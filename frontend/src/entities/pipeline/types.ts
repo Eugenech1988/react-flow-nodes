@@ -77,4 +77,6 @@ export interface PipelineState {
   takeSnapshot: () => void;
   undo: () => void;
   redo: () => void;
+  exportJSON: () => void;
+  importJSON: (file: File) => void;
 }
