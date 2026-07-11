@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useStore } from '@/entities/pipeline';
 import { Button, Dialog } from '@/shared/ui';
 
@@ -15,7 +15,7 @@ export const SubmitButton = () => {
   const [result, setResult] = useState<ParseResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = async () => {
     const { nodes, edges } = useStore.getState();
     setIsSubmitting(true);
     setError(null);
@@ -44,7 +44,7 @@ export const SubmitButton = () => {
     } finally {
       setIsSubmitting(false);
     }
-  }, []);
+  };
 
   const handleClose = () => {
     setResult(null);
@@ -59,7 +59,7 @@ export const SubmitButton = () => {
         variant="default"
         onClick={handleSubmit}
         disabled={isSubmitting}
-        className="rounded-full shadow-md hover:shadow-lg hover:scale-101 active:scale-98 font-semibold tracking-wide transition-all bg-[var(--md-primary)] text-[var(--md-on-primary)] hover:bg-[var(--md-primary-hover)] border-none px-6 py-2"
+        className="rounded-full shadow-md hover:shadow-lg hover:scale-101 active:scale-98 font-semibold tracking-wide transition-all bg-(--md-primary) text-(--md-on-primary) hover:bg-(--md-primary-hover) border-none px-6 py-2"
       >
         {isSubmitting ? 'Analyzing…' : 'Submit Pipeline'}
       </Button>
@@ -68,7 +68,7 @@ export const SubmitButton = () => {
         isOpen={isModalOpen}
         onClose={handleClose}
         title={error ? 'Submission Failed' : 'Pipeline Analysis'}
-        className="bg-[var(--background)]"
+        className="bg-(--background)"
       >
         <div className="flex flex-col gap-5 p-1 bg-card text-card-foreground">
           {error ? (
@@ -143,7 +143,7 @@ export const SubmitButton = () => {
             <Button
               variant="default"
               onClick={handleClose}
-              className="w-full sm:w-auto rounded-full px-6 py-2 bg-[var(--md-primary)] text-[var(--md-on-primary)] hover:bg-[var(--md-primary-hover)] border-none font-medium shadow-sm"
+              className="w-full sm:w-auto rounded-full px-6 py-2 bg-(--md-primary) text-(--md-on-primary) hover:bg-(--md-primary-hover) border-none font-medium shadow-sm"
             >
               Close
             </Button>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const HEALTH_ENDPOINT = 'http://localhost:8000/health';
 
@@ -13,7 +13,7 @@ const statusLabels: Record<ServerStatus, string> = {
 export const ServerStatusBadge = () => {
   const [status, setStatus] = useState<ServerStatus>('checking');
 
-  const checkServerStatus = useCallback(async () => {
+  const checkServerStatus = async () => {
     setStatus('checking');
     try {
       const response = await fetch(HEALTH_ENDPOINT);
@@ -21,7 +21,7 @@ export const ServerStatusBadge = () => {
     } catch {
       setStatus('offline');
     }
-  }, []);
+  };
 
   useEffect(() => {
     checkServerStatus();
@@ -35,9 +35,9 @@ export const ServerStatusBadge = () => {
       <span
         className={`w-2 h-2 rounded-full transition-colors duration-300 ${
           status === 'online'
-            ? 'bg-emerald-500 shadow-[0_0_6px_theme(colors.emerald.500/0.6)]'
+            ? 'bg-emerald-500 shadow-[0_0_6px_--theme(--color-emerald-500/0.6)]'
             : status === 'offline'
-            ? 'bg-rose-500 shadow-[0_0_6px_theme(colors.rose.500/0.6)]'
+            ? 'bg-rose-500 shadow-[0_0_6px_--theme(--color-rose-500/0.6)]'
             : 'bg-amber-500 animate-pulse'
         }`}
       />
