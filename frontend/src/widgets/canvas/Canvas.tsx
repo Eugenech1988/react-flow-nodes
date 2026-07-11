@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import type { DragEvent } from 'react';
-import { ReactFlow, Background, Controls, ConnectionLineType, MiniMap, ReactFlowProvider } from '@xyflow/react';
+import { type NodeTypes, ReactFlow, Background, Controls, ConnectionLineType, MiniMap, ReactFlowProvider } from '@xyflow/react';
 import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-import { useStore } from '@/entities/pipeline';
-import type { NodeData, PipelineNode, PipelineEdge } from '@/entities/pipeline';
+import { useStore } from '@/entities';
+import type { NodeData, PipelineNode, PipelineEdge } from '@/entities';
 import { useTheme } from '@/app/providers';
 
 import { HistoryControls } from './components/HistoryControls';
@@ -20,7 +20,7 @@ import {
   LLMNode,
   MathNode,
   OutputNode,
-  TextNode
+  TextNode,
 } from '@/features/manage-nodes';
 
 const GRID_SIZE = 20;
@@ -36,7 +36,7 @@ const nodeTypes = {
   api: APINode,
   database: DatabaseNode,
   image: ImageNode
-};
+} as unknown as NodeTypes;
 
 interface DragPayload {
   nodeType?: string;

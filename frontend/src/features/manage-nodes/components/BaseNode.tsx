@@ -1,6 +1,6 @@
 import { type JSX, type ChangeEvent, useState } from 'react';
 import { Handle, Position, useReactFlow } from '@xyflow/react';
-import { useStore } from '@/entities/pipeline';
+import { useStore } from '@/entities';
 import { AutosizeTextarea } from '@/shared/ui/custom/AutosizeTextarea.tsx';
 import { Input, Select } from '@/shared/ui';
 import type {
@@ -10,7 +10,7 @@ import type {
   NodeConfig,
   NodeData,
   NodeFieldValues,
-} from '@/entities/pipeline';
+} from '@/entities';
 import type { CSSProperties, ReactNode } from 'react';
 import { extractVariables } from '@/features/manage-nodes';
 

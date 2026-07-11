@@ -56,17 +56,20 @@ export interface NodeComponentProps {
   data: NodeData;
 }
 
-interface HistoryState {
+export interface HistoryState {
   nodes: PipelineNode[];
   edges: PipelineEdge[];
 }
 
-export interface PipelineState {
+export interface GraphState {
   nodes: PipelineNode[];
   edges: PipelineEdge[];
   nodeIDs: Record<string, number>;
   past: HistoryState[];
   future: HistoryState[];
+}
+
+export interface GraphActions {
   getNodeID: (type: string) => string;
   addNode: (node: PipelineNode) => void;
   deleteNode: (nodeId: string) => void;
@@ -80,3 +83,28 @@ export interface PipelineState {
   exportJSON: () => void;
   importJSON: (file: File) => void;
 }
+
+export type ExecutionStatus = 'idle' | 'running' | 'success' | 'failed';
+
+export interface ExecutionLog {
+  id: string;
+  nodeId?: string;
+  timestamp: string;
+  type: 'info' | 'success' | 'error';
+  message: string;
+}
+
+export interface ExecutionState {
+  executionStatus: ExecutionStatus;
+  activeNodeId: string | null;
+  logs: ExecutionLog[];
+}
+
+export interface ExecutionActions {
+  runWorkflow: () => Promise<void>;
+  stopWorkflow: () => void;
+  clearLogs: () => void;
+  addLog: (message: string, type?: ExecutionLog['type'], nodeId?: string) => void;
+}
+
+export type PipelineStore = GraphState & GraphActions & ExecutionState & ExecutionActions;

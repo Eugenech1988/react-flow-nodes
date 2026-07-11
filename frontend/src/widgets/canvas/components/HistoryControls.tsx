@@ -1,5 +1,5 @@
 import { Undo2, Redo2 } from 'lucide-react';
-import { useStore } from '@/entities/pipeline';
+import { useStore } from '@/entities';
 import { Button } from '@/shared/ui';
 
 export const HistoryControls = () => {

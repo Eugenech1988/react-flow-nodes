@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useStore } from '@/entities/pipeline';
+import { useStore } from '@/entities';
 import { Button, Dialog } from '@/shared/ui';
 
 const PARSE_ENDPOINT = 'http://localhost:8000/pipelines/parse';
