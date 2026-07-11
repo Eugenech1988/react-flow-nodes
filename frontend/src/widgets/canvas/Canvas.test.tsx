@@ -8,24 +8,31 @@ import type {
   Connection,
   ReactFlowInstance
 } from '@xyflow/react';
+import type { PipelineNode, PipelineEdge } from '@/entities/pipeline';
 
 const addNode = vi.fn();
 const getNodeID = vi.fn(() => 'customInput-1');
 const onNodesChange = vi.fn();
 const onEdgesChange = vi.fn();
 const onConnect = vi.fn();
+const takeSnapshot = vi.fn();
+const exportJSON = vi.fn();
+const importJSON = vi.fn();
 
 //@ts-ignore
 let reactFlowProps: ReactFlowProps;
 
 type StoreState = {
-  nodes: unknown[];
-  edges: unknown[];
+  nodes: PipelineNode[];
+  edges: PipelineEdge[];
   addNode: typeof addNode;
   getNodeID: typeof getNodeID;
-  onNodesChange: (changes: NodeChange[]) => void;
-  onEdgesChange: (changes: EdgeChange[]) => void;
+  onNodesChange: (changes: NodeChange<PipelineNode>[]) => void;
+  onEdgesChange: (changes: EdgeChange<PipelineEdge>[]) => void;
   onConnect: (connection: Connection) => void;
+  takeSnapshot: typeof takeSnapshot;
+  exportJSON: typeof exportJSON;
+  importJSON: typeof importJSON;
 };
 
 vi.mock('@/entities/pipeline', () => ({
@@ -38,11 +45,19 @@ vi.mock('@/entities/pipeline', () => ({
       onNodesChange,
       onEdgesChange,
       onConnect,
+      takeSnapshot,
+      exportJSON,
+      importJSON,
     }),
 }));
 
 vi.mock('@/app/providers', () => ({
   useTheme: () => ({ theme: 'light' }),
+}));
+
+// Изолируем HistoryControls, чтобы он не ломал рендеринг Canvas в тестовом окружении
+vi.mock('./components/HistoryControls', () => ({
+  HistoryControls: () => <div data-testid="history-controls" />,
 }));
 
 vi.mock('@xyflow/react', async (importOriginal) => {
@@ -85,9 +100,18 @@ describe('Canvas', () => {
     vi.clearAllMocks();
   });
 
-  it('renders ReactFlow and controls', () => {
+  it('renders ReactFlow, controls, export and import buttons', () => {
     render(<Canvas />);
     expect(screen.getByTestId('react-flow')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /export/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /import/i })).toBeInTheDocument();
+  });
+
+  it('triggers exportJSON when Export button is clicked', () => {
+    render(<Canvas />);
+    const exportBtn = screen.getByRole('button', { name: /export/i });
+    fireEvent.click(exportBtn);
+    expect(exportJSON).toHaveBeenCalledTimes(1);
   });
 
   it('adds node on drop', async () => {
