@@ -1,0 +1,94 @@
+# Pipeline Studio
+
+**Pipeline Studio** is a powerful visual workflow automation platform built on **React Flow**. It allows users to design, connect, and execute complex pipelines using an intuitive drag-and-drop interface.
+
+---
+
+## Key Features
+
+* **Drag-and-Drop Canvas**: Easily place and arrange nodes on the workspace.
+* **Dynamic Configuration**: Each node includes customizable fields (Textarea, Select, Input) tailored to its function.
+* **Variable Tag System**: Automatically extracts `{{variables}}` in Text nodes to visualize data flow and connections.
+* **Categorized Workflow Nodes**:
+    * **I/O**: Input and Output nodes.
+    * **Content**: Text processing and Image manipulation.
+    * **Logic**: LLM integrations, Math operations, and Conditional branching.
+    * **Integrations**: API calls and Database queries.
+* **Theming**: Full support for Light and Dark modes.
+
+---
+
+## Tech Stack
+
+* **Frontend**: React 19, XYFlow (React Flow), Tailwind CSS 4.
+* **State Management**: Zustand.
+* **UI Components**: Built with `shadcn` principles.
+* **Build Tool**: Vite.
+* **Testing**: Vitest + React Testing Library.
+
+---
+
+##  Architecture (FSD)
+
+The project follows the **Feature-Sliced Design (FSD)** methodology to ensure modularity and scalability:
+
+```text
+src/
+├── app/            # Global application initialization
+├── entities/       # Domain entities (Pipeline, Node model)
+├── features/       # Functional business logic (Node management, Parsing)
+├── shared/         # Reusable UI components and utilities
+└── widgets/        # Composite blocks (Canvas, Toolbar, Header)
+
+```
+
+---
+
+## Technical Highlights & Architecture Solutions
+
+### 1. Abstract & Declarative Node Construction (`BaseNode`)
+Instead of duplicating boilerplate code for each React Flow node type, the project introduces a highly reusable `BaseNode` component and a declarative `createNode` factory.
+* Custom nodes (`LLMNode`, `MathNode`, `APINode`, etc.) only specify their metadata, field inputs, and default connections as a simple configuration object.
+* `BaseNode` takes care of state encapsulation (`useState`), sync with the global Zustand store, and event bindings.
+
+### 2. Smart Node Handles Positioning (`withAutoPositions`)
+To prevent dynamic and static node handles from overlapping on the node edge, an automated spacing algorithm is implemented. It separates target and source handles, calculating equal percentage heights (`top: ...%`) relative to the total number of connections on each side.
+
+### 3. Reactive Variable Parsing & Dynamic Inputs
+When a user types a template string like `{{variableName}}` inside a text field:
+1. A regex-based parser (`extractVariables`) scans the content and removes duplicates.
+2. The `BaseNode` component dynamically updates its `HandleConfig`.
+3. React Flow spawns a new **Target Handle** labeled with that variable name on the fly, making it instantly linkable.
+4. **React Flow Handle ID Isolation:** To prevent routing bugs in React Flow, handle IDs are globally scoped by combining the node ID and port ID (`${nodeId}-${handleId}`).
+
+---
+
+## Backend Integration
+
+The **Submit** workflow interacts with a backend server (e.g., FastAPI) to parse the created graph:
+
+* **Endpoint**: `POST http://localhost:8000/pipelines/parse`
+* **Payload**:
+  ```json
+  {
+    "nodes": [...],
+    "edges": [...]
+  }
+  
+---
+# Getting Started
+
+## Install dependencies:
+**npm install**
+## Run development server:
+**npm run dev**
+## Run unit tests
+**npm test**
+# Run tests with UI
+**npm run test:ui**
+
+# Roadmap & Future Improvements
+- [ ] Add support for custom Edge styling and Edge deletion hotkeys.
+- [ ] Introduce Node Grouping (Sub-graphs) for organizing complex automation workflows.
+- [ ] Implement Copy/Paste shortcuts (`Ctrl+C` / `Ctrl+V`) for canvas elements.
+- [ ] Implement backend execution engine log streams directly into the Node UI.
