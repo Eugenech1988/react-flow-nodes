@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { Button } from '@/shared/ui';
 
 interface ImportExportToolbarProps {
   onExport: () => void;
@@ -13,23 +14,39 @@ export const ImportExportToolbar = ({ onExport, onImport }: ImportExportToolbarP
     if (file) {
       onImport(file);
     }
-    event.target.value = ''; // Сбрасываем значение, чтобы можно было загрузить тот же файл повторно
+    event.target.value = '';
   };
 
   return (
     <div className="absolute top-4 right-4 z-50 flex gap-2">
-      <button
+      <Button
+        variant="default"
+        size="sm"
         onClick={onExport}
-        className="px-3 py-1.5 text-xs font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+        className="h-8 px-4 text-xs font-medium rounded-[var(--radius)] shadow-md transition-all duration-300 border border-transparent cursor-pointer select-none
+          bg-[#0f172a] dark:bg-[var(--header-bg)]
+          text-white dark:text-[var(--foreground)]
+          border-transparent dark:border-[var(--border)]
+          hover:bg-[#1e293b] dark:hover:bg-[var(--accent)]
+          hover:shadow-lg"
       >
         Export
-      </button>
-      <button
+      </Button>
+
+      <Button
+        variant="default"
+        size="sm"
         onClick={() => fileInputRef.current?.click()}
-        className="px-3 py-1.5 text-xs font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+        className="h-8 px-4 text-xs font-medium rounded-[var(--radius)] shadow-md transition-all duration-300 border border-transparent cursor-pointer select-none
+          bg-[#0f172a] dark:bg-[var(--header-bg)]
+          text-white dark:text-[var(--foreground)]
+          border-transparent dark:border-[var(--border)]
+          hover:bg-[#1e293b] dark:hover:bg-[var(--accent)]
+          hover:shadow-lg"
       >
         Import
-      </button>
+      </Button>
+
       <input
         type="file"
         ref={fileInputRef}
