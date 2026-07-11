@@ -22,6 +22,8 @@ import {
   OutputNode,
   TextNode,
 } from '@/features/manage-nodes';
+import { WorkflowExecutionControl } from '@/widgets/canvas/components/WorkflowExecutionControl.tsx';
+import { ExecutionLogConsole } from '@/widgets/canvas/components/ExecutionLogConsole.tsx';
 
 const GRID_SIZE = 20;
 const PRO_OPTIONS = { hideAttribution: true };
@@ -135,8 +137,8 @@ export const Canvas = () => {
       ref={reactFlowWrapper}
       className="w-full h-full relative bg-[#f1f5f9] dark:bg-[#030712] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:[--react-flow__background-color:#374151]"
     >
-      {/* Рендерим вынесенный тулбар */}
       <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
+      <WorkflowExecutionControl/>
 
       <ReactFlowProvider>
         <ReactFlow<PipelineNode, PipelineEdge>
@@ -164,6 +166,7 @@ export const Canvas = () => {
           <MiniMap pannable zoomable />
           <HistoryControls />
         </ReactFlow>
+        <ExecutionLogConsole />
       </ReactFlowProvider>
     </div>
   );
