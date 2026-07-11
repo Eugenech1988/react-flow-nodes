@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 const HEALTH_ENDPOINT = 'http://localhost:8000/health';
 
@@ -13,18 +13,21 @@ const statusLabels: Record<ServerStatus, string> = {
 export const ServerStatusBadge = () => {
   const [status, setStatus] = useState<ServerStatus>('checking');
 
-  const checkServerStatus = async () => {
-    setStatus('checking');
+  const checkServerStatus = useCallback(async () => {
     try {
       const response = await fetch(HEALTH_ENDPOINT);
       setStatus(response.ok ? 'online' : 'offline');
     } catch {
       setStatus('offline');
     }
-  };
+  }, []);
 
   useEffect(() => {
     checkServerStatus();
+
+    const interval = setInterval(checkServerStatus, 30000);
+
+    return () => clearInterval(interval);
   }, [checkServerStatus]);
 
   return (
@@ -35,10 +38,10 @@ export const ServerStatusBadge = () => {
       <span
         className={`w-2 h-2 rounded-full transition-colors duration-300 ${
           status === 'online'
-            ? 'bg-emerald-500 shadow-[0_0_6px_--theme(--color-emerald-500/0.6)]'
+            ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]'
             : status === 'offline'
-            ? 'bg-rose-500 shadow-[0_0_6px_--theme(--color-rose-500/0.6)]'
-            : 'bg-amber-500 animate-pulse'
+              ? 'bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.6)]'
+              : 'bg-amber-500 animate-pulse'
         }`}
       />
       <span>{statusLabels[status]}</span>

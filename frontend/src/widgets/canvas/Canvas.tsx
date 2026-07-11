@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import type { DragEvent } from 'react';
 import { ReactFlow, Background, Controls, ConnectionLineType, MiniMap, ReactFlowProvider } from '@xyflow/react';
-import { HistoryControls } from '@/widgets/historyControls/';
 import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import { useStore } from '@/entities/pipeline';
 import type { NodeData, PipelineNode, PipelineEdge } from '@/entities/pipeline';
 import { useTheme } from '@/app/providers';
+
+import { HistoryControls } from './components/HistoryControls';
+import { ImportExportToolbar } from './components/ImportExportToolbar'; // Наш новый компонент
 
 import {
   APINode,
@@ -42,7 +44,6 @@ interface DragPayload {
 
 export const Canvas = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<PipelineNode, PipelineEdge> | null>(null);
 
   const { theme } = useTheme();
@@ -121,14 +122,6 @@ export const Canvas = () => {
     event.dataTransfer.dropEffect = 'move';
   };
 
-  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      importJSON(file);
-    }
-    event.target.value = '';
-  };
-
   const isDark =
     theme === 'dark' ||
     (theme === 'system' &&
@@ -142,27 +135,8 @@ export const Canvas = () => {
       ref={reactFlowWrapper}
       className="w-full h-full relative bg-[#f1f5f9] dark:bg-[#030712] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:[--react-flow__background-color:#374151]"
     >
-      <div className="absolute top-4 right-4 z-50 flex gap-2">
-        <button
-          onClick={exportJSON}
-          className="px-3 py-1.5 text-xs font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        >
-          Export
-        </button>
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="px-3 py-1.5 text-xs font-medium bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-md border border-gray-300 dark:border-gray-600 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        >
-          Import
-        </button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileInputChange}
-          accept=".json"
-          className="hidden"
-        />
-      </div>
+      {/* Рендерим вынесенный тулбар */}
+      <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
 
       <ReactFlowProvider>
         <ReactFlow<PipelineNode, PipelineEdge>

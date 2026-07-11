@@ -1,3 +1,3 @@
 export * from './header';
-export * from './toolbar';
+export * from './nodes-toolbar';
 export * from './canvas';

@@ -43,7 +43,7 @@ const nodeGroups: ToolbarGroup[] = [
   },
 ];
 
-export const Toolbar = () => {
+export const NodesToolbar = () => {
   return (
     <div className="flex items-center gap-8 px-6 py-3 bg-card border-b border-border/60 overflow-x-auto shrink-0 select-none transition-colors duration-300">
       {nodeGroups.map((group) => (

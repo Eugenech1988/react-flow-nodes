@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Toolbar } from './Toolbar';
+import { NodesToolbar } from '@/widgets';
 
 interface DraggableNodeProps {
   type: string;
@@ -24,7 +24,7 @@ describe('Toolbar', () => {
   });
 
   it('renders all toolbar groups', () => {
-    render(<Toolbar />);
+    render(<NodesToolbar />);
 
     expect(screen.getByText('I/O')).toBeInTheDocument();
     expect(screen.getByText('Content')).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe('Toolbar', () => {
   });
 
   it('renders all draggable nodes', () => {
-    render(<Toolbar />);
+    render(<NodesToolbar />);
 
     expect(screen.getAllByTestId('draggable-node')).toHaveLength(9);
 
@@ -48,7 +48,7 @@ describe('Toolbar', () => {
   });
 
   it('passes correct props to DraggableNode', () => {
-    render(<Toolbar />);
+    render(<NodesToolbar />);
 
     // Используем типизированный массив вызовов
     const propsList = draggableNodeMock.mock.calls.map(([props]) => props);
