@@ -1,1 +1,1 @@
-export * from './ui/SubmitButton';
+export * from './SubmitButton';

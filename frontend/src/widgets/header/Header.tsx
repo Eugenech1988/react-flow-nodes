@@ -1,4 +1,4 @@
-import { ServerStatusBadge } from '@/features/check-status';
+import { ServerStatusBadge } from '@/features/server-status-badge';
 import { ThemeToggle } from '@/features/toggle-theme';
 import { SubmitButton } from '@/features/submit-pipeline';
 
