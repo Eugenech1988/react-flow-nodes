@@ -56,9 +56,16 @@ vi.mock('@xyflow/react', async (importOriginal) => {
     ReactFlow: (props: ReactFlowProps) => {
       reactFlowProps = props;
 
-      props.onInit?.({
-        screenToFlowPosition: (pos: { x: number; y: number }) => pos,
-      } as ReactFlowInstance);
+      if (props.onInit) {
+        queueMicrotask(() => {
+          props.onInit?.({
+            screenToFlowPosition: (pos: any) => ({
+              x: pos.x ?? pos.clientX ?? 100,
+              y: pos.y ?? pos.clientY ?? 200,
+            }),
+          } as ReactFlowInstance);
+        });
+      }
 
       return (
         <div
@@ -83,8 +90,11 @@ describe('Canvas', () => {
     expect(screen.getByTestId('react-flow')).toBeInTheDocument();
   });
 
-  it('adds node on drop', () => {
+  it('adds node on drop', async () => {
     render(<Canvas />);
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
     const flow = screen.getByTestId('react-flow');
 
     const dataTransfer = {
