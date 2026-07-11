@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { DragEvent } from 'react';
 import { ReactFlow, Background, Controls, ConnectionLineType, MiniMap, ReactFlowProvider } from '@xyflow/react';
+import { HistoryControls } from '@/widgets/historyControls/';
 import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -51,6 +52,29 @@ export const Canvas = () => {
   const onNodesChange = useStore((state) => state.onNodesChange);
   const onEdgesChange = useStore((state) => state.onEdgesChange);
   const onConnect = useStore((state) => state.onConnect);
+  const takeSnapshot = useStore((state) => state.takeSnapshot);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const modifier = isMac ? event.metaKey : event.ctrlKey;
+
+      if (modifier && event.key.toLowerCase() === 'z') {
+        event.preventDefault();
+        if (event.shiftKey) {
+          useStore.getState().redo();
+        } else {
+          useStore.getState().undo();
+        }
+      } else if (modifier && event.key.toLowerCase() === 'y') {
+        event.preventDefault();
+        useStore.getState().redo();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const getInitNodeData = (nodeID: string, type: string): NodeData => ({
     id: nodeID,
@@ -116,6 +140,7 @@ export const Canvas = () => {
           onDragOver={onDragOver}
           onInit={setReactFlowInstance}
           nodeTypes={nodeTypes}
+          onNodeDragStart={takeSnapshot}
           proOptions={PRO_OPTIONS}
           snapGrid={[GRID_SIZE, GRID_SIZE]}
           connectionLineType={ConnectionLineType.SmoothStep}
@@ -128,6 +153,7 @@ export const Canvas = () => {
           <Background color={gridColor} gap={GRID_SIZE} />
           <Controls />
           <MiniMap pannable zoomable />
+          <HistoryControls />
         </ReactFlow>
       </ReactFlowProvider>
     </div>

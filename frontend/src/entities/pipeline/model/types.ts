@@ -56,10 +56,17 @@ export interface NodeComponentProps {
   data: NodeData;
 }
 
+interface HistoryState {
+  nodes: PipelineNode[];
+  edges: PipelineEdge[];
+}
+
 export interface PipelineState {
   nodes: PipelineNode[];
   edges: PipelineEdge[];
   nodeIDs: Record<string, number>;
+  past: HistoryState[];
+  future: HistoryState[];
   getNodeID: (type: string) => string;
   addNode: (node: PipelineNode) => void;
   deleteNode: (nodeId: string) => void;
@@ -67,4 +74,7 @@ export interface PipelineState {
   onEdgesChange: (changes: EdgeChange<PipelineEdge>[]) => void;
   onConnect: (connection: Connection) => void;
   updateNodeField: (nodeId: string, fieldName: string, fieldValue: string | number) => void;
+  takeSnapshot: () => void;
+  undo: () => void;
+  redo: () => void;
 }
