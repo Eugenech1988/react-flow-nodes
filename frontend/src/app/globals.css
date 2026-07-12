@@ -162,11 +162,24 @@ div.react-flow .base-node .react-flow__handle {
   -webkit-user-drag: element;
 }
 
-.react-flow__node:focus,
-.react-flow__node:focus-visible,
-.react-flow__node.selected {
+div.react-flow .react-flow__node:focus,
+div.react-flow .react-flow__node:focus-visible,
+div.react-flow .react-flow__node.selected {
   outline: none !important;
   box-shadow: none !important;
+}
+
+div.react-flow .react-flow__node.selected .base-node {
+  border-color: #475569 !important;
+
+  box-shadow: 0 0 0 1px rgba(71, 85, 105, 0.1),
+  0 20px 25px -5px rgba(0, 0, 0, 0.15),
+  0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+
+}
+
+.dark div.react-flow .react-flow__node.selected .base-node {
+  border-color: #94a3b8 !important;
 }
 
 div.react-flow .react-flow__node.drag {

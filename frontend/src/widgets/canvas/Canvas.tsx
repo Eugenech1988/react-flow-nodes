@@ -140,7 +140,6 @@ export const Canvas = () => {
       className="w-full h-full relative bg-[#f1f5f9] dark:bg-[#030712] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:[--react-flow__background-color:#374151]"
     >
       <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
-      <WorkflowExecutionControl/>
       <AutoLayoutButton />
       <ClearCanvasButton />
       <ReactFlowProvider>
@@ -169,6 +168,7 @@ export const Canvas = () => {
           <MiniMap pannable zoomable />
           <HistoryControls />
         </ReactFlow>
+        <WorkflowExecutionControl/>
         <ExecutionLogConsole />
       </ReactFlowProvider>
     </div>

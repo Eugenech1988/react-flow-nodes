@@ -221,14 +221,13 @@ export const BaseNode = ({
       data-category={category}
       className={`
         base-node relative rounded-2xl border bg-card text-card-foreground shadow-md transition-all duration-200 overflow-visible text-left
-        focus:outline-none outline-none
         ${isActive ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-lg z-10 scale-[1.01]' : ''}
         ${isSuccess ? 'border-emerald-500 dark:border-emerald-600 shadow-xs' : ''}
         ${isFailed ? 'border-rose-500 dark:border-rose-600 shadow-md z-10' : ''}
-        ${!isActive && !isSuccess && !isFailed ? 'border-border' : ''}
-        ${selected ? 'ring-2 ring-primary/40' : ''}
+        ${!isActive && !isSuccess && !isFailed && !selected ? 'border-border' : ''}
+        ${selected ? 'border-primary ring-2 ring-primary/20 z-20 shadow-lg' : ''}
       `}
-    >
+      >
       <div className="absolute -top-2.5 -right-2.5 z-30 pointer-events-none flex items-center justify-center">
         {isActive && (
           <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center border-2 border-card shadow-xs">
