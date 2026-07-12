@@ -33,7 +33,7 @@ vi.mock('@xyflow/react', async (importOriginal) => {
   };
 });
 
-// Хелпер для рендера компонента внутри контекста ReactFlow
+
 const renderWithProvider = (ui: React.ReactElement) => {
   return render(<ReactFlowProvider>{ui}</ReactFlowProvider>);
 };

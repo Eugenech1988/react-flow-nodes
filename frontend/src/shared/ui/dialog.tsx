@@ -18,7 +18,7 @@ export const Dialog = ({
   children,
   className,
 }: DialogProps) => {
-  // Close on Escape key press
+  
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
@@ -29,7 +29,7 @@ export const Dialog = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Prevent scroll when open
+  
   React.useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';

@@ -17,7 +17,7 @@ vi.mock('../BaseNode', () => ({
   },
 }));
 
-// Хелпер для генерации всех обязательных пропсов XYFlow
+
 const createMockNodeProps = (id: string, nodeType = 'text', overrides = {}) => ({
   id,
   data: { id, nodeType },

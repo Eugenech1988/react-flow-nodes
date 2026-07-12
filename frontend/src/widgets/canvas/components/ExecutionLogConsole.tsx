@@ -14,7 +14,6 @@ export const ExecutionLogConsole = () => {
 
   const isVisible = logs.length > 0 || status !== 'idle';
 
-  // Определяем цвет заголовка в зависимости от статуса
   const getHeaderColor = () => {
     if (status === 'failed') return 'text-[var(--node-math)]';
     if (status === 'running') return 'text-[var(--node-output)]';

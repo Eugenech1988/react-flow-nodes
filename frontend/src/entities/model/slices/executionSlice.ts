@@ -38,12 +38,12 @@ export const createExecutionSlice: StateCreator<
     }
 
     const startNodes = nodes.filter((node) => {
-      // Защищенное получение типа ноды из всех возможных источников
+      
       const dataNodeType = String(node.data?.nodeType || '').toLowerCase();
       const reactFlowType = String(node.type || '').toLowerCase();
 
-      // Нода является стартовой ТОЛЬКО если она явно содержит маркер input
-      // и при этом НЕ является текстовым полем (исключаем ложные срабатывания)
+      
+      
       const isInput = dataNodeType.includes('input') || reactFlowType.includes('input');
       const isText = dataNodeType.includes('text') || reactFlowType.includes('text');
 
