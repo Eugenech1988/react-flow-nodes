@@ -1,5 +1,5 @@
 import { Position, type NodeProps } from '@xyflow/react';
-import { BaseNode } from '../BaseNode';
+import { BaseNode } from './BaseNode';
 import type { NodeData } from '@/entities';
 
 export const TextNode = ({ id, data, selected, ...rest }: NodeProps & { data: NodeData }) => {

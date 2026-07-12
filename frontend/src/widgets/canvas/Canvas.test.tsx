@@ -6,7 +6,6 @@ import type {
   ReactFlowProps,
   ReactFlowInstance
 } from '@xyflow/react';
-
 const addNode = vi.fn();
 const getNodeID = vi.fn(() => 'customInput-1');
 const onNodesChange = vi.fn();

@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { Position } from '@xyflow/react';
 import { describe, expect, it, vi } from 'vitest';
 import { TextNode } from './TextNode';
-import type { BaseNodeProps } from '../BaseNode';
+import type { BaseNodeProps } from './BaseNode';
 
 const { baseNodeProps } = vi.hoisted(() => ({
   baseNodeProps: {
@@ -10,7 +10,7 @@ const { baseNodeProps } = vi.hoisted(() => ({
   },
 }));
 
-vi.mock('../BaseNode', () => ({
+vi.mock('./BaseNode', () => ({
   BaseNode: (props: BaseNodeProps) => {
     baseNodeProps.current = props;
     return <div data-testid="base-node" />;

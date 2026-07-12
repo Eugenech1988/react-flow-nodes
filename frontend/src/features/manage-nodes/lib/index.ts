@@ -1,1 +1,1 @@
-export * from './extractVariables';
+export { extractVariables } from './extractVariables';

@@ -1,5 +1,5 @@
 import { Position } from '@xyflow/react';
-import { createNode } from '../BaseNode';
+import { createNode } from './BaseNode';
 
 const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE'] as const;
 
