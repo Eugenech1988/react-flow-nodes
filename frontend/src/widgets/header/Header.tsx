@@ -8,9 +8,20 @@ export const Header = () => {
       <div className="flex items-center gap-3 select-none">
         <div data-testid="app-logo" className="flex items-center justify-center w-10 h-10 rounded-full shrink-0 select-none overflow-hidden bg-white dark:bg-black border border-border/20">
           <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full p-1.5">
-            <path d="M60 140V60H100C122.091 60 140 77.9086 140 100C140 122.091 122.091 140 100 140H60Z" fill="#38BDF8"/>
-            <path d="M100 140L145 95" stroke="#F59E0B" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M145 95L135 60" stroke="#F59E0B" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round"/>
+            <path
+              d="M60 140V60H100C122.091 60 140 77.9086 140 100C140 122.091 122.091 140 100 140H60Z"
+              className="fill-sky-400 dark:fill-sky-500"
+            />
+            <path
+              d="M100 140L145 95"
+              className="stroke-amber-500 dark:stroke-amber-400"
+              strokeWidth="20" strokeLinecap="round" strokeLinejoin="round"
+            />
+            <path
+              d="M145 95L135 60"
+              className="stroke-amber-500 dark:stroke-amber-400"
+              strokeWidth="20" strokeLinecap="round" strokeLinejoin="round"
+            />
           </svg>
         </div>
         <div>

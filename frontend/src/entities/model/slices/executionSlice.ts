@@ -30,7 +30,6 @@ export const createExecutionSlice: StateCreator<
 
   runWorkflow: async () => {
     const { nodes, edges, addLog } = get();
-
     if (nodes.length === 0) {
       addLog('Execution aborted: pipeline has no nodes', 'error');
       set({ executionStatus: 'failed' });
@@ -38,18 +37,12 @@ export const createExecutionSlice: StateCreator<
     }
 
     const startNodes = nodes.filter((node) => {
-      
       const dataNodeType = String(node.data?.nodeType || '').toLowerCase();
       const reactFlowType = String(node.type || '').toLowerCase();
-
-      
-      
       const isInput = dataNodeType.includes('input') || reactFlowType.includes('input');
       const isText = dataNodeType.includes('text') || reactFlowType.includes('text');
-
       const isStartType = isInput && !isText;
       const hasIncoming = edges.some((edge) => edge.target === node.id);
-
       return isStartType && !hasIncoming;
     });
 
@@ -61,12 +54,10 @@ export const createExecutionSlice: StateCreator<
 
     const inDegree = new Map<string, number>();
     const validationMap = new Map<string, string[]>();
-
     nodes.forEach((n) => {
       inDegree.set(n.id, 0);
       validationMap.set(n.id, []);
     });
-
     edges.forEach((e) => {
       if (validationMap.has(e.source) && validationMap.has(e.target)) {
         validationMap.get(e.source)!.push(e.target);
@@ -110,7 +101,6 @@ export const createExecutionSlice: StateCreator<
     const queue: string[] = startNodes.map((n) => n.id);
     const visited = new Set<string>();
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
-
     const adjacencyMap = new Map<string, string[]>();
     nodes.forEach((n) => adjacencyMap.set(n.id, []));
     edges.forEach((e) => {
@@ -123,11 +113,9 @@ export const createExecutionSlice: StateCreator<
       if (get().executionStatus !== 'running') {
         break;
       }
-
       const currentNodeId = queue.shift()!;
       if (visited.has(currentNodeId)) continue;
       visited.add(currentNodeId);
-
       const node = nodeMap.get(currentNodeId);
       if (!node) continue;
 

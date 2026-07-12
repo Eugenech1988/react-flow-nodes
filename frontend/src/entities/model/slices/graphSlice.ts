@@ -18,30 +18,19 @@ export const createGraphSlice: StateCreator<
   getNodeID: (type) => {
     const currentCount = get().nodeIDs[type] || 0;
     const newCount = currentCount + 1;
-
     set((state) => ({
       nodeIDs: { ...state.nodeIDs, [type]: newCount },
     }));
-
     return `${type}-${newCount}`;
   },
 
   takeSnapshot: () => {
     const { nodes, edges, past } = get();
-
     let newPast = [...past, { nodes, edges }];
-
     if (newPast.length > 15) {
       newPast = newPast.slice(-15);
     }
-
-    set(
-      () => ({
-        past: newPast,
-        future: [],
-      }),
-      false,
-    );
+    set(() => ({ past: newPast, future: [] }), false);
   },
 
   addNode: (node) => {
@@ -95,11 +84,8 @@ export const createGraphSlice: StateCreator<
   pasteNodes: () => {
     const { clipboard, getNodeID, takeSnapshot } = get();
     if (!clipboard) return;
-
     takeSnapshot();
-
     const idMap = new Map<string, string>();
-
     const newNodes = clipboard.nodes.map((node) => {
       const newId = getNodeID(node.type || 'default');
       idMap.set(node.id, newId);
@@ -113,7 +99,6 @@ export const createGraphSlice: StateCreator<
         data: { ...node.data, id: newId },
       };
     });
-
     const newEdges = clipboard.edges.map((edge) => {
       const newSource = idMap.get(edge.source)!;
       const newTarget = idMap.get(edge.target)!;
@@ -124,7 +109,6 @@ export const createGraphSlice: StateCreator<
         target: newTarget,
       };
     });
-
     set((state) => ({
       nodes: [...state.nodes, ...newNodes],
       edges: [...state.edges, ...newEdges],
@@ -163,10 +147,8 @@ export const createGraphSlice: StateCreator<
   undo: () => {
     const { past, nodes, edges } = get();
     if (past.length === 0) return;
-
     const previous = past[past.length - 1];
     const newPast = past.slice(0, past.length - 1);
-
     set({
       past: newPast,
       nodes: previous.nodes,
@@ -178,10 +160,8 @@ export const createGraphSlice: StateCreator<
   redo: () => {
     const { future, nodes, edges } = get();
     if (future.length === 0) return;
-
     const next = future[0];
     const newFuture = future.slice(1);
-
     set({
       past: [...get().past, { nodes, edges }],
       nodes: next.nodes,
@@ -194,7 +174,6 @@ export const createGraphSlice: StateCreator<
     const { nodes, edges } = get();
     const dataStr = JSON.stringify({ nodes, edges }, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-
     const exportFileDefaultName = `pipeline-${new Date().toISOString().slice(0, 10)}.json`;
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);

@@ -64,7 +64,7 @@ export interface HistoryState {
 export type ClipboardNodesData = {
   nodes: PipelineNode[];
   edges: PipelineEdge[];
-}
+};
 
 export interface GraphState {
   nodes: PipelineNode[];
