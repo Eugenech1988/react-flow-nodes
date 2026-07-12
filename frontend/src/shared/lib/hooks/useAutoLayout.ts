@@ -6,7 +6,7 @@ import type { PipelineNode } from '@/entities';
 export const useAutoLayout = (
   nodes: PipelineNode[],
   edges: Edge[],
-  direction: 'TB' | 'LR' = 'LR'
+  direction: 'TB' | 'LR' = 'TB'
 ) => {
   return useMemo(() => {
     const dagreGraph = new dagre.graphlib.Graph();

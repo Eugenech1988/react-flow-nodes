@@ -33,7 +33,7 @@ export const ServerStatusBadge = () => {
   return (
     <button
       onClick={checkServerStatus}
-      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card text-xs text-muted-foreground hover:text-foreground hover:border-muted-foreground/45 transition-colors cursor-pointer select-none"
+      className="h-9 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card text-xs text-muted-foreground hover:text-foreground hover:border-muted-foreground/45 transition-colors cursor-pointer select-none"
     >
       <span
         className={`w-2 h-2 rounded-full transition-colors duration-300 ${

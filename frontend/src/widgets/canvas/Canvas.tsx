@@ -25,6 +25,7 @@ import {
 } from '@/features/manage-nodes';
 import { WorkflowExecutionControl } from '@/widgets/canvas/components/WorkflowExecutionControl.tsx';
 import { ExecutionLogConsole } from '@/widgets/canvas/components/ExecutionLogConsole.tsx';
+import { ClearCanvasButton } from '@/widgets/canvas/components/ClearCanvasButton.tsx';
 
 const GRID_SIZE = 20;
 const PRO_OPTIONS = { hideAttribution: true };
@@ -141,6 +142,7 @@ export const Canvas = () => {
       <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
       <WorkflowExecutionControl/>
       <AutoLayoutButton />
+      <ClearCanvasButton />
 
       <ReactFlowProvider>
         <ReactFlow<PipelineNode, PipelineEdge>

@@ -84,6 +84,7 @@ export interface GraphActions {
   redo: () => void;
   exportJSON: () => void;
   importJSON: (file: File) => void;
+  clearCanvas: () => void;
 }
 
 export type ExecutionStatus = 'idle' | 'running' | 'success' | 'failed';

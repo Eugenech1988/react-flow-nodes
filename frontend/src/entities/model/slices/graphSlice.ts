@@ -163,4 +163,6 @@ export const createGraphSlice: StateCreator<
     };
     reader.readAsText(file);
   },
+
+  clearCanvas: () => set({ nodes: [], edges: [], past: [], future: [] }),
 });
