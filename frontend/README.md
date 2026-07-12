@@ -6,14 +6,27 @@
 
 ## Key Features
 
-* **Drag-and-Drop Canvas**: Easily place and arrange nodes on the workspace.
-* **Dynamic Node Configuration**: Every node exposes configurable fields (Input, Textarea, Select) based on its functionality.* **Variable Extraction**: Automatically detects `{{variables}}` inside text fields and exposes them as dynamic input handles, making data flow connections intuitive.* **Categorized Workflow Nodes**:
-    * **I/O**: Input and Output nodes.
-    * **Content**: Text processing and Image manipulation.
-    * **Logic**: LLM integrations, Math operations, and Conditional branching.
-    * **Integrations**: API calls and Database queries.
-* * **Undo / Redo History**: Built-in command history allows reverting and reapplying node, edge, and configuration changes.
-* **Theming**: Full support for Light and Dark modes.
+✔ Drag & Drop
+
+✔ Undo / Redo
+
+✔ Dynamic Handles
+
+✔ Auto Handle Positioning
+
+✔ Theme Switching
+
+✔ Node Validation
+
+✔ DAG Parsing
+
+✔ React Flow Controls
+
+✔ Background Grid
+
+✔ MiniMap
+
+✔ Auto Layout
 
 ---
 
@@ -42,6 +55,43 @@ src/
 ```
 
 ---
+
+## Why Feature-Sliced Design?
+
+The project follows Feature-Sliced Design to:
+
+- isolate business logic
+- simplify scaling
+- improve maintainability
+- reduce coupling
+- enable reusable domain entities
+
+---
+
+## Available Nodes
+
+| Category | Nodes |
+|----------|-------|
+| Input | Input |
+| Output | Output |
+| AI | LLM |
+| Logic | Condition |
+| Utility | Math |
+| Integration | API |
+| Database | Database |
+| Media | Image |
+| Text | Text |
+
+## Performance
+
+Implemented optimizations:
+
+- React Compiler
+- memoized selectors
+- isolated Zustand subscriptions
+- reusable node abstraction
+- automatic handle calculation
+- minimized rerenders
 
 ## Technical Highlights & Architecture Solutions
 
@@ -74,20 +124,44 @@ The **Submit** workflow interacts with a backend server (e.g., FastAPI) to parse
   }
   
 ---
+
+## Testing
+
+The project includes:
+
+- unit tests
+- React Testing Library
+- Vitest
+- store testing
+- component testing
+---
 # Getting Started
 
 ## Install dependencies:
 **npm install**
+
+**bun install**
 ## Run development server:
 **npm run dev**
+
+**bun run dev**
 ## Run unit tests
-**npm test**
+**npm run test**
+
+**bun run test**
 # Run tests with UI
 **npm run test:ui**
 
-# Roadmap & Future Improvements
-- [ ] Add support for custom Edge styling and Edge deletion hotkeys.
-- [x] Undo / Redo history support.
-- [ ] Introduce Node Grouping (Sub-graphs) for organizing complex automation workflows.
-- [ ] Implement Copy/Paste shortcuts (`Ctrl+C` / `Ctrl+V`) for canvas elements.
-- [ ] Implement backend execution engine log streams directly into the Node UI.
+**bun run test:ui**
+
+## Roadmap
+
+- [x] Copy / Paste nodes
+- [x] Keyboard shortcuts
+- [x] Import / Export
+- [ ] Auto Save
+- [ ] Collaborative editing
+- [ ] Playwright E2E
+- [ ] Custom Edge types
+- [ ] Node Groups
+

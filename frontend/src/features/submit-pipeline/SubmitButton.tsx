@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { useStore } from '@/entities';
-import { Button, Dialog } from '@/shared/ui';
+import { Button, DialogClose } from '@/shared/ui';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/shared/ui/dialog';
+import { X } from 'lucide-react';
 
 const PARSE_ENDPOINT = 'http://localhost:8000/pipelines/parse';
 
@@ -46,11 +54,6 @@ export const SubmitButton = () => {
     }
   };
 
-  const handleClose = () => {
-    setResult(null);
-    setError(null);
-  };
-
   const isModalOpen = result !== null || error !== null;
 
   return (
@@ -59,96 +62,85 @@ export const SubmitButton = () => {
         variant="default"
         onClick={handleSubmit}
         disabled={isSubmitting}
-        className="rounded-full shadow-md hover:shadow-lg hover:scale-101 active:scale-98 font-semibold tracking-wide transition-all bg-(--md-primary) text-(--md-on-primary) hover:bg-(--md-primary-hover) border-none px-6 py-2"
+        className="cursor-pointer h-9 rounded-full shadow-md hover:shadow-lg active:scale-[0.98] px-6 py-2.5 transition-all font-medium tracking-wide"
       >
         {isSubmitting ? 'Analyzing…' : 'Submit Pipeline'}
       </Button>
 
       <Dialog
-        isOpen={isModalOpen}
-        onClose={handleClose}
-        title={error ? 'Submission Failed' : 'Pipeline Analysis'}
-        className="bg-(--background)"
+        open={isModalOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setResult(null);
+            setError(null);
+          }
+        }}
       >
-        <div className="flex flex-col gap-5 p-1 bg-card text-card-foreground">
+        <DialogContent showCloseButton={false} className="sm:max-w-md p-6 gap-6 rounded-2xl">
+          <DialogClose className="cursor-pointer absolute right-4 top-4 rounded-full p-2 opacity-70 transition-opacity hover:opacity-100 hover:bg-[var(--secondary)] focus:outline-none">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">
+              {error ? 'Submission Failed' : 'Pipeline Analysis'}
+            </DialogTitle>
+          </DialogHeader>
+
           {error ? (
-            <div className="flex flex-col gap-4 rounded-xl p-4 bg-red-500/10 border border-red-500/20">
-              <div className="flex items-center gap-2 text-red-500 font-semibold text-base">
-                <span>✕</span>
-                Error Details
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <p className="text-sm font-medium text-red-600 dark:text-red-400">
-                  {error}
-                </p>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Make sure your backend API is online and accepting connections at port 8000.
-                </p>
-              </div>
+            <div className="bg-destructive/10 p-4 rounded-xl border border-destructive/20">
+              <p className="font-medium text-destructive mb-1">{error}</p>
+              <p className="text-sm text-muted-foreground">
+                Check your backend console. Ensure the server is active on port 8000 and CORS is enabled.
+              </p>
             </div>
           ) : (
             result && (
-              <div className="flex flex-col gap-6 bg-card text-card-foreground">
-                <div className="grid grid-cols-3 gap-4 text-center select-none">
-                  <div className="flex flex-col gap-1 p-3 rounded-xl bg-secondary/50 border border-border/60">
-                    <span className="text-2xl font-bold text-card-foreground">
-                      {result.num_nodes}
-                    </span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
+              <div className="space-y-5">
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-secondary/50 p-4 rounded-xl text-center border border-border/50">
+                    <div className="text-2xl font-bold">{result.num_nodes}</div>
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">
                       Nodes
-                    </span>
+                    </div>
                   </div>
-
-                  <div className="flex flex-col gap-1 p-3 rounded-xl bg-secondary/50 border border-border/60">
-                    <span className="text-2xl font-bold text-card-foreground">
-                      {result.num_edges}
-                    </span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
+                  <div className="bg-secondary/50 p-4 rounded-xl text-center border border-border/50">
+                    <div className="text-2xl font-bold">{result.num_edges}</div>
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">
                       Edges
-                    </span>
+                    </div>
                   </div>
-
-                  <div className="flex flex-col gap-1 p-3 rounded-xl bg-secondary/50 border border-border/60">
-                    <span
-                      className={`text-2xl font-bold ${
-                        result.is_dag ? 'text-emerald-500' : 'text-rose-500'
-                      }`}
-                    >
+                  <div className={`bg-secondary/50 p-4 rounded-xl text-center border ${result.is_dag ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-rose-500/30 bg-rose-500/10'}`}>
+                    <div className={`text-2xl font-bold ${result.is_dag ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                       {result.is_dag ? 'Yes' : 'No'}
-                    </span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">
+                    </div>
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">
                       Valid DAG
-                    </span>
+                    </div>
                   </div>
                 </div>
 
-                <div
-                  className={`flex flex-col gap-2 rounded-xl p-4 border ${
-                    result.is_dag
-                      ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                      : 'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400'
-                  }`}
-                >
-                  <p className="text-sm font-medium leading-relaxed">
+                <div className={`p-3 rounded-xl flex items-center gap-3 ${result.is_dag ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-rose-500/10 border border-rose-500/20'}`}>
+                  <span className="text-sm font-medium">
                     {result.is_dag
-                      ? '✓ Success! No cycles detected — your workflow is a valid Directed Acyclic Graph (DAG) and ready to run.'
-                      : '⚠ Validation Failed: Cycle detected! This pipeline contains loops. Please remove connections that cycle back to earlier nodes.'}
-                  </p>
+                      ? 'Your workflow is correctly structured as a Directed Acyclic Graph.'
+                      : 'Cycle detected in your workflow. Please review your connections.'}
+                  </span>
                 </div>
               </div>
             )
           )}
 
-          <div className="flex justify-end gap-2 pt-2">
+          <DialogFooter className="bg-transparent">
             <Button
-              variant="default"
-              onClick={handleClose}
-              className="w-full sm:w-auto rounded-full px-6 py-2 bg-(--md-primary) text-(--md-on-primary) hover:bg-(--md-primary-hover) border-none font-medium shadow-sm"
+              variant="secondary"
+              className="rounded-full px-8 py-5 cursor-pointer"
+              onClick={() => { setResult(null); setError(null); }}
             >
               Close
             </Button>
-          </div>
-        </div>
+          </DialogFooter>
+        </DialogContent>
       </Dialog>
     </>
   );
