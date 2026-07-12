@@ -61,12 +61,18 @@ export interface HistoryState {
   edges: PipelineEdge[];
 }
 
+export type ClipboardNodesData = {
+  nodes: PipelineNode[];
+  edges: PipelineEdge[];
+}
+
 export interface GraphState {
   nodes: PipelineNode[];
   edges: PipelineEdge[];
   nodeIDs: Record<string, number>;
   past: HistoryState[];
   future: HistoryState[];
+  clipboard: ClipboardNodesData | null;
 }
 
 export interface GraphActions {
@@ -77,6 +83,8 @@ export interface GraphActions {
   setGraph: (nodes: PipelineNode[], edges: PipelineEdge[]) => void;
   onNodesChange: (changes: NodeChange<PipelineNode>[]) => void;
   onEdgesChange: (changes: EdgeChange<PipelineEdge>[]) => void;
+  copyNodes: (nodes: PipelineNode[], edges: PipelineEdge[]) => void;
+  pasteNodes: () => void;
   onConnect: (connection: Connection) => void;
   updateNodeField: (nodeId: string, fieldName: string, fieldValue: string | number) => void;
   takeSnapshot: () => void;

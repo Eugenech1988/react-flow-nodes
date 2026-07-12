@@ -7,7 +7,7 @@ import {
   Controls,
   ConnectionLineType,
   MiniMap,
-  ReactFlowProvider
+  useReactFlow
 } from '@xyflow/react';
 import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -71,11 +71,32 @@ export const Canvas = () => {
   const takeSnapshot = useStore((state) => state.takeSnapshot);
   const exportJSON = useStore((state) => state.exportJSON);
   const importJSON = useStore((state) => state.importJSON);
+  const copyNodes = useStore((state) => state.copyNodes);
+  const pasteNodes = useStore((state) => state.pasteNodes);
+
+  const { getNodes, getEdges } = useReactFlow();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       const modifier = isMac ? event.metaKey : event.ctrlKey;
+
+      if (modifier && event.key.toLowerCase() === 'c') {
+        const allNodes = getNodes();
+        const allEdges = getEdges();
+        const selected = allNodes.filter((n) => n.selected);
+
+        if (selected.length > 0) {
+          copyNodes(selected as PipelineNode[], allEdges as PipelineEdge[]);
+          console.log('Copied nodes:', selected);
+        }
+      }
+
+      if (modifier && event.key.toLowerCase() === 'v') {
+        event.preventDefault();
+        pasteNodes();
+        console.log('Paste triggered');
+      }
 
       if (modifier && event.key.toLowerCase() === 'z') {
         event.preventDefault();
@@ -143,42 +164,40 @@ export const Canvas = () => {
   const gridColor = isDark ? '#374151' : '#cbd5e1';
 
   return (
-    <ReactFlowProvider>
-      <div
-        ref={reactFlowWrapper}
-        className="w-full h-full relative bg-[#f1f5f9] dark:bg-[#030712] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:[--react-flow__background-color:#374151]"
+    <div
+      ref={reactFlowWrapper}
+      className="w-full h-full relative bg-[#f1f5f9] dark:bg-[#030712] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:[--react-flow__background-color:#374151]"
+    >
+      <ImportExportToolbar onExport={exportJSON} onImport={importJSON}/>
+      <AutoLayoutButton/>
+      <ClearCanvasButton/>
+      <WorkflowExecutionControl/>
+      <ExecutionLogConsole/>
+      <ReactFlow<PipelineNode, PipelineEdge>
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onInit={setReactFlowInstance}
+        nodeTypes={nodeTypes}
+        onNodeDragStart={takeSnapshot}
+        proOptions={PRO_OPTIONS}
+        snapGrid={[GRID_SIZE, GRID_SIZE]}
+        connectionLineType={ConnectionLineType.SmoothStep}
+        fitView
+        fitViewOptions={{
+          padding: 0.2,
+          maxZoom: 1.2
+        }}
       >
-        <ImportExportToolbar onExport={exportJSON} onImport={importJSON}/>
-        <AutoLayoutButton/>
-        <ClearCanvasButton/>
-        <WorkflowExecutionControl/>
-        <ExecutionLogConsole/>
-        <ReactFlow<PipelineNode, PipelineEdge>
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          onInit={setReactFlowInstance}
-          nodeTypes={nodeTypes}
-          onNodeDragStart={takeSnapshot}
-          proOptions={PRO_OPTIONS}
-          snapGrid={[GRID_SIZE, GRID_SIZE]}
-          connectionLineType={ConnectionLineType.SmoothStep}
-          fitView
-          fitViewOptions={{
-            padding: 0.2,
-            maxZoom: 1.2
-          }}
-        >
-          <Background color={gridColor} gap={GRID_SIZE}/>
-          <Controls/>
-          <MiniMap pannable zoomable/>
-          <HistoryControls/>
-        </ReactFlow>
-      </div>
-    </ReactFlowProvider>
+        <Background color={gridColor} gap={GRID_SIZE}/>
+        <Controls/>
+        <MiniMap pannable zoomable/>
+        <HistoryControls/>
+      </ReactFlow>
+    </div>
   );
 };

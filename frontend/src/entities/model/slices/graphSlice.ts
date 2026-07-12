@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand';
 import { applyNodeChanges, applyEdgeChanges, addEdge } from '@xyflow/react';
-import type { PipelineStore, GraphState, GraphActions, PipelineNode } from '../types';
+import type { PipelineStore, GraphState, GraphActions, PipelineNode, PipelineEdge } from '../types';
 
 export const createGraphSlice: StateCreator<
   PipelineStore,
@@ -13,6 +13,7 @@ export const createGraphSlice: StateCreator<
   nodeIDs: {},
   past: [],
   future: [],
+  clipboard: null,
 
   getNodeID: (type) => {
     const currentCount = get().nodeIDs[type] || 0;
@@ -75,6 +76,62 @@ export const createGraphSlice: StateCreator<
   onEdgesChange: (changes) => {
     set((state) => ({
       edges: applyEdgeChanges(changes, state.edges),
+    }));
+  },
+
+  copyNodes: (selectedNodes: PipelineNode[], allEdges: PipelineEdge[]) => {
+    const selectedNodeIds = new Set(selectedNodes.map(n => n.id));
+    const edgesToCopy = allEdges.filter(edge =>
+      selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target)
+    );
+    set({
+      clipboard: {
+        nodes: selectedNodes,
+        edges: edgesToCopy
+      }
+    });
+  },
+
+  pasteNodes: () => {
+    const { clipboard, getNodeID, takeSnapshot } = get();
+    if (!clipboard) return;
+
+    takeSnapshot();
+
+    const idMap = new Map<string, string>();
+
+    const newNodes = clipboard.nodes.map((node) => {
+      const newId = getNodeID(node.type || 'default');
+      idMap.set(node.id, newId);
+      return {
+        ...structuredClone(node),
+        id: newId,
+        position: {
+          x: node.position.x + 40,
+          y: node.position.y + 40
+        },
+        data: { ...node.data, id: newId },
+      };
+    });
+
+    const newEdges = clipboard.edges.map((edge) => {
+      const newSource = idMap.get(edge.source)!;
+      const newTarget = idMap.get(edge.target)!;
+      return {
+        ...structuredClone(edge),
+        id: `e-${newSource}-${newTarget}`,
+        source: newSource,
+        target: newTarget,
+      };
+    });
+
+    set((state) => ({
+      nodes: [...state.nodes, ...newNodes],
+      edges: [...state.edges, ...newEdges],
+      clipboard: {
+        nodes: newNodes,
+        edges: newEdges
+      }
     }));
   },
 
