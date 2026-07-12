@@ -50,6 +50,7 @@
   --header-bg: #ffffff;
   --canvas-bg: #f8fafc;
   --canvas-dots: #64666a;
+  --console-bg: #f1f5f9;
 }
 
 .dark {
@@ -96,6 +97,7 @@
   --header-bg: #0d1321;
   --canvas-bg: #030712;
   --canvas-dots: #495a73;
+  --console-bg: #030712;
 }
 
 * {
@@ -235,7 +237,7 @@ div.react-flow .react-flow__handle {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--accent-color, var(--primary));
+  background: var(--accent, var(--primary));
   border: 2px solid var(--card);
   box-shadow: 0 0 0 1px var(--border);
   transition: transform 0.15s ease, background-color 0.15s ease;

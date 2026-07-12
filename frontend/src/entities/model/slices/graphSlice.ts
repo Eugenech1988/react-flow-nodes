@@ -26,11 +26,21 @@ export const createGraphSlice: StateCreator<
   },
 
   takeSnapshot: () => {
-    const { nodes, edges } = get();
-    set((state) => ({
-      past: [...state.past, { nodes, edges }],
-      future: [],
-    }));
+    const { nodes, edges, past } = get();
+
+    let newPast = [...past, { nodes, edges }];
+
+    if (newPast.length > 15) {
+      newPast = newPast.slice(-15);
+    }
+
+    set(
+      () => ({
+        past: newPast,
+        future: [],
+      }),
+      false,
+    );
   },
 
   addNode: (node) => {

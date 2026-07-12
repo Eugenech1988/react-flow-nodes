@@ -49,7 +49,7 @@ export const createExecutionSlice: StateCreator<
       try {
         await new Promise((resolve, reject) => {
           setTimeout(() => {
-            if (node.data.status === 'error' || node.data.error === true) {
+            if (node.data.status === 'error' || !node.data.error) {
               reject(new Error('Internal processing failure inside the node configuration'));
             } else {
               resolve(true);

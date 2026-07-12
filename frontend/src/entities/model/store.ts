@@ -7,12 +7,12 @@ import type { PipelineStore } from './types';
 export const useStore = create<PipelineStore>()(
   devtools(
     persist(
-      (...a) => ({
-        ...createGraphSlice(...a),
-        ...createExecutionSlice(...a),
+      (...args) => ({
+        ...createGraphSlice(...args),
+        ...createExecutionSlice(...args),
       }),
       {
-        name: 'pipeline-storage', // Ключ в LocalStorage
+        name: 'pipeline-storage',
 
         partialize: (state) => ({
           nodes: state.nodes,
