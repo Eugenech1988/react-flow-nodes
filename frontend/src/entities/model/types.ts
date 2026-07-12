@@ -101,6 +101,8 @@ export interface ExecutionState {
   executionStatus: ExecutionStatus;
   activeNodeId: string | null;
   logs: ExecutionLog[];
+  successNodeIds: string[];
+  failedNodeId: string | null;
 }
 
 export interface ExecutionActions {

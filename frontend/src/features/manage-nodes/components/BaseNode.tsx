@@ -1,12 +1,11 @@
-import { type JSX, type ChangeEvent, useState } from 'react';
-import { Handle, Position, useReactFlow } from '@xyflow/react';
+import { type JSX, type ChangeEvent, useState, useEffect } from 'react';
+import { Handle, Position, useReactFlow, type NodeProps } from '@xyflow/react';
 import { useStore } from '@/entities';
 import { AutosizeTextarea } from '@/shared/ui/custom/AutosizeTextarea.tsx';
 import { Input, Select } from '@/shared/ui';
 import type {
   FieldConfig,
   HandleConfig,
-  NodeComponentProps,
   NodeConfig,
   NodeData,
   NodeFieldValues,
@@ -158,8 +157,10 @@ const VariableTags = ({ variables }: { variables: string[] }) => {
   );
 };
 
-export interface BaseNodeProps extends NodeComponentProps, NodeConfig {
+export interface BaseNodeProps extends Omit<NodeProps, 'data'>, NodeConfig {
+  data: NodeData;
   withVariables?: boolean;
+  [key: string]: any;
 }
 
 export const BaseNode = ({
@@ -173,11 +174,23 @@ export const BaseNode = ({
                            children,
                            minWidth = 220,
                            withVariables = false,
+                           selected,
                          }: BaseNodeProps) => {
   const updateNodeField = useStore((state) => state.updateNodeField);
-  const { deleteElements } = useReactFlow();
+  const activeNodeId = useStore((state) => state.activeNodeId);
+  const successNodeIds = useStore((state) => state.successNodeIds);
+  const failedNodeId = useStore((state) => state.failedNodeId);
 
   const [values, setValues] = useState<NodeFieldValues>(() => buildInitialValues(fields, data, id));
+  const { deleteElements } = useReactFlow();
+
+  // Жесткая синхронизация: пишем тип в глобальный стейт, чтобы n8n-движок в slice гарантированно видел правильный nodeType
+  useEffect(() => {
+    const currentType = title?.toLowerCase() || category || 'default';
+    if (data?.nodeType !== currentType) {
+      updateNodeField(id, 'nodeType', currentType);
+    }
+  }, [id, data?.nodeType, title, category, updateNodeField]);
 
   const handleFieldChange = (key: string, value: string) => {
     setValues((prevValues) => ({ ...prevValues, [key]: value }));
@@ -198,13 +211,43 @@ export const BaseNode = ({
   const nodeStyle: CSSProperties = { minWidth };
   const hasBody = fields.length > 0 || Boolean(children);
 
+  const isActive = activeNodeId === id;
+  const isSuccess = successNodeIds.includes(id);
+  const isFailed = failedNodeId === id;
+
   return (
     <div
       style={nodeStyle}
       data-category={category}
-      className="base-node relative rounded-2xl border border-border bg-card text-card-foreground shadow-md transition-shadow hover:shadow-lg duration-150 overflow-visible text-left"
+      className={`
+        base-node relative rounded-2xl border bg-card text-card-foreground shadow-md transition-all duration-200 overflow-visible text-left
+        focus:outline-none outline-none
+        ${isActive ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-lg z-10 scale-[1.01]' : ''}
+        ${isSuccess ? 'border-emerald-500 dark:border-emerald-600 shadow-xs' : ''}
+        ${isFailed ? 'border-rose-500 dark:border-rose-600 shadow-md z-10' : ''}
+        ${!isActive && !isSuccess && !isFailed ? 'border-border' : ''}
+        ${selected ? 'ring-2 ring-primary/40' : ''}
+      `}
     >
-      <NodeHandles handles={targetHandles.map((h) => ({ ...h, id: `${id}-${h.id}` }))} type="target" />
+      <div className="absolute -top-2.5 -right-2.5 z-30 pointer-events-none flex items-center justify-center">
+        {isActive && (
+          <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center border-2 border-card shadow-xs">
+            <div className="w-2.5 h-2.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+        {isSuccess && (
+          <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center border-2 border-card shadow-xs text-white font-bold text-[10px]">
+            ✓
+          </div>
+        )}
+        {isFailed && (
+          <div className="w-5 h-5 rounded-full bg-rose-500 flex items-center justify-center border-2 border-card shadow-xs text-white font-bold text-[10px]">
+            ✕
+          </div>
+        )}
+      </div>
+
+      <NodeHandles handles={targetHandles} type="target" />
 
       <NodeHeader title={title} icon={icon} onDelete={handleDelete} />
 
@@ -219,20 +262,21 @@ export const BaseNode = ({
             />
           ))}
           {withVariables && <VariableTags variables={variables} />}
+          {children && children({ values, handleFieldChange, id })}
         </div>
       )}
 
-      <NodeHandles handles={sourceHandles.map((h) => ({ ...h, id: `${id}-${h.id}` }))} type="source" />
+      <NodeHandles handles={sourceHandles} type="source" />
     </div>
   );
 };
 
-type NodeConfigFactory = NodeConfig | ((props: NodeComponentProps) => JSX.Element);
+type NodeConfigFactory = NodeConfig | ((props: any) => JSX.Element);
 
 export const createNode = (config: NodeConfigFactory) => {
   if (typeof config === 'function') {
-    return ({ id, data }: NodeComponentProps) => config({ id, data });
+    return (props: any) => config(props);
   }
 
-  return ({ id, data }: NodeComponentProps) => <BaseNode id={id} data={data} {...config} />;
+  return (props: any) => <BaseNode id={props.id} data={props.data} selected={props.selected} {...props} {...config} />;
 };

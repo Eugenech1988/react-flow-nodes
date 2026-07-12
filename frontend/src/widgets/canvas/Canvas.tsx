@@ -143,7 +143,6 @@ export const Canvas = () => {
       <WorkflowExecutionControl/>
       <AutoLayoutButton />
       <ClearCanvasButton />
-
       <ReactFlowProvider>
         <ReactFlow<PipelineNode, PipelineEdge>
           nodes={nodes}

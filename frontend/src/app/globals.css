@@ -162,6 +162,13 @@ div.react-flow .base-node .react-flow__handle {
   -webkit-user-drag: element;
 }
 
+.react-flow__node:focus,
+.react-flow__node:focus-visible,
+.react-flow__node.selected {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 div.react-flow .react-flow__node.drag {
   background: transparent;
   border-color: transparent;
