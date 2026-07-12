@@ -2,6 +2,7 @@ import { Header } from '@/widgets/header';
 import { NodesToolbar } from '@/widgets/nodes-toolbar';
 import { Canvas } from '@/widgets/canvas';
 import { ReactFlowProvider } from '@xyflow/react';
+import { Toaster } from '@/shared/ui'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <ReactFlowProvider>
           <Canvas />
         </ReactFlowProvider>
+        <Toaster />
       </main>
     </div>
   );

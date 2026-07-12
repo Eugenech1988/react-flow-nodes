@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { PipelineNode, PipelineEdge } from '@/entities';
 import { useStore } from '@/entities';
+import { toast } from 'sonner';
 
 interface UseKeyboardShortcutsParams {
   copyNodes: (nodes: PipelineNode[], edges: PipelineEdge[]) => void;
@@ -24,6 +25,9 @@ export const useKeyboardShortcuts = ({
         const selected = getNodes().filter((n) => n.selected);
         if (selected.length > 0) {
           copyNodes(selected, getEdges());
+          toast.success('Nodes pasted', {
+            duration: 2000,
+          });
         }
       }
 
