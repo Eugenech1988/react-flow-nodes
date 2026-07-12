@@ -13,16 +13,16 @@ export const ImportExportToolbar = ({ onExport, onImport }: { onExport: () => vo
     <div className="absolute top-4 right-4 z-10 flex gap-2">
       <button
         onClick={onExport}
-        className="flex items-center h-8.5 gap-1.5 px-3 py-1.5 bg-[var(--card)] border border-[var(--border)] text-[var(--card-foreground)] text-xs font-medium rounded-[var(--radius)] shadow-md hover:bg-[var(--accent)] transition-colors"
+        className="flex items-center cursor-pointer h-8.5 gap-1.5 px-3 py-1.5 bg-[var(--card)] border border-[var(--border)] text-[var(--card-foreground)] text-xs font-medium rounded-[var(--radius)] shadow-md hover:bg-[var(--accent)] transition-colors"
       >
-        <Download size={14} />
+        <Download size={16} />
         Export
       </button>
       <button
         onClick={() => fileInputRef.current?.click()}
-        className="flex items-center h-8.5 gap-1.5 px-3 py-1.5 bg-[var(--card)] border border-[var(--border)] text-[var(--card-foreground)] text-xs font-medium rounded-[var(--radius)] shadow-md hover:bg-[var(--accent)] transition-colors"
+        className="flex items-center cursor-pointer h-8.5 gap-1.5 px-3 py-1.5 bg-[var(--card)] border border-[var(--border)] text-[var(--card-foreground)] text-xs font-medium rounded-[var(--radius)] shadow-md hover:bg-[var(--accent)] transition-colors"
       >
-        <Upload size={14} />
+        <Upload size={16} />
         Import
       </button>
       <input
