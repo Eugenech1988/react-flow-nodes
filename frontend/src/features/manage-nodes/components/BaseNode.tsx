@@ -184,7 +184,6 @@ export const BaseNode = ({
   const [values, setValues] = useState<NodeFieldValues>(() => buildInitialValues(fields, data, id));
   const { deleteElements } = useReactFlow();
 
-  // Жесткая синхронизация: пишем тип в глобальный стейт, чтобы n8n-движок в slice гарантированно видел правильный nodeType
   useEffect(() => {
     const currentType = title?.toLowerCase() || category || 'default';
     if (data?.nodeType !== currentType) {

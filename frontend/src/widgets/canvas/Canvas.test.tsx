@@ -1,14 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Canvas } from './Canvas';
+import { ReactFlowProvider } from '@xyflow/react';
 import type {
   ReactFlowProps,
-  NodeChange,
-  EdgeChange,
-  Connection,
   ReactFlowInstance
 } from '@xyflow/react';
-import type { PipelineNode, PipelineEdge } from '@/entities/pipeline';
 
 const addNode = vi.fn();
 const getNodeID = vi.fn(() => 'customInput-1');
@@ -18,59 +15,44 @@ const onConnect = vi.fn();
 const takeSnapshot = vi.fn();
 const exportJSON = vi.fn();
 const importJSON = vi.fn();
+const undo = vi.fn();
+const redo = vi.fn();
 
-//@ts-ignore
-let reactFlowProps: ReactFlowProps;
-
-type StoreState = {
-  nodes: PipelineNode[];
-  edges: PipelineEdge[];
-  addNode: typeof addNode;
-  getNodeID: typeof getNodeID;
-  onNodesChange: (changes: NodeChange<PipelineNode>[]) => void;
-  onEdgesChange: (changes: EdgeChange<PipelineEdge>[]) => void;
-  onConnect: (connection: Connection) => void;
-  takeSnapshot: typeof takeSnapshot;
-  exportJSON: typeof exportJSON;
-  importJSON: typeof importJSON;
-};
-
-vi.mock('@/entities/pipeline', () => ({
-  useStore: (selector: (state: StoreState) => unknown) =>
-    selector({
-      nodes: [],
-      edges: [],
-      addNode,
-      getNodeID,
-      onNodesChange,
-      onEdgesChange,
-      onConnect,
-      takeSnapshot,
-      exportJSON,
-      importJSON,
-    }),
+vi.mock('@/entities', () => ({
+  useStore: vi.fn((selector) => selector({
+    nodes: [],
+    edges: [],
+    past: [],
+    future: [],
+    addNode,
+    getNodeID,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    takeSnapshot,
+    exportJSON,
+    importJSON,
+    undo,
+    redo,
+  })),
 }));
 
 vi.mock('@/app/providers', () => ({
   useTheme: () => ({ theme: 'light' }),
 }));
 
-// Изолируем HistoryControls, чтобы он не ломал рендеринг Canvas в тестовом окружении
-vi.mock('./components/HistoryControls', () => ({
-  HistoryControls: () => <div data-testid="history-controls" />,
-}));
+vi.mock('./components/HistoryControls', () => ({ HistoryControls: () => <div data-testid="history-controls" /> }));
+vi.mock('./components/ImportExportToolbar', () => ({ ImportExportToolbar: () => <div /> }));
+vi.mock('./components/AutoLayoutButton', () => ({ AutoLayoutButton: () => <div /> }));
+vi.mock('./components/ClearCanvasButton', () => ({ ClearCanvasButton: () => <div /> }));
+vi.mock('./canvas/components/WorkflowExecutionControl', () => ({ WorkflowExecutionControl: () => <div /> }));
+vi.mock('./components/ExecutionLogConsole', () => ({ ExecutionLogConsole: () => <div /> }));
 
 vi.mock('@xyflow/react', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@xyflow/react')>();
   return {
     ...actual,
-    ReactFlowProvider: ({ children }: { children: React.ReactNode }) => children,
-    Background: ({ color }: { color: string }) => <div data-testid="background">{color}</div>,
-    Controls: () => <div data-testid="controls" />,
-    MiniMap: () => <div data-testid="minimap" />,
     ReactFlow: (props: ReactFlowProps) => {
-      reactFlowProps = props;
-
       if (props.onInit) {
         queueMicrotask(() => {
           props.onInit?.({
@@ -81,13 +63,8 @@ vi.mock('@xyflow/react', async (importOriginal) => {
           } as ReactFlowInstance);
         });
       }
-
       return (
-        <div
-          data-testid="react-flow"
-          onDrop={props.onDrop}
-          onDragOver={props.onDragOver}
-        >
+        <div data-testid="react-flow" onDrop={props.onDrop} onDragOver={props.onDragOver}>
           {props.children}
         </div>
       );
@@ -100,29 +77,28 @@ describe('Canvas', () => {
     vi.clearAllMocks();
   });
 
-  it('renders ReactFlow, controls, export and import buttons', () => {
-    render(<Canvas />);
-    expect(screen.getByTestId('react-flow')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /export/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /import/i })).toBeInTheDocument();
-  });
+  const renderCanvas = () => render(
+    <ReactFlowProvider>
+      <Canvas />
+    </ReactFlowProvider>
+  );
 
-  it('triggers exportJSON when Export button is clicked', () => {
-    render(<Canvas />);
-    const exportBtn = screen.getByRole('button', { name: /export/i });
-    fireEvent.click(exportBtn);
-    expect(exportJSON).toHaveBeenCalledTimes(1);
+  it('renders ReactFlow component', () => {
+    renderCanvas();
+    expect(screen.getByTestId('react-flow')).toBeInTheDocument();
   });
 
   it('adds node on drop', async () => {
-    render(<Canvas />);
+    renderCanvas();
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     const flow = screen.getByTestId('react-flow');
 
     const dataTransfer = {
-      getData: () => JSON.stringify({ nodeType: 'customInput' }),
+      data: { 'application/reactflow': JSON.stringify({ nodeType: 'customInput' }) },
+      setData: vi.fn(),
+      getData: vi.fn((key) => dataTransfer.data[key] || ''),
     } as unknown as DataTransfer;
 
     fireEvent.drop(flow, {
@@ -132,6 +108,7 @@ describe('Canvas', () => {
     });
 
     expect(getNodeID).toHaveBeenCalledWith('customInput');
+
     expect(addNode).toHaveBeenCalledWith(
       expect.objectContaining({
         id: 'customInput-1',

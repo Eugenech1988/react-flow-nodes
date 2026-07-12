@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import type { DragEvent } from 'react';
-import { type NodeTypes, ReactFlow, Background, Controls, ConnectionLineType, MiniMap, ReactFlowProvider } from '@xyflow/react';
+import {
+  type NodeTypes,
+  ReactFlow,
+  Background,
+  Controls,
+  ConnectionLineType,
+  MiniMap,
+  ReactFlowProvider
+} from '@xyflow/react';
 import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -21,14 +29,14 @@ import {
   LLMNode,
   MathNode,
   OutputNode,
-  TextNode,
+  TextNode
 } from '@/features/manage-nodes';
 import { WorkflowExecutionControl } from '@/widgets/canvas/components/WorkflowExecutionControl.tsx';
 import { ExecutionLogConsole } from '@/widgets/canvas/components/ExecutionLogConsole.tsx';
 import { ClearCanvasButton } from '@/widgets/canvas/components/ClearCanvasButton.tsx';
 
 const GRID_SIZE = 20;
-const PRO_OPTIONS = { hideAttribution: true };
+const PRO_OPTIONS = {hideAttribution: true};
 
 const nodeTypes = {
   customInput: InputNode,
@@ -50,7 +58,7 @@ export const Canvas = () => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance<PipelineNode, PipelineEdge> | null>(null);
 
-  const { theme } = useTheme();
+  const {theme} = useTheme();
 
   const nodes = useStore((state) => state.nodes);
   const edges = useStore((state) => state.edges);
@@ -135,14 +143,16 @@ export const Canvas = () => {
   const gridColor = isDark ? '#374151' : '#cbd5e1';
 
   return (
-    <div
-      ref={reactFlowWrapper}
-      className="w-full h-full relative bg-[#f1f5f9] dark:bg-[#030712] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:[--react-flow__background-color:#374151]"
-    >
-      <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
-      <AutoLayoutButton />
-      <ClearCanvasButton />
-      <ReactFlowProvider>
+    <ReactFlowProvider>
+      <div
+        ref={reactFlowWrapper}
+        className="w-full h-full relative bg-[#f1f5f9] dark:bg-[#030712] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:[--react-flow__background-color:#374151]"
+      >
+        <ImportExportToolbar onExport={exportJSON} onImport={importJSON}/>
+        <AutoLayoutButton/>
+        <ClearCanvasButton/>
+        <WorkflowExecutionControl/>
+        <ExecutionLogConsole/>
         <ReactFlow<PipelineNode, PipelineEdge>
           nodes={nodes}
           edges={edges}
@@ -163,14 +173,12 @@ export const Canvas = () => {
             maxZoom: 1.2
           }}
         >
-          <Background color={gridColor} gap={GRID_SIZE} />
-          <Controls />
-          <MiniMap pannable zoomable />
-          <HistoryControls />
+          <Background color={gridColor} gap={GRID_SIZE}/>
+          <Controls/>
+          <MiniMap pannable zoomable/>
+          <HistoryControls/>
         </ReactFlow>
-        <WorkflowExecutionControl/>
-        <ExecutionLogConsole />
-      </ReactFlowProvider>
-    </div>
+      </div>
+    </ReactFlowProvider>
   );
 };

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BaseNode, createNode } from './BaseNode';
-import type { FieldConfig } from '@/entities/pipeline';
+import type { FieldConfig } from '@/entities';
 import type { ChangeEvent } from 'react';
 
 const { updateNodeField, deleteElements, extractVariables } = vi.hoisted(() => ({
@@ -13,14 +13,19 @@ const { updateNodeField, deleteElements, extractVariables } = vi.hoisted(() => (
   }),
 }));
 
-vi.mock('@/entities/pipeline', () => ({
-  useStore: (selector: (state: { updateNodeField: typeof updateNodeField }) => unknown) =>
-    selector({ updateNodeField }),
+vi.mock('@/entities', () => ({
+  useStore: (selector: (state: any) => unknown) =>
+    selector({
+      updateNodeField,
+      activeNodeId: 'node-active',
+      successNodeIds: ['node-success'],
+      failedNodeId: 'node-failed',
+    }),
 }));
 
 vi.mock('@xyflow/react', () => ({
   Position: { Left: 'left', Right: 'right' },
-  Handle: ({ id }: { id: string }) => <div data-testid={id} />,
+  Handle: ({ id }: { id: string }) => <div data-testid={`handle-${id}`} />,
   useReactFlow: () => ({ deleteElements }),
 }));
 
@@ -45,37 +50,59 @@ vi.mock('@/features/manage-nodes', () => ({
   extractVariables,
 }));
 
+const createMockNodeProps = (id: string, nodeType = 'text', overrides = {}) => ({
+  id,
+  data: { id, nodeType },
+  type: 'custom',
+  dragging: false,
+  zIndex: 1,
+  selectable: true,
+  draggable: true,
+  deletable: true,
+  parentId: undefined,
+  positionAbsolute: { x: 0, y: 0 },
+  selected: false,
+  isConnectable: true,
+  positionAbsoluteX: 0,
+  positionAbsoluteY: 0,
+  ...overrides,
+});
+
 describe('BaseNode', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('renders title and icon', () => {
-    render(<BaseNode id="node-1" data={{ id: 'node-1', nodeType: 'text' }} title="Text Node" icon="✎" />);
+    render(<BaseNode {...createMockNodeProps('node-1')} title="Text Node" icon="✎" />);
     expect(screen.getByText('Text Node')).toBeInTheDocument();
     expect(screen.getByText('✎')).toBeInTheDocument();
   });
 
-  it('updates input field', () => {
+  it('triggers updateNodeField inside useEffect if nodeType is missing or different', () => {
+    render(<BaseNode {...createMockNodeProps('node-1', '')} title="Text" />);
+    expect(updateNodeField).toHaveBeenCalledWith('node-1', 'nodeType', 'text');
+  });
+
+  it('updates input field and triggers updateNodeField', () => {
     const fields: FieldConfig[] = [{ key: 'name', label: 'Name', type: 'text' }];
-    render(<BaseNode id="node-1" data={{ id: 'node-1', nodeType: 'text' }} fields={fields} />);
+    render(<BaseNode {...createMockNodeProps('node-1')} fields={fields} />);
 
     fireEvent.change(screen.getByTestId('input'), { target: { value: 'John' } });
     expect(updateNodeField).toHaveBeenCalledWith('node-1', 'name', 'John');
   });
 
   it('renders handles', () => {
-    render(<BaseNode id="node-1" data={{ id: 'node-1', nodeType: 'text' }} handles={[{ id: 'input', type: 'target' }]} />);
-    expect(screen.getByTestId('node-1-input')).toBeInTheDocument();
+    render(<BaseNode {...createMockNodeProps('node-1')} handles={[{ id: 'input', type: 'target' }]} />);
+    expect(screen.getByTestId('handle-input')).toBeInTheDocument();
   });
 
-  it('renders extracted variables', () => {
+  it('renders extracted variables as tags', () => {
     extractVariables.mockReturnValue(['name', 'email']);
     render(
       <BaseNode
-        id="node-1"
+        {...createMockNodeProps('node-1')}
         withVariables
-        data={{ id: 'node-1', nodeType: 'text', text: '{{name}} {{email}}' }}
         fields={[{ key: 'text', label: 'Content', type: 'textarea' }]}
       />
     );
@@ -83,9 +110,35 @@ describe('BaseNode', () => {
     expect(screen.getByText('email')).toBeInTheDocument();
   });
 
-  it('createNode creates component from config', () => {
-    const Node = createNode({ title: 'Config Node' });
-    render(<Node id="node-1" data={{ id: 'node-1', nodeType: 'text' }} />);
+  it('triggers deleteElements on delete button click', () => {
+    render(<BaseNode {...createMockNodeProps('node-1')} title="Delete Test" />);
+
+    fireEvent.click(screen.getByTitle('Delete node'));
+    expect(deleteElements).toHaveBeenCalledWith({ nodes: [{ id: 'node-1' }] });
+  });
+
+  it('shows loader indicator when node is active', () => {
+    const { container } = render(<BaseNode {...createMockNodeProps('node-active')} />);
+    expect(container.querySelector('.animate-spin')).toBeInTheDocument();
+  });
+
+  it('shows checkmark indicator when node execution is successful', () => {
+    render(<BaseNode {...createMockNodeProps('node-success')} />);
+    expect(screen.getByText('✓')).toBeInTheDocument();
+  });
+
+  it('shows cross indicator when node execution failed', () => {
+    const { container } = render(<BaseNode {...createMockNodeProps('node-failed')} />);
+
+    const failedIndicator = container.querySelector('.bg-rose-500');
+    expect(failedIndicator).toBeInTheDocument();
+    expect(failedIndicator).toHaveTextContent('✕');
+  });
+
+  it('createNode factory generates a valid component from configuration object', () => {
+    const NodeComponent = createNode({ title: 'Config Node', category: 'test-category' });
+    render(<NodeComponent {...createMockNodeProps('node-factory', 'test-category', { selected: true })} />);
+
     expect(screen.getByText('Config Node')).toBeInTheDocument();
   });
 });

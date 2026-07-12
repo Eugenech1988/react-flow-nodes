@@ -14,9 +14,13 @@ const { draggableNodeMock } = vi.hoisted(() => ({
   )),
 }));
 
-vi.mock('@/features/manage-nodes', () => ({
-  DraggableNode: draggableNodeMock,
-}));
+vi.mock('@/features/manage-nodes', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/features/manage-nodes')>();
+  return {
+    ...actual,
+    DraggableNode: draggableNodeMock,
+  };
+});
 
 describe('Toolbar', () => {
   beforeEach(() => {
@@ -50,7 +54,6 @@ describe('Toolbar', () => {
   it('passes correct props to DraggableNode', () => {
     render(<NodesToolbar />);
 
-    // Используем типизированный массив вызовов
     const propsList = draggableNodeMock.mock.calls.map(([props]) => props);
 
     expect(propsList).toEqual(

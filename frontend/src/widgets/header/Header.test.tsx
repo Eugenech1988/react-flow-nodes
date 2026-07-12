@@ -2,23 +2,29 @@ import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Header } from './Header';
 
-vi.mock('@/features/check-status', () => ({
-  ServerStatusBadge: () => (
-    <div data-testid="server-status">ServerStatusBadge</div>
-  ),
-}));
+vi.mock('@/features/check-status', () => {
+  const MockComponent = () => <div data-testid="server-status">ServerStatusBadge</div>;
+  return {
+    default: MockComponent,
+    ServerStatusBadge: MockComponent,
+  };
+});
 
-vi.mock('@/features/toggle-theme', () => ({
-  ThemeToggle: () => (
-    <div data-testid="theme-toggle">ThemeToggle</div>
-  ),
-}));
+vi.mock('@/features/toggle-theme', () => {
+  const MockComponent = () => <div data-testid="theme-toggle">ThemeToggle</div>;
+  return {
+    default: MockComponent,
+    ThemeToggle: MockComponent,
+  };
+});
 
-vi.mock('@/features/submit-pipeline', () => ({
-  SubmitButton: () => (
-    <div data-testid="submit-button">SubmitButton</div>
-  ),
-}));
+vi.mock('@/features/submit-pipeline', () => {
+  const MockComponent = () => <div data-testid="submit-button">SubmitButton</div>;
+  return {
+    default: MockComponent,
+    SubmitButton: MockComponent,
+  };
+});
 
 describe('Header', () => {
   beforeEach(() => {
@@ -47,7 +53,8 @@ describe('Header', () => {
   it('renders action components', () => {
     render(<Header />);
 
-    expect(screen.getByTestId('server-status')).toBeInTheDocument();
+    expect(screen.getByText('Checking backend…')).toBeInTheDocument();
+
     expect(screen.getByTestId('theme-toggle')).toBeInTheDocument();
     expect(screen.getByTestId('submit-button')).toBeInTheDocument();
   });

@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { ReactFlowProvider } from '@xyflow/react';
 import { WorkflowExecutionControl } from './WorkflowExecutionControl';
 
 const mockStore = {
@@ -20,6 +21,23 @@ vi.mock('@/shared/ui', () => ({
   ),
 }));
 
+vi.mock('@xyflow/react', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@xyflow/react')>();
+  return {
+    ...actual,
+    useReactFlow: () => ({
+      unselectNodesAndEdges: vi.fn(),
+      setNodes: vi.fn(),
+      setEdges: vi.fn(),
+    }),
+  };
+});
+
+// Хелпер для рендера компонента внутри контекста ReactFlow
+const renderWithProvider = (ui: React.ReactElement) => {
+  return render(<ReactFlowProvider>{ui}</ReactFlowProvider>);
+};
+
 describe('WorkflowExecutionControl', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -27,7 +45,7 @@ describe('WorkflowExecutionControl', () => {
   });
 
   it('renders "Run" button when status is idle', () => {
-    render(<WorkflowExecutionControl />);
+    renderWithProvider(<WorkflowExecutionControl />);
     const btn = screen.getByRole('button', { name: /run/i });
     expect(btn).toBeInTheDocument();
 
@@ -37,7 +55,7 @@ describe('WorkflowExecutionControl', () => {
 
   it('renders "Stop" button when status is running', () => {
     mockStore.executionStatus = 'running';
-    render(<WorkflowExecutionControl />);
+    renderWithProvider(<WorkflowExecutionControl />);
 
     const btn = screen.getByRole('button', { name: /stop/i });
     expect(btn).toBeInTheDocument();
@@ -48,13 +66,13 @@ describe('WorkflowExecutionControl', () => {
 
   it('renders "Success" state correctly', () => {
     mockStore.executionStatus = 'success';
-    render(<WorkflowExecutionControl />);
+    renderWithProvider(<WorkflowExecutionControl />);
     expect(screen.getByText(/success/i)).toBeInTheDocument();
   });
 
   it('renders "Failed" state correctly', () => {
     mockStore.executionStatus = 'failed';
-    render(<WorkflowExecutionControl />);
+    renderWithProvider(<WorkflowExecutionControl />);
     expect(screen.getByText(/failed/i)).toBeInTheDocument();
   });
 });

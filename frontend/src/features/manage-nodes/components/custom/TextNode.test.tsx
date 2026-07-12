@@ -17,11 +17,32 @@ vi.mock('../BaseNode', () => ({
   },
 }));
 
+// Хелпер для генерации всех обязательных пропсов XYFlow
+const createMockNodeProps = (id: string, nodeType = 'text', overrides = {}) => ({
+  id,
+  data: { id, nodeType },
+  type: 'custom',
+  dragging: false,
+  zIndex: 1,
+  selectable: true,
+  draggable: true,
+  deletable: true,
+  parentId: undefined,
+  positionAbsolute: { x: 0, y: 0 },
+  selected: false,
+  isConnectable: true,
+  positionAbsoluteX: 0,
+  positionAbsoluteY: 0,
+  ...overrides,
+});
+
 describe('TextNode', () => {
   it('passes correct configuration to BaseNode', () => {
+    const mockProps = createMockNodeProps('text-1', 'text');
+
     render(
       <TextNode
-        id="text-1"
+        {...mockProps}
         data={{
           id: 'text-1',
           nodeType: 'text',

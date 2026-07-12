@@ -12,8 +12,16 @@ const mockStore = vi.hoisted(() => ({
   redo: vi.fn(),
 }));
 
-vi.mock('@/entities/pipeline', () => ({
+vi.mock('@/entities', () => ({
   useStore: (selector: (state: typeof mockStore) => unknown) => selector(mockStore),
+}));
+
+vi.mock('@/shared/ui', () => ({
+  Button: ({ children, onClick, disabled, 'aria-label': ariaLabel, title, ...props }: any) => (
+    <button onClick={onClick} disabled={disabled} {...props}>
+      {ariaLabel || title || children}
+    </button>
+  ),
 }));
 
 describe('HistoryControls', () => {

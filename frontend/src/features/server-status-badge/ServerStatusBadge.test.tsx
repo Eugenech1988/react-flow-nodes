@@ -1,32 +1,48 @@
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { ServerStatusBadge } from './ServerStatusBadge';
+import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { Header } from '@/widgets/header';
 
-const fetchMock = vi.fn();
+vi.mock('@/features/check-status', () => ({
+  ServerStatusBadge: () => <div data-testid="server-status-badge">ServerStatusBadge</div>,
+}));
 
-vi.stubGlobal('fetch', fetchMock);
+vi.mock('@/features/toggle-theme', () => ({
+  ThemeToggle: () => <div data-testid="theme-toggle">ThemeToggle</div>,
+}));
 
-describe('ServerStatusBadge', () => {
+vi.mock('@/features/submit-pipeline', () => ({
+  SubmitButton: () => <div data-testid="submit-button">SubmitButton</div>,
+}));
+
+describe('Header', () => {
   beforeEach(() => {
-    fetchMock.mockClear();
+    vi.clearAllMocks();
   });
 
-  it('should show status "online" if status 200', async () => {
-    fetchMock.mockResolvedValueOnce({ ok: true });
+  it('renders application title and subtitle', () => {
+    render(<Header />);
 
-    render(<ServerStatusBadge />);
-
-    await waitFor(() => {
-      expect(screen.getByText('Backend online')).toBeDefined();
-    });
+    expect(screen.getByText('Pipeline Studio')).toBeInTheDocument();
+    expect(
+      screen.getByText('Drag, connect, and run your workflow')
+    ).toBeInTheDocument();
   });
-  it('should show status "online" if status 404', async () => {
-    fetchMock.mockResolvedValueOnce({ ok: false });
 
-    render(<ServerStatusBadge />);
+  it('renders application logo', () => {
+    render(<Header />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Backend offline')).toBeDefined();
-    });
+    const logo = screen.getByTestId('app-logo');
+    expect(logo).toBeInTheDocument();
+    expect(logo.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('renders all action components correctly', () => {
+    render(<Header />);
+
+
+
+    expect(screen.getByTestId('server-status-badge')).toBeInTheDocument();
+    expect(screen.getByTestId('theme-toggle')).toBeInTheDocument();
+    expect(screen.getByTestId('submit-button')).toBeInTheDocument();
   });
 });

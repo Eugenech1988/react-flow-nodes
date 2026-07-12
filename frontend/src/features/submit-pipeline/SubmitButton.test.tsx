@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SubmitButton } from './SubmitButton';
 import type { ReactNode } from 'react';
 
@@ -7,11 +7,17 @@ const { getStateMock } = vi.hoisted(() => ({
   getStateMock: vi.fn(),
 }));
 
-vi.mock('@/entities/pipeline', () => ({
-  useStore: {
-    getState: getStateMock,
-  },
-}));
+// Делаем useStore функцией-заглушкой, у которой также есть метод getState
+vi.mock('@/entities', () => {
+  const mockStoreHook = () => ({
+    nodes: [{ id: '1' }],
+    edges: [{ id: 'e1' }],
+  });
+  mockStoreHook.getState = getStateMock;
+  return {
+    useStore: mockStoreHook,
+  };
+});
 
 vi.mock('@/shared/ui', () => ({
   Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
