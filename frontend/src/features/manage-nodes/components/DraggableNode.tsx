@@ -40,8 +40,12 @@ export const DraggableNode = ({ type, label, icon }: DraggableNodeProps) => {
   return (
     <div
       className="flex items-center gap-1.5 px-3 py-1.5 bg-card border rounded-full text-[13px] font-medium cursor-grab hover:bg-muted/30 active:cursor-grabbing hover:shadow-xs select-none transition-all duration-150"
-      style={chipStyle}
-      onDragStart={(event) => onDragStart(event, type)}
+      style={{
+        ...chipStyle,
+        borderRadius: '9999px',
+        backgroundColor: 'var(--background)',
+        clipPath: 'inset(0% 0% 0% 0% round 9999px)'
+      }}      onDragStart={(event) => onDragStart(event, type)}
       onDragEnd={onDragEnd}
       draggable
     >
