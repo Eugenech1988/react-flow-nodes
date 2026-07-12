@@ -226,6 +226,8 @@ div.react-flow .react-flow__controls-button {
   background: var(--card);
   border-bottom: 1px solid var(--border);
   fill: var(--foreground);
+  height: 32px;
+  width: 32px;
   transition: background-color 0.15s ease;
 }
 

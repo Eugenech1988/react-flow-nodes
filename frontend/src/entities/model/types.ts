@@ -73,6 +73,8 @@ export interface GraphActions {
   getNodeID: (type: string) => string;
   addNode: (node: PipelineNode) => void;
   deleteNode: (nodeId: string) => void;
+  setNodes: (nodes: PipelineNode[]) => void;
+  setGraph: (nodes: PipelineNode[], edges: PipelineEdge[]) => void;
   onNodesChange: (changes: NodeChange<PipelineNode>[]) => void;
   onEdgesChange: (changes: EdgeChange<PipelineEdge>[]) => void;
   onConnect: (connection: Connection) => void;

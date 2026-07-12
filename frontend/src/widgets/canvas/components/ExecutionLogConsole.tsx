@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Terminal, Trash2, Square, X } from 'lucide-react';
+import { Terminal, Trash2, Square, X, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/entities';
 import { Button } from '@/shared/ui';
@@ -14,6 +14,13 @@ export const ExecutionLogConsole = () => {
 
   const isVisible = logs.length > 0 || status !== 'idle';
 
+  // Определяем цвет заголовка в зависимости от статуса
+  const getHeaderColor = () => {
+    if (status === 'failed') return 'text-[var(--node-math)]';
+    if (status === 'running') return 'text-[var(--node-output)]';
+    return 'text-[var(--foreground)]';
+  };
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -23,12 +30,12 @@ export const ExecutionLogConsole = () => {
             opacity: 1,
             y: 0,
             scale: 1,
-            width: isMinimized ? '42px' : 'calc(100vw - 32px)',
-            height: isMinimized ? '42px' : '192px',
+            width: isMinimized ? '40px' : 'calc(100vw - 32px)',
+            height: isMinimized ? '40px' : '192px',
           }}
           exit={{ opacity: 0, y: 100, scale: 0.9 }}
           transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-          className={`absolute bottom-4 ${isMinimized ? 'left-12 ' : 'left-4'} z-50 bg-[var(--header-bg)] border border-[var(--border)] rounded-[var(--radius)] shadow-xl flex flex-col overflow-hidden backdrop-blur-md select-none`}
+          className={`absolute bottom-4 ${isMinimized ? 'left-14 ' : 'left-4'} z-50 bg-[var(--header-bg)] border border-[var(--border)] rounded-[var(--radius)] shadow-xl flex flex-col overflow-hidden backdrop-blur-md select-none`}
         >
           {isMinimized ? (
             <button
@@ -36,7 +43,11 @@ export const ExecutionLogConsole = () => {
               className="w-full h-full cursor-pointer flex items-center justify-center hover:bg-[var(--accent)] transition-colors"
               title="Expand logs"
             >
-              <Terminal className="w-5 h-5 text-[var(--foreground)]" />
+              {status === 'failed' ? (
+                <AlertCircle className="w-5 h-5 text-[var(--node-math)]" />
+              ) : (
+                <Terminal className="w-5 h-5 text-[var(--foreground)]" />
+              )}
               {status === 'running' && (
                 <span className="absolute top-1 right-1 w-2 h-2 bg-[var(--node-output)] rounded-full animate-pulse" />
               )}
@@ -44,12 +55,17 @@ export const ExecutionLogConsole = () => {
           ) : (
             <>
               <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--border)] bg-[var(--accent)] text-[var(--foreground)] shrink-0">
-                <div className="flex items-center gap-2 text-xs font-semibold tracking-wide">
-                  <Terminal className={`w-3.5 h-3.5 ${status === 'running' ? 'text-[var(--node-output)] animate-pulse' : ''}`} />
+                <div className={`flex items-center gap-2 text-xs font-semibold tracking-wide ${getHeaderColor()}`}>
+                  {status === 'failed' ? <AlertCircle className="w-3.5 h-3.5" /> : <Terminal className="w-3.5 h-3.5" />}
                   Execution Logs
                   {status === 'running' && (
                     <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-[var(--node-output)]/10 text-[var(--node-output)] animate-pulse">
                       running
+                    </span>
+                  )}
+                  {status === 'failed' && (
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-[var(--node-math)]/10 text-[var(--node-math)]">
+                      failed
                     </span>
                   )}
                 </div>

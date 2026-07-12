@@ -58,6 +58,14 @@ export const createGraphSlice: StateCreator<
     }));
   },
 
+  setNodes: (nodes) => {
+    set({ nodes });
+  },
+
+  setGraph: (nodes, edges) => {
+    set({ nodes, edges });
+  },
+
   onNodesChange: (changes) => {
     set((state) => ({
       nodes: applyNodeChanges(changes, state.nodes) as PipelineNode[],

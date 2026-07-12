@@ -9,7 +9,8 @@ import type { NodeData, PipelineNode, PipelineEdge } from '@/entities';
 import { useTheme } from '@/app/providers';
 
 import { HistoryControls } from './components/HistoryControls';
-import { ImportExportToolbar } from './components/ImportExportToolbar'; // Наш новый компонент
+import { ImportExportToolbar } from './components/ImportExportToolbar';
+import { AutoLayoutButton } from './components/AutoLayoutButton';
 
 import {
   APINode,
@@ -139,6 +140,7 @@ export const Canvas = () => {
     >
       <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
       <WorkflowExecutionControl/>
+      <AutoLayoutButton />
 
       <ReactFlowProvider>
         <ReactFlow<PipelineNode, PipelineEdge>

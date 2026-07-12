@@ -1,56 +1,34 @@
 import { useRef } from 'react';
-import { Button } from '@/shared/ui';
+import { Upload, Download } from 'lucide-react';
 
-interface ImportExportToolbarProps {
-  onExport: () => void;
-  onImport: (file: File) => void;
-}
-
-export const ImportExportToolbar = ({ onExport, onImport }: ImportExportToolbarProps) => {
+export const ImportExportToolbar = ({ onExport, onImport }: { onExport: () => void, onImport: (file: File) => void }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      onImport(file);
-    }
-    event.target.value = '';
+    if (file) onImport(file);
   };
 
   return (
-    <div className="absolute top-4 right-4 z-50 flex gap-2">
-      <Button
-        variant="default"
-        size="sm"
+    <div className="absolute top-4 right-4 z-10 flex gap-2">
+      <button
         onClick={onExport}
-        className="h-8 px-4 text-xs font-medium rounded-[var(--radius)] shadow-md transition-all duration-300 border border-transparent cursor-pointer select-none
-          bg-[#0f172a] dark:bg-[var(--header-bg)]
-          text-white dark:text-[var(--foreground)]
-          border-transparent dark:border-[var(--border)]
-          hover:bg-[#1e293b] dark:hover:bg-[var(--accent)]
-          hover:shadow-lg"
+        className="flex items-center h-8.5 gap-1.5 px-3 py-1.5 bg-[var(--card)] border border-[var(--border)] text-[var(--card-foreground)] text-xs font-medium rounded-[var(--radius)] shadow-md hover:bg-[var(--accent)] transition-colors"
       >
+        <Download size={14} />
         Export
-      </Button>
-
-      <Button
-        variant="default"
-        size="sm"
+      </button>
+      <button
         onClick={() => fileInputRef.current?.click()}
-        className="h-8 px-4 text-xs font-medium rounded-[var(--radius)] shadow-md transition-all duration-300 border border-transparent cursor-pointer select-none
-          bg-[#0f172a] dark:bg-[var(--header-bg)]
-          text-white dark:text-[var(--foreground)]
-          border-transparent dark:border-[var(--border)]
-          hover:bg-[#1e293b] dark:hover:bg-[var(--accent)]
-          hover:shadow-lg"
+        className="flex items-center h-8.5 gap-1.5 px-3 py-1.5 bg-[var(--card)] border border-[var(--border)] text-[var(--card-foreground)] text-xs font-medium rounded-[var(--radius)] shadow-md hover:bg-[var(--accent)] transition-colors"
       >
+        <Upload size={14} />
         Import
-      </Button>
-
+      </button>
       <input
         type="file"
         ref={fileInputRef}
-        onChange={handleFileInputChange}
+        onChange={handleFileChange}
         accept=".json"
         className="hidden"
       />
