@@ -1,7 +1,14 @@
 import { type ChangeEvent, type ReactNode } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { AutosizeTextarea } from '@/shared/ui/custom/AutosizeTextarea';
-import { Input, Select } from '@/shared/ui';
+import {
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/ui';
 import type { FieldConfig, HandleConfig, NodeFieldValues } from '@/entities';
 import { inputFieldClassName } from './BaseNode.utils';
 
@@ -63,18 +70,26 @@ export const NodeField = ({
     </span>
 
     {field.type === 'select' ? (
-      <div className="relative">
+      <div className="nodrag nopan pointer-events-auto">
         <Select
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          options={field.options}
-          className="w-full appearance-none bg-background/50 border-slate-200 dark:border-zinc-800 pr-8 transition-colors hover:border-slate-300 dark:hover:border-zinc-700"
-        />
-        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-foreground">
-          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
+          value={String(value)}
+          onValueChange={onChange}
+        >
+          <SelectTrigger className="w-full h-9 bg-background/50 border-slate-200 dark:border-zinc-800 transition-colors hover:border-slate-300 dark:hover:border-zinc-700 rounded-md px-3 text-left font-normal text-xs">
+            <SelectValue placeholder="Select option" />
+          </SelectTrigger>
+          <SelectContent className="nodrag nopan">
+            {field.options?.map((option) => (
+              <SelectItem
+                key={option.value}
+                value={String(option.value)}
+                className="text-xs cursor-pointer"
+              >
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     ) : field.type === 'textarea' ? (
       <AutosizeTextarea

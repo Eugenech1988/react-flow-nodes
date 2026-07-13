@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '@/entities';
 import { Button, DialogClose } from '@/shared/ui';
+import { validatePipeline } from '@/entities/model/lib';
 import {
   Dialog,
   DialogContent,
@@ -18,15 +19,37 @@ interface ParseResult {
   is_dag: boolean;
 }
 
+interface ValidationMetrics {
+  isDag: boolean;
+  inputConnected: boolean;
+  requiredFieldsFilled: boolean;
+  outputConnected: boolean;
+  noIsolatedNodes: boolean;
+  noCycles: boolean;
+  variableExists: boolean;
+  noDuplicateVariables: boolean;
+}
+
 export const SubmitButton = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<ParseResult | null>(null);
+  const [validation, setValidation] = useState<ValidationMetrics | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
     const { nodes, edges } = useStore.getState();
     setIsSubmitting(true);
     setError(null);
+    setResult(null);
+
+    const clientReport = validatePipeline(nodes, edges);
+    setValidation(clientReport);
+
+    if (!clientReport.isValid) {
+      setError('Pipeline configuration failed local architecture checks.');
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const response = await fetch(PARSE_ENDPOINT, {
@@ -41,6 +64,17 @@ export const SubmitButton = () => {
 
       const data = (await response.json()) as ParseResult;
       setResult(data);
+
+      setValidation({
+        isDag: data.is_dag,
+        requiredFieldsFilled: clientReport.requiredFieldsFilled,
+        outputConnected: clientReport.outputConnected,
+        noIsolatedNodes: clientReport.noIsolatedNodes,
+        noCycles: data.is_dag,
+        inputConnected: clientReport.inputConnected,
+        variableExists: clientReport.variableExists,
+        noDuplicateVariables: clientReport.noDuplicateVariables,
+      });
     } catch (submitError) {
       if (submitError instanceof TypeError) {
         setError("Couldn't reach the backend. Is it running on localhost:8000?");
@@ -54,7 +88,18 @@ export const SubmitButton = () => {
     }
   };
 
-  const isModalOpen = result !== null || error !== null;
+  const isModalOpen = validation !== null || error !== null;
+
+  const validationRules = validation ? [
+    { label: 'Graph is DAG', status: validation.isDag },
+    { label: 'Required fields filled', status: validation.requiredFieldsFilled },
+    { label: 'Output connected', status: validation.outputConnected },
+    { label: 'Input Connected', status: validation.inputConnected },
+    { label: 'No isolated nodes', status: validation.noIsolatedNodes },
+    { label: 'No cycles', status: validation.noCycles },
+    { label: 'Variable exists', status: validation.variableExists },
+    { label: 'No duplicate variables', status: validation.noDuplicateVariables },
+  ] : [];
 
   return (
     <>
@@ -72,6 +117,7 @@ export const SubmitButton = () => {
         onOpenChange={(open) => {
           if (!open) {
             setResult(null);
+            setValidation(null);
             setError(null);
           }
         }}
@@ -83,59 +129,56 @@ export const SubmitButton = () => {
           </DialogClose>
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">
-              {error ? 'Submission Failed' : 'Pipeline Analysis'}
+              {error && !result ? 'Verification Warning' : 'Pipeline Analysis'}
             </DialogTitle>
           </DialogHeader>
 
-          {error ? (
-            <div className="bg-destructive/10 p-4 rounded-xl border border-destructive/20">
-              <p className="font-medium text-destructive mb-1">{error}</p>
-              <p className="text-sm text-muted-foreground">
-                Check your backend console. Ensure the server is active on port 8000 and CORS is enabled.
-              </p>
-            </div>
-          ) : (
-            result && (
-              <div className="space-y-5">
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-secondary/50 p-4 rounded-xl text-center border border-border/50">
-                    <div className="text-2xl font-bold">{result.num_nodes}</div>
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">
-                      Nodes
-                    </div>
-                  </div>
-                  <div className="bg-secondary/50 p-4 rounded-xl text-center border border-border/50">
-                    <div className="text-2xl font-bold">{result.num_edges}</div>
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">
-                      Edges
-                    </div>
-                  </div>
-                  <div className={`bg-secondary/50 p-4 rounded-xl text-center border ${result.is_dag ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-rose-500/30 bg-rose-500/10'}`}>
-                    <div className={`text-2xl font-bold ${result.is_dag ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
-                      {result.is_dag ? 'Yes' : 'No'}
-                    </div>
-                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">
-                      Valid DAG
-                    </div>
-                  </div>
-                </div>
-
-                <div className={`p-3 rounded-xl flex items-center gap-3 ${result.is_dag ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-rose-500/10 border border-rose-500/20'}`}>
-                  <span className="text-sm font-medium">
-                    {result.is_dag
-                      ? 'Your workflow is correctly structured as a Directed Acyclic Graph.'
-                      : 'Cycle detected in your workflow. Please review your connections.'}
+          {validation && (
+            <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
+              {validationRules.map((rule) => (
+                <div key={rule.label} className="flex items-center justify-between p-3 bg-secondary/40 border border-border/40 rounded-xl transition-colors">
+                  <span className="text-sm font-medium">{rule.label}</span>
+                  <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                    rule.status
+                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                      : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                  }`}>
+                    {rule.status ? '✔ Pass' : '✕ Fail'}
                   </span>
                 </div>
+              ))}
+            </div>
+          )}
+
+          {error && (
+            <div className="bg-destructive/10 p-4 rounded-xl border border-destructive/20">
+              <p className="font-medium text-destructive mb-1">{error}</p>
+              {!result && (
+                <p className="text-sm text-muted-foreground">
+                  Please review the checklist parameters above and fix any structural violations in your canvas before re-submitting.
+                </p>
+              )}
+            </div>
+          )}
+
+          {result && !error && (
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <div className="bg-secondary/50 p-3 rounded-xl text-center border border-border/50">
+                <div className="text-xl font-bold">{result.num_nodes}</div>
+                <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Nodes</div>
               </div>
-            )
+              <div className="bg-secondary/50 p-3 rounded-xl text-center border border-border/50">
+                <div className="text-xl font-bold">{result.num_edges}</div>
+                <div className="text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">Edges</div>
+              </div>
+            </div>
           )}
 
           <DialogFooter className="bg-transparent">
             <Button
               variant="secondary"
               className="rounded-full px-8 py-5 cursor-pointer"
-              onClick={() => { setResult(null); setError(null); }}
+              onClick={() => { setResult(null); setValidation(null); setError(null); }}
             >
               Close
             </Button>

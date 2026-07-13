@@ -22,6 +22,7 @@ export const useKeyboardShortcuts = ({
       const modifier = isMac ? event.metaKey : event.ctrlKey;
 
       if (modifier && event.key.toLowerCase() === 'c') {
+        event.preventDefault();
         const selected = getNodes().filter((n) => n.selected);
         if (selected.length > 0) {
           copyNodes(selected, getEdges());
