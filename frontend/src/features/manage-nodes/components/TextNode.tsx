@@ -18,12 +18,20 @@ export const TextNode = ({ id, data, selected, ...rest }: NodeProps & { data: No
           key: 'text',
           label: 'Content',
           type: 'textarea',
-          defaultValue: '{{input}}'
-        }
+          defaultValue: '',
+        },
       ]}
       handles={[
-        { id: 'input', type: 'target', position: Position.Left },
-        { id: 'output', type: 'source', position: Position.Right }
+        {
+          id: 'input',
+          type: 'target',
+          position: Position.Left,
+        },
+        {
+          id: 'output',
+          type: 'source',
+          position: Position.Right,
+        },
       ]}
     />
   );
