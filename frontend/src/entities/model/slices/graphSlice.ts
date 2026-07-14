@@ -76,16 +76,14 @@ export const createGraphSlice: StateCreator<
     const isDragStart = changes.some((c) => c.type === 'position' && 'dragging' in c && c.dragging === true);
     const isDragStop = changes.some((c) => c.type === 'position' && 'dragging' in c && c.dragging === false);
 
-    const isUserAction = changes.some(
-      (c) => c.type === 'remove' || (c.type === 'position' && 'position' in c)
-    );
+    const hasActualRemoval = changes.some((c) => c.type === 'remove');
 
     if (isDragStart && !isDragging) {
       get().takeSnapshot();
       set({ isDragging: true });
     }
 
-    if (!isDragging && !isDragStart && isUserAction) {
+    if (hasActualRemoval) {
       get().takeSnapshot();
     }
 
@@ -105,8 +103,8 @@ export const createGraphSlice: StateCreator<
       return;
     }
 
-    const isUserAction = changes.some((c) => c.type === 'remove');
-    if (isUserAction) {
+    const hasActualRemoval = changes.some((c) => c.type === 'remove');
+    if (hasActualRemoval) {
       get().takeSnapshot();
     }
 
