@@ -1,6 +1,6 @@
 import { ServerStatusBadge } from '@/features/server-status-badge';
 import { ThemeToggle } from '@/features/toggle-theme';
-import { SubmitButton } from '@/features/submit-pipeline';
+import { WorkflowSubmit } from '@/features/workflow-submit';
 
 export const Header = () => {
   return (
@@ -34,7 +34,7 @@ export const Header = () => {
       <div className="flex items-center gap-3">
         <ServerStatusBadge />
         <ThemeToggle />
-        <SubmitButton />
+        <WorkflowSubmit />
       </div>
     </header>
   );
