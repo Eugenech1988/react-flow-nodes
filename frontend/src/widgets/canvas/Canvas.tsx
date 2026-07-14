@@ -14,7 +14,7 @@ import { useStore } from '@/entities';
 import type { PipelineNode, PipelineEdge } from '@/entities';
 
 import { HistoryControls } from './components/HistoryControls';
-import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES } from './config';
+import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES, NODE_COLORS, NODE_TYPE_TO_CATEGORY } from './config';
 import { useDragAndDrop, useKeyboardShortcuts, useThemeSync } from './lib';
 import { ImportExportToolbar } from '@/widgets/canvas/components/ImportExportToolbar.tsx';
 import { AutoLayoutButton } from '@/widgets/canvas/components/AutoLayoutButton.tsx';
@@ -57,6 +57,11 @@ export const Canvas = () => {
 
   const gridColor = useThemeSync();
 
+  const getMiniMapNodeColor = (node: PipelineNode) => {
+    const category = node.data?.category || NODE_TYPE_TO_CATEGORY[node.type || ''] || 'default';
+    return NODE_COLORS[category] || '#94a3b8';
+  };
+
   return (
     <div
       ref={wrapperRef}
@@ -86,7 +91,7 @@ export const Canvas = () => {
       >
         <Background color={gridColor} gap={GRID_SIZE}/>
         <Controls/>
-        <MiniMap pannable zoomable/>
+        <MiniMap pannable zoomable nodeColor={getMiniMapNodeColor}/>
         <HistoryControls/>
       </ReactFlow>
     </div>
