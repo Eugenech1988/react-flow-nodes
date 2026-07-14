@@ -13,13 +13,10 @@ export const useStore = create<PipelineStore>()(
       }),
       {
         name: 'pipeline-storage',
-
         partialize: (state) => ({
           nodes: state.nodes,
           edges: state.edges,
           nodeIDs: state.nodeIDs,
-          past: state.past,
-          future: state.future,
         }),
       }
     ),

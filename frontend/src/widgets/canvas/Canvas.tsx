@@ -14,13 +14,13 @@ import { useStore } from '@/entities';
 import type { PipelineNode, PipelineEdge } from '@/entities';
 
 import { HistoryControls } from './components/HistoryControls';
+import { ImportExportToolbar } from './components/ImportExportToolbar';
+import { AutoLayoutButton } from './components/AutoLayoutButton';
+import { ClearCanvasButton } from './components/ClearCanvasButton';
+import { WorkflowExecutionControl } from './components/WorkflowExecutionControl';
+import { ExecutionLogConsole } from './components/ExecutionLogConsole';
 import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES, NODE_COLORS, NODE_TYPE_TO_CATEGORY } from './config';
 import { useDragAndDrop, useKeyboardShortcuts, useThemeSync } from './lib';
-import { ImportExportToolbar } from '@/widgets/canvas/components/ImportExportToolbar.tsx';
-import { AutoLayoutButton } from '@/widgets/canvas/components/AutoLayoutButton.tsx';
-import { ClearCanvasButton } from '@/widgets/canvas/components/ClearCanvasButton.tsx';
-import { WorkflowExecutionControl } from '@/widgets/canvas/components/WorkflowExecutionControl.tsx';
-import { ExecutionLogConsole } from '@/widgets/canvas/components/ExecutionLogConsole.tsx';
 
 export const Canvas = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -33,12 +33,14 @@ export const Canvas = () => {
   const onNodesChange = useStore((state) => state.onNodesChange);
   const onEdgesChange = useStore((state) => state.onEdgesChange);
   const onConnect = useStore((state) => state.onConnect);
-  const takeSnapshot = useStore((state) => state.takeSnapshot);
   const exportJSON = useStore((state) => state.exportJSON);
   const importJSON = useStore((state) => state.importJSON);
   const copyNodes = useStore((state) => state.copyNodes);
   const pasteNodes = useStore((state) => state.pasteNodes);
   const getNodeID = useStore((state) => state.getNodeID);
+
+  const undo = useStore((state) => state.undo);
+  const redo = useStore((state) => state.redo);
 
   const { getNodes, getEdges } = useReactFlow<PipelineNode, PipelineEdge>();
 
@@ -53,6 +55,8 @@ export const Canvas = () => {
     pasteNodes,
     getNodes,
     getEdges,
+    undo,
+    redo,
   });
 
   const gridColor = useThemeSync();
@@ -67,11 +71,11 @@ export const Canvas = () => {
       ref={wrapperRef}
       className="w-full h-full relative bg-[#f1f5f9] dark:bg-[#030712] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:[--react-flow__background-color:#374151]"
     >
-      <ImportExportToolbar onExport={exportJSON} onImport={importJSON}/>
-      <AutoLayoutButton/>
-      <ClearCanvasButton/>
-      <WorkflowExecutionControl/>
-      <ExecutionLogConsole/>
+      <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
+      <AutoLayoutButton />
+      <ClearCanvasButton />
+      <WorkflowExecutionControl />
+      <ExecutionLogConsole />
       <ReactFlow<PipelineNode, PipelineEdge>
         nodes={nodes}
         edges={edges}
@@ -82,17 +86,16 @@ export const Canvas = () => {
         onDragOver={onDragOver}
         onInit={setRfInstance}
         nodeTypes={NODE_TYPES}
-        onNodeDragStart={takeSnapshot}
         proOptions={PRO_OPTIONS}
         snapGrid={[GRID_SIZE, GRID_SIZE]}
         connectionLineType={ConnectionLineType.SmoothStep}
         fitView
         fitViewOptions={FIT_VIEW_OPTIONS}
       >
-        <Background color={gridColor} gap={GRID_SIZE}/>
-        <Controls/>
-        <MiniMap pannable zoomable nodeColor={getMiniMapNodeColor}/>
-        <HistoryControls/>
+        <Background color={gridColor} gap={GRID_SIZE} />
+        <Controls />
+        <MiniMap pannable zoomable nodeColor={getMiniMapNodeColor} />
+        <HistoryControls />
       </ReactFlow>
     </div>
   );

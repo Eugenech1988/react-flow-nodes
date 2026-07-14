@@ -1,17 +1,17 @@
-import { useStore } from '@/entities';
 import { Undo, Redo } from 'lucide-react';
+import { useStore } from '@/entities';
 
 export const HistoryControls = () => {
-  const past = useStore((state) => state.past);
-  const future = useStore((state) => state.future);
   const undo = useStore((state) => state.undo);
   const redo = useStore((state) => state.redo);
+  const canUndo = useStore((state) => state.past.length > 0);
+  const canRedo = useStore((state) => state.future.length > 0);
 
   return (
     <div className="absolute top-4 left-4 z-10 flex bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] shadow-md overflow-hidden">
       <button
-        onClick={undo}
-        disabled={past.length === 0}
+        onClick={() => undo()}
+        disabled={!canUndo}
         aria-label="Undo"
         title="Undo"
         className="p-2 text-[var(--card-foreground)] cursor-pointer hover:bg-[var(--accent)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
@@ -19,8 +19,8 @@ export const HistoryControls = () => {
         <Undo size={16} />
       </button>
       <button
-        onClick={redo}
-        disabled={future.length === 0}
+        onClick={() => redo()}
+        disabled={!canRedo}
         aria-label="Redo"
         title="Redo"
         className="p-2 text-[var(--card-foreground)] cursor-pointer hover:bg-[var(--accent)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-l border-[var(--border)]"

@@ -56,23 +56,25 @@ export interface NodeComponentProps {
   data: NodeData;
 }
 
-export interface HistoryState {
-  nodes: PipelineNode[];
-  edges: PipelineEdge[];
-}
-
 export type ClipboardNodesData = {
   nodes: PipelineNode[];
   edges: PipelineEdge[];
 };
 
+export interface HistoryState {
+  past: Array<{ nodes: any[]; edges: any[] }>;
+  future: Array<{ nodes: any[]; edges: any[] }>;
+}
+
 export interface GraphState {
   nodes: PipelineNode[];
   edges: PipelineEdge[];
   nodeIDs: Record<string, number>;
-  past: HistoryState[];
-  future: HistoryState[];
   clipboard: ClipboardNodesData | null;
+  isDragging: boolean;
+  past: Array<{ nodes: PipelineNode[]; edges: PipelineEdge[] }>;
+  future: Array<{ nodes: PipelineNode[]; edges: PipelineEdge[] }>;
+  isHistoryAction: boolean;
 }
 
 export interface GraphActions {
@@ -87,12 +89,14 @@ export interface GraphActions {
   pasteNodes: () => void;
   onConnect: (connection: Connection) => void;
   updateNodeField: (nodeId: string, fieldName: string, fieldValue: string | number) => void;
-  takeSnapshot: () => void;
-  undo: () => void;
-  redo: () => void;
   exportJSON: () => void;
   importJSON: (file: File) => void;
   clearCanvas: () => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+  takeSnapshot: () => void;
 }
 
 export type ExecutionStatus = 'idle' | 'running' | 'success' | 'failed';

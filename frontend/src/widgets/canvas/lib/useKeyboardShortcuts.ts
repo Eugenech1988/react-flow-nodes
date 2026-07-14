@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import type { PipelineNode, PipelineEdge } from '@/entities';
-import { useStore } from '@/entities';
 import { toast } from 'sonner';
 
 interface UseKeyboardShortcutsParams {
@@ -8,6 +7,8 @@ interface UseKeyboardShortcutsParams {
   pasteNodes: () => void;
   getNodes: () => PipelineNode[];
   getEdges: () => PipelineEdge[];
+  undo: () => void;
+  redo: () => void;
 }
 
 export const useKeyboardShortcuts = ({
@@ -15,6 +16,8 @@ export const useKeyboardShortcuts = ({
                                        pasteNodes,
                                        getNodes,
                                        getEdges,
+                                       undo,
+                                       redo,
                                      }: UseKeyboardShortcutsParams) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -26,7 +29,7 @@ export const useKeyboardShortcuts = ({
         const selected = getNodes().filter((n) => n.selected);
         if (selected.length > 0) {
           copyNodes(selected, getEdges());
-          toast.success('Nodes pasted', {
+          toast.success('Nodes copied', {
             duration: 2000,
           });
         }
@@ -40,19 +43,19 @@ export const useKeyboardShortcuts = ({
       if (modifier && event.key.toLowerCase() === 'z') {
         event.preventDefault();
         if (event.shiftKey) {
-          useStore.getState().redo();
+          redo();
         } else {
-          useStore.getState().undo();
+          undo();
         }
       }
 
       if (modifier && event.key.toLowerCase() === 'y') {
         event.preventDefault();
-        useStore.getState().redo();
+        redo();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [copyNodes, pasteNodes, getNodes, getEdges]);
+  }, [copyNodes, pasteNodes, getNodes, getEdges, undo, redo]);
 };
