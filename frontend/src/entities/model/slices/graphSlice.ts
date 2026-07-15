@@ -6,7 +6,7 @@ export const createGraphSlice: StateCreator<
   PipelineStore,
   [],
   [],
-  GraphState & GraphActions & { past: any[]; future: any[]; isHistoryAction: boolean }
+  GraphState & GraphActions & { past: any[]; future: any[] }
 > = (set, get) => ({
   nodes: [],
   edges: [],
@@ -30,8 +30,24 @@ export const createGraphSlice: StateCreator<
   },
 
   takeSnapshot: () => {
-    const { nodes, edges, past, isHistoryAction } = get();
-    if (isHistoryAction) return;
+    const { nodes, edges, past } = get();
+
+    const currentStateStr = JSON.stringify({
+      n: nodes.map(n => ({ id: n.id, x: Math.round(n.position.x), y: Math.round(n.position.y) })),
+      e: edges.map(e => ({ id: e.id, s: e.source, t: e.target }))
+    });
+
+    if (past.length > 0) {
+      const last = past[past.length - 1];
+      const lastStateStr = JSON.stringify({
+        n: last.nodes.map((n: any) => ({ id: n.id, x: Math.round(n.position.x), y: Math.round(n.position.y) })),
+        e: last.edges.map((e: any) => ({ id: e.id, s: e.source, t: e.target }))
+      });
+
+      if (currentStateStr === lastStateStr) {
+        return;
+      }
+    }
 
     set({
       past: [...past, { nodes: structuredClone(nodes), edges: structuredClone(edges) }],
@@ -64,44 +80,20 @@ export const createGraphSlice: StateCreator<
   },
 
   onNodesChange: (changes) => {
-    const { nodes, isDragging, isHistoryAction } = get();
-
-    if (isHistoryAction) {
-      set({
-        nodes: applyNodeChanges(changes, nodes) as PipelineNode[],
-      });
-      return;
-    }
-
-    const isDragStart = changes.some((c) => c.type === 'position' && 'dragging' in c && c.dragging === true);
-    const isDragStop = changes.some((c) => c.type === 'position' && 'dragging' in c && c.dragging === false);
+    const { nodes } = get();
 
     const hasActualRemoval = changes.some((c) => c.type === 'remove');
-
-    if (isDragStart && !isDragging) {
-      get().takeSnapshot();
-      set({ isDragging: true });
-    }
-
     if (hasActualRemoval) {
       get().takeSnapshot();
     }
 
     set({
       nodes: applyNodeChanges(changes, nodes) as PipelineNode[],
-      isDragging: isDragStop ? false : isDragging,
     });
   },
 
   onEdgesChange: (changes) => {
-    const { edges, isHistoryAction } = get();
-
-    if (isHistoryAction) {
-      set({
-        edges: applyEdgeChanges(changes, edges),
-      });
-      return;
-    }
+    const { edges } = get();
 
     const hasActualRemoval = changes.some((c) => c.type === 'remove');
     if (hasActualRemoval) {
@@ -127,9 +119,27 @@ export const createGraphSlice: StateCreator<
   },
 
   pasteNodes: () => {
-    get().takeSnapshot();
-    const { clipboard, getNodeID } = get();
+    const { clipboard, getNodeID, nodes } = get();
     if (!clipboard) return;
+
+    get().takeSnapshot();
+
+    let offset = 40;
+
+    const hasOverlap = (checkOffset: number) => {
+      return clipboard.nodes.some((clipNode) =>
+        nodes.some(
+          (canvasNode) =>
+            Math.round(canvasNode.position.x) === Math.round(clipNode.position.x + checkOffset) &&
+            Math.round(canvasNode.position.y) === Math.round(clipNode.position.y + checkOffset)
+        )
+      );
+    };
+
+    while (hasOverlap(offset)) {
+      offset += 40;
+    }
+
     const idMap = new Map<string, string>();
     const newNodes = clipboard.nodes.map((node) => {
       const newId = getNodeID(node.type || 'default');
@@ -138,12 +148,14 @@ export const createGraphSlice: StateCreator<
         ...structuredClone(node),
         id: newId,
         position: {
-          x: node.position.x + 40,
-          y: node.position.y + 40,
+          x: node.position.x + offset,
+          y: node.position.y + offset,
         },
         data: { ...node.data, id: newId },
+        selected: true,
       };
     });
+
     const newEdges = clipboard.edges.map((edge) => {
       const newSource = idMap.get(edge.source)!;
       const newTarget = idMap.get(edge.target)!;
@@ -154,10 +166,13 @@ export const createGraphSlice: StateCreator<
         target: newTarget,
       };
     });
-    set((state) => ({
-      nodes: [...state.nodes, ...newNodes],
-      edges: [...state.edges, ...newEdges],
-    }));
+
+    const unselectedNodes = nodes.map((n) => ({ ...n, selected: false }));
+
+    set({
+      nodes: [...unselectedNodes, ...newNodes],
+      edges: [...get().edges, ...newEdges],
+    });
   },
 
   onConnect: (connection) => {
@@ -228,14 +243,11 @@ export const createGraphSlice: StateCreator<
     const newPast = past.slice(0, past.length - 1);
 
     set({
-      isHistoryAction: true,
       past: newPast,
       future: [{ nodes: structuredClone(nodes), edges: structuredClone(edges) }, ...future],
       nodes: previous.nodes,
       edges: previous.edges,
     });
-
-    setTimeout(() => set({ isHistoryAction: false }), 0);
   },
 
   redo: () => {
@@ -246,14 +258,11 @@ export const createGraphSlice: StateCreator<
     const newFuture = future.slice(1);
 
     set({
-      isHistoryAction: true,
       past: [...past, { nodes: structuredClone(nodes), edges: structuredClone(edges) }],
       future: newFuture,
       nodes: next.nodes,
       edges: next.edges,
     });
-
-    setTimeout(() => set({ isHistoryAction: false }), 0);
   },
 
   canUndo: () => get().past.length > 0,
