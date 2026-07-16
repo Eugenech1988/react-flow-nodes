@@ -1,0 +1,128 @@
+---
+import pipelineLogo from '@/assets/logo.svg?raw'
+interface Link {
+  label: string;
+  href: string;
+}
+
+const navLinks: Link[] = [
+  { label: "Features", href: "#features" },
+  { label: "Templates", href: "#templates" },
+  { label: "Docs", href: "#docs" },
+  { label: "Pricing", href: "#pricing" },
+];
+---
+
+<header class="fixed top-0 left-0 w-full z-50 bg-white backdrop-blur-md border-b border-border transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-[72px] flex items-center justify-between">
+
+        <a href="/" class="flex w-full max-w-20 h-auto items-center gap-3 font-bold text-xl tracking-tight text-foreground hover:opacity-90 transition-opacity z-50">
+                <Fragment set:html={pipelineLogo} />
+        </a>
+
+
+        <nav class="hidden md:block">
+            <ul class="flex items-center gap-8 list-none m-0 p-0">
+              {navLinks.map(({ label, href }) => (
+                      <li>
+                          <a href={href} class="text-md text-muted-foreground font-medium hover:text-foreground transition-colors">
+                            {label}
+                          </a>
+                      </li>
+              ))}
+            </ul>
+        </nav>
+
+        <div class="flex items-center gap-4 z-50">
+            <a href="/signin" class="hidden sm:inline-flex items-center justify-center px-4 py-2 rounded-[var(--radius)] text-sm font-semibold text-foreground hover:bg-muted transition-all">
+                Sign In
+            </a>
+            <a href="/signup" class="inline-flex items-center justify-center px-4 py-2 rounded-[var(--radius)] text-sm font-semibold text-white bg-gradient-to-r hover:shadow-[0_6px_16px_rgba(99,102,241,0.35)] hover:-translate-y-[0.5px] active:translate-y-0 transition-all">
+                Sign Up
+            </a>
+
+            <button
+                    id="menu-toggle"
+                    class="md:hidden flex flex-col justify-center items-center w-8 h-8 space-y-1.5 focus:outline-none"
+                    aria-label="Toggle Menu"
+            >
+                <span class="w-6 h-0.5 bg-foreground transition-transform duration-300" id="line1"></span>
+                <span class="w-6 h-0.5 bg-foreground transition-opacity duration-300" id="line2"></span>
+                <span class="w-6 h-0.5 bg-foreground transition-transform duration-300" id="line3"></span>
+            </button>
+        </div>
+
+    </div>
+
+    <div
+            id="mobile-menu"
+            class="fixed inset-0 top-[72px] w-full border-t border-border -translate-y-full opacity-0 pointer-events-none transition-all duration-300 md:hidden z-40"
+    >
+        <nav class="flex  bg-white flex-col p-6 h-[calc(100vh-72px)] justify-between">
+            <ul class="flex flex-col gap-6 list-none m-0 p-0">
+              {navLinks.map(({ label, href }) => (
+                      <li>
+                          <a href={href} class="mobile-nav-link text-lg text-muted-foreground font-semibold hover:text-foreground transition-colors block">
+                            {label}
+                          </a>
+                      </li>
+              ))}
+            </ul>
+
+            <div class="sm:hidden flex flex-col gap-3 pb-8">
+                <a href="/signin" class="w-full py-3 rounded-[var(--radius)] text-center text-sm font-semibold border border-border text-foreground hover:bg-muted transition-colors">
+                    Sign In
+                </a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<script>
+  // Быстрый и легковесный интерактив без зависимостей
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const line1 = document.getElementById('line1');
+  const line2 = document.getElementById('line2');
+  const line3 = document.getElementById('line3');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+  let isMenuOpen = false;
+
+  const toggleMenu = () => {
+    isMenuOpen = !isMenuOpen;
+
+    if (isMenuOpen) {
+      // Открываем меню
+      mobileMenu?.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+      mobileMenu?.classList.add('translate-y-0', 'opacity-100');
+
+      // Анимация иконки гамбургера в крестик
+      line1?.classList.add('rotate-45', 'translate-y-[8px]');
+      line2?.classList.add('opacity-0');
+      line3?.classList.add('-rotate-45', '-translate-y-[8px]');
+
+      // Блокируем скролл основного контента при открытом меню
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Закрываем меню
+      mobileMenu?.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+      mobileMenu?.classList.remove('translate-y-0', 'opacity-100');
+
+      line1?.classList.remove('rotate-45', 'translate-y-[8px]');
+      line2?.classList.remove('opacity-0');
+      line3?.classList.remove('-rotate-45', '-translate-y-[8px]');
+
+      document.body.style.overflow = '';
+    }
+  };
+
+  menuToggle?.addEventListener('click', toggleMenu);
+
+  // Закрываем меню при клике по ссылкам навигации (для плавного скролла к якорям)
+  mobileNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (isMenuOpen) toggleMenu();
+    });
+  });
+</script>
