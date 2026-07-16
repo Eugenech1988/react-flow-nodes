@@ -1,10 +1,11 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/Header.astro';
-import HeroSection from '@/components/hero.tsx';
+import Hero from '@/components/Hero.astro';
+
 ---
 
 <Layout title="Pipeline Studio">
     <Header/>
-    <HeroSection client:load/>
+    <Hero/>
 </Layout>
