@@ -1,0 +1,32 @@
+{
+  "name": "pipeline-monorepo",
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "turbo": "^2.10.5",
+    "typescript": "5.9.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "bun@1.3.14",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,astro,md,json,cjs,mjs}\"",
+    "format:check": "prettier --read \"**/*.{ts,tsx,astro,md,json,cjs,mjs}\"",
+    "clean": "rimraf .turbo node_modules \"apps/**/{node_modules,dist,.next,out,.astro}\" \"packages/**/{node_modules,dist}\" node_modules",
+    "check-types": "turbo run check-types"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "lucide-react": "^1.24.0"
+  }
+}
