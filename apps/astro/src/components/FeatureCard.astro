@@ -1,0 +1,30 @@
+---
+interface Props {
+    title: string;
+    badge?: string;
+}
+
+const { title, badge } = Astro.props;
+---
+
+<div class="group relative p-6 bg-slate-900/60 border border-slate-100/10 rounded-xl hover:border-[#39b39b]/30 transition-all duration-300">
+    <div class="flex items-center justify-between mb-5">
+        <div class="relative w-9 h-9 rounded-lg bg-[#39b39b]/5 border border-dashed border-[#39b39b]/30 flex items-center justify-center transition-colors group-hover:border-[#39b39b]/60 group-hover:bg-[#39b39b]/10">
+            <div class="w-2 h-2 rounded-full bg-[#39b39b] shadow-[0_0_8px_#39b39b] transition-transform group-hover:scale-125"></div>
+        </div>
+
+        {badge && (
+          <span class="px-2.5 py-0.5 text-[10px] font-mono bg-[#39b39b]/10 text-[#39b39b] rounded-full border border-[#39b39b]/20">
+        {badge}
+      </span>
+        )}
+    </div>
+
+    <h3 class="text-base font-bold text-slate-100 mb-2 group-hover:text-[#39b39b] transition-colors">
+        {title}
+    </h3>
+
+    <div class="text-xs text-slate-400 font-mono leading-relaxed space-y-2">
+        <slot />
+    </div>
+</div>
