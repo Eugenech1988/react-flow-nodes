@@ -95,7 +95,7 @@ export const AuthForm: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 font-sans antialiased text-slate-200">
+    <div className="bg-[url('/nodes-bg.png')] bg-cover bg-center flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 font-sans antialiased text-slate-200">
       <Card className="w-full p-5 max-w-md border-zinc-800 bg-slate-900/50 backdrop-blur-sm shadow-xl">
         <CardHeader className="text-center space-y-1.5">
           <CardTitle className="text-xl font-medium tracking-tight text-slate-100 font-mono">
