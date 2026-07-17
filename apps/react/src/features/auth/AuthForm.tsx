@@ -15,7 +15,6 @@ import {
 
 type FormMode = 'login' | 'register';
 
-// Создаем единую схему с динамической проверкой в зависимости от mode
 const authSchema = z
   .object({
     mode: z.enum(['login', 'register']),
@@ -87,10 +86,13 @@ export const AuthForm: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = (e) => {
+  const handleGoogleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    window.location.href = 'http://localhost:3000/auth/google';
+
+    const apiUrl = import.meta.env.API_URL || 'http://localhost:3000';
+
+    window.location.href = `${apiUrl}/auth/google`;
   };
 
   return (
@@ -148,7 +150,6 @@ export const AuthForm: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Скрытое поле для передачи режима в схему валидации */}
             <input type="hidden" {...register('mode')} />
 
             <div className="space-y-3">
