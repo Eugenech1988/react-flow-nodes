@@ -1,0 +1,80 @@
+---
+import { ArrowUpRight, MessageSquare, ShieldAlert, Cpu, Database } from '@lucide/astro';
+
+const useCases = [
+    {
+        title: "LLM & Agentic Orchestration",
+        category: "AI & Inference",
+        description: "Chain multi-step prompts, validate schema boundaries between models, and integrate custom vector database tools via standard API nodes.",
+        icon: Cpu,
+        metric: "Latency: < 15ms"
+    },
+    {
+        title: "Notification Dispatcher",
+        category: "Messaging",
+        description: "Route real-time alerts dynamically across Slack, email, and Webhooks based on user action payloads and custom conditional rules.",
+        icon: MessageSquare,
+        metric: "Volume: 1.2M/day"
+    },
+    {
+        title: "Lightweight ETL Pipelines",
+        category: "Data Processing",
+        description: "Extract payloads from incoming webhooks, transform fields in real-time, and securely batch load clean datasets straight to Postgres.",
+        icon: Database,
+        metric: "Type: Event-driven"
+    },
+    {
+        title: "Auto-Mitigation Workflows",
+        category: "SecOps",
+        description: "Trigger security logic when an anomaly is detected. Block IP addresses on Cloudflare and rotate API tokens instantly without human delay.",
+        icon: ShieldAlert,
+        metric: "SLA: 100% Guaranteed"
+    }
+];
+---
+
+<section class="relative py-20 bg-slate-950/97 overflow-hidden border-t border-slate-900">
+    <div class="max-w-5xl mx-auto px-6 relative z-10">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="text-xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-teal-400 via-slate-100 to-white">
+                Designed for Modern Workloads
+            </h2>
+            <p class="mt-4 text-base text-slate-400">
+                Explore how engineering teams leverage our visual editor to orchestrate critical business events and automate infrastructure.
+            </p>
+        </div>
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
+            {useCases.map((item) => {
+                const IconComponent = item.icon;
+
+                return (
+                  <div class="group relative p-6 bg-slate-900/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl transition-all duration-300 backdrop-blur-md flex flex-col justify-between">
+                      <div>
+                          <div class="flex items-center justify-between mb-6">
+                              <div class="p-2.5 bg-teal-500/10 rounded-xl text-teal-400 group-hover:scale-110 transition-transform duration-300">
+                                  <IconComponent class="w-5 h-5" />
+                              </div>
+                              <span class="text-[10px] font-mono font-bold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded">
+                                    {item.category}
+                                </span>
+                          </div>
+                          <h3 class="text-lg font-bold text-slate-100 mb-2 group-hover:text-teal-400 transition-colors">
+                              {item.title}
+                          </h3>
+                          <p class="text-xs text-slate-400 leading-relaxed">
+                              {item.description}
+                          </p>
+                      </div>
+
+                      <div class="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs font-mono text-slate-500">
+                          <span>{item.metric}</span>
+                          <a href="#" class="flex items-center gap-1 text-teal-400 font-bold hover:underline group-hover:translate-x-0.5 transition-transform">
+                              View Blueprint <ArrowUpRight class="w-3.5 h-3.5" />
+                          </a>
+                      </div>
+                  </div>
+                );
+            })}
+        </div>
+    </div>
+</section>
