@@ -1,52 +1,98 @@
-import { Controller, Post, Body, Res, UseGuards, Get, Req } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dtos/register.dto';
-import type { Response, Request } from 'express';
-import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/utils/decorators/current-user.deacorator';
-import { GoogleOauthGuard } from './guards/google.guard';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import type { Response } from 'express';
+import { verify } from 'argon2';
+import { IGoogleUser } from './types/google-user.types';
 
-@Controller('auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+@Injectable()
+export class AuthService {
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
-  @Post('register')
-  async register(@Body() registerDto: RegisterDto, @Res({ passthrough: true }) res: Response) {
-    return this.authService.register(registerDto, res);
+  async register(registerDto: RegisterDto, res: Response) {
+    const createdUser = await this.usersService.create(registerDto);
+    await this.generateTokens(createdUser.id, res);
+    return createdUser;
   }
 
-  @UseGuards(AuthGuard('local'))
-  @Post('login')
-  async login(@CurrentUser('id') userId: string, @Res({ passthrough: true }) res: Response) {
-    await this.authService.generateTokens(userId, res);
-
-    return { success: true, userId };
+  async login(user: { id: string; password?: string }, res: Response) {
+    await this.generateTokens(user.id, res);
+    const { password: _, ...result } = user;
+    return result;
   }
 
-  @UseGuards(AuthGuard('jwt-refresh'))
-  @Post('refresh')
-  async refresh(@CurrentUser('id') userId: string, @Res({ passthrough: true }) res: Response) {
-    await this.authService.generateTokens(userId, res);
+  async googleAuth(googleUser: IGoogleUser, res: Response) {
+    if (!googleUser || !googleUser.email) {
+      throw new UnauthorizedException('Google authentication failed');
+    }
 
-    return { success: true, userId };
+    let user = await this.usersService.findOneByEmail(googleUser.email);
+
+    if (!user) {
+      user = await this.usersService.create({
+        email: googleUser.email,
+        password: '',
+        nickName: '',
+        firstName: googleUser.firstName,
+        lastName: googleUser.lastName,
+      });
+    }
+
+    await this.generateTokens(user.id, res);
+
+    const { password: _, ...result } = user;
+    return result;
   }
 
-  @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response) {
-    res.cookie('refreshToken', '');
+  async generateTokens(userId: string, res: Response): Promise<void> {
+    const accessToken = await this.jwtService.signAsync(
+      { userId },
+      {
+        secret: this.configService.getOrThrow('JWT_ACCESS_SECRET'),
+        expiresIn: this.configService.getOrThrow('JWT_ACCESS_EXPIRES'),
+      },
+    );
+
+    const refreshToken = await this.jwtService.signAsync(
+      { userId },
+      {
+        secret: this.configService.getOrThrow('JWT_REFRESH_SECRET'),
+        expiresIn: this.configService.getOrThrow('JWT_REFRESH_EXPIRES'),
+      },
+    );
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
   }
 
-  @Get('gooogle')
-  @UseGuards(GoogleOauthGuard)
-  async googleAuth(@Req() req: Request) {
-    console.log(req.user);
-    // const user = req.user;
-    //
-    // return {
-    //   message: 'Google auth success',
-    //   user,
-    // };
+  async validateUser(email: string, password: string): Promise<{ id: string } | null> {
+    const userByEmail = await this.usersService.findOneByEmail(email);
+
+    if (!userByEmail) {
+      return null;
+    }
+
+    const isValidPw = await verify(userByEmail.password, password);
+
+    if (!isValidPw) {
+      return null;
+    }
+
+    return userByEmail;
   }
-
-
 }
