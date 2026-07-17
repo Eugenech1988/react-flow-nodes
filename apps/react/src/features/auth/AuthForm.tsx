@@ -21,50 +21,43 @@ export const AuthForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (mode === 'login') {
-      console.log('Логин данные:', { email: formData.email, password: formData.password });
-      // Твой fetch/axios запрос на /auth/login
+      console.log('Login data:', { email: formData.email, password: formData.password });
     } else {
-      console.log('Регистрация данные:', formData);
-      // Твой fetch/axios запрос на /auth/register
+      console.log('Registration data:', formData);
     }
   };
 
   const handleGoogleLogin = () => {
-    // Редирект на эндпоинт NestJS, который инициирует Google OAuth паспорт-стратегию
     window.location.href = 'http://localhost:3000/auth/google';
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-md">
-
-        {/* Шапка формы */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            {mode === 'login' ? 'Войти в аккаунт' : 'Регистрация'}
+    <div className="flex min-h-screen items-center justify-center bg-[#030712] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.15),transparent)] px-4 py-12 sm:px-6 lg:px-8 font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+      <div className="w-full max-w-md space-y-6 rounded-md border border-white/[0.08] bg-white/[0.02] backdrop-blur-md p-8 shadow-2xl shadow-black/50">
+        <div className="text-center space-y-1.5">
+          <h2 className="text-xl font-medium tracking-tight text-white font-mono">
+            {mode === 'login' ? 'Sign In' : 'Create Account'}
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            {mode === 'login' ? 'Нет аккаунта? ' : 'Уже есть аккаунт? '}
+          <p className="text-xs text-neutral-400">
+            {mode === 'login' ? "Don't have an account? " : 'Already registered? '}
             <button
               type="button"
               onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-              className="font-medium text-indigo-600 hover:text-indigo-500 underline focus:outline-none"
+              className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors focus:outline-none"
             >
-              {mode === 'login' ? 'Зарегистрироваться' : 'Войти'}
+              {mode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
           </p>
         </div>
 
-        {/* Кнопка Google OAuth */}
         <div>
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="flex w-full justify-center items-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:ring-transparent"
+            className="flex w-full justify-center items-center gap-2 rounded-md border border-white/[0.08] bg-black px-4 py-2 text-xs font-medium text-neutral-200 transition-all duration-150 hover:bg-neutral-900 hover:border-white/20 active:scale-[0.98] focus:outline-none"
           >
-            <svg className="h-5 w-5" viewBox="0 0 24 24">
+            <svg className="h-4 w-4" viewBox="0 0 24 24">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                 fill="#4285F4"
@@ -82,98 +75,88 @@ export const AuthForm: React.FC = () => {
                 fill="#EA4335"
               />
             </svg>
-            <span>Войти через Google</span>
+            <span>Continue with Google</span>
           </button>
         </div>
 
         <div className="relative flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300" />
+            <div className="w-full border-t border-white/[0.06]" />
           </div>
-          <span className="relative bg-white px-3 text-sm text-gray-500">или</span>
+          <span className="relative bg-[#050914] px-3 text-[10px] uppercase tracking-widest text-neutral-500 font-mono">or</span>
         </div>
 
-        {/* Форма */}
-        <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
-          <div className="space-y-3 rounded-md">
-
-            {/* Поля, которые видны ТОЛЬКО при регистрации */}
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="space-y-3">
             {mode === 'register' && (
               <>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="sr-only">Имя</label>
                     <input
                       name="firstName"
                       type="text"
                       value={formData.firstName}
                       onChange={handleChange}
-                      placeholder="Имя"
-                      className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
+                      placeholder="First Name"
+                      className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="sr-only">Фамилия</label>
                     <input
                       name="lastName"
                       type="text"
                       value={formData.lastName}
                       onChange={handleChange}
-                      placeholder="Фамилия (опц.)"
-                      className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
+                      placeholder="Last Name"
+                      className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="sr-only">Никнейм</label>
                   <input
                     name="nickName"
                     type="text"
                     value={formData.nickName}
                     onChange={handleChange}
-                    placeholder="Никнейм"
-                    className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
+                    placeholder="Username"
+                    className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
                   />
                 </div>
               </>
             )}
 
-            {/* Поля, общие для обоих режимов */}
             <div>
-              <label className="sr-only">Email</label>
               <input
                 name="email"
                 type="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email адрес"
-                className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
+                placeholder="Email Address"
+                className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="sr-only">Пароль</label>
               <input
                 name="password"
                 type="password"
                 required
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Пароль"
-                className="relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
+                placeholder="Password"
+                className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
               />
             </div>
           </div>
 
-          {/* Кнопка отправки формы */}
-          <div>
+          <div className="pt-1">
             <button
               type="submit"
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all duration-150 hover:bg-indigo-500 shadow-lg shadow-indigo-600/10 active:scale-[0.98] focus:outline-none"
             >
-              {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
+              {mode === 'login' ? 'Confirm & Sign In' : 'Create Account'}
             </button>
           </div>
         </form>
