@@ -1,57 +1,80 @@
 ---
 import FeatureCard from './FeatureCard.astro';
+import { Network, Zap, CloudLightning, Users, MousePointer, ShieldCheck } from '@lucide/astro';
 
 const features = [
-  {
-    title: "Visual Node Editor",
-    badge: "Interactive",
-    description: "Design complex data flows effortlessly using drag-and-drop node mechanics with native connection validation and instant reactivity."
-  },
-  {
-    title: "Event-Driven Triggers",
-    badge: "Real-time",
-    description: 'Execute actions conditionally. Connect custom trigger nodes like <code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded font-mono">on_click</code> or webhooks to down-stream payloads instantly.'
-  },
-  {
-    title: "Zero-Lag Canvas",
-    badge: "Performance",
-    description: "Experience ultra-smooth navigation. Fully optimized zoom-locked interactions, hardware-accelerated panning, and layout protection."
-  },
-  {
-    title: "Strict Schema Control",
-    badge: "Type Safe",
-    description: "Ensure data integrity between source and target connections. Mismatched node ports block incompatible payloads automatically."
-  }
+    {
+        title: "Visual Node Editor",
+        badge: "Interactive",
+        description: "Design complex data flows effortlessly using drag-and-drop node mechanics with native connection validation and instant reactivity.",
+        icon: Network
+    },
+    {
+        title: "Event-Driven Triggers",
+        badge: "Real-time",
+        description: 'Execute actions conditionally. Connect custom trigger nodes like <code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded font-mono">on_click</code> or webhooks to down-stream payloads instantly.',
+        icon: Zap
+    },
+    {
+        title: "Zero-Lag Canvas",
+        badge: "Performance",
+        description: "Experience ultra-smooth navigation. Fully optimized zoom-locked interactions, hardware-accelerated panning, and layout protection.",
+        icon: MousePointer
+    },
+    {
+        title: "Strict Schema Control",
+        badge: "Type Safe",
+        description: "Ensure data integrity between source and target connections. Mismatched node ports block incompatible payloads automatically.",
+        icon: ShieldCheck
+    },
+    {
+        title: "Collaborative Rooms",
+        badge: "Multiplayer",
+        description: "Build and debug pipelines together in real-time. Share workspaces with your team instantly with live presence and cursor tracking.",
+        icon: Users
+    },
+    {
+        title: "One-Click Deploy",
+        badge: "Serverless",
+        description: "Push your validated nodes to production with a single click. Scale automatically on serverless edge runtimes without cold starts.",
+        icon: CloudLightning
+    }
 ];
 ---
 
-<section class="relative bg-[#0b0f19] overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: radial-gradient(#39b39b 1px, transparent 1px); background-size: 20px 20px;"></div>
-
-    <div class="max-w-5xl mx-auto px-6 relative z-10">
+<section class="relative py-16 bg-slate-950/97 overflow-hidden">
+    <div class="max-w-5xl mx-auto px-6 my-0 relative z-10">
         <div class="text-center max-w-2xl mx-auto mb-16">
-            <h2 class="mt-4 text-3xl md:text-4xl font-extrabold text-slate-100 tracking-tight">
-                Powering Your <span class="text-[#39b39b]">Workflows</span>
+            <h2 class="text-5xl md:text-4xl font-extrabold text-slate-100 tracking-tight">
+                Powering Your <span class="text-teal-400">Workflows</span>
             </h2>
-            <p class="mt-4 text-sm text-slate-400">
+            <p class="mt-4 text-md text-slate-400">
                 An intuitive visual environment designed to build, run, and scale event-driven pipelines with production-grade reliability.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {features.map((feature) => (
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
+            {features.map((feature) => {
+                const IconComponent = feature.icon;
+
+                return (
                   <FeatureCard title={feature.title} badge={feature.badge}>
+                      <IconComponent
+                        slot="icon"
+                        class="w-5 h-5 text-teal-400 transition-transform duration-300 group-hover:scale-110 filter drop-shadow-[0_0_4px_var(--color-teal-400/40)]"
+                      />
                       <p set:html={feature.description}></p>
                   </FeatureCard>
-          ))}
+                );
+            })}
         </div>
 
-        <div class="mt-12 p-6 bg-linear-to-r from-[#39b39b]/5 to-slate-900/40 border border-[#39b39b]/15 rounded-xl text-center md:text-left md:flex md:items-center md:justify-between">
-            <div class="mb-4 md:mb-0">
-                <h4 class="text-sm font-bold text-slate-200">Ready to build your first automation pipeline?</h4>
-                <p class="text-xs text-slate-400 mt-1">Combine inputs, actions, and custom webhooks in a secure browser-based designer.</p>
+        <div class="mt-12 p-6 bg-linear-to-r from-teal-500/5 to-slate-900/40 border border-teal-500/15 rounded-xl grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 items-center">
+            <div>
+                <h4 class="text-md font-bold text-slate-200">Ready to build your first automation pipeline?</h4>
+                <p class="text-sm text-slate-400 mt-1">Combine inputs, actions, and custom webhooks in a secure browser-based designer.</p>
             </div>
-            <a href="#designer" class="inline-flex items-center justify-center px-4 py-2 text-xs font-mono font-bold text-[#39b39b] bg-[#39b39b]/10 hover:bg-[#39b39b]/20 border border-[#39b39b]/30 rounded-lg transition-all">
+            <a href="#" class="inline-flex items-center justify-center px-4 py-2 text-xs font-mono text-teal-400 font-bold bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/30 rounded-lg transition-all self-start md:self-auto justify-self-start md:justify-self-end">
                 Open Studio ➔
             </a>
         </div>

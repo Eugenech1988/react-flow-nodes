@@ -9,8 +9,8 @@ const { title, badge } = Astro.props;
 
 <div class="group relative p-6 bg-slate-900/60 border border-slate-100/10 rounded-xl hover:border-[#39b39b]/30 transition-all duration-300">
     <div class="flex items-center justify-between mb-5">
-        <div class="relative w-9 h-9 rounded-lg bg-[#39b39b]/5 border border-dashed border-[#39b39b]/30 flex items-center justify-center transition-colors group-hover:border-[#39b39b]/60 group-hover:bg-[#39b39b]/10">
-            <div class="w-2 h-2 rounded-full bg-[#39b39b] shadow-[0_0_8px_#39b39b] transition-transform group-hover:scale-125"></div>
+        <div class="w-9 h-9 rounded-lg bg-[#39b39b]/5 border border-[#39b39b]/20 flex items-center justify-center transition-colors group-hover:border-[#39b39b]/40 group-hover:bg-[#39b39b]/10">
+            <slot name="icon" />
         </div>
 
         {badge && (
