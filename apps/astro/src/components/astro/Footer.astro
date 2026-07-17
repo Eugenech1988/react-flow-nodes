@@ -1,0 +1,109 @@
+---
+import { CircleUserRound, X, Command } from '@lucide/astro';
+
+const columns = [
+  {
+    title: "Product",
+    links: [
+      { label: "Features", href: "#" },
+      { label: "Use Cases", href: "#" },
+      { label: "How It Works", href: "#" },
+      { label: "Pricing", href: "#" }
+    ]
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Documentation", href: "#" },
+      { label: "API Reference", href: "#" },
+      { label: "Guides", href: "#" },
+      { label: "System Status", href: "#" }
+    ]
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About Us", href: "#" },
+      { label: "Blog", href: "#" },
+      { label: "Careers", href: "#" },
+      { label: "Contact", href: "#" }
+    ]
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy Policy", href: "#" },
+      { label: "Terms of Service", href: "#" },
+      { label: "Security", href: "#" }
+    ]
+  }
+];
+
+const socials = [
+  { icon: CircleUserRound, href: "https://github.com" },
+  { icon: X, href: "https://twitter.com" }
+];
+---
+
+<footer class="relative bg-slate-950 border-t border-slate-900 overflow-hidden">
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-150 h-75 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
+
+    <div class="max-w-5xl mx-auto px-6 py-16 relative z-10">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-12 md:gap-8 mb-16">
+
+            <div class="col-span-2 flex flex-col justify-between">
+                <div>
+                    <a href="#" class="flex items-center gap-2.5 text-slate-100 group select-none">
+                        <div class="p-2 bg-teal-500/10 rounded-xl text-teal-400 group-hover:scale-105 transition-transform duration-300">
+                            <Command class="w-5 h-5" />
+                        </div>
+                        <span class="font-sans font-bold tracking-tight text-lg">Synapse</span>
+                    </a>
+                    <p class="mt-4 text-xs text-slate-400 leading-relaxed max-w-xs">
+                        An event-driven orchestration engine running at the edge. Connect services, validate data payloads, and scale workflows instantly.
+                    </p>
+                </div>
+
+                <div class="mt-8 flex items-center gap-4">
+                  {socials.map((social) => {
+                    const Icon = social.icon;
+                    return (
+                            <a href={social.href} class="p-2 bg-slate-900 border border-slate-800 hover:border-teal-500/30 hover:text-teal-400 text-slate-400 rounded-xl transition-all duration-300">
+                                <Icon class="w-4 h-4" />
+                            </a>
+                    );
+                  })}
+                </div>
+            </div>
+
+          {columns.map((column) => (
+                  <div class="col-span-1">
+                      <h4 class="text-xs font-mono font-bold text-slate-200 uppercase tracking-widest mb-5">
+                        {column.title}
+                      </h4>
+                      <ul class="space-y-3">
+                        {column.links.map((link) => (
+                                <li>
+                                    <a href={link.href} class="text-xs text-slate-400 hover:text-teal-400 transition-colors duration-300">
+                                      {link.label}
+                                    </a>
+                                </li>
+                        ))}
+                      </ul>
+                  </div>
+          ))}
+
+        </div>
+
+        <div class="pt-8 border-t border-slate-900/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono">
+            <p class="text-slate-500">
+                &copy; {new Date().getFullYear()} Pipelines Studio Inc. All rights reserved.
+            </p>
+
+            <div class="flex items-center gap-2 px-3 py-1 bg-teal-500/5 border border-teal-500/10 rounded-full text-teal-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                <span>All names are fictional</span>
+            </div>
+        </div>
+    </div>
+</footer>

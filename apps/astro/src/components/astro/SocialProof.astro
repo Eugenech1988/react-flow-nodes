@@ -2,16 +2,16 @@
 import { Cpu, Database, Flame, Globe, Terminal, Wind } from '@lucide/astro';
 
 const companies = [
-  { name: "Synapse", icon: Cpu },
-  { name: "PrismDB", icon: Database },
-  { name: "Aether", icon: Flame },
-  { name: "Orbit", icon: Globe },
-  { name: "Shell", icon: Terminal },
-  { name: "Gale", icon: Wind }
+    { name: "Synapse", icon: Cpu },
+    { name: "PrismDB", icon: Database },
+    { name: "Aether", icon: Flame },
+    { name: "Orbit", icon: Globe },
+    { name: "Shell", icon: Terminal },
+    { name: "Gale", icon: Wind }
 ];
 ---
 
-<section class="py-12 bg-slate-950 border-t border-slate-900 overflow-hidden relative">
+<section class="py-12 bg-slate-900 border-t border-slate-900 overflow-hidden relative">
     <div class="max-w-5xl mx-auto px-6 mb-6 text-center">
         <p class="text-md font-mono font-semibold tracking-wider text-slate-300 uppercase">
             Trusted by modern engineering teams worldwide
@@ -20,28 +20,29 @@ const companies = [
 
     <div class="relative w-full flex items-center overflow-x-hidden py-4">
 
-        <div class="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
-        <div class="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
-        <div class="flex gap-16 min-w-full shrink-0 items-center justify-around animate-marquee">
-          {companies.map((company) => {
-            const IconComponent = company.icon;
-            return (
-                    <div class="flex text-md items-center gap-3 text-slate-300 hover:text-teal-400/80 transition-colors duration-300">
-                        <IconComponent class="w-6 h-6" />
-                        <span class="font-sans font-bold tracking-tight text-lg">{company.name}</span>
-                    </div>
-            );
-          })}
+        <div class="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-slate-900 to-transparent z-10 pointer-events-none" />
+        <div class="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-slate-900 to-transparent z-10 pointer-events-none" />
 
-          {companies.map((company) => {
-            const IconComponent = company.icon;
-            return (
-                    <div class="flex text-md items-center gap-3 text-slate-300 hover:text-teal-400/80 transition-colors duration-300" aria-hidden="true">
-                        <IconComponent class="w-6 h-6" />
-                        <span class="font-sans font-bold tracking-tight text-lg">{company.name}</span>
-                    </div>
-            );
-          })}
+        <div class="flex gap-16 min-w-full shrink-0 items-center justify-around animate-marquee">
+            {companies.map((company) => {
+                const IconComponent = company.icon;
+                return (
+                  <div class="flex text-md items-center gap-3 text-slate-300 hover:text-teal-400/80 transition-colors duration-300">
+                      <IconComponent class="w-6 h-6" />
+                      <span class="font-sans font-bold tracking-tight text-lg">{company.name}</span>
+                  </div>
+                );
+            })}
+
+            {companies.map((company) => {
+                const IconComponent = company.icon;
+                return (
+                  <div class="flex text-md items-center gap-3 text-slate-300 hover:text-teal-400/80 transition-colors duration-300" aria-hidden="true">
+                      <IconComponent class="w-6 h-6" />
+                      <span class="font-sans font-bold tracking-tight text-lg">{company.name}</span>
+                  </div>
+                );
+            })}
         </div>
     </div>
 </section>
