@@ -37,7 +37,7 @@ interface SequenceProps {
 
 export function Sequence({ children }: SequenceProps) {
   return (
-    <div className="relative flex flex-col">
+    <div tabIndex={-1} className="relative flex flex-col">
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement<StepProps>(child)) {
           return React.cloneElement(child, {
