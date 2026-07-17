@@ -1,0 +1,89 @@
+---
+import { Network, Sliders, Play, ArrowRight } from '@lucide/astro';
+import { Sequence, Step } from '@/components/react/Sequence.tsx';
+---
+
+<section class="relative py-20 bg-slate-950 overflow-hidden border-t border-slate-900">
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,var(--color-teal-950/20)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-teal-950/20)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-60"/>
+
+    <div class="max-w-5xl mx-auto px-6 relative z-10">
+
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-slate-100 tracking-tight">
+                How <span class="text-teal-400 font-extrabold">It</span> Works
+            </h2>
+            <p class="mt-4 text-md text-slate-400">
+                Go from a blank canvas to a production-ready, event-driven API in three simple steps. No complex infra hosting required.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center">
+
+            <div class="space-y-2">
+                <Sequence>
+                    <Step title="1. Drag and Connect Nodes" subtitle="Design Phase">
+                        Select from over 100+ pre-built triggers, actions, and logical operators. Drag them onto the zero-lag canvas and route your data by connecting matching output-to-input ports.
+                    </Step>
+
+                    <Step title="2. Configure Payloads" subtitle="Validation Phase">
+                        Click on any node to open its properties. Map incoming JSON fields, write custom mapping expressions with autocomplete support, and let our strict schema engine validate your connections.
+                    </Step>
+
+                    <Step title="3. Deploy and Run" subtitle="Production Phase">
+                        Hit **Deploy** to publish your workspace. Your workflow immediately compiles into a highly optimized, stateful execution pipeline running on global edge nodes.
+                    </Step>
+                </Sequence>
+            </div>
+
+            <div class="relative bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-2xl">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 p-3 bg-slate-950/80 border border-slate-800 rounded-xl">
+                        <div class="p-2 bg-teal-500/10 rounded-lg">
+                            <Network class="w-4 h-4 text-teal-400" />
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-xs font-mono text-slate-500">webhook_trigger</div>
+                            <div class="text-xs font-bold text-slate-200">POST /v1/incoming</div>
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+                    </div>
+
+                    <div class="h-6 w-0.5 bg-linear-to-b from-teal-500/50 to-slate-800 ml-6" />
+
+                    <div class="flex items-center gap-3 p-3 bg-slate-950/80 border border-teal-500/20 rounded-xl shadow-[0_0_15px_var(--color-teal-500/5)]">
+                        <div class="p-2 bg-teal-500/25 rounded-lg">
+                            <Sliders class="w-4 h-4 text-teal-400" />
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-xs font-mono text-teal-400">filter_payload</div>
+                            <div class="text-xs font-bold text-slate-200">amount > 1000</div>
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-teal-400" />
+                    </div>
+
+                    <div class="h-6 w-0.5 bg-linear-to-b from-slate-800 to-teal-500/50 ml-6" />
+
+                    <div class="flex items-center gap-3 p-3 bg-slate-950/80 border border-slate-800 rounded-xl">
+                        <div class="p-2 bg-teal-500/10 rounded-lg">
+                            <Play class="w-4 h-4 text-teal-400 fill-teal-400/20" />
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-xs font-mono text-slate-500">slack_notification</div>
+                            <div class="text-xs font-bold text-slate-200">Send Alert #billing</div>
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-slate-800" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-16 text-center">
+            <a href="#designer" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-slate-950 bg-teal-400 hover:bg-teal-350 rounded-xl shadow-lg shadow-teal-500/10 transition-all transform hover:-translate-y-0.5 cursor-pointer">
+                Start Building Free
+                <ArrowRight class="w-4 h-4 text-slate-950" />
+            </a>
+        </div>
+
+    </div>
+</section>
