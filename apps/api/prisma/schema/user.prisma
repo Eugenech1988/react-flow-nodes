@@ -4,7 +4,9 @@ model User {
   email    String @unique
   password String
 
-  name      String? @unique
+  nickName  String  @unique @default("") @map("nick_name")
+  firstName String  @default("") @map("first_name")
+  lastName  String? @map("last_name")
   avatarUrl String? @map("avatar_url")
 
   createdAt DateTime @default(now()) @map("created_at")

@@ -5,19 +5,23 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Email is required' })
   email!: string;
 
-  @IsNotEmpty({ message: 'Password is required' })
+  @IsOptional()
   @MinLength(6, { message: 'Password must be at least 6 characters long' })
-  password!: string;
+  password?: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty({ message: 'Nick name is required' })
-  nickName!: string;
+  nickName?: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty({ message: 'First name is required' })
-  firstName!: string;
+  firstName?: string;
 
   @IsOptional()
   @IsString()
   lastName?: string;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
 }

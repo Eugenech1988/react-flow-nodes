@@ -22,7 +22,7 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const { email, password } = createUserDto;
+    const { email, password, firstName, lastName, avatarUrl } = createUserDto;
 
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -33,12 +33,29 @@ export class UsersService {
     }
 
     try {
-      const hashedPassword = await hash(password);
+      const hashedPassword = password ? await hash(password) : '';
+
+      let nickName = createUserDto.nickName;
+      if (!nickName) {
+        nickName = email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 7);
+      }
+
+      const existingNick = await this.prisma.user.findUnique({
+        where: { nickName },
+      });
+
+      if (existingNick) {
+        nickName = `${nickName}_${Math.random().toString(36).substring(2, 5)}`;
+      }
 
       const user = await this.prisma.user.create({
         data: {
           email,
           password: hashedPassword,
+          nickName,
+          firstName: firstName || '',
+          lastName: lastName || null,
+          avatarUrl: avatarUrl || null,
         },
       });
 
@@ -54,7 +71,7 @@ export class UsersService {
 
   async findOneByEmail(email: string) {
     if (!email) {
-      throw new ConflictException('A user with this email does not exists');
+      throw new ConflictException('Email parameters are missing');
     }
     const user = await this.prisma.user.findUnique({
       where: { email },
@@ -65,7 +82,7 @@ export class UsersService {
 
   async findOneById(id: string) {
     if (!id) {
-      throw new ConflictException('A user with this id does not exist');
+      throw new ConflictException('ID parameter is missing');
     }
 
     const user = await this.prisma.user.findUnique({
