@@ -1,7 +1,7 @@
 ---
 import { ArrowRight, Play } from '@lucide/astro';
 
-import { FlowCanvas } from '@/components/react/FlowCanvas.tsx';
+import { HeroFlowCanvas } from '@/components/react/HeroFlowCanvas.tsx';
 ---
 
 <div class="relative min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center overflow-hidden">
@@ -44,7 +44,7 @@ import { FlowCanvas } from '@/components/react/FlowCanvas.tsx';
             </div>
 
             <div class="h-100 rounded-lg bg-slate-950/80 flex items-center justify-center border border-slate-800/50 relative overflow-hidden">
-                <FlowCanvas client:load />
+                <HeroFlowCanvas client:visible />
             </div>
         </div>
 

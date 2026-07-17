@@ -71,7 +71,7 @@ const initialEdges: Edge[] = [
   },
 ];
 
-export const FlowCanvas = () => {
+export const HeroFlowCanvas = () => {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
 
