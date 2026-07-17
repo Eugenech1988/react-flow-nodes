@@ -5,3 +5,4 @@ export * from './components/select';
 export * from './components/input';
 export * from './components/textarea';
 export * from './components/sonner';
+export * from './components/card';

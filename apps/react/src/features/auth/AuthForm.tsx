@@ -1,61 +1,123 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Button
+} from '@pipeline/ui';
 
 type FormMode = 'login' | 'register';
 
-export const AuthForm: React.FC = () => {
-  const [mode, setMode] = useState<FormMode>('login');
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    nickName: '',
-    firstName: '',
-    lastName: '',
+// Создаем единую схему с динамической проверкой в зависимости от mode
+const authSchema = z
+  .object({
+    mode: z.enum(['login', 'register']),
+    email: z.string().email('Invalid email format'),
+    password: z.string().min(6, 'Password must be at least 6 characters long'),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    nickName: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.mode === 'register') {
+      if (!data.firstName || data.firstName.trim().length === 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'First name is required',
+          path: ['firstName'],
+        });
+      }
+      if (!data.nickName || data.nickName.trim().length < 3) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Username must be at least 3 characters long',
+          path: ['nickName'],
+        });
+      }
+    }
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+type FormData = z.infer<typeof authSchema>;
+
+export const AuthForm: React.FC = () => {
+  const [mode, setMode] = useState<FormMode>('login');
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting }
+  } = useForm<FormData>({
+    resolver: zodResolver(authSchema),
+    defaultValues: {
+      mode: 'login',
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+      nickName: ''
+    }
+  });
+
+  const toggleMode = () => {
+    const newMode = mode === 'login' ? 'register' : 'login';
+    setMode(newMode);
+    reset({
+      mode: newMode,
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+      nickName: ''
+    });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (mode === 'login') {
-      console.log('Login data:', { email: formData.email, password: formData.password });
+  const onSubmit = async (data: FormData) => {
+    if (data.mode === 'login') {
+      console.log('Login data:', { email: data.email, password: data.password });
     } else {
-      console.log('Registration data:', formData);
+      console.log('Registration data:', data);
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     window.location.href = 'http://localhost:3000/auth/google';
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#030712] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(99,102,241,0.15),transparent)] px-4 py-12 sm:px-6 lg:px-8 font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
-      <div className="w-full max-w-md space-y-6 rounded-md border border-white/[0.08] bg-white/[0.02] backdrop-blur-md p-8 shadow-2xl shadow-black/50">
-        <div className="text-center space-y-1.5">
-          <h2 className="text-xl font-medium tracking-tight text-white font-mono">
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 font-sans antialiased text-zinc-200">
+      <Card className="w-full max-w-md border-zinc-800 bg-slate-900/50 backdrop-blur-sm p-2 shadow-xl">
+        <CardHeader className="text-center space-y-1.5">
+          <CardTitle className="text-xl font-medium tracking-tight text-zinc-100 font-mono">
             {mode === 'login' ? 'Sign In' : 'Create Account'}
-          </h2>
-          <p className="text-xs text-neutral-400">
+          </CardTitle>
+          <CardDescription className="text-xs text-zinc-400">
             {mode === 'login' ? "Don't have an account? " : 'Already registered? '}
             <button
               type="button"
-              onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-              className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors focus:outline-none"
+              onClick={toggleMode}
+              className="font-medium text-zinc-200 hover:text-white transition-colors focus:outline-none underline underline-offset-4"
             >
               {mode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
-          </p>
-        </div>
+          </CardDescription>
+        </CardHeader>
 
-        <div>
-          <button
+        <CardContent className="space-y-6">
+          <Button
             type="button"
+            variant="outline"
             onClick={handleGoogleLogin}
-            className="flex w-full justify-center items-center gap-2 rounded-md border border-white/[0.08] bg-black px-4 py-2 text-xs font-medium text-neutral-200 transition-all duration-150 hover:bg-neutral-900 hover:border-white/20 active:scale-[0.98] focus:outline-none"
+            className="flex w-full justify-center items-center gap-2 rounded-md border-zinc-800 bg-slate-950 text-xs font-medium text-zinc-200 transition-colors hover:bg-zinc-900 hover:text-white focus:outline-none"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24">
               <path
@@ -76,91 +138,103 @@ export const AuthForm: React.FC = () => {
               />
             </svg>
             <span>Continue with Google</span>
-          </button>
-        </div>
+          </Button>
 
-        <div className="relative flex items-center justify-center">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/[0.06]" />
+          <div className="relative flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-zinc-800/60"/>
+            </div>
+            <span className="relative bg-[#0d1527] px-3 text-[10px] uppercase tracking-widest text-zinc-500 font-mono">or</span>
           </div>
-          <span className="relative bg-[#050914] px-3 text-[10px] uppercase tracking-widest text-neutral-500 font-mono">or</span>
-        </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="space-y-3">
-            {mode === 'register' && (
-              <>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <input
-                      name="firstName"
-                      type="text"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      placeholder="First Name"
-                      className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
-                    />
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Скрытое поле для передачи режима в схему валидации */}
+            <input type="hidden" {...register('mode')} />
+
+            <div className="space-y-3">
+              {mode === 'register' && (
+                <>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Input
+                        {...register('firstName')}
+                        type="text"
+                        placeholder="First Name"
+                        className={`border-zinc-800 bg-slate-950 text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-zinc-700 ${
+                          errors.firstName ? 'border-red-500/50 focus-visible:ring-red-500' : ''
+                        }`}
+                      />
+                      {errors.firstName && (
+                        <p className="text-[11px] text-red-400 font-mono">{errors.firstName.message}</p>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <Input
+                        {...register('lastName')}
+                        type="text"
+                        placeholder="Last Name"
+                        className="border-zinc-800 bg-slate-950 text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-zinc-700"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <input
-                      name="lastName"
+
+                  <div className="space-y-1">
+                    <Input
+                      {...register('nickName')}
                       type="text"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      placeholder="Last Name"
-                      className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
+                      placeholder="Username"
+                      className={`border-zinc-800 bg-slate-950 text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-zinc-700 ${
+                        errors.nickName ? 'border-red-500/50 focus-visible:ring-red-500' : ''
+                      }`}
                     />
+                    {errors.nickName && (
+                      <p className="text-[11px] text-red-400 font-mono">{errors.nickName.message}</p>
+                    )}
                   </div>
-                </div>
+                </>
+              )}
 
-                <div>
-                  <input
-                    name="nickName"
-                    type="text"
-                    value={formData.nickName}
-                    onChange={handleChange}
-                    placeholder="Username"
-                    className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
-                  />
-                </div>
-              </>
-            )}
+              <div className="space-y-1">
+                <Input
+                  {...register('email')}
+                  type="email"
+                  placeholder="Email Address"
+                  className={`border-zinc-800 bg-slate-950 text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-zinc-700 ${
+                    errors.email ? 'border-red-500/50 focus-visible:ring-red-500' : ''
+                  }`}
+                />
+                {errors.email && (
+                  <p className="text-[11px] text-red-400 font-mono">{errors.email.message}</p>
+                )}
+              </div>
 
-            <div>
-              <input
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Email Address"
-                className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
-              />
+              <div className="space-y-1">
+                <Input
+                  {...register('password')}
+                  type="password"
+                  placeholder="Password"
+                  className={`border-zinc-800 bg-slate-950 text-zinc-200 placeholder:text-zinc-600 focus-visible:ring-zinc-700 ${
+                    errors.password ? 'border-red-500/50 focus-visible:ring-red-500' : ''
+                  }`}
+                />
+                {errors.password && (
+                  <p className="text-[11px] text-red-400 font-mono">{errors.password.message}</p>
+                )}
+              </div>
             </div>
 
-            <div>
-              <input
-                name="password"
-                type="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Password"
-                className="block w-full rounded-md border border-white/[0.08] bg-black/40 px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 transition-all duration-150 focus:border-indigo-500/80 focus:bg-black/80 focus:ring-1 focus:ring-indigo-500/20 focus:outline-none"
-              />
+            <div className="pt-1">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-zinc-100 text-slate-950 hover:bg-white disabled:opacity-50 font-mono"
+              >
+                {isSubmitting ? 'Processing...' : mode === 'login' ? 'EXECUTE SIGN_IN' : 'EXECUTE REGISTER'}
+              </Button>
             </div>
-          </div>
-
-          <div className="pt-1">
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-all duration-150 hover:bg-indigo-500 shadow-lg shadow-indigo-600/10 active:scale-[0.98] focus:outline-none"
-            >
-              {mode === 'login' ? 'Confirm & Sign In' : 'Create Account'}
-            </button>
-          </div>
-        </form>
-      </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
