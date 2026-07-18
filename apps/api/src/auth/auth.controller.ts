@@ -5,7 +5,9 @@ import type { Response, Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/utils/decorators/current-user.deacorator';
 import { GoogleOauthGuard } from './guards/google.guard';
+import { GithubOauthGuard } from './guards/github.guard';
 import { IGoogleUser } from './types/google-user.types';
+import { IGithubUser } from './types/github-user.types';
 
 @Controller('auth')
 export class AuthController {
@@ -39,12 +41,27 @@ export class AuthController {
   @Get('google')
   async google() {}
 
+  @UseGuards(GithubOauthGuard)
+  @Get('github')
+  async github() {}
+
   @UseGuards(GoogleOauthGuard)
   @Get('google/callback')
   async googleAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     if (!req.user) {
       throw new UnauthorizedException('User data missing from Google provider');
     }
-    return this.authService.googleAuth(req.user as IGoogleUser, res);
+    await this.authService.googleAuth(req.user as IGoogleUser, res);
+    return res.redirect(process.env.FRONTEND_URL || 'http://localhost:5173');
+  }
+
+  @UseGuards(GithubOauthGuard)
+  @Get('github/callback')
+  async githubAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    if (!req.user) {
+      throw new UnauthorizedException('User data missing from GitHub provider');
+    }
+    await this.authService.githubAuth(req.user as IGithubUser, res);
+    return res.redirect(process.env.FRONTEND_URL || 'http://localhost:5173');
   }
 }

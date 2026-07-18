@@ -1,4 +1,4 @@
-export interface IGoogleUser {
+export interface IGithubUser {
   email: string;
   firstName: string;
   lastName: string;
@@ -6,5 +6,5 @@ export interface IGoogleUser {
   accessToken: string;
   refreshToken?: string;
   providerId: string;
-  provider: 'google';
+  provider: 'github';
 }

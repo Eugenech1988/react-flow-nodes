@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import type { Response } from 'express';
 import { RegisterDto } from './dtos/register.dto';
 import { IGoogleUser } from './types/google-user.types';
+import { IGithubUser } from './types/github-user.types';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dtos/create-user.dto';
 
@@ -17,41 +18,97 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto, res: Response) {
-    const createdUser = await this.usersService.create(registerDto as unknown as CreateUserDto);
+    const createdUser = await this.usersService.create(registerDto as CreateUserDto);
     await this.generateTokens(createdUser.id, res);
-    return createdUser;
+    const { password: _, ...result } = createdUser;
+    return result;
   }
 
   async login(user: { id: string; password?: string }, res: Response) {
+    await this.generateTokens(user.id, res);
+    return { id: user.id };
+  }
+
+  async googleAuth(googleUser: IGoogleUser, res: Response) {
+    if (!googleUser || !googleUser.providerId) {
+      throw new UnauthorizedException('Google authentication failed – missing providerId');
+    }
+
+    let user = await this.usersService.findOneByProvider('google', googleUser.providerId);
+
+    if (!user && googleUser.email) {
+      user = await this.usersService.findOneByEmail(googleUser.email);
+      if (user) {
+        await this.usersService.update(user.id, {
+          provider: 'google',
+          providerId: googleUser.providerId,
+        } as any); // если TS всё ещё ругается, можно использовать as any
+      }
+    }
+
+    if (!user) {
+      const email = googleUser.email || `${googleUser.providerId}@google.placeholder`;
+      const nickName = `google_${googleUser.providerId.slice(0, 8)}`;
+
+      user = await this.usersService.create({
+        email,
+        password: '',
+        nickName,
+        firstName: googleUser.firstName || '',
+        lastName: googleUser.lastName || '',
+        avatarUrl: googleUser.picture || '',
+        provider: 'google',
+        providerId: googleUser.providerId,
+      });
+    }
+
+    if (!user) {
+      throw new UnauthorizedException('User not found after authentication');
+    }
+
     await this.generateTokens(user.id, res);
     const { password: _, ...result } = user;
     return result;
   }
 
-  async googleAuth(googleUser: IGoogleUser, res: Response) {
-    if (!googleUser || !googleUser.email) {
-      throw new UnauthorizedException('Google authentication failed');
+  async githubAuth(githubUser: IGithubUser, res: Response) {
+    if (!githubUser || !githubUser.providerId) {
+      throw new UnauthorizedException('GitHub authentication failed – missing providerId');
     }
 
-    const generatedNick = googleUser.email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 7);
+    let user = await this.usersService.findOneByProvider('github', githubUser.providerId);
 
-    let user = await this.usersService.findOneByEmail(googleUser.email);
+    if (!user && githubUser.email) {
+      user = await this.usersService.findOneByEmail(githubUser.email);
+      if (user) {
+        await this.usersService.update(user.id, {
+          provider: 'github',
+          providerId: githubUser.providerId,
+        } as any);
+      }
+    }
 
     if (!user) {
-      const newUser = await this.usersService.create({
-        email: googleUser.email,
-        password: '',
-        nickName: generatedNick,
-        firstName: googleUser.firstName,
-        lastName: googleUser.lastName,
-        avatarUrl: googleUser.picture,
-      } as CreateUserDto);
+      const email = githubUser.email || `${githubUser.providerId}@github.placeholder`;
+      const nickName = `gh_${githubUser.providerId.slice(0, 8)}`;
 
-      user = { ...newUser, password: '' };
+      user = await this.usersService.create({
+        email,
+        password: '',
+        nickName,
+        firstName: githubUser.firstName || '',
+        lastName: githubUser.lastName || '',
+        avatarUrl: githubUser.picture || '',
+        provider: 'github',
+        providerId: githubUser.providerId,
+      });
+    }
+
+    if (!user) {
+      throw new UnauthorizedException('User not found after authentication');
     }
 
     await this.generateTokens(user.id, res);
-
     const { password: _, ...result } = user;
     return result;
   }
@@ -86,7 +143,7 @@ export class AuthService {
     });
   }
 
-   async validateUser(email: string, password: string): Promise<{ id: string } | null> {
+  async validateUser(email: string, password: string): Promise<{ id: string } | null> {
     const userByEmail = await this.usersService.findOneByEmail(email);
 
     if (!userByEmail) {

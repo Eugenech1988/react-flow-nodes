@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt.refresh.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { GithubStrategy } from './strategies/github.strategy';
 
 @Module({
   imports: [
@@ -28,8 +29,8 @@ import { GoogleStrategy } from './strategies/google.strategy';
     AuthService,
     LocalStrategy,
     JwtRefreshStrategy,
-    GoogleStrategy
+    GoogleStrategy,
+    GithubStrategy
   ]
 })
-export class AuthModule {
-}
+export class AuthModule {}
