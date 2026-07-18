@@ -4,10 +4,11 @@ import { Input } from '@pipeline/ui';
 interface FloatingInputProps extends React.ComponentProps<typeof Input> {
   label: string;
   error?: boolean;
+  labelClasses?: string;
 }
 
 export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
-  ({ label, error, className = '', ...props }, ref) => {
+  ({ label, error, className = '', labelClasses = '', ...props }, ref) => {
     return (
       <div className="relative w-full">
         <Input
@@ -19,9 +20,10 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
           } ${className}`}
         />
         <label
-          className="absolute left-3 top-0 -translate-y-1/2 pointer-events-none text-[10px] text-zinc-400 font-sans transition-all duration-200 ease-in-out origin-left px-1 bg-slate-950
+          className={`absolute left-3 top-0 -translate-y-1/2 pointer-events-none text-[10px] text-zinc-400 font-sans transition-all duration-200 ease-in-out origin-left px-1 bg-slate-950
           peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-xs peer-placeholder-shown:text-zinc-500 peer-placeholder-shown:bg-transparent
-          peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:text-[10px] peer-focus:text-zinc-400 peer-focus:bg-slate-950"
+          peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:text-[10px] peer-focus:text-zinc-400 peer-focus:bg-slate-950
+          ${labelClasses}`}
         >
           {label}
         </label>
