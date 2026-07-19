@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/features/auth';
 import {
   Camera,
   Shield,
   KeyRound,
-  Save
+  Save,
+  ArrowLeft
 } from 'lucide-react';
 import { FloatingInput } from '@/shared/ui/FloatingInput';
 
 export const ProfilePage = () => {
+  const navigate = useNavigate();
   const { user } = useUser();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
@@ -19,35 +24,123 @@ export const ProfilePage = () => {
     role: 'Senior Pipeline Engineer'
   });
 
+  // Локальное состояние для превью выбранной аватарки (исходный URL из юзера)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl || null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert('Профиль успешно обновлен!');
+  // Обработка выбора файла во входном инпуте
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Валидация на размер файла (например, до 5 МБ)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File is too large. Maximum size is 5MB.');
+        return;
+      }
+
+      setAvatarFile(file);
+      // Создаем временную ссылку для немедленного отображения картинки в интерфейсе
+      setAvatarPreview(URL.createObjectURL(file));
+    }
   };
+
+  // Метод триггерит клик по скрытому инпуту при нажатии на аватарку
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Создаем FormData для отправки текстовых полей вместе с файлом
+    const dataToSend = new FormData();
+    dataToSend.append('firstName', formData.firstName);
+    dataToSend.append('lastName', formData.lastName);
+    dataToSend.append('email', formData.email);
+    dataToSend.append('company', formData.company);
+    dataToSend.append('location', formData.location);
+    dataToSend.append('role', formData.role);
+
+    if (avatarFile) {
+      dataToSend.append('avatar', avatarFile); // Ключ 'avatar' должен совпадать с тем, что ожидает бэкенд
+    }
+
+    try {
+      // Пример отправки на бэкенд через fetch или axios:
+      // const response = await fetch('/api/profile/update', {
+      //   method: 'POST',
+      //   body: dataToSend, // Браузер сам выставит нужный Content-Type (multipart/form-data)
+      // });
+
+      alert('Профиль и аватар успешно обновлены!');
+    } catch (error) {
+      console.error(error);
+      alert('Ошибка при сохранении данных.');
+    }
+  };
+
+  // Генерация инициалов для заглушки
+  const initials = `${formData.firstName[0] || ''}${formData.lastName[0] || ''}`.toUpperCase();
 
   return (
     <div className="min-h-screen bg-background text-foreground p-6 md:p-12 transition-colors duration-300">
       <div className="max-w-4xl mx-auto space-y-8">
 
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Profile Settings</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage your account details, professional information, and security preferences.
-          </p>
+        {/* Хедер страницы */}
+        <div className="space-y-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="group flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-hidden"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+            Back
+          </button>
+
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Profile Settings</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Manage your account details, professional information, and security preferences.
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
+          {/* Левая колонка: Аватар и Быстрая информация */}
           <div className="md:col-span-1 flex flex-col items-center p-6 border border-border bg-card rounded-xl shadow-xs h-fit">
-            <div className="relative group cursor-pointer">
-              <div className="flex items-center justify-center w-24 h-24 rounded-full bg-linear-to-br from-teal-400 to-emerald-500 text-3xl font-bold text-white shadow-md">
-                {formData.firstName[0] || ''}{formData.lastName[0] || ''}
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+
+            {/* Скрытый инпут для выбора файла */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleAvatarChange}
+              accept="image/*"
+              className="hidden"
+            />
+
+            {/* Зона клика по аватарке */}
+            <div
+              onClick={handleAvatarClick}
+              className="relative group cursor-pointer w-24 h-24 rounded-full overflow-hidden shadow-md border border-border bg-linear-to-br from-teal-400 to-emerald-500"
+            >
+              {avatarPreview ? (
+                <img
+                  src={avatarPreview}
+                  alt="Avatar Preview"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex items-center justify-center w-full h-full text-3xl font-bold text-white">
+                  {initials}
+                </div>
+              )}
+              {/* Overlay при наведении */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 <Camera className="w-6 h-6 text-white" />
               </div>
             </div>
@@ -71,6 +164,7 @@ export const ProfilePage = () => {
             </div>
           </div>
 
+          {/* Правая колонка: Форма редактирования */}
           <div className="md:col-span-2 border border-border bg-card rounded-xl shadow-xs overflow-hidden">
             <div className="px-6 py-4 border-b border-border/60 bg-foreground/[0.01]">
               <h3 className="font-medium text-sm">Personal Information</h3>
