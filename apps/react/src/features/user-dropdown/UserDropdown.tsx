@@ -1,5 +1,6 @@
 import { useLogout } from '@/features/auth';
 import { Link } from 'react-router-dom';
+import { useUser } from '@/features/auth';
 import {
   LogOut,
   User,
@@ -19,27 +20,50 @@ import {
 } from '@pipeline/ui';
 
 export const UserDropdown = () => {
-  const {logout} = useLogout();
+  const { user } = useUser();
+  const { logout } = useLogout();
+
+  const firstName = user?.profile?.firstName || '';
+  const lastName = user?.profile?.lastName || '';
+  const email = user?.email || '';
+
+  const initials = (firstName && lastName)
+    ? `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+    : firstName
+      ? firstName.substring(0, 2).toUpperCase()
+      : email.substring(0, 2).toUpperCase();
+
+  const fullName = (firstName || lastName)
+    ? `${firstName} ${lastName}`.trim()
+    : user?.profile?.nickName || email.split('@')[0];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className="flex items-center gap-1.5 p-1 hover:bg-foreground/[0.04] active:bg-foreground/[0.08] border border-transparent hover:border-border/60 rounded-full cursor-pointer transition-all outline-hidden select-none group">
-        <div
-          className="flex items-center justify-center w-6 h-6 rounded-full bg-linear-to-br from-teal-400 to-emerald-500 text-[10px] font-bold text-white shadow-xs">
-          JD
-        </div>
+        {user?.profile?.avatarUrl ? (
+          <img
+            src={user.profile.avatarUrl}
+            alt={fullName}
+            className="w-6 h-6 rounded-full object-cover shadow-xs"
+          />
+        ) : (
+          <div
+            className="flex items-center justify-center w-6 h-6 rounded-full bg-linear-to-br from-teal-400 to-emerald-500 text-[10px] font-bold text-white shadow-xs">
+            {initials}
+          </div>
+        )}
         <ChevronDown
           className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors duration-200"/>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56 align-end p-1.5 border border-border bg-card shadow-md rounded-xl"
                            align="end" sideOffset={8}>
-        {/* Everything inside the content must sit inside the group to satisfy Base UI */}
         <DropdownMenuGroup>
           <DropdownMenuLabel className="px-2 py-1.5 font-normal">
             <div className="flex flex-col space-y-0.5">
-              <p className="text-sm font-medium leading-none text-foreground">John Doe</p>
-              <p className="text-xs leading-none text-muted-foreground">john.doe@pipeline.io</p>
+              <p className="text-sm font-medium leading-none text-foreground">{fullName}</p>
+              <p className="text-xs leading-none text-muted-foreground">{email}</p>
             </div>
           </DropdownMenuLabel>
 

@@ -2,8 +2,10 @@ import { CloudCheck, Settings, Share2 } from 'lucide-react';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
 import { UserDropdown } from '@/features/user-dropdown';
+import { useUser } from '@/features/auth';
 
 export const Header = () => {
+  const { user } = useUser();
   return (
     <header className="flex h-14 w-full items-center justify-between px-6 bg-header-bg border-b border-border z-40 shrink-0 transition-colors duration-300">
       <div className="flex items-center gap-4">

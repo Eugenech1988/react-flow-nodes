@@ -1,13 +1,24 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/shared/api';
 
+export interface Profile {
+  id: string;
+  nickName: string;
+  firstName: string;
+  lastName: string | null;
+  avatarUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface User {
   id: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  picture?: string;
-  avatarUrl?: string;
+  provider: string;
+  providerId: string;
+  createdAt: string;
+  updatedAt: string;
+  profile: Profile | null;
 }
 
 export const USER_QUERY_KEY = ['current-user'];
