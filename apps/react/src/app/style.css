@@ -1,9 +1,3 @@
-.pipeline-header {
-  background-color: var(--header-bg);
-  color: var(--foreground);
-  border-bottom: 1px solid var(--border);
-}
-
 div.react-flow {
   background-color: var(--canvas-bg);
 }
