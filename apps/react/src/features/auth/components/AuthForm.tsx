@@ -134,8 +134,8 @@ export const AuthForm: React.FC = () => {
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {apiError && (
-              <div className="text-sm text-red-400 bg-red-950/40 border border-red-900/50 p-3 rounded-xl text-center">
-                {apiError}
+              <div className="text-sm font-medium text-red-400 bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center antialiased">
+                {apiError === 'Unauthorized' ? 'User not found or invalid credentials' : apiError}
               </div>
             )}
 
