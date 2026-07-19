@@ -15,35 +15,22 @@ import { FloatingInput } from '@/shared/ui';
 
 type FormMode = 'login' | 'register';
 
-const authSchema = z
-  .object({
-    mode: z.enum(['login', 'register']),
-    email: z.string().email('Invalid email format'),
-    password: z.string().min(6, 'Password must be at least 6 characters long'),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    nickName: z.string().optional()
-  })
-  .superRefine((data, ctx) => {
-    if (data.mode === 'register') {
-      if (!data.firstName || data.firstName.trim().length === 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'First name is required',
-          path: ['firstName']
-        });
-      }
-      if (!data.nickName || data.nickName.trim().length < 3) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Username must be at least 3 characters long',
-          path: ['nickName']
-        });
-      }
-    }
-  });
+const loginSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(6, 'Password is required')
+});
 
-type FormData = z.infer<typeof authSchema>;
+const registerSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().optional(),
+  nickName: z.string().min(3, 'Username must be at least 3 characters long')
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+type RegisterFormData = z.infer<typeof registerSchema>;
+type CombinedFormData = LoginFormData & Partial<RegisterFormData>;
 
 export const AuthForm: React.FC = () => {
   const [mode, setMode] = useState<FormMode>('login');
@@ -53,10 +40,9 @@ export const AuthForm: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting }
-  } = useForm<FormData>({
-    resolver: zodResolver(authSchema),
-    defaultValues: {
-      mode: 'login',
+  } = useForm<CombinedFormData>({
+    resolver: zodResolver(mode === 'login' ? loginSchema : registerSchema),
+    values: {
       email: '',
       password: '',
       firstName: '',
@@ -69,7 +55,6 @@ export const AuthForm: React.FC = () => {
     const newMode = mode === 'login' ? 'register' : 'login';
     setMode(newMode);
     reset({
-      mode: newMode,
       email: '',
       password: '',
       firstName: '',
@@ -78,8 +63,8 @@ export const AuthForm: React.FC = () => {
     });
   };
 
-  const onSubmit = async (data: FormData) => {
-    if (data.mode === 'login') {
+  const onSubmit = async (data: CombinedFormData) => {
+    if (mode === 'login') {
       console.log('Login data:', { email: data.email, password: data.password });
     } else {
       console.log('Registration data:', data);
@@ -102,14 +87,14 @@ export const AuthForm: React.FC = () => {
     window.location.href = `${apiUrl}/auth/github`;
   };
 
-  const inputClasses = 'block w-full rounded-md border border-zinc-600 bg-slate-950/60 px-4 py-3 text-sm text-zinc-300 placeholder:text-zinc-600 focus:border-emerald-500 focus:ring-emerald-500 ';
+  const inputClasses = 'block w-full rounded-md border border-zinc-700 bg-slate-950/80 px-4 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-zinc-500 focus:ring-0 focus:shadow-[0_0_15px_rgba(255,255,255,0.03)] outline-none transition-all';
   const labelClasses = '';
 
   return (
-    <div className="bg-[url('/nodes-bg.png')] bg-cover bg-center flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 sm:px-6 lg:px-8  antialiased text-zinc-300">
+    <div className="bg-[url('/nodes-bg.png')] bg-cover bg-center flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300">
       <Card className="w-full p-8 max-w-lg rounded-2xl border border-zinc-600/80 bg-slate-950/60 backdrop-blur-sm shadow-2xl space-y-2">
         <CardHeader className="text-center p-0 space-y-2">
-          <CardTitle className="text-3xl font-normal tracking-tight text-white ">
+          <CardTitle className="text-3xl font-normal tracking-tight text-white">
             {mode === 'login' ? 'Sign In' : 'Create Account'}
           </CardTitle>
           <CardDescription className="text-sm text-zinc-400">
@@ -129,7 +114,7 @@ export const AuthForm: React.FC = () => {
             type="button"
             variant="outline"
             onClick={handleGoogleLogin}
-            className="cursor-pointer h-12 w-full gap-3 border-zinc-600 bg-slate-950/60 text-base font-medium text-white hover:bg-slate-950/40 hover:text-slate-100 hover:border-emerald-500 "
+            className="cursor-pointer h-12 w-full gap-3 border border-zinc-600/50 bg-gradient-to-br from-slate-800/60 to-slate-900/40 backdrop-blur-md text-base font-medium text-zinc-100 transition-all duration-300 hover:border-zinc-300 hover:from-slate-700/70 hover:to-slate-800/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.08)] active:scale-[0.98]"
           >
             <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
               <path
@@ -151,30 +136,24 @@ export const AuthForm: React.FC = () => {
             </svg>
             <span>Continue with Google</span>
           </Button>
+
           <Button
             type="button"
             variant="outline"
             onClick={handleGithubLogin}
-            className="cursor-pointer h-12 w-full gap-3 border-zinc-600 bg-slate-950/60 text-base font-medium text-white hover:bg-slate-950/40 hover:text-slate-100 hover:border-emerald-500 "
+            className="cursor-pointer h-12 w-full gap-3 border border-zinc-600/50 bg-gradient-to-br from-slate-800/60 to-slate-900/40 backdrop-blur-md text-base font-medium text-zinc-100 transition-all duration-300 hover:border-zinc-300 hover:from-slate-700/70 hover:to-slate-800/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.08)] active:scale-[0.98]"
           >
             <svg className="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
               <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.138 20.193 22 16.44 22 12.017 22 6.484 17.522 2 12 2z" />
             </svg>
-            <span>Continue with Github</span>
+            <span>Continue with GitHub</span>
           </Button>
 
-          <div className="relative flex items-center justify-center">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-600" />
-            </div>
-            <span className="relative bg-slate-900 px-3 text-xs uppercase tracking-widest text-zinc-500">
-              or
-            </span>
+          <div className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-zinc-500 before:h-[1px] before:flex-1 before:bg-slate-600 after:h-[1px] after:flex-1 after:bg-slate-600">
+            <span className="px-3">or</span>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <input type="hidden" {...register('mode')} />
-
             <div className="space-y-5">
               {mode === 'register' && (
                 <>
@@ -189,7 +168,7 @@ export const AuthForm: React.FC = () => {
                         error={!!errors.firstName}
                       />
                       {errors.firstName && (
-                        <p className="text-xs text-red-400  pt-1">
+                        <p className="text-xs text-red-400 pt-1">
                           {errors.firstName.message}
                         </p>
                       )}
@@ -216,7 +195,7 @@ export const AuthForm: React.FC = () => {
                       error={!!errors.nickName}
                     />
                     {errors.nickName && (
-                      <p className="text-xs text-red-400  pt-1">
+                      <p className="text-xs text-red-400 pt-1">
                         {errors.nickName.message}
                       </p>
                     )}
@@ -234,7 +213,7 @@ export const AuthForm: React.FC = () => {
                   error={!!errors.email}
                 />
                 {errors.email && (
-                  <p className="text-xs text-red-400  pt-1">
+                  <p className="text-xs text-red-400 pt-1">
                     {errors.email.message}
                   </p>
                 )}
@@ -250,7 +229,7 @@ export const AuthForm: React.FC = () => {
                   className={inputClasses}
                 />
                 {errors.password && (
-                  <p className="text-xs text-red-400  pt-1">
+                  <p className="text-xs text-red-400 pt-1">
                     {errors.password.message}
                   </p>
                 )}
@@ -261,7 +240,7 @@ export const AuthForm: React.FC = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="cursor-pointer w-full h-12 border border-zinc-600 bg-slate-950/60 text-base font-bold tracking-widest text-zinc-300 hover:bg-slate-950/40 hover:text-white hover:border-emerald-500/80 active:scale-[0.99] "
+                className="cursor-pointer w-full h-12 border border-emerald-400/50 bg-gradient-to-r from-teal-600 to-emerald-600 text-base font-bold tracking-widest text-white shadow-[0_0_20px_rgba(16,185,129,0.2)] transition-all duration-300 hover:from-teal-500 hover:to-emerald-500 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] active:scale-[0.97]"
               >
                 {isSubmitting ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Register'}
               </Button>
