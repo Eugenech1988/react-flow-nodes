@@ -1,23 +1,31 @@
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { User, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { hash } from 'argon2';
+
+const userWithProfileValidator = Prisma.validator<Prisma.UserDefaultArgs>()({
+  include: { profile: true },
+});
+
+export type UserWithProfile = Prisma.UserGetPayload<typeof userWithProfileValidator>;
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(): Promise<UserWithProfile[]> {
     try {
-      return await this.prisma.user.findMany();
+      return await this.prisma.user.findMany({
+        include: { profile: true },
+      });
     } catch (error) {
       console.error('Failed to fetch users:', error);
       throw new InternalServerErrorException('An unexpected error occurred while fetching users');
     }
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async register(createUserDto: CreateUserDto): Promise<UserWithProfile> {
     const { email, password, firstName, lastName, avatarUrl, provider, providerId } = createUserDto;
 
     const existingUser = await this.prisma.user.findUnique({ where: { email } });
@@ -33,54 +41,95 @@ export class UsersService {
         nickName = email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 7);
       }
 
-      const existingNick = await this.prisma.user.findUnique({ where: { nickName } });
-      if (existingNick) {
+      const existingProfile = await this.prisma.profile.findFirst({ where: { nickName } });
+      if (existingProfile) {
         nickName = `${nickName}_${Math.random().toString(36).substring(2, 5)}`;
       }
 
       const finalProvider = provider || 'local';
       const finalProviderId = providerId || email;
 
-      const user = await this.prisma.user.create({
+      return await this.prisma.user.create({
         data: {
           email,
           password: hashedPassword,
-          nickName,
-          firstName: firstName || '',
-          lastName: lastName || null,
-          avatarUrl: avatarUrl || null,
           provider: finalProvider,
           providerId: finalProviderId,
-        } as Prisma.UserCreateInput,
+          profile: {
+            create: {
+              nickName,
+              firstName: firstName || '',
+              lastName: lastName || null,
+              avatarUrl: avatarUrl || null,
+            },
+          },
+        },
+        include: { profile: true },
       });
-
-      return user;
     } catch (error) {
       console.error('Failed to create user:', error);
       throw new InternalServerErrorException('An unexpected error occurred while creating the user');
     }
   }
 
-  async findOneByEmail(email: string): Promise<User | null> {
-    if (!email) throw new ConflictException('Email parameters are missing');
-    return this.prisma.user.findUnique({ where: { email } });
+  async create(data: Prisma.UserCreateInput): Promise<UserWithProfile> {
+    try {
+      return await this.prisma.user.create({
+        data,
+        include: { profile: true },
+      });
+    } catch (error) {
+      console.error('Failed in create operations:', error);
+      throw new InternalServerErrorException('An unexpected error occurred during user raw creation');
+    }
   }
 
-  async findOneById(id: string): Promise<User | null> {
-    if (!id) throw new ConflictException('ID parameter is missing');
-    return this.prisma.user.findUnique({ where: { id } });
+  async findOneByEmail(email: string): Promise<UserWithProfile | null> {
+    try {
+      return await this.prisma.user.findUnique({
+        where: { email },
+        include: { profile: true },
+      });
+    } catch (error) {
+      console.error(`Failed to find user by email ${email}:`, error);
+      throw new InternalServerErrorException('Error searching for user by email');
+    }
   }
 
-  async findOneByProvider(provider: string, providerId: string): Promise<User | null> {
-    return this.prisma.user.findFirst({
-      where: {
-        provider,
-        providerId
-      } as Prisma.UserWhereInput
-    });
+  async findOneByProvider(provider: string, providerId: string): Promise<UserWithProfile | null> {
+    try {
+      return await this.prisma.user.findFirst({
+        where: { provider, providerId },
+        include: { profile: true },
+      });
+    } catch (error) {
+      console.error(`Failed to find user by provider ${provider}:`, error);
+      throw new InternalServerErrorException('Error searching for user by provider');
+    }
   }
 
-  async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
-    return this.prisma.user.update({ where: { id }, data });
+  async findOneById(id: string): Promise<UserWithProfile | null> {
+    try {
+      return await this.prisma.user.findUnique({
+        where: { id },
+        include: { profile: true },
+      });
+    } catch (error) {
+      console.error(`Failed to find user by id ${id}:`, error);
+      throw new InternalServerErrorException('Error searching for user by id');
+    }
+  }
+
+  async update(id: string, data: Prisma.UserUpdateInput): Promise<UserWithProfile> {
+    try {
+      return await this.prisma.user.update({
+        where: { id },
+        data,
+        include: { profile: true },
+      });
+    } catch (error) {
+      console.error(`Failed to update user with id ${id}:`, error);
+      throw new InternalServerErrorException('An unexpected error occurred while updating the user');
+    }
   }
 }

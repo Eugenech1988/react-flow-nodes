@@ -1,13 +1,7 @@
 model User {
-  id String @id @default(cuid())
-
+  id       String  @id @default(cuid())
   email    String  @unique
   password String?
-
-  nickName  String  @unique @default("") @map("nick_name")
-  firstName String  @default("") @map("first_name")
-  lastName  String? @map("last_name")
-  avatarUrl String? @map("avatar_url")
 
   provider   String @default("local")
   providerId String @map("provider_id")
@@ -15,6 +9,7 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  profile   Profile?
   pipelines Pipeline[]
 
   @@unique([provider, providerId])

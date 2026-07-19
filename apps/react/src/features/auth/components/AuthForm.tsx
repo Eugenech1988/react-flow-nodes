@@ -30,8 +30,6 @@ const registerSchema = z.object({
   email: z.string().email('Invalid email format'),
   password: z.string().min(6, 'Password must be at least 6 characters long'),
   confirmPassword: z.string().min(1, 'Please confirm your password'),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -57,9 +55,7 @@ export const AuthForm: React.FC = () => {
     defaultValues: {
       email: '',
       password: '',
-      firstName: '',
-      confirmPassword: '',
-      lastName: '',
+      confirmPassword: ''
     }
   });
 
@@ -77,8 +73,6 @@ export const AuthForm: React.FC = () => {
       email: '',
       password: '',
       confirmPassword: '',
-      firstName: '',
-      lastName: '',
     });
   };
 
@@ -95,8 +89,6 @@ export const AuthForm: React.FC = () => {
         await api.post('/auth/register', {
           email: data.email,
           password: data.password,
-          firstName: data.firstName,
-          lastName: data.lastName || null,
         });
         toggleMode();
       }

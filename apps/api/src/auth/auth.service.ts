@@ -1,4 +1,5 @@
 import { ConflictException, BadRequestException, Injectable } from '@nestjs/common';
+import { SigningOptions } from 'jsonwebtoken';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
@@ -22,7 +23,7 @@ export class AuthService {
       const isMatch = await verify(user.password, pass);
       if (isMatch) {
         const { password, ...result } = user;
-        return result;
+        return result as IUserSafe;
       }
     }
     return null;
@@ -33,7 +34,7 @@ export class AuthService {
 
     if (existingUser) {
       const { password, ...result } = existingUser;
-      return result;
+      return result as IUserSafe;
     }
 
     const emailUser = await this.usersService.findOneByEmail(profile.email);
@@ -41,23 +42,38 @@ export class AuthService {
       const updatedUser = await this.usersService.update(emailUser.id, {
         provider: profile.provider,
         providerId: profile.providerId,
-        avatarUrl: emailUser.avatarUrl || profile.picture,
+        profile: {
+          upsert: {
+            create: {
+              avatarUrl: profile.picture,
+              firstName: profile.firstName,
+              lastName: profile.lastName,
+            },
+            update: {
+              avatarUrl: emailUser.profile?.avatarUrl || profile.picture,
+            }
+          }
+        }
       });
       const { password, ...result } = updatedUser;
-      return result;
+      return result as IUserSafe;
     }
 
     const newUser = await this.usersService.create({
       email: profile.email,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      avatarUrl: profile.picture,
       provider: profile.provider,
       providerId: profile.providerId,
+      profile: {
+        create: {
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          avatarUrl: profile.picture,
+        }
+      }
     });
 
     const { password, ...result } = newUser;
-    return result;
+    return result as IUserSafe;
   }
 
   async register(dto: RegisterDto): Promise<IUserSafe> {
@@ -66,16 +82,24 @@ export class AuthService {
       throw new ConflictException('A user with this email already exists');
     }
 
+    const hashedPassword = await hash(dto.password);
+
     const user = await this.usersService.create({
       email: dto.email,
-      password: dto.password,
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-      nickName: dto.nickName,
+      password: hashedPassword,
+      provider: 'local',
+      providerId: dto.email,
+      profile: {
+        create: {
+          firstName: dto.firstName || '',
+          lastName: dto.lastName || null,
+          nickName: dto.nickName || dto.email.split('@')[0],
+        }
+      }
     });
 
     const { password, ...result } = user;
-    return result;
+    return result as IUserSafe;
   }
 
   async generateTokens(userId: string) {
@@ -83,12 +107,12 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-      expiresIn: '15m',
+      expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES') as SigningOptions,
     });
 
     const refreshToken = this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
-      expiresIn: '7d',
+      expiresIn: this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRES') as SigningOptions,
     });
 
     return { accessToken, refreshToken };
@@ -109,8 +133,7 @@ export class AuthService {
     const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
     const recoveryLink = `${clientUrl}/reset-password?token=${resetToken}`;
 
-    console.log(`Recovering token from ${clientUrl} ${resetToken}`, );
-
+    console.log(`Recovering token from ${clientUrl} ${resetToken}`);
   }
 
   async resetPassword(dto: ResetPasswordDto): Promise<void> {

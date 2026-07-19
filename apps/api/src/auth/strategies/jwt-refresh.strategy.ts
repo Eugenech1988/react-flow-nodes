@@ -10,7 +10,7 @@ import { IJwtPayload, IUserSafe } from '../types/auth.types';
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(
     private readonly configService: ConfigService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -27,6 +27,6 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
       throw new UnauthorizedException('User not found');
     }
     const { password, ...safeUser } = user;
-    return safeUser;
+    return safeUser as unknown as IUserSafe;
   }
 }

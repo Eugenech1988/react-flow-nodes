@@ -1,0 +1,17 @@
+model Profile {
+  id     String @id @default(cuid())
+  userId String @unique @map("user_id")
+
+  nickName  String  @default("") @map("nick_name")
+  firstName String  @default("") @map("first_name")
+  lastName  String? @map("last_name")
+  avatarUrl String? @map("avatar_url")
+
+  company  String? @default("Pipeline Inc.")
+  location String? @default("San Francisco, CA")
+  jobTitle String? @default("Senior Pipeline Engineer") @map("job_title")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
