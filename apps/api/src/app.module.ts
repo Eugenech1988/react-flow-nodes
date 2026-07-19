@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { MailModule } from './mail/mail.module';
     PrismaModule,
     AuthModule,
     UsersModule,
+    ProfileModule,
     // MailModule
   ],
 })
