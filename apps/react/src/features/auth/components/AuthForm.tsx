@@ -16,6 +16,7 @@ import { SocialLoginButtons } from './SocialLoginButtons';
 import { AuthModeToggle } from './AuthModeToggle';
 import { RegisterFields } from './RegisterFields';
 import { LoginFields } from './LoginFields';
+import { api } from '@/shared/api';
 
 type FormMode = 'login' | 'register';
 
@@ -38,6 +39,7 @@ type CombinedFormData = LoginFormData & Partial<RegisterFormData>;
 
 export const AuthForm: React.FC = () => {
   const [mode, setMode] = useState<FormMode>('login');
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const {
     register,
@@ -56,6 +58,7 @@ export const AuthForm: React.FC = () => {
   });
 
   const toggleMode = () => {
+    setApiError(null);
     const newMode = mode === 'login' ? 'register' : 'login';
     setMode(newMode);
     reset({
@@ -68,10 +71,28 @@ export const AuthForm: React.FC = () => {
   };
 
   const onSubmit = async (data: CombinedFormData) => {
-    if (mode === 'login') {
-      console.log('Login data:', { email: data.email, password: data.password });
-    } else {
-      console.log('Registration data:', data);
+    setApiError(null);
+    try {
+      if (mode === 'login') {
+        await api.post('/auth/login', {
+          email: data.email,
+          password: data.password
+        });
+
+        window.location.href = '/dashboard';
+      } else {
+        await api.post('/auth/register', {
+          email: data.email,
+          password: data.password,
+          firstName: data.firstName,
+          lastName: data.lastName || null,
+          nickName: data.nickName
+        });
+
+        toggleMode();
+      }
+    } catch (error: any) {
+      setApiError(error.message || 'Something went wrong');
     }
   };
 
@@ -112,6 +133,13 @@ export const AuthForm: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Вывод ошибки от бэкенда */}
+            {apiError && (
+              <div className="text-sm text-red-400 bg-red-950/40 border border-red-900/50 p-3 rounded-xl text-center">
+                {apiError}
+              </div>
+            )}
+
             <div className="space-y-5">
               {mode === 'register' ? (
                 <RegisterFields register={register} errors={errors} />
