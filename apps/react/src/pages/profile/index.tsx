@@ -26,7 +26,6 @@ export const ProfilePage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Здесь будет логика сохранения данных на бэкенд
     alert('Профиль успешно обновлен!');
   };
 
@@ -34,7 +33,6 @@ export const ProfilePage = () => {
     <div className="min-h-screen bg-background text-foreground p-6 md:p-12 transition-colors duration-300">
       <div className="max-w-4xl mx-auto space-y-8">
 
-        {/* Хедер страницы */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Profile Settings</h1>
           <p className="text-muted-foreground text-sm mt-1">
@@ -44,7 +42,6 @@ export const ProfilePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-          {/* Левая колонка: Аватар и Быстрая информация */}
           <div className="md:col-span-1 flex flex-col items-center p-6 border border-border bg-card rounded-xl shadow-xs h-fit">
             <div className="relative group cursor-pointer">
               <div className="flex items-center justify-center w-24 h-24 rounded-full bg-linear-to-br from-teal-400 to-emerald-500 text-3xl font-bold text-white shadow-md">
@@ -74,7 +71,6 @@ export const ProfilePage = () => {
             </div>
           </div>
 
-          {/* Правая колонка: Форма редактирования */}
           <div className="md:col-span-2 border border-border bg-card rounded-xl shadow-xs overflow-hidden">
             <div className="px-6 py-4 border-b border-border/60 bg-foreground/[0.01]">
               <h3 className="font-medium text-sm">Personal Information</h3>
@@ -82,7 +78,6 @@ export const ProfilePage = () => {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
 
-              {/* Две колонки: Имя и Фамилия */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FloatingInput
                   label="First Name"
@@ -103,7 +98,6 @@ export const ProfilePage = () => {
                 />
               </div>
 
-              {/* Email */}
               <FloatingInput
                 label="Email Address"
                 type="email"
@@ -114,7 +108,6 @@ export const ProfilePage = () => {
                 required
               />
 
-              {/* Две колонки: Компания и Локация */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FloatingInput
                   label="Company"
@@ -133,7 +126,6 @@ export const ProfilePage = () => {
                 />
               </div>
 
-              {/* Роль / Должность */}
               <FloatingInput
                 label="Job Title"
                 id="role"
@@ -142,7 +134,6 @@ export const ProfilePage = () => {
                 onChange={handleChange}
               />
 
-              {/* Кнопка сохранения */}
               <div className="flex justify-end pt-2 border-t border-border/60">
                 <button
                   type="submit"
