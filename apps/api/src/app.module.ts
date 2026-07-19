@@ -11,7 +11,7 @@ import { MailModule } from './mail/mail.module';
     PrismaModule,
     AuthModule,
     UsersModule,
-    MailModule
+    // MailModule
   ],
 })
 export class AppModule {}
