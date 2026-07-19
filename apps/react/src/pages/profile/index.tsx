@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import { useUser } from '@/features/auth';
 import {
   Camera,
   Shield,
   KeyRound,
   Save
 } from 'lucide-react';
-import { FloatingInput } from '@/shared/ui/FloatingInput'; // Скоректируйте путь к файлу FloatingInput, если нужно
+import { FloatingInput } from '@/shared/ui/FloatingInput';
 
 export const ProfilePage = () => {
+  const { user } = useUser();
   const [formData, setFormData] = useState({
-    fullName: 'John Doe',
-    email: 'john.doe@pipeline.io',
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    email: user?.email || '',
     company: 'Pipeline Inc.',
     location: 'San Francisco, CA',
     role: 'Senior Pipeline Engineer'
@@ -45,14 +48,16 @@ export const ProfilePage = () => {
           <div className="md:col-span-1 flex flex-col items-center p-6 border border-border bg-card rounded-xl shadow-xs h-fit">
             <div className="relative group cursor-pointer">
               <div className="flex items-center justify-center w-24 h-24 rounded-full bg-linear-to-br from-teal-400 to-emerald-500 text-3xl font-bold text-white shadow-md">
-                JD
+                {formData.firstName[0] || ''}{formData.lastName[0] || ''}
               </div>
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 <Camera className="w-6 h-6 text-white" />
               </div>
             </div>
 
-            <h2 className="text-lg font-semibold mt-4 text-center">{formData.fullName}</h2>
+            <h2 className="text-lg font-semibold mt-4 text-center">
+              {formData.firstName} {formData.lastName}
+            </h2>
             <p className="text-xs text-muted-foreground text-center mt-0.5">{formData.role}</p>
 
             <div className="w-full h-[1px] bg-border/60 my-4" />
@@ -77,15 +82,26 @@ export const ProfilePage = () => {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
 
-              {/* Имя */}
-              <FloatingInput
-                label="Full Name"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-              />
+              {/* Две колонки: Имя и Фамилия */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FloatingInput
+                  label="First Name"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+
+                <FloatingInput
+                  label="Last Name"
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
               {/* Email */}
               <FloatingInput
