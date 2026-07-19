@@ -9,6 +9,8 @@ interface ProfileAvatarProps {
   onAvatarChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
+
 export const ProfileAvatar = ({
                                 avatarPreview,
                                 initials,
@@ -16,6 +18,12 @@ export const ProfileAvatar = ({
                                 fileInputRef,
                                 onAvatarChange,
                               }: ProfileAvatarProps) => {
+  const displaySrc = avatarPreview?.startsWith('blob:')
+    ? avatarPreview
+    : avatarPreview
+      ? `${BASE_URL}${avatarPreview}`
+      : null;
+
   return (
     <>
       <input
@@ -29,9 +37,9 @@ export const ProfileAvatar = ({
         onClick={onAvatarClick}
         className="relative group cursor-pointer w-24 h-24 rounded-full overflow-hidden shadow-md border border-border bg-linear-to-br from-teal-400 to-emerald-500"
       >
-        {avatarPreview ? (
+        {displaySrc ? (
           <img
-            src={avatarPreview}
+            src={displaySrc}
             alt="Avatar Preview"
             className="w-full h-full object-cover"
           />
