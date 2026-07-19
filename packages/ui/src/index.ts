@@ -6,3 +6,4 @@ export * from './components/input';
 export * from './components/textarea';
 export * from './components/sonner';
 export * from './components/card';
+export * from './components/dropdown-menu'

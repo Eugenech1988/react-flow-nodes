@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useTheme } from 'next-themes';
 import {
   ReactFlow,
   Background,
@@ -20,7 +21,7 @@ import { ClearCanvasButton } from './components/ClearCanvasButton';
 import { WorkflowExecutionControl } from './components/WorkflowExecutionControl';
 import { ExecutionLogConsole } from './components/ExecutionLogConsole';
 import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES, NODE_COLORS, NODE_TYPE_TO_CATEGORY } from './config';
-import { useDragAndDrop, useKeyboardShortcuts, useThemeSync } from './lib';
+import { useDragAndDrop, useKeyboardShortcuts } from './lib';
 
 export const Canvas = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -59,7 +60,9 @@ export const Canvas = () => {
     redo,
   });
 
-  const gridColor = useThemeSync();
+  const { resolvedTheme } = useTheme();
+
+  const gridColor = resolvedTheme === 'dark' ? '#374151' : '#cbd5e1';
 
   const getMiniMapNodeColor = (node: PipelineNode) => {
     const category = node.data?.category || NODE_TYPE_TO_CATEGORY[node.type || ''] || 'default';
