@@ -4,10 +4,12 @@ import { RegisterDto } from './dtos/register.dto';
 import type { Response, Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from 'src/utils/decorators/current-user.deacorator';
+import { JwtAuthGuard } from './guards/jwt.guard';
 import { GoogleOauthGuard } from './guards/google.guard';
 import { GithubOauthGuard } from './guards/github.guard';
 import { IGoogleUser } from './types/google-user.types';
 import { IGithubUser } from './types/github-user.types';
+import type { User } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -63,5 +65,11 @@ export class AuthController {
     }
     await this.authService.githubAuth(req.user as IGithubUser, res);
     return res.redirect(process.env.FRONTEND_URL || 'http://localhost:5173');
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async getProfile(@CurrentUser() user: User, @Res({ passthrough: true }) res: Response) {
+    return user;
   }
 }
