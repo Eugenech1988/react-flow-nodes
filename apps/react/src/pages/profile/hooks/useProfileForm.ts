@@ -63,10 +63,8 @@ export const useProfileForm = () => {
         updateUserCache(response);
       }
 
-      alert('Профиль и аватар успешно обновлены!');
     } catch (error) {
       console.error(error);
-      alert('Ошибка при сохранении данных.');
     }
   };
 
