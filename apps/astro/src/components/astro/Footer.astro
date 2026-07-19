@@ -1,5 +1,6 @@
 ---
-import { CircleUserRound, X, Command } from '@lucide/astro';
+import piplineLogo from '@/assets/logo.svg?raw';
+import { CircleUserRound, X } from '@lucide/astro';
 
 const columns = [
   {
@@ -53,11 +54,13 @@ const socials = [
 
             <div class="col-span-2 flex flex-col justify-between">
                 <div>
-                    <a href="#" class="flex items-center gap-2.5 text-slate-100 group select-none">
-                        <div class="p-2 bg-teal-500/10 rounded-xl text-teal-400 group-hover:scale-105 transition-transform duration-300">
-                            <Command class="w-5 h-5" />
+                    <a href="/" class="group flex items-center gap-2.5 text-white font-semibold text-lg tracking-tight">
+                        <div class="h-6 w-11 flex items-center justify-center text-teal-400 transition-transform duration-300 group-hover:scale-110">
+                            <Fragment set:html={piplineLogo}/>
                         </div>
-                        <span class="font-sans font-bold tracking-tight text-lg">Synapse</span>
+                        <span class="bg-linear-to-r from-white via-neutral-100 to-[#39b39b] bg-clip-text text-transparent font-medium transition-colors duration-300">
+                    pipeline studio
+                </span>
                     </a>
                     <p class="mt-4 text-xs text-slate-400 leading-relaxed max-w-xs">
                         An event-driven orchestration engine running at the edge. Connect services, validate data payloads, and scale workflows instantly.

@@ -31,7 +31,6 @@ const registerSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters long'),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().optional(),
-  nickName: z.string().min(3, 'Username must be at least 3 characters long')
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -42,14 +41,6 @@ export const AuthForm: React.FC = () => {
   const [mode, setMode] = useState<FormMode>('login');
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const inputClasses = cn(
-    'block w-full rounded-md border border-zinc-800 bg-slate-950/90 px-4 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none transition-all',
-    'focus:border-slate-400 focus:!text-slate-400 focus:ring-0 focus:shadow-[0_0_15px_rgba(255,255,255,0.03)]',
-    'hover:border-slate-400 hover:text-slate-400 hover:shadow-[0_0_15px_rgba(255,255,255,0.03)]',
-    'not-placeholder-shown:border-slate-400 not-placeholder-shown:text-slate-400 not-placeholder-shown:shadow-[0_0_15px_rgba(255,255,255,0.03)]',
-    'autofill:border-slate-400 autofill:text-slate-400 autofill:shadow-[0_0_15px_rgba(255,255,255,0.03)]'
-  );
-
   const {
     register,
     handleSubmit,
@@ -57,14 +48,20 @@ export const AuthForm: React.FC = () => {
     formState: { errors, isSubmitting }
   } = useForm<CombinedFormData>({
     resolver: zodResolver(mode === 'login' ? loginSchema : registerSchema),
+    mode: "onChange",
     defaultValues: {
       email: '',
       password: '',
       firstName: '',
       lastName: '',
-      nickName: ''
     }
   });
+
+  const inputClasses = cn(
+    'block w-full bg-transparent text-sm outline-none transition-all duration-200',
+    '[transition:background-color_99999s_ease-in-out_0s] autofill:[transition:background-color_99999s_ease-in-out_0s]',
+    'autofill:text-sm text-zinc-200 placeholder:text-zinc-600 !focus:text-slate-400 !focus-visible:text-slate-400 [-webkit-text-fill-color:zinc-200] autofill:![-webkit-text-fill-color:theme(colors.slate.400)]'
+  );
 
   const toggleMode = () => {
     setApiError(null);
@@ -75,7 +72,6 @@ export const AuthForm: React.FC = () => {
       password: '',
       firstName: '',
       lastName: '',
-      nickName: ''
     });
   };
 
@@ -94,7 +90,6 @@ export const AuthForm: React.FC = () => {
           password: data.password,
           firstName: data.firstName,
           lastName: data.lastName || null,
-          nickName: data.nickName
         });
         toggleMode();
       }
@@ -123,9 +118,11 @@ export const AuthForm: React.FC = () => {
     window.location.href = `${apiUrl}/auth/github`;
   };
 
+  const isAuthError = apiError === 'Unauthorized' || apiError?.toLowerCase().includes('invalid');
+
   return (
     <div className="bg-[url('/nodes-bg.png')] bg-cover bg-center flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300">
-      <Card className="w-full p-8 max-w-lg rounded-2xl border border-zinc-800/60 bg-slate-950/70 backdrop-blur-md shadow-2xl space-y-2">
+      <Card className="w-full p-8 max-w-lg rounded-2xl border border-zinc-800/60 bg-slate-950/70 backdrop-blur-md shadow-2xl space-y-2 overflow-hidden">
         <CardHeader className="text-center p-0 space-y-2">
           <CardTitle className="text-3xl font-normal tracking-tight text-white">
             {mode === 'login' ? 'Sign In' : 'Create Account'}
@@ -135,7 +132,7 @@ export const AuthForm: React.FC = () => {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-8 p-0">
+        <CardContent className="space-y-5.5 p-0">
           <SocialLoginButtons
             onGoogleClick={handleGoogleLogin}
             onGithubClick={handleGithubLogin}
@@ -146,17 +143,42 @@ export const AuthForm: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {apiError && (
+            {apiError && !isAuthError && (
               <div className="text-sm font-medium text-red-400 bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center antialiased">
-                {apiError === 'Unauthorized' ? 'User not found or invalid credentials' : apiError}
+                {apiError}
               </div>
             )}
 
-            <div className="space-y-5">
+            <div className="w-full space-y-5">
               {mode === 'register' ? (
-                <RegisterFields register={register} errors={errors} inputClasses={inputClasses} />
+                <RegisterFields
+                  register={register}
+                  errors={errors}
+                  inputClasses={inputClasses}
+                />
               ) : (
-                <LoginFields register={register} errors={errors} inputClasses={inputClasses} />
+                <>
+                  <LoginFields
+                    register={register}
+                    errors={errors}
+                    inputClasses={inputClasses}
+                    error={isAuthError || !!errors.email || !!errors.password}
+                  />
+
+                  {isAuthError && (
+                    <div className="text-xs text-red-400 antialiased space-y-2 pt-1">
+                      <p>Incorrect email address or password. Please try again.</p>
+                      <div>
+                        <a
+                          href="/forgot-password"
+                          className="text-teal-500 hover:text-teal-400 font-medium transition-colors duration-200 underline underline-offset-4"
+                        >
+                          Forgot your password?
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 

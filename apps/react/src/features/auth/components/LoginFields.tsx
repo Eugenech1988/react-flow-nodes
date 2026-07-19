@@ -7,15 +7,16 @@ interface LoginFieldsProps {
   register: UseFormRegister<CombinedFormData>;
   errors: FieldErrors<CombinedFormData>;
   inputClasses: string;
+  error?: boolean;
 }
 
-export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, inputClasses }) => {
+export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, error, inputClasses }) => {
   return (
     <>
       <div className="space-y-1">
         <FloatingInput
           {...register('email')}
-          type="email"
+          type="text"
           autoComplete="email"
           label="Email Address"
           className={inputClasses}

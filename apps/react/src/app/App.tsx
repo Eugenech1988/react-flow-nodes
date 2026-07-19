@@ -23,11 +23,11 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
-      {/*<button*/}
-      {/*  onClick={logout}*/}
-      {/*>*/}
-      {/*  logout*/}
-      {/*</button>*/}
+      <button
+        onClick={logout}
+      >
+        logout
+      </button>
       <Header />
       <NodesToolbar />
       <main className="flex-1 min-h-0">

@@ -12,46 +12,33 @@ interface RegisterFieldsProps {
 export const RegisterFields: FC<RegisterFieldsProps> = ({ register, errors, inputClasses }) => {
   return (
     <>
-      <div className="space-y-1">
-        <FloatingInput
-          {...register('firstName')}
-          type="text"
-          autoComplete="given-name"
-          label="First Name"
-          placeholder="First Name"
-          className={inputClasses}
-          error={!!errors.firstName}
-        />
-        {errors.firstName && (
-          <p className="text-xs text-red-400 pt-1">{errors.firstName.message}</p>
-        )}
-      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1">
+          <FloatingInput
+            {...register('firstName')}
+            type="text"
+            autoComplete="given-name"
+            label="First Name"
+            placeholder="First Name"
+            className={inputClasses}
+            error={!!errors.firstName}
+          />
+          {errors.firstName && (
+            <p className="text-xs text-red-400 pt-1">{errors.firstName.message}</p>
+          )}
+        </div>
 
-      <div className="space-y-1">
-        <FloatingInput
-          {...register('lastName')}
-          type="text"
-          autoComplete="family-name"
-          label="Last Name"
-          placeholder="Last Name"
-          className={inputClasses}
-          error={!!errors.lastName}
-        />
-      </div>
-
-      <div className="space-y-1">
-        <FloatingInput
-          {...register('nickName')}
-          type="text"
-          autoComplete="username"
-          label="Username"
-          placeholder="Username"
-          className={inputClasses}
-          error={!!errors.nickName}
-        />
-        {errors.nickName && (
-          <p className="text-xs text-red-400 pt-1">{errors.nickName.message}</p>
-        )}
+        <div className="space-y-1">
+          <FloatingInput
+            {...register('lastName')}
+            type="text"
+            autoComplete="family-name"
+            label="Last Name"
+            placeholder="Last Name"
+            className={inputClasses}
+            error={!!errors.lastName}
+          />
+        </div>
       </div>
 
       <div className="space-y-1">
