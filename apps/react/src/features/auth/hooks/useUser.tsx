@@ -7,6 +7,9 @@ export interface Profile {
   firstName: string;
   lastName: string | null;
   avatarUrl: string | null;
+  company?: string | null;
+  location?: string | null;
+  role?: string | null;
   createdAt: string;
   updatedAt: string;
 }

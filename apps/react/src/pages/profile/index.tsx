@@ -13,16 +13,15 @@ import { FloatingInput } from '@/shared/ui/FloatingInput';
 export const ProfilePage = () => {
   const navigate = useNavigate();
   const { user } = useUser();
-  console.log(user);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     firstName: user?.profile.firstName || '',
     lastName: user?.profile.lastName || '',
     email: user?.email || '',
-    company: 'Pipeline Inc.',
-    location: 'San Francisco, CA',
-    role: 'Senior Pipeline Engineer'
+    company: user.profile.company,
+    location: user.profile.location,
+    role: user.profile.role
   });
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.profile.avatarUrl || null);
