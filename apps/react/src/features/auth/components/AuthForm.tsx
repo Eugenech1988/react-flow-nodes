@@ -133,7 +133,6 @@ export const AuthForm: React.FC = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Вывод ошибки от бэкенда */}
             {apiError && (
               <div className="text-sm text-red-400 bg-red-950/40 border border-red-900/50 p-3 rounded-xl text-center">
                 {apiError}

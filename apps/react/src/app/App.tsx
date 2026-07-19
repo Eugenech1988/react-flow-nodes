@@ -1,13 +1,12 @@
-// import { Header } from '@/widgets/header';
-// import { NodesToolbar } from '@/widgets/nodes-toolbar';
-// import { Canvas } from '@/widgets/canvas';
-// import { ReactFlowProvider } from '@xyflow/react';
-// import { Toaster } from '@pipeline/ui'
-import { AuthForm, useUser, useLogout } from '@/features/auth';
+import { Header } from '@/widgets/header';
+import { NodesToolbar } from '@/widgets/nodes-toolbar';
+import { Canvas } from '@/widgets/canvas';
+import { ReactFlowProvider } from '@xyflow/react';
+import { Toaster } from '@pipeline/ui'
+import { AuthForm, useUser } from '@/features/auth';
 
 function App() {
-  const { user, isLoading, isAuth } = useUser();
-  const { logout, isLoggingOut } = useLogout();
+  const { isLoading, isAuth } = useUser();
 
   if (isLoading) {
     return (
@@ -23,22 +22,14 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
-      {/*<Header />*/}
-      {/*<NodesToolbar />*/}
-      {/*<main className="flex-1 min-h-0">*/}
-      {/*  <ReactFlowProvider>*/}
-      {/*    <Canvas />*/}
-      {/*  </ReactFlowProvider>*/}
-      {/*  <Toaster />*/}
-      {/*</main>*/}
-      {user.email}
-      <button
-        onClick={() => logout()}
-        disabled={isLoggingOut}
-      >
-        {isLoggingOut ? 'Logging out...' : 'Sign Out'}
-      </button>
-      {/*<AuthForm/>*/}
+      <Header />
+      <NodesToolbar />
+      <main className="flex-1 min-h-0">
+        <ReactFlowProvider>
+          <Canvas />
+        </ReactFlowProvider>
+        <Toaster />
+      </main>
     </div>
   );
 }
