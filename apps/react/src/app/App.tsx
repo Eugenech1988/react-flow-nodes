@@ -3,9 +3,23 @@
 // import { Canvas } from '@/widgets/canvas';
 // import { ReactFlowProvider } from '@xyflow/react';
 // import { Toaster } from '@pipeline/ui'
-import { AuthForm } from '@/features/auth/AuthForm.tsx';
+import { AuthForm, useUser } from '@/features/auth';
 
 function App() {
+  const { user, isLoading, isAuth } = useUser();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-zinc-400 flex items-center justify-center">
+        <div className="animate-pulse tracking-wider text-sm">LOADING WORKSPACE...</div>
+      </div>
+    );
+  }
+
+  if (!isAuth) {
+    return <AuthForm />;
+  }
+
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
       {/*<Header />*/}
@@ -16,7 +30,8 @@ function App() {
       {/*  </ReactFlowProvider>*/}
       {/*  <Toaster />*/}
       {/*</main>*/}
-      <AuthForm/>
+      {user.email}
+      {/*<AuthForm/>*/}
     </div>
   );
 }
