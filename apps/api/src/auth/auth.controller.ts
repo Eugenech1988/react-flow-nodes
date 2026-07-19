@@ -1,75 +1,129 @@
-import { Controller, Post, Body, Res, UseGuards, Get, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Get, Body, UseGuards, Req, Res, HttpCode, HttpStatus } from '@nestjs/common';
+import type { Response, Request } from 'express';
+import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dtos/register.dto';
-import type { Response, Request } from 'express';
-import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/utils/decorators/current-user.deacorator';
-import { JwtAuthGuard } from './guards/jwt.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { GoogleOauthGuard } from './guards/google.guard';
 import { GithubOauthGuard } from './guards/github.guard';
-import { IGoogleUser } from './types/google-user.types';
-import { IGithubUser } from './types/github-user.types';
-import type { User } from '@prisma/client';
+import type { IUserSafe, IOauthUser } from './types/auth.types';
+
+interface IRequestWithUser extends Request {
+  user: IUserSafe;
+}
+
+interface IRequestWithOauthUser extends Request {
+  user: IOauthUser;
+}
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  private setTokenCookies(res: Response, accessToken: string, refreshToken: string) {
+    const isProd = process.env.NODE_ENV === 'production';
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'lax',
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+  }
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto, @Res({ passthrough: true }) res: Response) {
-    return this.authService.register(registerDto, res);
+  async register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<IUserSafe> {
+    const user = await this.authService.register(dto);
+    const tokens = await this.authService.generateTokens(user.id);
+    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    return user;
   }
 
-  @UseGuards(AuthGuard('local'))
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@CurrentUser('id') userId: string, @Res({ passthrough: true }) res: Response) {
-    await this.authService.generateTokens(userId, res);
-    return { success: true, userId };
+  async login(
+    @Req() req: IRequestWithUser,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<IUserSafe> {
+    const tokens = await this.authService.generateTokens(req.user.id);
+    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    return req.user;
   }
 
-  @UseGuards(AuthGuard('jwt-refresh'))
-  @Post('refresh')
-  async refresh(@CurrentUser('id') userId: string, @Res({ passthrough: true }) res: Response) {
-    await this.authService.generateTokens(userId, res);
-    return { success: true, userId };
-  }
-
-  @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response) {
-    res.cookie('refreshToken', '');
-  }
-
-  @UseGuards(GoogleOauthGuard)
   @Get('google')
-  async google() {}
-
-  @UseGuards(GithubOauthGuard)
-  @Get('github')
-  async github() {}
-
   @UseGuards(GoogleOauthGuard)
+  async googleAuth() {}
+
   @Get('google/callback')
-  async googleAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    if (!req.user) {
-      throw new UnauthorizedException('User data missing from Google provider');
-    }
-    await this.authService.googleAuth(req.user as IGoogleUser, res);
-    return res.redirect(process.env.FRONTEND_URL || 'http://localhost:5173');
+  @UseGuards(GoogleOauthGuard)
+  async googleAuthCallback(
+    @Req() req: IRequestWithOauthUser,
+    @Res() res: Response,
+  ) {
+    const user = await this.authService.validateOauthUser(req.user);
+    const tokens = await this.authService.generateTokens(user.id);
+    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+
+    const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
+    return res.redirect(clientUrl);
   }
 
+  @Get('github')
   @UseGuards(GithubOauthGuard)
+  async githubAuth() {}
+
   @Get('github/callback')
-  async githubAuthCallback(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    if (!req.user) {
-      throw new UnauthorizedException('User data missing from GitHub provider');
-    }
-    await this.authService.githubAuth(req.user as IGithubUser, res);
-    return res.redirect(process.env.FRONTEND_URL || 'http://localhost:5173');
+  @UseGuards(GithubOauthGuard)
+  async githubAuthCallback(
+    @Req() req: IRequestWithOauthUser,
+    @Res() res: Response,
+  ) {
+    const user = await this.authService.validateOauthUser(req.user);
+    const tokens = await this.authService.generateTokens(user.id);
+    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+
+    const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
+    return res.redirect(clientUrl);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtRefreshGuard)
+  @Post('refresh')
+  async refresh(
+    @Req() req: IRequestWithUser,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ success: boolean }> {
+    const tokens = await this.authService.generateTokens(req.user.id);
+    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    return { success: true };
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  async getProfile(@CurrentUser() user: User, @Res({ passthrough: true }) res: Response) {
-    return user;
+  getMe(@Req() req: IRequestWithUser): IUserSafe {
+    return req.user;
+  }
+
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return { success: true };
   }
 }

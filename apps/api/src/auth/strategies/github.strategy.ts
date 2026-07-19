@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-github2';
-import { IGithubUser } from '../types/github-user.types';
+import { IOauthUser } from '../types/auth.types';
 
 interface GithubEmail {
   value: string;
@@ -24,22 +24,19 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     accessToken: string,
     refreshToken: string,
     profile: Profile,
-    done: (error: Error | null, user: IGithubUser | false) => void,
+    done: (error: Error | null, user: IOauthUser | false) => void,
   ): Promise<void> {
     const { displayName, username, emails, photos } = profile;
-
     const githubEmails = (emails || []) as GithubEmail[];
-
     const primaryEmail = githubEmails.find((e) => e.primary)?.value;
     const fallbackEmail = githubEmails[0]?.value;
-
     const email = primaryEmail || fallbackEmail || `${username || 'unknown'}@github.placeholder`;
 
     const nameParts = displayName?.split(' ') || [];
     const firstName = nameParts[0] || username || '';
     const lastName = nameParts.slice(1).join(' ') || '';
 
-    const user: IGithubUser = {
+    const user: IOauthUser = {
       email,
       firstName,
       lastName,
