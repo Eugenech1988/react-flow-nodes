@@ -1,13 +1,12 @@
-import { ServerStatusBadge } from '@/features/server-status-badge';
+// import { ServerStatusBadge } from '@/features/server-status-badge';
 import { ThemeToggle } from '@/features/toggle-theme';
-import { WorkflowSubmit } from '@/features/workflow-submit';
+// import { WorkflowSubmit } from '@/features/workflow-submit';
 // import { WorkflowLoad } from '@/features/workflow'; // Замените на ваш реальный импорт
 import { useUser } from '@/features/auth'; // Замените на ваш реальный импорт
 
 export const Header = () => {
   const { user } = useUser();
 
-  // Генерация инициалов, если аватар отсутствует
   const getInitials = () => {
     if (!user) return '';
     const first = user.firstName?.charAt(0) || '';
@@ -63,6 +62,9 @@ export const Header = () => {
       {/*    </div>*/}
       {/*  )}*/}
       {/*</div>*/}
+      <div>
+        <ThemeToggle/>
+      </div>
     </header>
   );
 };
