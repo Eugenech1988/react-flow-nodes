@@ -3,15 +3,14 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import '@pipeline/ui/globals.css';
 import './style.css';
-import { ThemeProvider, QueryProvider } from './providers';
-import App from './App';
+import { ThemeProvider, QueryProvider, AppRoutes } from './providers';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryProvider>
       <ThemeProvider defaultTheme="system" storageKey="pipeline-studio-theme">
         <Router>
-          <App/>
+          <AppRoutes/>
         </Router>
       </ThemeProvider>
     </QueryProvider>
