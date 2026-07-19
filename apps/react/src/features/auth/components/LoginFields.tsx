@@ -40,20 +40,6 @@ export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, inputClass
           <p className="text-xs text-red-400 pt-1">{errors.password.message}</p>
         )}
       </div>
-
-      <div className="space-y-1">
-        <FloatingInput
-          {...register('confirmPassword')}
-          type="password"
-          autoComplete="current-password"
-          label="Confirm Password"
-          className={inputClasses}
-          error={error || !!errors.confirmPassword}
-        />
-        {errors.confirmPassword && (
-          <p className="text-xs text-red-400 pt-1">{errors.confirmPassword.message}</p>
-        )}
-      </div>
     </>
   );
 };
