@@ -10,15 +10,7 @@ export class UsersService {
 
   async findAll() {
     try {
-      return await this.prisma.user.findMany({
-        select: {
-          id: true,
-          email: true,
-          nickName: true,
-          firstName: true,
-          lastName: true
-        },
-      });
+      return await this.prisma.user.findMany();
     } catch (error) {
       console.error('Failed to fetch users:', error);
       throw new InternalServerErrorException('An unexpected error occurred while fetching users');

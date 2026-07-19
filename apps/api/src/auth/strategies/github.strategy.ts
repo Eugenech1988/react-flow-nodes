@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-github2';
-import { IOauthUser } from '../types/auth.types';
+import type { IOauthUser } from '../types/auth.types';
 
-interface GithubEmail {
-  value: string;
-  primary?: boolean;
+interface GithubApiEmail {
+  email: string;
+  primary: boolean;
+  verified: boolean;
+  visibility: string | null;
 }
 
 @Injectable()
@@ -26,11 +28,32 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     profile: Profile,
     done: (error: Error | null, user: IOauthUser | false) => void,
   ): Promise<void> {
-    const { displayName, username, emails, photos } = profile;
-    const githubEmails = (emails || []) as GithubEmail[];
-    const primaryEmail = githubEmails.find((e) => e.primary)?.value;
-    const fallbackEmail = githubEmails[0]?.value;
-    const email = primaryEmail || fallbackEmail || `${username || 'unknown'}@github.placeholder`;
+    const { displayName, username, photos } = profile;
+    let email = '';
+
+    try {
+      const response = await fetch('https://api.github.com/user/emails', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'User-Agent': 'NestJS-Auth-App',
+          Accept: 'application/vnd.github+json',
+        },
+      });
+
+      if (response.ok) {
+        const emails = (await response.json()) as GithubApiEmail[];
+        const primaryEmail = emails.find((e) => e.primary);
+        const verifiedEmail = emails.find((e) => e.verified);
+
+        email = primaryEmail?.email || verifiedEmail?.email || emails[0]?.email || '';
+      }
+    } catch (error) {
+      console.error('Failed to fetch GitHub private emails:', error);
+    }
+
+    if (!email) {
+      email = `${username || 'unknown'}_${profile.id}@github.placeholder`;
+    }
 
     const nameParts = displayName?.split(' ') || [];
     const firstName = nameParts[0] || username || '';

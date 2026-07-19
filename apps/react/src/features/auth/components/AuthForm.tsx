@@ -91,7 +91,7 @@ export const AuthForm: React.FC = () => {
     e.stopPropagation();
 
     const apiUrl = import.meta.env.API_URL || 'http://localhost:3000';
-    window.location.href = `${apiUrl}/auth/google/callback`;
+    window.location.href = `${apiUrl}/auth/google`;
   };
 
   const handleGithubLogin = (e: React.MouseEvent<HTMLButtonElement>) => {

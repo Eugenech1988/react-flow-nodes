@@ -35,7 +35,6 @@ function App() {
       <button
         onClick={() => logout()}
         disabled={isLoggingOut}
-        variant="outline"
       >
         {isLoggingOut ? 'Logging out...' : 'Sign Out'}
       </button>
