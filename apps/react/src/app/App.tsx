@@ -3,10 +3,11 @@
 // import { Canvas } from '@/widgets/canvas';
 // import { ReactFlowProvider } from '@xyflow/react';
 // import { Toaster } from '@pipeline/ui'
-import { AuthForm, useUser } from '@/features/auth';
+import { AuthForm, useUser, useLogout } from '@/features/auth';
 
 function App() {
   const { user, isLoading, isAuth } = useUser();
+  const { logout, isLoggingOut } = useLogout();
 
   if (isLoading) {
     return (
@@ -31,6 +32,13 @@ function App() {
       {/*  <Toaster />*/}
       {/*</main>*/}
       {user.email}
+      <button
+        onClick={() => logout()}
+        disabled={isLoggingOut}
+        variant="outline"
+      >
+        {isLoggingOut ? 'Logging out...' : 'Sign Out'}
+      </button>
       {/*<AuthForm/>*/}
     </div>
   );
