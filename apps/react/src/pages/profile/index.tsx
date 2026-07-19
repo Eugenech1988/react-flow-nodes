@@ -24,7 +24,6 @@ export const ProfilePage = () => {
     role: 'Senior Pipeline Engineer'
   });
 
-  // Локальное состояние для превью выбранной аватарки (исходный URL из юзера)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl || null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
@@ -33,23 +32,19 @@ export const ProfilePage = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Обработка выбора файла во входном инпуте
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Валидация на размер файла (например, до 5 МБ)
       if (file.size > 5 * 1024 * 1024) {
         alert('File is too large. Maximum size is 5MB.');
         return;
       }
 
       setAvatarFile(file);
-      // Создаем временную ссылку для немедленного отображения картинки в интерфейсе
       setAvatarPreview(URL.createObjectURL(file));
     }
   };
 
-  // Метод триггерит клик по скрытому инпуту при нажатии на аватарку
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
   };
@@ -57,7 +52,6 @@ export const ProfilePage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Создаем FormData для отправки текстовых полей вместе с файлом
     const dataToSend = new FormData();
     dataToSend.append('firstName', formData.firstName);
     dataToSend.append('lastName', formData.lastName);
@@ -71,10 +65,9 @@ export const ProfilePage = () => {
     }
 
     try {
-      // Пример отправки на бэкенд через fetch или axios:
       // const response = await fetch('/api/profile/update', {
       //   method: 'POST',
-      //   body: dataToSend, // Браузер сам выставит нужный Content-Type (multipart/form-data)
+      //   body: dataToSend,
       // });
 
       alert('Профиль и аватар успешно обновлены!');
@@ -84,21 +77,18 @@ export const ProfilePage = () => {
     }
   };
 
-  // Генерация инициалов для заглушки
   const initials = `${formData.firstName[0] || ''}${formData.lastName[0] || ''}`.toUpperCase();
 
   return (
     <div className="min-h-screen bg-background text-foreground p-6 md:p-12 transition-colors duration-300">
       <div className="max-w-4xl mx-auto space-y-8">
-
-        {/* Хедер страницы */}
         <div className="space-y-4">
           <button
             onClick={() => navigate(-1)}
             className="group flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-hidden"
           >
             <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
-            Back
+            Back to app
           </button>
 
           <div>
@@ -111,10 +101,8 @@ export const ProfilePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-          {/* Левая колонка: Аватар и Быстрая информация */}
           <div className="md:col-span-1 flex flex-col items-center p-6 border border-border bg-card rounded-xl shadow-xs h-fit">
 
-            {/* Скрытый инпут для выбора файла */}
             <input
               type="file"
               ref={fileInputRef}
@@ -123,7 +111,6 @@ export const ProfilePage = () => {
               className="hidden"
             />
 
-            {/* Зона клика по аватарке */}
             <div
               onClick={handleAvatarClick}
               className="relative group cursor-pointer w-24 h-24 rounded-full overflow-hidden shadow-md border border-border bg-linear-to-br from-teal-400 to-emerald-500"
@@ -139,7 +126,6 @@ export const ProfilePage = () => {
                   {initials}
                 </div>
               )}
-              {/* Overlay при наведении */}
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 <Camera className="w-6 h-6 text-white" />
               </div>
@@ -164,7 +150,6 @@ export const ProfilePage = () => {
             </div>
           </div>
 
-          {/* Правая колонка: Форма редактирования */}
           <div className="md:col-span-2 border border-border bg-card rounded-xl shadow-xs overflow-hidden">
             <div className="px-6 py-4 border-b border-border/60 bg-foreground/[0.01]">
               <h3 className="font-medium text-sm">Personal Information</h3>

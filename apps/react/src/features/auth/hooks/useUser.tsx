@@ -7,6 +7,7 @@ export interface User {
   firstName?: string;
   lastName?: string;
   picture?: string;
+  avatarUrl?: string;
 }
 
 export const USER_QUERY_KEY = ['current-user'];
