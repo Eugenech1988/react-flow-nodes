@@ -1,10 +1,12 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dtos/register.dto';
+import { RecoveryDto } from './dtos/recovery.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { IUserSafe, IJwtPayload, IOauthUser } from './types/auth.types';
-import { verify } from 'argon2';
+import { verify, hash } from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -90,5 +92,46 @@ export class AuthService {
     });
 
     return { accessToken, refreshToken };
+  }
+
+  async recovery(dto: RecoveryDto): Promise<void> {
+    const user = await this.usersService.findOneByEmail(dto.email);
+    if (!user) return;
+
+    const resetToken = this.jwtService.sign(
+      { userId: user.id, purpose: 'password_recovery' },
+      {
+        secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+        expiresIn: '15m',
+      },
+    );
+
+    const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
+    const recoveryLink = `${clientUrl}/reset-password?token=${resetToken}`;
+
+    console.log(`Recovering token from ${clientUrl} ${resetToken}`, );
+
+  }
+
+  async resetPassword(dto: ResetPasswordDto): Promise<void> {
+    let payload: any;
+
+    try {
+      payload = this.jwtService.verify(dto.token, {
+        secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+      });
+    } catch (error) {
+      throw new BadRequestException('Invalid or expired recovery token');
+    }
+
+    if (payload.purpose !== 'password_recovery') {
+      throw new BadRequestException('Invalid token purpose');
+    }
+
+    const hashedPassword = await hash(dto.password);
+
+    await this.usersService.update(payload.userId, {
+      password: hashedPassword,
+    });
   }
 }

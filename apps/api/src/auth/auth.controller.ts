@@ -3,6 +3,8 @@ import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dtos/register.dto';
+import { RecoveryDto } from './dtos/recovery.dto';
+import { ResetPasswordDto} from './dtos/reset-password.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
@@ -139,6 +141,20 @@ export class AuthController {
     res.clearCookie('accessToken', cookieOptions);
     res.clearCookie('refreshToken', cookieOptions);
 
+    return { success: true };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('recovery')
+  async recovery(@Body() dto: RecoveryDto): Promise<{ message: string }> {
+    await this.authService.recovery(dto);
+    return { message: 'If the email exists, a reset link has been sent.' };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('reset-password')
+  async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ success: boolean }> {
+    await this.authService.resetPassword(dto);
     return { success: true };
   }
 }
