@@ -68,6 +68,20 @@ export const RegisterFields: FC<RegisterFieldsProps> = ({ register, errors, inpu
           <p className="text-xs text-red-400 pt-1">{errors.password.message}</p>
         )}
       </div>
+
+      <div className="space-y-1">
+        <FloatingInput
+          {...register('confirmPassword')}
+          type="password"
+          autoComplete="new-password"
+          label="Confirm Password"
+          error={!!errors.confirmPassword}
+          className={inputClasses}
+        />
+        {errors.confirmPassword && (
+          <p className="text-xs text-red-400 pt-1">{errors.confirmPassword.message}</p>
+        )}
+      </div>
     </>
   );
 };

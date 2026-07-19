@@ -23,14 +23,22 @@ type FormMode = 'login' | 'register';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password is required')
+  password: z.string().min(6, 'Password is required'),
+  confirmPassword: z.string().min(1, 'Please confirm your password')
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 const registerSchema = z.object({
   email: z.string().email('Invalid email format'),
   password: z.string().min(6, 'Password must be at least 6 characters long'),
+  confirmPassword: z.string().min(1, 'Please confirm your password'),
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().optional(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -48,11 +56,13 @@ export const AuthForm: React.FC = () => {
     formState: { errors, isSubmitting }
   } = useForm<CombinedFormData>({
     resolver: zodResolver(mode === 'login' ? loginSchema : registerSchema),
-    mode: "onChange",
+    mode: "onSubmit",
+    reValidateMode: "onChange",
     defaultValues: {
       email: '',
       password: '',
       firstName: '',
+      confirmPassword: '',
       lastName: '',
     }
   });
@@ -70,6 +80,7 @@ export const AuthForm: React.FC = () => {
     reset({
       email: '',
       password: '',
+      confirmPassword: '',
       firstName: '',
       lastName: '',
     });

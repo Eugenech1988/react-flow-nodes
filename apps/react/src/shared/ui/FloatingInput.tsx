@@ -18,7 +18,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             ref={ref}
             placeholder=" "
             className={cn(
-              'peer w-full rounded-md border-0 bg-transparent focus-visible:ring-0 pt-3 pb-3 h-11 placeholder:opacity-0 transition-all z-10 relative',
+              'peer w-full rounded-md border-0 bg-transparent focus-visible:ring-0 px-3 pt-3 pb-3 h-11 placeholder:opacity-0 transition-all z-10 relative',
               error
                 ? '!text-red-500 ![-webkit-text-fill-color:theme(colors.red.500)] autofill:![-webkit-text-fill-color:theme(colors.red.500)]'
                 : 'text-zinc-200 autofill:![-webkit-text-fill-color:theme(colors.slate.400)]',
@@ -28,8 +28,8 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
 
           <label
             className={cn(
-              'absolute left-3 top-0 -translate-y-1/2 pointer-events-none text-[10px] font-sans transition-all duration-200 ease-in-out px-1 z-20 block select-none max-w-[calc(100%-24px)] truncate text-ellipsis',
-              'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-xs',
+              'absolute left-3 top-0 -translate-y-1/2 pointer-events-none text-[10px] font-sans transition-all duration-200 ease-in-out z-20 block select-none max-w-[calc(100%-24px)] truncate text-ellipsis origin-left',
+              'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm',
               error
                 ? '!text-red-500'
                 : 'text-zinc-500 peer-focus:text-slate-400 peer-focus-visible:text-slate-400 peer-not-placeholder-shown:text-slate-400 group-hover:text-slate-400',
@@ -52,7 +52,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
                 : 'border-zinc-600 group-hover:border-slate-400 peer-focus:border-slate-400 peer-focus-visible:border-slate-400 peer-not-placeholder-shown:border-slate-400'
             )}
           >
-            <legend className="h-3 text-[10px] font-sans pointer-events-none block w-auto whitespace-nowrap box-border ml-3 opacity-0 invisible select-none px-1">
+            <legend className="h-3 text-[10px] font-sans pointer-events-none block w-auto whitespace-nowrap box-border ml-2.5 opacity-0 invisible select-none px-1">
               {label}
             </legend>
           </fieldset>

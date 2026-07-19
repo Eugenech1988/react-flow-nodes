@@ -3,7 +3,7 @@ import { NodesToolbar } from '@/widgets/nodes-toolbar';
 import { Canvas } from '@/widgets/canvas';
 import { ReactFlowProvider } from '@xyflow/react';
 import { Toaster } from '@pipeline/ui'
-import { AuthForm, useUser, useLogout } from '@/features/auth';
+import { AuthForm, RecoveryForm, useUser, useLogout } from '@/features/auth';
 
 function App() {
   const { isLoading, isAuth } = useUser();

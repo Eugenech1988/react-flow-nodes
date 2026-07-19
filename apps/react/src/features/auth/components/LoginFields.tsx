@@ -10,7 +10,7 @@ interface LoginFieldsProps {
   error?: boolean;
 }
 
-export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, error, inputClasses }) => {
+export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, inputClasses, error }) => {
   return (
     <>
       <div className="space-y-1">
@@ -20,7 +20,7 @@ export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, error, inp
           autoComplete="email"
           label="Email Address"
           className={inputClasses}
-          error={!!errors.email}
+          error={error || !!errors.email}
         />
         {errors.email && (
           <p className="text-xs text-red-400 pt-1">{errors.email.message}</p>
@@ -33,11 +33,25 @@ export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, error, inp
           type="password"
           autoComplete="current-password"
           label="Password"
-          error={!!errors.password}
           className={inputClasses}
+          error={error || !!errors.password}
         />
         {errors.password && (
           <p className="text-xs text-red-400 pt-1">{errors.password.message}</p>
+        )}
+      </div>
+
+      <div className="space-y-1">
+        <FloatingInput
+          {...register('confirmPassword')}
+          type="password"
+          autoComplete="current-password"
+          label="Confirm Password"
+          className={inputClasses}
+          error={error || !!errors.confirmPassword}
+        />
+        {errors.confirmPassword && (
+          <p className="text-xs text-red-400 pt-1">{errors.confirmPassword.message}</p>
         )}
       </div>
     </>
