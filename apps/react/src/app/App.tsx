@@ -3,10 +3,11 @@ import { NodesToolbar } from '@/widgets/nodes-toolbar';
 import { Canvas } from '@/widgets/canvas';
 import { ReactFlowProvider } from '@xyflow/react';
 import { Toaster } from '@pipeline/ui'
-import { AuthForm, useUser } from '@/features/auth';
+import { AuthForm, useUser, useLogout } from '@/features/auth';
 
 function App() {
   const { isLoading, isAuth } = useUser();
+  const { logout } = useLogout();
 
   if (isLoading) {
     return (
@@ -22,6 +23,11 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
+      {/*<button*/}
+      {/*  onClick={logout}*/}
+      {/*>*/}
+      {/*  logout*/}
+      {/*</button>*/}
       <Header />
       <NodesToolbar />
       <main className="flex-1 min-h-0">

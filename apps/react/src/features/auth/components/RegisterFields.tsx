@@ -1,55 +1,51 @@
-import React from 'react';
-import type { FieldErrors } from 'react-hook-form';
+import type { FC } from 'react';
+import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { FloatingInput } from '@/shared/ui';
-
-type RegisterFormData = {
-  firstName: string;
-  lastName?: string;
-  nickName: string;
-  email: string;
-  password: string;
-};
+import type { CombinedFormData } from './AuthForm';
 
 interface RegisterFieldsProps {
-  register: any;
-  errors: FieldErrors<RegisterFormData>;
+  register: UseFormRegister<CombinedFormData>;
+  errors: FieldErrors<CombinedFormData>;
+  inputClasses: string;
 }
 
-export const RegisterFields: React.FC<RegisterFieldsProps> = ({ register, errors }) => {
-  const inputClasses =
-    'block w-full rounded-md border border-zinc-800 bg-slate-950/90 px-4 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-zinc-500 focus:ring-0 focus:shadow-[0_0_15px_rgba(255,255,255,0.03)] outline-none transition-all';
-
+export const RegisterFields: FC<RegisterFieldsProps> = ({ register, errors, inputClasses }) => {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <FloatingInput
-            {...register('firstName')}
-            type="text"
-            label="First Name"
-            className={inputClasses}
-            error={!!errors.firstName}
-          />
-          {errors.firstName && (
-            <p className="text-xs text-red-400 pt-1">{errors.firstName.message}</p>
-          )}
-        </div>
+      <div className="space-y-1">
+        <FloatingInput
+          {...register('firstName')}
+          type="text"
+          autoComplete="given-name"
+          label="First Name"
+          placeholder="First Name"
+          className={inputClasses}
+          error={!!errors.firstName}
+        />
+        {errors.firstName && (
+          <p className="text-xs text-red-400 pt-1">{errors.firstName.message}</p>
+        )}
+      </div>
 
-        <div className="space-y-1">
-          <FloatingInput
-            {...register('lastName')}
-            type="text"
-            label="Last Name"
-            className={inputClasses}
-          />
-        </div>
+      <div className="space-y-1">
+        <FloatingInput
+          {...register('lastName')}
+          type="text"
+          autoComplete="family-name"
+          label="Last Name"
+          placeholder="Last Name"
+          className={inputClasses}
+          error={!!errors.lastName}
+        />
       </div>
 
       <div className="space-y-1">
         <FloatingInput
           {...register('nickName')}
           type="text"
+          autoComplete="username"
           label="Username"
+          placeholder="Username"
           className={inputClasses}
           error={!!errors.nickName}
         />
@@ -62,8 +58,8 @@ export const RegisterFields: React.FC<RegisterFieldsProps> = ({ register, errors
         <FloatingInput
           {...register('email')}
           type="email"
+          autoComplete="email"
           label="Email Address"
-          placeholder="Email Address"
           className={inputClasses}
           error={!!errors.email}
         />
@@ -76,10 +72,10 @@ export const RegisterFields: React.FC<RegisterFieldsProps> = ({ register, errors
         <FloatingInput
           {...register('password')}
           type="password"
+          autoComplete="new-password"
           label="Password"
-          placeholder="Password"
-          error={!!errors.password}
           className={inputClasses}
+          error={!!errors.password}
         />
         {errors.password && (
           <p className="text-xs text-red-400 pt-1">{errors.password.message}</p>

@@ -17,6 +17,7 @@ import { AuthModeToggle } from './AuthModeToggle';
 import { RegisterFields } from './RegisterFields';
 import { LoginFields } from './LoginFields';
 import { api } from '@/shared/api';
+import { cn } from '@/shared/lib';
 
 type FormMode = 'login' | 'register';
 
@@ -35,11 +36,19 @@ const registerSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 type RegisterFormData = z.infer<typeof registerSchema>;
-type CombinedFormData = LoginFormData & Partial<RegisterFormData>;
+export type CombinedFormData = LoginFormData & Partial<RegisterFormData>;
 
 export const AuthForm: React.FC = () => {
   const [mode, setMode] = useState<FormMode>('login');
   const [apiError, setApiError] = useState<string | null>(null);
+
+  const inputClasses = cn(
+    'block w-full rounded-md border border-zinc-800 bg-slate-950/90 px-4 py-3 text-sm text-zinc-200 placeholder:text-zinc-600 outline-none transition-all',
+    'focus:border-slate-400 focus:!text-slate-400 focus:ring-0 focus:shadow-[0_0_15px_rgba(255,255,255,0.03)]',
+    'hover:border-slate-400 hover:text-slate-400 hover:shadow-[0_0_15px_rgba(255,255,255,0.03)]',
+    'not-placeholder-shown:border-slate-400 not-placeholder-shown:text-slate-400 not-placeholder-shown:shadow-[0_0_15px_rgba(255,255,255,0.03)]',
+    'autofill:border-slate-400 autofill:text-slate-400 autofill:shadow-[0_0_15px_rgba(255,255,255,0.03)]'
+  );
 
   const {
     register,
@@ -78,7 +87,6 @@ export const AuthForm: React.FC = () => {
           email: data.email,
           password: data.password
         });
-
         window.location.href = '/dashboard';
       } else {
         await api.post('/auth/register', {
@@ -88,11 +96,16 @@ export const AuthForm: React.FC = () => {
           lastName: data.lastName || null,
           nickName: data.nickName
         });
-
         toggleMode();
       }
-    } catch (error: any) {
-      setApiError(error.message || 'Something went wrong');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setApiError(error.message);
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
+        setApiError(String((error as { message: unknown }).message));
+      } else {
+        setApiError('Something went wrong');
+      }
     }
   };
 
@@ -128,7 +141,7 @@ export const AuthForm: React.FC = () => {
             onGithubClick={handleGithubLogin}
           />
 
-          <div className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-zinc-600 before:h-[1px] before:flex-1 before:bg-zinc-800 after:h-[1px] after:flex-1 after:bg-zinc-800">
+          <div className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-slate-400 before:h-[1px] before:flex-1 before:bg-slate-400 after:h-[1px] after:flex-1 after:bg-slate-400">
             <span className="px-3">or</span>
           </div>
 
@@ -141,9 +154,9 @@ export const AuthForm: React.FC = () => {
 
             <div className="space-y-5">
               {mode === 'register' ? (
-                <RegisterFields register={register} errors={errors} />
+                <RegisterFields register={register} errors={errors} inputClasses={inputClasses} />
               ) : (
-                <LoginFields register={register} errors={errors} />
+                <LoginFields register={register} errors={errors} inputClasses={inputClasses} />
               )}
             </div>
 
