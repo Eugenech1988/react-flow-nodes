@@ -18,7 +18,7 @@ export class ProfileController {
 
   @Post('update')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('avatar')) // Ключ 'avatar' совпадает с FormData на фронтенде
+  @UseInterceptors(FileInterceptor('avatar'))
   async updateProfile(
     @CurrentUser('id') userId: string,
     @Body() updateProfileDto: UpdateProfileDto,

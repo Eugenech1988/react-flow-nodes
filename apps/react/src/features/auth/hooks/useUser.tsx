@@ -9,7 +9,7 @@ export interface Profile {
   avatarUrl: string | null;
   company?: string | null;
   location?: string | null;
-  role?: string | null;
+  jobTitle?: string | null;
   createdAt: string;
   updatedAt: string;
 }

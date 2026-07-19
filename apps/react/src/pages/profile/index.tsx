@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/features/auth';
+import { api } from '@/shared/api';
 import {
   Camera,
   Shield,
@@ -12,19 +13,19 @@ import { FloatingInput } from '@/shared/ui/FloatingInput';
 
 export const ProfilePage = () => {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, updateUserCache } = useUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
-    firstName: user?.profile.firstName || '',
-    lastName: user?.profile.lastName || '',
+    firstName: user?.profile?.firstName || '',
+    lastName: user?.profile?.lastName || '',
     email: user?.email || '',
-    company: user.profile.company,
-    location: user.profile.location,
-    role: user.profile.role
+    company: user?.profile?.company || '',
+    location: user?.profile?.location || '',
+    jobTitle: user?.profile?.jobTitle || '' // Маппим jobTitle из базы в стейт role
   });
 
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.profile.avatarUrl || null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.profile?.avatarUrl || null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,20 +56,19 @@ export const ProfilePage = () => {
     const dataToSend = new FormData();
     dataToSend.append('firstName', formData.firstName);
     dataToSend.append('lastName', formData.lastName);
-    dataToSend.append('email', formData.email);
     dataToSend.append('company', formData.company);
     dataToSend.append('location', formData.location);
-    dataToSend.append('role', formData.role);
-
+    dataToSend.append('jobTitle', formData.jobTitle);
     if (avatarFile) {
-      dataToSend.append('avatar', avatarFile); // Ключ 'avatar' должен совпадать с тем, что ожидает бэкенд
+      dataToSend.append('avatar', avatarFile);
     }
 
     try {
-      // const response = await fetch('/api/profile/update', {
-      //   method: 'POST',
-      //   body: dataToSend,
-      // });
+      const response = await api.post('/profile/update', dataToSend);
+
+      if (response.data) {
+        updateUserCache(response.data);
+      }
 
       alert('Профиль и аватар успешно обновлены!');
     } catch (error) {
@@ -100,9 +100,7 @@ export const ProfilePage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
           <div className="md:col-span-1 flex flex-col items-center p-6 border border-border bg-card rounded-xl shadow-xs h-fit">
-
             <input
               type="file"
               ref={fileInputRef}
@@ -134,8 +132,7 @@ export const ProfilePage = () => {
             <h2 className="text-lg font-semibold mt-4 text-center">
               {formData.firstName} {formData.lastName}
             </h2>
-            <p className="text-xs text-muted-foreground text-center mt-0.5">{formData.role}</p>
-
+            <p className="text-xs text-muted-foreground text-center mt-0.5">{formData.jobTitle}</p>
             <div className="w-full h-[1px] bg-border/60 my-4" />
 
             <div className="w-full space-y-2 text-xs text-muted-foreground">
@@ -156,7 +153,6 @@ export const ProfilePage = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
-
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FloatingInput
                   label="First Name"
@@ -183,7 +179,7 @@ export const ProfilePage = () => {
                 id="email"
                 name="email"
                 value={formData.email}
-                onChange={handleChange}
+                disabled
                 required
               />
 
@@ -207,9 +203,9 @@ export const ProfilePage = () => {
 
               <FloatingInput
                 label="Job Title"
-                id="role"
-                name="role"
-                value={formData.role}
+                id="jobTitle"
+                name="jobTitle"
+                value={formData.jobTitle}
                 onChange={handleChange}
               />
 
@@ -222,10 +218,8 @@ export const ProfilePage = () => {
                   Save Changes
                 </button>
               </div>
-
             </form>
           </div>
-
         </div>
       </div>
     </div>

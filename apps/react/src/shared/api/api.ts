@@ -3,11 +3,13 @@ const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
 
+  const isFormData = options.body instanceof FormData;
+
   const config: RequestInit = {
     ...options,
     credentials: 'include',
     headers: {
-      'Content-Type': 'application/json',
+      ...(!isFormData && { 'Content-Type': 'application/json' }),
       ...options.headers,
     },
   };
@@ -44,10 +46,21 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 export const api = {
   get: <T>(endpoint: string, options?: RequestInit) =>
     request<T>(endpoint, { ...options, method: 'GET' }),
+
   post: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
-    request<T>(endpoint, { ...options, method: 'POST', body: JSON.stringify(body) }),
+    request<T>(endpoint, {
+      ...options,
+      method: 'POST',
+      body: body instanceof FormData ? body : JSON.stringify(body)
+    }),
+
   put: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
-    request<T>(endpoint, { ...options, method: 'PUT', body: JSON.stringify(body) }),
+    request<T>(endpoint, {
+      ...options,
+      method: 'PUT',
+      body: body instanceof FormData ? body : JSON.stringify(body)
+    }),
+
   delete: <T>(endpoint: string, options?: RequestInit) =>
     request<T>(endpoint, { ...options, method: 'DELETE' }),
 };
