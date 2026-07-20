@@ -165,7 +165,7 @@ export const AuthForm: React.FC = () => {
                   />
 
                   {isAuthError && (
-                    <div className="text-xs text-red-400 antialiased space-y-2 pt-1">
+                    <div className="text-xs text-red-500 antialiased space-y-2 pt-1 pl-1">
                       <p>Incorrect email address or password. Please try again.</p>
                       <div>
                         <a
