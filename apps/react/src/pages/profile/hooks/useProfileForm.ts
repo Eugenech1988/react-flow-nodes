@@ -1,5 +1,4 @@
 import { useState, useRef, type ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUser, type User } from '@/features/auth';
@@ -7,9 +6,10 @@ import { api } from '@/shared/api';
 import { profileSchema, type IProfileFormData } from '../types';
 
 export const useProfileForm = () => {
-  const navigate = useNavigate();
   const { user, updateUserCache } = useUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const form = useForm<IProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -32,7 +32,7 @@ export const useProfileForm = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert('File is too large. Maximum size is 5MB.');
+        setAlert({ type: 'error', message: 'File is too large. Maximum size is 5MB.' });
         return;
       }
       setAvatarFile(file);
@@ -45,6 +45,7 @@ export const useProfileForm = () => {
   };
 
   const onSubmit = async (data: IProfileFormData) => {
+    setAlert(null);
     const dataToSend = new FormData();
     dataToSend.append('firstName', data.firstName);
     dataToSend.append('lastName', data.lastName);
@@ -59,9 +60,11 @@ export const useProfileForm = () => {
       const response = await api.post<User>('/profile/update', dataToSend);
       if (response) {
         updateUserCache(response);
+        setAlert({ type: 'success', message: 'Profile updated successfully.' });
       }
     } catch (error) {
       console.error(error);
+      setAlert({ type: 'error', message: 'Failed to update profile. Please try again.' });
     }
   };
 
@@ -79,9 +82,9 @@ export const useProfileForm = () => {
     handleAvatarClick,
     onSubmit: form.handleSubmit(onSubmit),
     initials,
-    navigate,
     firstName: watchedFirstName,
     lastName: watchedLastName,
     jobTitle: watchedJobTitle,
+    alert,
   };
 };

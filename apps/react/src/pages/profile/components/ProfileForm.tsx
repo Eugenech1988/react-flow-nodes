@@ -1,5 +1,6 @@
-import type { UseFormReturn } from 'react-hook-form';
-import { Save } from 'lucide-react';
+import { Save, ArrowLeft } from 'lucide-react';
+import { type UseFormReturn } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { FloatingInput } from '@/shared/ui/FloatingInput';
 import type { IProfileFormData } from '../types';
 
@@ -13,7 +14,7 @@ export const ProfileForm = ({ form, onSubmit }: ProfileFormProps) => {
 
   return (
     <div className="md:col-span-2 border border-border bg-card rounded-xl shadow-xs overflow-hidden">
-      <div className="px-6 py-4 border-b border-border/60 bg-foreground/[0.01]">
+      <div className="px-6 py-4 border-b border-border/60 bg-foreground/1">
         <h3 className="font-medium text-sm">Personal Information</h3>
       </div>
 
@@ -70,7 +71,16 @@ export const ProfileForm = ({ form, onSubmit }: ProfileFormProps) => {
           {...register('jobTitle')}
         />
 
-        <div className="flex justify-end pt-2 border-t border-border/60">
+        <div className="flex end justify-end gap-4 items-center pt-2 border-t border-border/60">
+          <Link
+            type="button"
+            to='/'
+            className="group flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors cursor-pointer outline-hidden"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+            Back to app
+          </Link>
+
           <button
             type="submit"
             className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-hidden focus:ring-2 focus:ring-teal-500/20"

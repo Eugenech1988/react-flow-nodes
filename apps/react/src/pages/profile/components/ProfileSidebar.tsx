@@ -36,7 +36,7 @@ export const ProfileSidebar = ({
         {firstName} {lastName}
       </h2>
       <p className="text-xs text-muted-foreground text-center mt-0.5">{jobTitle}</p>
-      <div className="w-full h-[1px] bg-border/60 my-4" />
+      <div className="w-full h-px bg-border/60 my-4" />
 
       <div className="w-full space-y-2 text-xs text-muted-foreground">
         <div className="flex items-center gap-2">
