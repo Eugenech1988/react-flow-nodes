@@ -1,8 +1,19 @@
 const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 
+let isRefreshing = false;
+let refreshSubscribers: (() => void)[] = [];
+
+function subscribeTokenRefresh(cb: () => void) {
+  refreshSubscribers.push(cb);
+}
+
+function onRefreshed() {
+  refreshSubscribers.forEach((cb) => cb());
+  refreshSubscribers = [];
+}
+
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
-
   const isFormData = options.body instanceof FormData;
 
   const config: RequestInit = {
@@ -17,14 +28,30 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const response = await fetch(url, config);
 
   if (response.status === 401) {
-    if (endpoint === '/auth/refresh' || endpoint === '/auth/me') {
+    if (endpoint === '/auth/refresh') {
+      isRefreshing = false;
+      refreshSubscribers = [];
       throw new Error('Unauthorized');
     }
 
+    if (isRefreshing) {
+      return new Promise<T>((resolve) => {
+        subscribeTokenRefresh(() => {
+          resolve(request<T>(endpoint, options));
+        });
+      });
+    }
+
+    isRefreshing = true;
+
     try {
       await request('/auth/refresh', { method: 'POST' });
+      isRefreshing = false;
+      onRefreshed();
       return await request<T>(endpoint, options);
-    } catch {
+    } catch (refreshError) {
+      isRefreshing = false;
+      refreshSubscribers = [];
       throw new Error('Unauthorized');
     }
   }

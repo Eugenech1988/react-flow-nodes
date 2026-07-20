@@ -39,16 +39,27 @@ export function useUser() {
     queryFn: async () => {
       try {
         return await api.get<User>('/auth/me');
-      } catch (err) {
-        return null;
+      } catch (err: any) {
+        if (err.message === 'Unauthorized') {
+          return null;
+        }
+        throw err;
       }
     },
-    staleTime: 10 * 60 * 1000,
-    gcTime: 24 * 60 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
+    retry: (failureCount, error: any) => {
+      if (error.message === 'Unauthorized') return false;
+      return failureCount < 2;
+    },
   });
 
   const updateUserCache = (userData: User | null) => {
     queryClient.setQueryData(USER_QUERY_KEY, userData);
+  };
+
+  const clearUserCache = () => {
+    queryClient.setQueryData(USER_QUERY_KEY, null);
+    queryClient.invalidateQueries();
   };
 
   return {
@@ -58,5 +69,6 @@ export function useUser() {
     isError,
     error,
     updateUserCache,
+    clearUserCache,
   };
 }
