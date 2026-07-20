@@ -77,7 +77,7 @@ export const ProfileForm = ({ form, onSubmit, isPristine }: ProfileFormProps) =>
         <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
           <Link
             to="/"
-            className="group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-hidden"
+            className="group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-md"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to app
@@ -86,7 +86,7 @@ export const ProfileForm = ({ form, onSubmit, isPristine }: ProfileFormProps) =>
           <Button
             type="submit"
             disabled={isPristine}
-            className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-hidden focus:ring-teal-500/20"
+            className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
           >
             <Save className="w-4 h-4" />
             Save Changes
