@@ -8,6 +8,7 @@ import { RecoveryDto } from './dtos/recovery.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { IUserSafe, IJwtPayload, IOauthUser } from './types/auth.types';
 import { verify, hash } from 'argon2';
+import { UpdatePasswordDto } from './dtos/update-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -134,6 +135,25 @@ export class AuthService {
     const recoveryLink = `${clientUrl}/reset-password?token=${resetToken}`;
 
     console.log(`Recovering token from ${clientUrl} ${resetToken}`);
+  }
+
+  async updatePassword(userId: string, dto: UpdatePasswordDto): Promise<void> {
+    const user = await this.usersService.findOneById(userId);
+
+    if (!user || !user.password) {
+      throw new BadRequestException('User not found or uses social login without a password');
+    }
+
+    const isMatch = await verify(user.password, dto.oldPassword);
+    if (!isMatch) {
+      throw new BadRequestException('Incorrect old password');
+    }
+
+    const hashedPassword = await hash(dto.newPassword);
+
+    await this.usersService.update(userId, {
+      password: hashedPassword,
+    });
   }
 
   async resetPassword(dto: ResetPasswordDto): Promise<void> {

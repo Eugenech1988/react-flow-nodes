@@ -4,13 +4,14 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dtos/register.dto';
 import { RecoveryDto } from './dtos/recovery.dto';
-import { ResetPasswordDto} from './dtos/reset-password.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { GoogleOauthGuard } from './guards/google.guard';
 import { GithubOauthGuard } from './guards/github.guard';
 import type { IUserSafe, IOauthUser } from './types/auth.types';
+import { UpdatePasswordDto } from './dtos/update-password.dto';
 
 interface IRequestWithUser extends Request {
   user: IUserSafe;
@@ -24,8 +25,9 @@ interface IRequestWithOauthUser extends Request {
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
-  ) {}
+    private readonly configService: ConfigService
+  ) {
+  }
 
   private setTokenCookies(res: Response, accessToken: string, refreshToken: string) {
     const isProd = process.env.NODE_ENV === 'production';
@@ -34,21 +36,21 @@ export class AuthController {
       httpOnly: true,
       secure: isProd,
       sameSite: 'lax',
-      maxAge: 15 * 60 * 1000,
+      maxAge: 15 * 60 * 1000
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: isProd,
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
   }
 
   @Post('register')
   async register(
     @Body() dto: RegisterDto,
-    @Res({ passthrough: true }) res: Response,
+    @Res({passthrough: true}) res: Response
   ): Promise<IUserSafe> {
     const user = await this.authService.register(dto);
     const tokens = await this.authService.generateTokens(user.id);
@@ -61,7 +63,7 @@ export class AuthController {
   @Post('login')
   async login(
     @Req() req: IRequestWithUser,
-    @Res({ passthrough: true }) res: Response,
+    @Res({passthrough: true}) res: Response
   ): Promise<IUserSafe> {
     const tokens = await this.authService.generateTokens(req.user.id);
     this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
@@ -70,13 +72,14 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
-  async googleAuth() {}
+  async googleAuth() {
+  }
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
   async googleAuthCallback(
     @Req() req: IRequestWithOauthUser,
-    @Res() res: Response,
+    @Res() res: Response
   ) {
     const user = await this.authService.validateOauthUser(req.user);
     const tokens = await this.authService.generateTokens(user.id);
@@ -88,13 +91,14 @@ export class AuthController {
 
   @Get('github')
   @UseGuards(GithubOauthGuard)
-  async githubAuth() {}
+  async githubAuth() {
+  }
 
   @Get('github/callback')
   @UseGuards(GithubOauthGuard)
   async githubAuthCallback(
     @Req() req: IRequestWithOauthUser,
-    @Res() res: Response,
+    @Res() res: Response
   ) {
     const user = await this.authService.validateOauthUser(req.user);
     const tokens = await this.authService.generateTokens(user.id);
@@ -109,18 +113,18 @@ export class AuthController {
   @Post('refresh')
   async refresh(
     @Req() req: IRequestWithUser,
-    @Res({ passthrough: true }) res: Response,
+    @Res({passthrough: true}) res: Response
   ): Promise<{ success: boolean }> {
     const tokens = await this.authService.generateTokens(req.user.id);
     this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
-    return { success: true };
+    return {success: true};
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getMe(
     @Req() req: IRequestWithUser,
-    @Res({ passthrough: true }) res: Response,
+    @Res({passthrough: true}) res: Response
   ): IUserSafe {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
@@ -130,31 +134,42 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Res({ passthrough: true }) res: Response) {
+  async logout(@Res({passthrough: true}) res: Response) {
     const isProd = process.env.NODE_ENV === 'production';
     const cookieOptions = {
       httpOnly: true,
       secure: isProd,
-      sameSite: 'lax' as const,
+      sameSite: 'lax' as const
     };
 
     res.clearCookie('accessToken', cookieOptions);
     res.clearCookie('refreshToken', cookieOptions);
 
-    return { success: true };
+    return {success: true};
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('recovery')
   async recovery(@Body() dto: RecoveryDto): Promise<{ message: string }> {
     await this.authService.recovery(dto);
-    return { message: 'If the email exists, a reset link has been sent.' };
+    return {message: 'If the email exists, a reset link has been sent.'};
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Post('update-password')
+  async updatePassword(
+    @Req() req: IRequestWithUser,
+    @Body() dto: UpdatePasswordDto
+  ): Promise<{ success: boolean }> {
+    await this.authService.updatePassword(req.user.id, dto);
+    return {success: true};
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ success: boolean }> {
     await this.authService.resetPassword(dto);
-    return { success: true };
+    return {success: true};
   }
 }
