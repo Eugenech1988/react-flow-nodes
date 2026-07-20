@@ -19,6 +19,8 @@ import {
   DropdownMenuGroup
 } from '@pipeline/ui';
 
+const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
+
 export const UserDropdown = () => {
   const { user } = useUser();
   const { logout } = useLogout();
@@ -37,13 +39,20 @@ export const UserDropdown = () => {
     ? `${firstName} ${lastName}`.trim()
     : user?.profile?.nickName || email.split('@')[0];
 
+  const avatarUrl = user?.profile?.avatarUrl;
+  const displaySrc = avatarUrl?.startsWith('blob:')
+    ? avatarUrl
+    : avatarUrl
+      ? `${BASE_URL}${avatarUrl}`
+      : null;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className="flex items-center gap-1.5 p-1 hover:bg-foreground/[0.04] active:bg-foreground/[0.08] border border-transparent hover:border-border/60 rounded-full cursor-pointer transition-all outline-hidden select-none group">
-        {user?.profile?.avatarUrl ? (
+        {displaySrc ? (
           <img
-            src={user.profile.avatarUrl}
+            src={displaySrc}
             alt={fullName}
             className="w-6 h-6 rounded-full object-cover shadow-xs"
           />

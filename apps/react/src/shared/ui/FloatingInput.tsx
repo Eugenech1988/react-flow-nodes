@@ -5,11 +5,12 @@ import { cn } from '@/shared/lib';
 interface FloatingInputProps extends React.ComponentProps<typeof Input> {
   label: string;
   error?: boolean;
+  errorMessage?: string;
   labelClasses?: string;
 }
 
 export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
-  ({ label, error, className = '', labelClasses = '', ...props }, ref) => {
+  ({ label, error, errorMessage, className = '', labelClasses = '', ...props }, ref) => {
     return (
       <div className="w-full pt-2">
         <div className="relative w-full group">
@@ -57,6 +58,9 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             </legend>
           </fieldset>
         </div>
+        {error && errorMessage && (
+          <p className="text-xs text-red-500 mt-1 pl-1">{errorMessage}</p>
+        )}
       </div>
     );
   }

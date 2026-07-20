@@ -1,14 +1,16 @@
+import type { UseFormReturn } from 'react-hook-form';
 import { Save } from 'lucide-react';
 import { FloatingInput } from '@/shared/ui/FloatingInput';
 import type { IProfileFormData } from '../types';
 
 interface ProfileFormProps {
-  formData: IProfileFormData;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  form: UseFormReturn<IProfileFormData>;
   onSubmit: (e: React.FormEvent) => void;
 }
 
-export const ProfileForm = ({ formData, onChange, onSubmit }: ProfileFormProps) => {
+export const ProfileForm = ({ form, onSubmit }: ProfileFormProps) => {
+  const { register, formState: { errors } } = form;
+
   return (
     <div className="md:col-span-2 border border-border bg-card rounded-xl shadow-xs overflow-hidden">
       <div className="px-6 py-4 border-b border-border/60 bg-foreground/[0.01]">
@@ -20,18 +22,16 @@ export const ProfileForm = ({ formData, onChange, onSubmit }: ProfileFormProps) 
           <FloatingInput
             label="First Name"
             id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={onChange}
-            required
+            error={!!errors.firstName}
+            errorMessage={errors.firstName?.message}
+            {...register('firstName')}
           />
           <FloatingInput
             label="Last Name"
             id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={onChange}
-            required
+            error={!!errors.lastName}
+            errorMessage={errors.lastName?.message}
+            {...register('lastName')}
           />
         </div>
 
@@ -39,35 +39,35 @@ export const ProfileForm = ({ formData, onChange, onSubmit }: ProfileFormProps) 
           label="Email Address"
           type="email"
           id="email"
-          name="email"
-          value={formData.email}
           disabled
-          required
+          error={!!errors.email}
+          errorMessage={errors.email?.message}
+          {...register('email')}
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FloatingInput
             label="Company"
             id="company"
-            name="company"
-            value={formData.company}
-            onChange={onChange}
+            error={!!errors.company}
+            errorMessage={errors.company?.message}
+            {...register('company')}
           />
           <FloatingInput
             label="Location"
             id="location"
-            name="location"
-            value={formData.location}
-            onChange={onChange}
+            error={!!errors.location}
+            errorMessage={errors.location?.message}
+            {...register('location')}
           />
         </div>
 
         <FloatingInput
           label="Job Title"
           id="jobTitle"
-          name="jobTitle"
-          value={formData.jobTitle}
-          onChange={onChange}
+          error={!!errors.jobTitle}
+          errorMessage={errors.jobTitle?.message}
+          {...register('jobTitle')}
         />
 
         <div className="flex justify-end pt-2 border-t border-border/60">

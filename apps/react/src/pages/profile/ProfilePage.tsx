@@ -5,15 +5,17 @@ import { ProfileForm } from './components/ProfileForm';
 
 export const ProfilePage = () => {
   const {
-    formData,
+    form,
     avatarPreview,
     fileInputRef,
-    handleChange,
     handleAvatarChange,
     handleAvatarClick,
-    handleSubmit,
+    onSubmit,
     initials,
     navigate,
+    firstName,
+    lastName,
+    jobTitle,
   } = useProfileForm();
 
   return (
@@ -43,15 +45,14 @@ export const ProfilePage = () => {
             onAvatarClick={handleAvatarClick}
             fileInputRef={fileInputRef}
             onAvatarChange={handleAvatarChange}
-            firstName={formData.firstName}
-            lastName={formData.lastName}
-            jobTitle={formData.jobTitle}
+            firstName={firstName}
+            lastName={lastName}
+            jobTitle={jobTitle}
           />
 
           <ProfileForm
-            formData={formData}
-            onChange={handleChange}
-            onSubmit={handleSubmit}
+            form={form}
+            onSubmit={onSubmit}
           />
         </div>
       </div>

@@ -1,32 +1,32 @@
-import { useState, useRef, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useRef, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useUser, type User } from '@/features/auth';
 import { api } from '@/shared/api';
-import type { IProfileFormData } from '../types';
+import { profileSchema, type IProfileFormData } from '../types';
 
 export const useProfileForm = () => {
   const navigate = useNavigate();
   const { user, updateUserCache } = useUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState<IProfileFormData>({
-    firstName: user?.profile?.firstName || '',
-    lastName: user?.profile?.lastName || '',
-    email: user?.email || '',
-    company: user?.profile?.company || '',
-    location: user?.profile?.location || '',
-    jobTitle: user?.profile?.jobTitle || ''
+  const form = useForm<IProfileFormData>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      firstName: user?.profile?.firstName || '',
+      lastName: user?.profile?.lastName || '',
+      email: user?.email || '',
+      company: user?.profile?.company || '',
+      location: user?.profile?.location || '',
+      jobTitle: user?.profile?.jobTitle || '',
+    },
   });
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
     user?.profile?.avatarUrl || null
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
 
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -44,15 +44,13 @@ export const useProfileForm = () => {
     fileInputRef.current?.click();
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: IProfileFormData) => {
     const dataToSend = new FormData();
-    dataToSend.append('firstName', formData.firstName);
-    dataToSend.append('lastName', formData.lastName);
-    dataToSend.append('company', formData.company);
-    dataToSend.append('location', formData.location);
-    dataToSend.append('jobTitle', formData.jobTitle);
+    dataToSend.append('firstName', data.firstName);
+    dataToSend.append('lastName', data.lastName);
+    dataToSend.append('company', data.company || '');
+    dataToSend.append('location', data.location || '');
+    dataToSend.append('jobTitle', data.jobTitle || '');
     if (avatarFile) {
       dataToSend.append('avatar', avatarFile);
     }
@@ -62,23 +60,28 @@ export const useProfileForm = () => {
       if (response) {
         updateUserCache(response);
       }
-
     } catch (error) {
       console.error(error);
     }
   };
 
-  const initials = `${formData.firstName[0] || ''}${formData.lastName[0] || ''}`.toUpperCase();
+  const watchedFirstName = form.watch('firstName');
+  const watchedLastName = form.watch('lastName');
+  const watchedJobTitle = form.watch('jobTitle');
+
+  const initials = `${watchedFirstName[0] || ''}${watchedLastName[0] || ''}`.toUpperCase();
 
   return {
-    formData,
+    form,
     avatarPreview,
     fileInputRef,
-    handleChange,
     handleAvatarChange,
     handleAvatarClick,
-    handleSubmit,
+    onSubmit: form.handleSubmit(onSubmit),
     initials,
     navigate,
+    firstName: watchedFirstName,
+    lastName: watchedLastName,
+    jobTitle: watchedJobTitle,
   };
 };
