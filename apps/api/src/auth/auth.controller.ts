@@ -61,11 +61,58 @@ export class AuthController {
   @Post('login')
   async login(
     @Req() req: IRequestWithUser,
-    @Res({passthrough: true}) res: Response
-  ): Promise<IUserSafe> {
-    const tokens = await this.authService.generateTokens(req.user.id);
+    @Res({ passthrough: true }) res: Response
+  ): Promise<IUserSafe | { isTwoFactorRequired: true; tempToken: string }> { // <-- Разрешаем возвращать объект с tempToken
+    const user = req.user;
+
+    if (user.isTwoFactorEnabled) {
+      const tempToken = this.authService.generateTempToken(user.id);
+      return {
+        isTwoFactorRequired: true,
+        tempToken,
+      };
+    }
+
+    const tokens = await this.authService.generateTokens(user.id);
     this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
-    return req.user;
+    return user;
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login-2fa')
+  async loginWith2fa(
+    @Body('tempToken') tempToken: string,
+    @Body('code') code: string,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<IUserSafe> {
+    const user = await this.authService.authenticateWith2Fa(tempToken, code);
+    const tokens = await this.authService.generateTokens(user.id);
+    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    return user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('2fa/generate')
+  async generate2fa(@Req() req: IRequestWithUser) {
+    return this.authService.generateTwoFactorSecret(req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('2fa/turn-on')
+  async turnOn2fa(
+    @Req() req: IRequestWithUser,
+    @Body('code') code: string
+  ) {
+    return this.authService.turnOnTwoFactor(req.user.id, code);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('2fa/turn-off')
+  async turnOff2fa(
+    @Req() req: IRequestWithUser,
+    @Body('code') code: string
+  ) {
+    return this.authService.turnOffTwoFactor(req.user.id, code);
   }
 
   @Get('google')

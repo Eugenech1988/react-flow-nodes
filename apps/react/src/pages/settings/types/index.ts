@@ -15,7 +15,8 @@ export const accountSchema = z
   .object({
     currentPassword: z
       .string()
-      .min(1, 'Current password is required'),
+      .min(1, 'Current password is required')
+      .min(6, 'Current password must be ate least 6 characters'),
     newPassword: z
       .string()
       .min(1, 'New password is required')

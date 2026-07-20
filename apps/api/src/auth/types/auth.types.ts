@@ -17,6 +17,8 @@ export interface IOauthUser {
   picture: string;
   accessToken: string;
   refreshToken?: string;
+  isTwoFactorEnabled?: boolean;
+  twoFactorSecret?: string;
   providerId: string;
   provider: 'google' | 'github' | ' local';
 }

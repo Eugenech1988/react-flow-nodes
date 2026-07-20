@@ -47,6 +47,8 @@ export const useAccountForm = () => {
   const onSubmit = (data: IAccountFormData) => {
     setAlert(null);
 
+    console.log('Form data after validation:', data);
+
     updatePassword({
       currentPassword: data.currentPassword || '',
       newPassword: data.newPassword || ''

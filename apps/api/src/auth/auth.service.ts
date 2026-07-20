@@ -7,7 +7,9 @@ import { RegisterDto } from './dtos/register.dto';
 import { RecoveryDto } from './dtos/recovery.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { IUserSafe, IJwtPayload, IOauthUser } from './types/auth.types';
-import { verify, hash } from 'argon2';
+import { generateSecret, generate, verify as verifyOtp, generateURI } from 'otplib';
+import * as qrcode from 'qrcode';
+import { verify as verifyArgon, hash } from 'argon2';
 
 interface IResetPasswordPayload {
   userId: string;
@@ -25,7 +27,7 @@ export class AuthService {
   async validateUser(email: string, pass: string): Promise<IUserSafe | null> {
     const user = await this.usersService.findOneByEmail(email);
     if (user && user.password) {
-      const isMatch = await verify(user.password, pass);
+      const isMatch = await verifyArgon(user.password, pass);
       if (isMatch) {
         const { password, ...result } = user;
         return result as IUserSafe;
@@ -141,6 +143,14 @@ export class AuthService {
     console.log(`Recovering token from ${clientUrl} ${resetToken}`);
   }
 
+  generateTempToken(userId: string) {
+    const payload = { userId, purpose: '2fa_pending' };
+    return this.jwtService.sign(payload, {
+      secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+      expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES') as SigningOptions,
+    });
+  }
+
   async resetPassword(dto: ResetPasswordDto): Promise<void> {
     let payload: IResetPasswordPayload;
 
@@ -161,5 +171,103 @@ export class AuthService {
     await this.usersService.update(payload.userId, {
       password: hashedPassword,
     });
+  }
+
+  async generateTwoFactorSecret(userId: string) {
+    const user = await this.usersService.findOneById(userId);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const secret = generateSecret();
+
+    const otpauthUrl = generateURI({
+      issuer: 'MyAppName',
+      label: user.email,
+      secret,
+    });
+
+    const qrCodeImage = await qrcode.toDataURL(otpauthUrl);
+
+    await this.usersService.update(userId, { twoFactorSecret: secret });
+
+    return {
+      qrCodeImage,
+      secret,
+    };
+  }
+
+  async turnOnTwoFactor(userId: string, code: string) {
+    const user = await this.usersService.findOneById(userId);
+    if (!user || !user.twoFactorSecret) {
+      throw new BadRequestException('2FA not initialized');
+    }
+
+    const result = await verifyOtp({
+      token: code,
+      secret: user.twoFactorSecret,
+    });
+
+    if (!result.valid) {
+      throw new BadRequestException('Invalid authenticator code');
+    }
+
+    await this.usersService.update(userId, { isTwoFactorEnabled: true });
+    return { success: true };
+  }
+
+  async turnOffTwoFactor(userId: string, code: string) {
+    const user = await this.usersService.findOneById(userId);
+    if (!user || !user.twoFactorSecret) {
+      throw new BadRequestException('2FA not initialized');
+    }
+
+    const result = await verifyOtp({
+      token: code,
+      secret: user.twoFactorSecret,
+    });
+
+    if (!result.valid) {
+      throw new BadRequestException('Invalid authenticator code');
+    }
+
+    await this.usersService.update(userId, {
+      isTwoFactorEnabled: false,
+      twoFactorSecret: null,
+    });
+
+    return { success: true };
+  }
+
+  async authenticateWith2Fa(tempToken: string, code: string) {
+    let payload: { userId: string; purpose: string };
+    try {
+      payload = this.jwtService.verify(tempToken, {
+        secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
+      });
+    } catch {
+      throw new BadRequestException('Invalid or expired temporary token');
+    }
+
+    if (payload.purpose !== '2fa_pending') {
+      throw new BadRequestException('Invalid token purpose');
+    }
+
+    const user = await this.usersService.findOneById(payload.userId);
+    if (!user || !user.twoFactorSecret) {
+      throw new BadRequestException('User not found or 2FA not set up');
+    }
+
+    const result = await verifyOtp({
+      token: code,
+      secret: user.twoFactorSecret,
+    });
+
+    if (!result.valid) {
+      throw new BadRequestException('Invalid authenticator code');
+    }
+
+    const { password, twoFactorSecret, ...resultUser } = user;
+    return resultUser as IUserSafe;
   }
 }

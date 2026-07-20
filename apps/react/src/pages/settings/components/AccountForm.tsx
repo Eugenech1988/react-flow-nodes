@@ -46,28 +46,31 @@ export const AccountForm = ({
 
         <div className="space-y-4">
           <FloatingInput
+            {...register('currentPassword')}
             id="currentPassword"
             label="Current Password"
             type="password"
-            {...register('currentPassword')}
+            autoComplete="current-password"
             error={!!errors.currentPassword}
             errorMessage={errors.currentPassword?.message}
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FloatingInput
+              {...register('newPassword')}
               id="newPassword"
               label="New Password"
               type="password"
-              {...register('newPassword')}
+              autoComplete="current-password"
               error={!!errors.newPassword}
               errorMessage={errors.newPassword?.message}
             />
             <FloatingInput
+              {...register('confirmPassword')}
               id="confirmPassword"
               label="Confirm New Password"
               type="password"
-              {...register('confirmPassword')}
+              autoComplete="current-password"
               error={!!errors.confirmPassword}
               errorMessage={errors.confirmPassword?.message}
             />
@@ -85,7 +88,7 @@ export const AccountForm = ({
 
           <Button
             type="submit"
-            disabled={isPristine || isPending} // Кнопка теперь заблокирована, если форма «чистая»
+            disabled={isPristine || isPending}
             className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
           >
             {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4"/>}

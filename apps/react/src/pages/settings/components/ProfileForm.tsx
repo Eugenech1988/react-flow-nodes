@@ -38,46 +38,46 @@ export const ProfileForm = ({ form, onSubmit, isPristine, isPending = false, ale
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FloatingInput
+            {...register('firstName')}
             label="First Name"
             id="firstName"
             error={!!errors.firstName}
             errorMessage={errors.firstName?.message}
-            {...register('firstName')}
           />
           <FloatingInput
+            {...register('lastName')}
             label="Last Name"
             id="lastName"
             error={!!errors.lastName}
             errorMessage={errors.lastName?.message}
-            {...register('lastName')}
           />
         </div>
 
         <FloatingInput
+          {...register('email')}
           label="Email Address"
           type="email"
           id="email"
           disabled
           error={!!errors.email}
           errorMessage={errors.email?.message}
-          {...register('email')}
           className="opacity-60"
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FloatingInput
+            {...register('company')}
             label="Company"
             id="company"
             error={!!errors.company}
             errorMessage={errors.company?.message}
-            {...register('company')}
           />
           <FloatingInput
+            {...register('location')}
             label="Location"
             id="location"
             error={!!errors.location}
             errorMessage={errors.location?.message}
-            {...register('location')}
           />
         </div>
 

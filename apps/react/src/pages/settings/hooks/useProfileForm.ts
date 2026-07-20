@@ -16,13 +16,16 @@ export const useProfileForm = () => {
     resolver: zodResolver(profileSchema),
     mode: 'onSubmit',
     reValidateMode: "onChange",
-    defaultValues: {
+    values: {
       firstName: user?.profile?.firstName || '',
       lastName: user?.profile?.lastName || '',
       email: user?.email || '',
       company: user?.profile?.company || '',
       location: user?.profile?.location || '',
       jobTitle: user?.profile?.jobTitle || ''
+    },
+    resetOptions: {
+      keepDirty: true
     }
   });
 
