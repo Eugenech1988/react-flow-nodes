@@ -8,3 +8,4 @@ export * from './components/sonner';
 export * from './components/card';
 export * from './components/dropdown-menu'
 export * from './components/alert';
+export * from './components/tabs';
