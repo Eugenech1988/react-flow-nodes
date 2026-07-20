@@ -2,7 +2,8 @@ import { Routes, Route, Navigate, useOutletContext } from 'react-router-dom';
 import { AuthForm } from '@/features/auth';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicOnlyRoute } from './PublicOnlyRoute';
-import App from '@/app/App';
+import AppLayout from '@/app/AppLayout';
+import { CanvasPage } from '@/pages/canvas/CanvasPage';
 import { SettingsPage, ProfileForm, AccountForm, ActiveProPlanPage } from '@/pages/settings';
 
 const ProfileRouteWrapper = () => {
@@ -21,16 +22,20 @@ export const AppRoutes = () => {
       <Route element={<PublicOnlyRoute />}>
         <Route path="/login" element={<AuthForm />} />
       </Route>
-      <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<App />} />
 
-        <Route path="/settings" element={<SettingsPage />}>
-          <Route index element={<Navigate to="profile" replace />} />
-          <Route path="profile" element={<ProfileRouteWrapper />} />
-          <Route path="account" element={<AccountRouteWrapper />} />
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route index element={<CanvasPage />} />
+
+          <Route path="/settings" element={<SettingsPage />}>
+            <Route index element={<Navigate to="profile" replace />} />
+            <Route path="profile" element={<ProfileRouteWrapper />} />
+            <Route path="account" element={<AccountRouteWrapper />} />
+          </Route>
+
+          <Route path="/settings/billing" element={<ActiveProPlanPage />} />
         </Route>
 
-        <Route path="/settings/billing" element={<ActiveProPlanPage />} />
         <Route path="/profile" element={<Navigate to="/settings/profile" replace />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
