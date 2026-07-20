@@ -146,10 +146,12 @@ export class UsersService {
       throw new BadRequestException('Local authentication password is not set for this account');
     }
 
-    const isMatch = await verify(user.password, dto.oldPassword);
+    const isMatch = await verify(user.password, dto.currentPassword);
     if (!isMatch) {
       throw new BadRequestException('Invalid old password');
     }
+
+    console.log('here');
 
     const hashedPassword = await hash(dto.newPassword);
 
