@@ -1,0 +1,30 @@
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+model Transaction {
+  id     String @id @default(cuid())
+  userId String @map("user_id")
+
+  invoiceId    String? @unique @map("invoice_id")
+  providerTxId String? @unique @map("provider_tx_id")
+
+  amount   Int
+  currency String            @default("USD")
+  status   TransactionStatus @default(PENDING)
+
+  plan Plan
+
+  invoiceUrl String? @map("invoice_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("transactions")
+}

@@ -6,11 +6,15 @@ model User {
   provider   String @default("local")
   providerId String @map("provider_id")
 
+  isTwoFactorEnabled Boolean @default(false) @map("is_two_factor_enabled")
+  twoFactorSecret    String? @map("two_factor_secret")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  profile   Profile?
-  pipelines Pipeline[]
+  profile      Profile?
+  pipelines    Pipeline[]
+  transactions Transaction[]
 
   @@unique([provider, providerId])
   @@map("users")
