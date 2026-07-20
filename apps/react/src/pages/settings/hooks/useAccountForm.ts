@@ -8,7 +8,6 @@ import { accountSchema, type IAccountFormData } from '../types';
 export const useAccountForm = () => {
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-
   const form = useForm<IAccountFormData>({
     resolver: zodResolver(accountSchema),
     defaultValues: {
@@ -45,10 +44,6 @@ export const useAccountForm = () => {
 
   const onSubmit = (data: IAccountFormData) => {
     setAlert(null);
-
-    if (!data.currentPassword && !data.newPassword) {
-      return;
-    }
 
     updatePassword({
       currentPassword: data.currentPassword || '',

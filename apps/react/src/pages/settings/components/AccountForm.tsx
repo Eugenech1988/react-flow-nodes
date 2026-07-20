@@ -9,12 +9,18 @@ import type { IAccountFormData } from '../types';
 interface AccountFormProps {
   form: UseFormReturn<IAccountFormData>;
   onSubmit: (e: React.FormEvent) => void;
-  isPristine: boolean;
+  isPristine: boolean; // Добавлено строгое соответствие пропсу
   isPending?: boolean;
   alert?: { type: 'success' | 'error'; message: string } | null;
 }
 
-export const AccountForm = ({ form, onSubmit, isPending = false, alert = null }: AccountFormProps) => {
+export const AccountForm = ({
+                              form,
+                              onSubmit,
+                              isPristine, // Деструктурируем проп, чтобы кнопка блокировалась до ввода данных
+                              isPending = false,
+                              alert = null
+                            }: AccountFormProps) => {
   const { register, formState: { errors } } = form;
 
   const rootError = errors.root?.message || errors['' as keyof typeof errors]?.message;
@@ -31,39 +37,54 @@ export const AccountForm = ({ form, onSubmit, isPending = false, alert = null }:
 
       <form onSubmit={onSubmit} className="p-6 space-y-6">
         {(hasError || hasSuccess) && (
-          <Alert variant={hasError ? 'destructive' : 'default'} className={hasSuccess ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : ''}>
-            {hasError ? <AlertCircle className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
-            <AlertTitle>{hasError ? 'Error' : 'Success'}</AlertTitle>
-            <AlertDescription>{alertMessage}</AlertDescription>
+          <Alert
+            variant={hasError ? 'destructive' : 'default'}
+            className={
+              hasError
+                ? 'border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400'
+                : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+            }
+          >
+            {hasError ? (
+              <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+            ) : (
+              <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-500" />
+            )}
+            <AlertTitle className={hasError ? 'text-red-800 dark:text-red-200' : 'text-emerald-800 dark:text-emerald-200'}>
+              {hasError ? 'Error' : 'Success'}
+            </AlertTitle>
+            <AlertDescription className={hasError ? 'text-red-700/90 dark:text-red-300' : 'text-emerald-700/90 dark:text-emerald-300'}>
+              {alertMessage}
+            </AlertDescription>
           </Alert>
         )}
 
         <div className="space-y-4">
           <FloatingInput
+            id="currentPassword"
             label="Current Password"
             type="password"
-            id="currentPassword"
-            error={!!errors.currentPassword}
+            {...register('currentPassword')} // Сначала регистрируем
+            error={!!errors.currentPassword}  // Затем передаем состояние ошибки
             errorMessage={errors.currentPassword?.message}
-            {...register('currentPassword')}
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FloatingInput
+              id="newPassword"
               label="New Password"
               type="password"
-              id="newPassword"
+              {...register('newPassword')}
               error={!!errors.newPassword}
               errorMessage={errors.newPassword?.message}
-              {...register('newPassword')}
             />
             <FloatingInput
+              id="confirmPassword"
               label="Confirm New Password"
               type="password"
-              id="confirmPassword"
+              {...register('confirmPassword')}
               error={!!errors.confirmPassword}
               errorMessage={errors.confirmPassword?.message}
-              {...register('confirmPassword')}
             />
           </div>
         </div>
@@ -79,7 +100,7 @@ export const AccountForm = ({ form, onSubmit, isPending = false, alert = null }:
 
           <Button
             type="submit"
-            disabled={isPending}
+            disabled={isPristine || isPending} // Кнопка теперь заблокирована, если форма «чистая»
             className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
           >
             {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4"/>}
