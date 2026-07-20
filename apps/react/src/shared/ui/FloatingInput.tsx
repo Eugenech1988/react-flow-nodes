@@ -20,6 +20,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             placeholder=" "
             className={cn(
               'peer w-full rounded-md border-0 bg-transparent focus-visible:ring-0 px-3 pt-3 pb-3 h-11 placeholder:opacity-0 transition-all z-10 relative',
+              'disabled:cursor-not-allowed disabled:text-muted-foreground/60',
               error
                 ? 'text-red-500! [-webkit-text-fill-color:var(--color-red-500)]! autofill:[-webkit-text-fill-color:var(--color-red-500)]!'
                 : 'text-foreground autofill:[-webkit-text-fill-color:var(--foreground)]!',
@@ -31,6 +32,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             className={cn(
               'absolute left-3.75 top-0 -translate-y-1/2 pointer-events-none text-[10px] font-sans transition-all duration-200 ease-in-out z-20 block select-none max-w-[calc(100%-24px)] truncate text-ellipsis origin-left',
               'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm',
+              'peer-disabled:text-muted-foreground/50',
               error
                 ? 'text-red-500!'
                 : 'text-muted-foreground/80 peer-focus:text-foreground peer-focus-visible:text-foreground peer-not-placeholder-shown:text-foreground group-hover:text-foreground',
@@ -48,6 +50,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
               'peer-focus:[&_legend]:max-w-full peer-focus:[&_legend]:px-1 peer-focus:[&_legend]:visible',
               'peer-not-placeholder-shown:[&_legend]:max-w-full peer-not-placeholder-shown:[&_legend]:px-1 peer-not-placeholder-shown:[&_legend]:visible',
               'autofill:[&_legend]:max-w-full autofill:[&_legend]:px-1 autofill:[&_legend]:visible',
+              'peer-disabled:bg-muted/30 peer-disabled:border-border/40 peer-disabled:opacity-80',
               error
                 ? 'border-red-500! shadow-[0_0_15px_rgba(239,68,68,0.02)]'
                 : 'border-input group-hover:border-muted-foreground/50 peer-focus:border-foreground peer-focus-visible:border-foreground peer-not-placeholder-shown:border-foreground'
