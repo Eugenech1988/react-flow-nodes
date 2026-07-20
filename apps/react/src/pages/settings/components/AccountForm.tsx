@@ -14,10 +14,12 @@ interface AccountFormProps {
   alert?: { type: 'success' | 'error'; message: string } | null;
 }
 
+//TODO check validations
+
 export const AccountForm = ({
                               form,
                               onSubmit,
-                              isPristine, // Деструктурируем проп, чтобы кнопка блокировалась до ввода данных
+                              isPristine,
                               isPending = false,
                               alert = null
                             }: AccountFormProps) => {
@@ -47,8 +49,8 @@ export const AccountForm = ({
             id="currentPassword"
             label="Current Password"
             type="password"
-            {...register('currentPassword')} // Сначала регистрируем
-            error={!!errors.currentPassword}  // Затем передаем состояние ошибки
+            {...register('currentPassword')}
+            error={!!errors.currentPassword}
             errorMessage={errors.currentPassword?.message}
           />
 

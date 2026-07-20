@@ -7,38 +7,40 @@ import { api } from '@/shared/api';
 import { profileSchema, type IProfileFormData } from '../types';
 
 export const useProfileForm = () => {
-  const { user } = useUser();
+  const {user} = useUser();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const form = useForm<IProfileFormData>({
     resolver: zodResolver(profileSchema),
+    mode: 'onSubmit',
+    reValidateMode: "onChange",
     defaultValues: {
       firstName: user?.profile?.firstName || '',
       lastName: user?.profile?.lastName || '',
       email: user?.email || '',
       company: user?.profile?.company || '',
       location: user?.profile?.location || '',
-      jobTitle: user?.profile?.jobTitle || '',
-    },
+      jobTitle: user?.profile?.jobTitle || ''
+    }
   });
 
-  const { formState: { isDirty } } = form;
+  const {formState: {isDirty}} = form;
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.profile?.avatarUrl || null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
-  const { mutate: updateProfile, isPending } = useMutation({
+  const {mutate: updateProfile, isPending} = useMutation({
     mutationFn: (dataToSend: FormData) => api.patch<User>('/profiles/me', dataToSend),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['current-user'] });
+      queryClient.invalidateQueries({queryKey: ['current-user']});
       form.reset(form.getValues());
       setAvatarFile(null);
-      setAlert({ type: 'success', message: 'Profile updated successfully.' });
+      setAlert({type: 'success', message: 'Profile updated successfully.'});
     },
     onError: (error) => {
       console.error(error);
-      setAlert({ type: 'error', message: 'Failed to update profile. Please try again.' });
+      setAlert({type: 'error', message: 'Failed to update profile. Please try again.'});
     }
   });
 
@@ -46,7 +48,7 @@ export const useProfileForm = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        setAlert({ type: 'error', message: 'File is too large. Maximum size is 5MB.' });
+        setAlert({type: 'error', message: 'File is too large. Maximum size is 5MB.'});
         return;
       }
       setAvatarFile(file);
@@ -93,6 +95,6 @@ export const useProfileForm = () => {
     jobTitle: watchedJobTitle,
     alert,
     isPristine,
-    isPending,
+    isPending
   };
 };
