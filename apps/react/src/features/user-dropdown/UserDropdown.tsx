@@ -25,7 +25,9 @@ export const UserDropdown = () => {
   const { user } = useUser();
   const { logout } = useLogout();
 
-  const isProActive = false; // Замените на реальный статус из стейта/хука
+  console.log(user);
+
+  const isProActive = false;
 
   const firstName = user?.profile?.firstName || '';
   const lastName = user?.profile?.lastName || '';
@@ -42,11 +44,11 @@ export const UserDropdown = () => {
     : user?.profile?.nickName || email.split('@')[0];
 
   const avatarUrl = user?.profile?.avatarUrl;
-  const displaySrc = avatarUrl?.startsWith('blob:')
-    ? avatarUrl
-    : avatarUrl
-      ? `${BASE_URL}${avatarUrl}`
-      : null;
+  const displaySrc = avatarUrl
+    ? (avatarUrl.startsWith('http') || avatarUrl.startsWith('blob:'))
+      ? avatarUrl
+      : `${BASE_URL}${avatarUrl}`
+    : null;
 
   return (
     <DropdownMenu>

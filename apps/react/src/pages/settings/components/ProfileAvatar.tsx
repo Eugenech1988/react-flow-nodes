@@ -18,11 +18,11 @@ export const ProfileAvatar = ({
                                 fileInputRef,
                                 onAvatarChange,
                               }: ProfileAvatarProps) => {
-  const displaySrc = avatarPreview?.startsWith('blob:')
-    ? avatarPreview
-    : avatarPreview
-      ? `${BASE_URL}${avatarPreview}`
-      : null;
+  const displaySrc = avatarPreview
+    ? (avatarPreview?.startsWith('http') || avatarPreview?.startsWith('blob:'))
+      ? avatarPreview
+      : `${BASE_URL}${avatarPreview}`
+    : null;
 
   return (
     <>
