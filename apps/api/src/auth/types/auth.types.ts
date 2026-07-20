@@ -18,5 +18,5 @@ export interface IOauthUser {
   accessToken: string;
   refreshToken?: string;
   providerId: string;
-  provider: 'google' | 'github';
+  provider: 'google' | 'github' | ' local';
 }

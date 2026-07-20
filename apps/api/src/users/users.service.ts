@@ -1,8 +1,14 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdatePasswordDto } from './dtos/update-password.dto';
 import { Prisma } from '@prisma/client';
-import { hash } from 'argon2';
+import { hash, verify } from 'argon2';
 
 const userWithProfileValidator = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { profile: true },
@@ -130,6 +136,31 @@ export class UsersService {
     } catch (error) {
       console.error(`Failed to update user with id ${id}:`, error);
       throw new InternalServerErrorException('An unexpected error occurred while updating the user');
+    }
+  }
+
+  async updatePassword(id: string, dto: UpdatePasswordDto): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user || !user.password) {
+      throw new BadRequestException('Local authentication password is not set for this account');
+    }
+
+    const isMatch = await verify(user.password, dto.oldPassword);
+    if (!isMatch) {
+      throw new BadRequestException('Invalid old password');
+    }
+
+    const hashedPassword = await hash(dto.newPassword);
+
+    try {
+      await this.prisma.user.update({
+        where: { id },
+        data: { password: hashedPassword },
+      });
+    } catch (error) {
+      console.error(`Failed to update password for user ${id}:`, error);
+      throw new InternalServerErrorException('Error updating account password');
     }
   }
 }

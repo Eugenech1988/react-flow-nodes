@@ -1,19 +1,37 @@
-import { Routes, Route, Navigate, useOutletContext } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthForm } from '@/features/auth';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicOnlyRoute } from './PublicOnlyRoute';
 import AppLayout from '@/app/AppLayout';
 import { CanvasPage } from '@/pages/canvas/CanvasPage';
 import { SettingsPage, ProfileForm, AccountForm, ActiveProPlanPage } from '@/pages/settings';
+import { useProfileForm } from '@/pages/settings/hooks/useProfileForm';
+import { useAccountForm } from '@/pages/settings/hooks/useAccountForm';
 
 const ProfileRouteWrapper = () => {
-  const { profile } = useOutletContext<any>();
-  return <ProfileForm form={profile.form} onSubmit={profile.onSubmit} isPristine={profile.isPristine} />;
+  const profile = useProfileForm(); // Хук вызывается локально при монтировании таба
+  return (
+    <ProfileForm
+      alert={profile.alert}
+      form={profile.form}
+      onSubmit={profile.onSubmit}
+      isPristine={profile.isPristine}
+      isPending={profile.isPending}
+    />
+  );
 };
 
 const AccountRouteWrapper = () => {
-  const { account } = useOutletContext<any>();
-  return <AccountForm form={account.form} onSubmit={account.onSubmit} isPristine={account.isPristine} />;
+  const account = useAccountForm(); // Хук вызывается локально при монтировании таба
+  return (
+    <AccountForm
+      form={account.form}
+      alert={account.alert}
+      onSubmit={account.onSubmit}
+      isPristine={account.isPristine}
+      isPending={account.isPending}
+    />
+  );
 };
 
 export const AppRoutes = () => {

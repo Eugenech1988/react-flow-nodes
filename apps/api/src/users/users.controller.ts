@@ -1,6 +1,26 @@
-import { Controller, Post, Get, Body, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Req,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  Body,
+  UsePipes,
+  ValidationPipe
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdatePasswordDto } from './dtos/update-password.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { type IUserSafe } from './types';
+import type { Request } from 'express';
+
+interface IRequestWithUser extends Request {
+  user: IUserSafe;
+}
 
 @Controller('users')
 export class UsersController {
@@ -15,5 +35,17 @@ export class UsersController {
   @Get()
   async findAll() {
     return this.usersService.findAll();
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Patch('password')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updatePassword(
+    @Req() req: IRequestWithUser,
+    @Body() dto: UpdatePasswordDto,
+  ): Promise<{ success: boolean }> {
+    await this.usersService.updatePassword(req.user.id, dto);
+    return { success: true };
   }
 }

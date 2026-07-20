@@ -11,7 +11,6 @@ import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { GoogleOauthGuard } from './guards/google.guard';
 import { GithubOauthGuard } from './guards/github.guard';
 import type { IUserSafe, IOauthUser } from './types/auth.types';
-import { UpdatePasswordDto } from './dtos/update-password.dto';
 
 interface IRequestWithUser extends Request {
   user: IUserSafe;
@@ -26,8 +25,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService
-  ) {
-  }
+  ) {}
 
   private setTokenCookies(res: Response, accessToken: string, refreshToken: string) {
     const isProd = process.env.NODE_ENV === 'production';
@@ -72,8 +70,7 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
-  async googleAuth() {
-  }
+  async googleAuth() {}
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
@@ -91,8 +88,7 @@ export class AuthController {
 
   @Get('github')
   @UseGuards(GithubOauthGuard)
-  async githubAuth() {
-  }
+  async githubAuth() {}
 
   @Get('github/callback')
   @UseGuards(GithubOauthGuard)
@@ -153,17 +149,6 @@ export class AuthController {
   async recovery(@Body() dto: RecoveryDto): Promise<{ message: string }> {
     await this.authService.recovery(dto);
     return {message: 'If the email exists, a reset link has been sent.'};
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
-  @Post('update-password')
-  async updatePassword(
-    @Req() req: IRequestWithUser,
-    @Body() dto: UpdatePasswordDto
-  ): Promise<{ success: boolean }> {
-    await this.authService.updatePassword(req.user.id, dto);
-    return {success: true};
   }
 
   @HttpCode(HttpStatus.OK)

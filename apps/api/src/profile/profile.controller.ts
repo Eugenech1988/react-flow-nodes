@@ -1,6 +1,7 @@
 import {
   Controller,
-  Post,
+  Patch,
+  Get,
   Body,
   UseGuards,
   UseInterceptors,
@@ -12,13 +13,23 @@ import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; // Укажите ваш Guard доступа
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { diskStorage } from 'multer';
-import { extname } from 'node:path'; // Ваш декоратор получения юзера из req.user
+import { extname } from 'node:path';
+import { UsersService } from '../users/users.service'; // Ваш декоратор получения юзера из req.user
 
-@Controller('profile')
+@Controller('profiles')
 export class ProfileController {
-  constructor(private readonly profileService: ProfileService) {}
+  constructor(
+    private readonly profileService: ProfileService,
+    private readonly userService: UsersService,
+  ) {}
 
-  @Post('update')
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  async getMyProfile(@CurrentUser('id') userId: string) {
+    return this.userService.findOneById(userId);
+  }
+
+  @Patch('me')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('avatar', {

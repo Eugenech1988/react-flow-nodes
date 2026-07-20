@@ -5,23 +5,28 @@ export interface Profile {
   id: string;
   nickName: string;
   firstName: string;
-  lastName: string | null;
+  lastName?: string | null;
   avatarUrl: string | null;
   company?: string | null;
   location?: string | null;
   jobTitle?: string | null;
   createdAt: string;
   updatedAt: string;
+  plan?: string;
+  planExpiresAt?: string;
+
 }
 
 export interface User {
   id: string;
   email: string;
-  provider: string;
+  provider: 'google' | 'github' | 'local';
   providerId: string;
   createdAt: string;
   updatedAt: string;
   profile: Profile | null;
+  isTwoFactorEnabled?: boolean;
+  twoFactorSecret?: string;
 }
 
 export const USER_QUERY_KEY = ['current-user'];

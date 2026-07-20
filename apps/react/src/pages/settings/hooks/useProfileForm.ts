@@ -1,12 +1,14 @@
 import { useState, useRef, type ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query'; // или старая версия без @tanstack
 import { useUser, type User } from '@/features/auth';
 import { api } from '@/shared/api';
 import { profileSchema, type IProfileFormData } from '../types';
 
 export const useProfileForm = () => {
-  const { user, updateUserCache } = useUser();
+  const { user } = useUser();
+  const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
@@ -26,6 +28,20 @@ export const useProfileForm = () => {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.profile?.avatarUrl || null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
+  const { mutate: updateProfile, isPending } = useMutation({
+    mutationFn: (dataToSend: FormData) => api.patch<User>('/profiles/me', dataToSend),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['current-user'] });
+      form.reset(form.getValues());
+      setAvatarFile(null);
+      setAlert({ type: 'success', message: 'Profile updated successfully.' });
+    },
+    onError: (error) => {
+      console.error(error);
+      setAlert({ type: 'error', message: 'Failed to update profile. Please try again.' });
+    }
+  });
+
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -42,7 +58,7 @@ export const useProfileForm = () => {
     fileInputRef.current?.click();
   };
 
-  const onSubmit = async (data: IProfileFormData) => {
+  const onSubmit = (data: IProfileFormData) => {
     setAlert(null);
     const dataToSend = new FormData();
     dataToSend.append('firstName', data.firstName);
@@ -54,18 +70,7 @@ export const useProfileForm = () => {
       dataToSend.append('avatar', avatarFile);
     }
 
-    try {
-      const response = await api.post<User>('/profile/update', dataToSend);
-      if (response) {
-        updateUserCache(response);
-        form.reset(data);
-        setAvatarFile(null);
-        setAlert({ type: 'success', message: 'Profile updated successfully.' });
-      }
-    } catch (error) {
-      console.error(error);
-      setAlert({ type: 'error', message: 'Failed to update profile. Please try again.' });
-    }
+    updateProfile(dataToSend);
   };
 
   const watchedFirstName = form.watch('firstName');
@@ -88,5 +93,6 @@ export const useProfileForm = () => {
     jobTitle: watchedJobTitle,
     alert,
     isPristine,
+    isPending,
   };
 };

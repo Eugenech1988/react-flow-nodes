@@ -11,17 +11,20 @@ export const profileSchema = z.object({
 
 export type IProfileFormData = z.infer<typeof profileSchema>;
 
+const emptyStringToUndefined = z.string().transform((val) => (val === '' ? undefined : val)).optional();
+
 export const accountSchema = z
   .object({
-    currentPassword: z.string().optional(),
+    currentPassword: emptyStringToUndefined,
     newPassword: z
       .string()
+      .transform((val) => (val === '' ? undefined : val))
       .optional()
       .refine((val) => !val || val.length >= 6, {
         message: 'Password must be at least 6 characters long',
       }),
-    confirmPassword: z.string().optional(),
-    twoFactorEnabled: z.boolean(),
+    confirmPassword: emptyStringToUndefined,
+    // twoFactorEnabled: z.boolean(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
@@ -29,7 +32,6 @@ export const accountSchema = z
   })
   .refine((data) => !data.newPassword || data.currentPassword, {
     message: 'Current password is required to set a new one',
-    path: ['currentPassword'],
   });
 
 export type IAccountFormData = z.infer<typeof accountSchema>;

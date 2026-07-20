@@ -1,18 +1,27 @@
 import { Link } from 'react-router-dom';
-import { Save, ArrowLeft, ShieldCheck } from 'lucide-react';
-import { type UseFormReturn, Controller } from 'react-hook-form';
+import { Save, ArrowLeft, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput } from '@/shared/ui/FloatingInput';
-import { Button, Switch } from '@pipeline/ui';
+import { Button } from '@pipeline/ui';
+import { Alert, AlertDescription, AlertTitle } from '@pipeline/ui';
 import type { IAccountFormData } from '../types';
 
 interface AccountFormProps {
   form: UseFormReturn<IAccountFormData>;
   onSubmit: (e: React.FormEvent) => void;
   isPristine: boolean;
+  isPending?: boolean;
+  alert?: { type: 'success' | 'error'; message: string } | null;
 }
 
-export const AccountForm = ({form, onSubmit, isPristine}: AccountFormProps) => {
-  const {register, control, formState: {errors}} = form;
+export const AccountForm = ({ form, onSubmit, isPending = false, alert = null }: AccountFormProps) => {
+  const { register, formState: { errors } } = form;
+
+  const rootError = errors.root?.message || errors['' as keyof typeof errors]?.message;
+
+  const hasError = alert?.type === 'error' || !!rootError;
+  const hasSuccess = alert?.type === 'success';
+  const alertMessage = alert?.message || (rootError as string);
 
   return (
     <div className="border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
@@ -21,6 +30,14 @@ export const AccountForm = ({form, onSubmit, isPristine}: AccountFormProps) => {
       </div>
 
       <form onSubmit={onSubmit} className="p-6 space-y-6">
+        {(hasError || hasSuccess) && (
+          <Alert variant={hasError ? 'destructive' : 'default'} className={hasSuccess ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : ''}>
+            {hasError ? <AlertCircle className="h-4 w-4" /> : <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
+            <AlertTitle>{hasError ? 'Error' : 'Success'}</AlertTitle>
+            <AlertDescription>{alertMessage}</AlertDescription>
+          </Alert>
+        )}
+
         <div className="space-y-4">
           <FloatingInput
             label="Current Password"
@@ -51,33 +68,6 @@ export const AccountForm = ({form, onSubmit, isPristine}: AccountFormProps) => {
           </div>
         </div>
 
-        <div className="pt-4 border-t border-border/60">
-          <div className="flex items-start justify-between rounded-lg border border-border p-4 bg-muted/5">
-            <div className="space-y-0.5 pr-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <ShieldCheck className="w-4 h-4 text-emerald-500"/>
-                Two-Factor Authentication
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Secure your account with an additional security layer via authenticator app.
-              </p>
-            </div>
-            <Controller
-              control={control}
-              name="twoFactorEnabled"
-              render={({field}) => (
-                <div style={{'--primary': 'var(--color-teal-600)'} as React.CSSProperties}>
-                  <Switch
-                    id="twoFactorEnabled"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    className="data-[state=checked]:!bg-teal-600 cursor-pointer data-[state=checked]:hover:!bg-teal-500"/>
-                </div>
-              )}
-            />
-          </div>
-        </div>
-
         <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
           <Link
             to="/"
@@ -89,10 +79,10 @@ export const AccountForm = ({form, onSubmit, isPristine}: AccountFormProps) => {
 
           <Button
             type="submit"
-            disabled={isPristine}
+            disabled={isPending}
             className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
           >
-            <Save className="w-4 h-4"/>
+            {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4"/>}
             Save Changes
           </Button>
         </div>

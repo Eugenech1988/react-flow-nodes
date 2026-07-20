@@ -22,15 +22,13 @@ export const ActiveProPlanPage = () => {
   ];
 
   const handleCancelSubscription = () => {
-    // Вызов эндпоинта деактивации
   };
 
   const handleActivateSubscription = () => {
-    // Вызов эндпоинта активации / переход на оплату
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-6 md:p-12 transition-colors duration-300">
+    <div className="min-h-screen bg-background text-foreground p-6 md:p-8 transition-colors duration-300">
       <motion.div
         className="max-w-2xl mx-auto space-y-8"
         variants={containerVariants}
