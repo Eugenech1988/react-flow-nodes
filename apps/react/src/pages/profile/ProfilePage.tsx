@@ -17,6 +17,7 @@ export const ProfilePage = () => {
     lastName,
     jobTitle,
     alert,
+    isPristine
   } = useProfileForm();
 
   return (
@@ -56,6 +57,7 @@ export const ProfilePage = () => {
           <ProfileForm
             form={form}
             onSubmit={onSubmit}
+            isPristine={isPristine}
           />
         </div>
       </div>

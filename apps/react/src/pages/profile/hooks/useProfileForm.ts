@@ -23,6 +23,8 @@ export const useProfileForm = () => {
     },
   });
 
+  const { formState: { isDirty } } = form;
+
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
     user?.profile?.avatarUrl || null
   );
@@ -60,6 +62,9 @@ export const useProfileForm = () => {
       const response = await api.post<User>('/profile/update', dataToSend);
       if (response) {
         updateUserCache(response);
+        form.reset(data);
+        setAvatarFile(null);
+
         setAlert({ type: 'success', message: 'Profile updated successfully.' });
       }
     } catch (error) {
@@ -74,6 +79,8 @@ export const useProfileForm = () => {
 
   const initials = `${watchedFirstName[0] || ''}${watchedLastName[0] || ''}`.toUpperCase();
 
+  const isPristine = !isDirty && !avatarFile;
+
   return {
     form,
     avatarPreview,
@@ -86,5 +93,6 @@ export const useProfileForm = () => {
     lastName: watchedLastName,
     jobTitle: watchedJobTitle,
     alert,
+    isPristine,
   };
 };

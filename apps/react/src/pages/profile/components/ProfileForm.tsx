@@ -1,21 +1,23 @@
+import { Link } from 'react-router-dom';
 import { Save, ArrowLeft } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import { FloatingInput } from '@/shared/ui/FloatingInput';
+import { Button } from '@pipeline/ui';
 import type { IProfileFormData } from '../types';
 
 interface ProfileFormProps {
   form: UseFormReturn<IProfileFormData>;
   onSubmit: (e: React.FormEvent) => void;
+  isPristine: boolean;
 }
 
-export const ProfileForm = ({ form, onSubmit }: ProfileFormProps) => {
+export const ProfileForm = ({ form, onSubmit, isPristine }: ProfileFormProps) => {
   const { register, formState: { errors } } = form;
 
   return (
-    <div className="md:col-span-2 border border-border bg-card rounded-xl shadow-xs overflow-hidden">
-      <div className="px-6 py-4 border-b border-border/60 bg-foreground/1">
-        <h3 className="font-medium text-sm">Personal Information</h3>
+    <div className="md:col-span-2 border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
+      <div className="px-6 py-4 border-b border-border/60 bg-muted/10">
+        <h3 className="font-medium text-sm text-foreground/90">Personal Information</h3>
       </div>
 
       <form onSubmit={onSubmit} className="p-6 space-y-4">
@@ -44,6 +46,7 @@ export const ProfileForm = ({ form, onSubmit }: ProfileFormProps) => {
           error={!!errors.email}
           errorMessage={errors.email?.message}
           {...register('email')}
+          className="opacity-60"
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -71,23 +74,23 @@ export const ProfileForm = ({ form, onSubmit }: ProfileFormProps) => {
           {...register('jobTitle')}
         />
 
-        <div className="flex end justify-end gap-4 items-center pt-2 border-t border-border/60">
+        <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
           <Link
-            type="button"
-            to='/'
-            className="group flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors cursor-pointer outline-hidden"
+            to="/"
+            className="group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-hidden"
           >
-            <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+            <ArrowLeft className="w-4 h-4" />
             Back to app
           </Link>
 
-          <button
+          <Button
             type="submit"
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-hidden focus:ring-2 focus:ring-teal-500/20"
+            disabled={isPristine}
+            className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-hidden focus:ring-teal-500/20"
           >
             <Save className="w-4 h-4" />
             Save Changes
-          </button>
+          </Button>
         </div>
       </form>
     </div>
