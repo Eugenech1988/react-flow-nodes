@@ -8,7 +8,6 @@ import { profileSchema, type IProfileFormData } from '../types';
 export const useProfileForm = () => {
   const { user, updateUserCache } = useUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const form = useForm<IProfileFormData>({
@@ -24,10 +23,7 @@ export const useProfileForm = () => {
   });
 
   const { formState: { isDirty } } = form;
-
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    user?.profile?.avatarUrl || null
-  );
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.profile?.avatarUrl || null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +60,6 @@ export const useProfileForm = () => {
         updateUserCache(response);
         form.reset(data);
         setAvatarFile(null);
-
         setAlert({ type: 'success', message: 'Profile updated successfully.' });
       }
     } catch (error) {
@@ -78,7 +73,6 @@ export const useProfileForm = () => {
   const watchedJobTitle = form.watch('jobTitle');
 
   const initials = `${watchedFirstName[0] || ''}${watchedLastName[0] || ''}`.toUpperCase();
-
   const isPristine = !isDirty && !avatarFile;
 
   return {

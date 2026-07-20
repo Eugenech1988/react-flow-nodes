@@ -78,19 +78,19 @@ export const UserDropdown = () => {
 
           <DropdownMenuSeparator className="my-1 bg-border/60"/>
 
-          <Link to="/profile">
-            <DropdownMenuItem
-              className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors">
+          <Link to="/settings/profile">
+            <DropdownMenuItem className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors">
               <User className="w-4 h-4 text-muted-foreground"/>
               <span>Profile</span>
             </DropdownMenuItem>
           </Link>
 
-          <DropdownMenuItem
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors">
-            <Settings className="w-4 h-4 text-muted-foreground"/>
-            <span>Account Settings</span>
-          </DropdownMenuItem>
+          <Link to="/settings/account">
+            <DropdownMenuItem className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors">
+              <Settings className="w-4 h-4 text-muted-foreground"/>
+              <span>Account Settings</span>
+            </DropdownMenuItem>
+          </Link>
 
           <DropdownMenuItem
             className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors">

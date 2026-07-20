@@ -15,7 +15,7 @@ export const ProfileForm = ({ form, onSubmit, isPristine }: ProfileFormProps) =>
   const { register, formState: { errors } } = form;
 
   return (
-    <div className="md:col-span-2 border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
+    <div className="border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
       <div className="px-6 py-4 border-b border-border/60 bg-muted/10">
         <h3 className="font-medium text-sm text-foreground/90">Personal Information</h3>
       </div>
