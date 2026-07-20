@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Save, ArrowLeft, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Save, ArrowLeft, Loader2 } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput } from '@/shared/ui/FloatingInput';
 import { Button } from '@pipeline/ui';
-import { Alert, AlertDescription, AlertTitle } from '@pipeline/ui';
+import { LocalAlert } from '@/shared';
 import type { IProfileFormData } from '../types';
 
 interface ProfileFormProps {
@@ -30,28 +30,11 @@ export const ProfileForm = ({ form, onSubmit, isPristine, isPending = false, ale
       </div>
 
       <form onSubmit={onSubmit} className="p-6 space-y-4">
-        {(hasError || hasSuccess) && (
-          <Alert
-            variant={hasError ? 'destructive' : 'default'}
-            className={
-              hasError
-                ? 'border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400'
-                : 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
-            }
-          >
-            {hasError ? (
-              <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-            ) : (
-              <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-500" />
-            )}
-            <AlertTitle className={hasError ? 'text-red-800 dark:text-red-200' : 'text-emerald-800 dark:text-emerald-200'}>
-              {hasError ? 'Error' : 'Success'}
-            </AlertTitle>
-            <AlertDescription className={hasError ? 'text-red-700/90 dark:text-red-300' : 'text-emerald-700/90 dark:text-emerald-300'}>
-              {alertMessage}
-            </AlertDescription>
-          </Alert>
-        )}
+        <LocalAlert
+          hasSuccess={hasSuccess}
+          hasError={hasError}
+          alertMessage={alertMessage}
+        />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FloatingInput
