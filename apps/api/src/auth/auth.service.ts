@@ -7,7 +7,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { RecoveryDto } from './dtos/recovery.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { IUserSafe, IJwtPayload, IOauthUser } from './types/auth.types';
-import { generateSecret, generate, verify as verifyOtp, generateURI } from 'otplib';
+import { generateSecret,   verify as verifyOtp, generateURI } from 'otplib';
 import * as qrcode from 'qrcode';
 import { verify as verifyArgon, hash } from 'argon2';
 
@@ -147,7 +147,7 @@ export class AuthService {
     const payload = { userId, purpose: '2fa_pending' };
     return this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-      expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES') as SigningOptions,
+      expiresIn: '5m',
     });
   }
 
