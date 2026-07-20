@@ -25,8 +25,6 @@ export const UserDropdown = () => {
   const { user } = useUser();
   const { logout } = useLogout();
 
-  console.log(user);
-
   const isProActive = false;
 
   const firstName = user?.profile?.firstName || '';
