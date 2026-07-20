@@ -22,20 +22,14 @@ const ProfileRouteWrapper = () => {
 };
 
 const AccountRouteWrapper = () => {
-  const {
-    form,
-    alert,
-    onSubmit,
-    isPristine,
-    isPending
-  } = useAccountForm(); // Хук вызывается локально при монтировании таба
+  const account= useAccountForm();
   return (
     <AccountForm
-      form={form}
-      alert={alert}
-      onSubmit={onSubmit}
-      isPristine={isPristine}
-      isPending={isPending}
+      form={account.form}
+      alert={account.alert}
+      onSubmit={account.onSubmit}
+      isPristine={account.isPristine}
+      isPending={account.isPending}
     />
   );
 };
