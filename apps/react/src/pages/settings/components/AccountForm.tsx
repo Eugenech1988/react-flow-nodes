@@ -11,8 +11,8 @@ interface AccountFormProps {
   isPristine: boolean;
 }
 
-export const AccountForm = ({ form, onSubmit, isPristine }: AccountFormProps) => {
-  const { register, control, formState: { errors } } = form;
+export const AccountForm = ({form, onSubmit, isPristine}: AccountFormProps) => {
+  const {register, control, formState: {errors}} = form;
 
   return (
     <div className="border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
@@ -55,7 +55,7 @@ export const AccountForm = ({ form, onSubmit, isPristine }: AccountFormProps) =>
           <div className="flex items-start justify-between rounded-lg border border-border p-4 bg-muted/5">
             <div className="space-y-0.5 pr-4">
               <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                <ShieldCheck className="w-4 h-4 text-emerald-500"/>
                 Two-Factor Authentication
               </div>
               <p className="text-xs text-muted-foreground mt-1">
@@ -65,13 +65,14 @@ export const AccountForm = ({ form, onSubmit, isPristine }: AccountFormProps) =>
             <Controller
               control={control}
               name="twoFactorEnabled"
-              render={({ field }) => (
-                <Switch
-                  id="twoFactorEnabled"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  className="data-[state=checked]:bg-emerald-500 data-[state=checked]:hover:bg-emerald-400"
-                />
+              render={({field}) => (
+                <div style={{'--primary': 'var(--color-teal-600)'} as React.CSSProperties}>
+                  <Switch
+                    id="twoFactorEnabled"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    className="data-[state=checked]:!bg-teal-600 cursor-pointer data-[state=checked]:hover:!bg-teal-500"/>
+                </div>
               )}
             />
           </div>
@@ -82,7 +83,7 @@ export const AccountForm = ({ form, onSubmit, isPristine }: AccountFormProps) =>
             to="/"
             className="group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-md"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4"/>
             Back to app
           </Link>
 
@@ -91,7 +92,7 @@ export const AccountForm = ({ form, onSubmit, isPristine }: AccountFormProps) =>
             disabled={isPristine}
             className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
           >
-            <Save className="w-4 h-4" />
+            <Save className="w-4 h-4"/>
             Save Changes
           </Button>
         </div>

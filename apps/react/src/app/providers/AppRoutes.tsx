@@ -3,7 +3,7 @@ import { AuthForm } from '@/features/auth';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicOnlyRoute } from './PublicOnlyRoute';
 import App from '@/app/App';
-import { SettingsPage, ProfileForm, AccountForm } from '@/pages/settings';
+import { SettingsPage, ProfileForm, AccountForm, ActiveProPlanPage } from '@/pages/settings';
 
 const ProfileRouteWrapper = () => {
   const { profile } = useOutletContext<any>();
@@ -30,6 +30,7 @@ export const AppRoutes = () => {
           <Route path="account" element={<AccountRouteWrapper />} />
         </Route>
 
+        <Route path="/settings/billing" element={<ActiveProPlanPage />} />
         <Route path="/profile" element={<Navigate to="/settings/profile" replace />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

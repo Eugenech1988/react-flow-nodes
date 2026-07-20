@@ -1,13 +1,12 @@
-import { useLogout } from '@/features/auth';
-import { Link } from 'react-router-dom';
-import { useUser } from '@/features/auth';
+import { useNavigate } from 'react-router-dom';
+import { useLogout, useUser } from '@/features/auth';
 import {
   LogOut,
   User,
   Settings,
   CreditCard,
   ChevronDown,
-  Sparkles
+  Zap
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -22,8 +21,11 @@ import {
 const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 
 export const UserDropdown = () => {
+  const navigate = useNavigate();
   const { user } = useUser();
   const { logout } = useLogout();
+
+  const isProActive = false; // Замените на реальный статус из стейта/хука
 
   const firstName = user?.profile?.firstName || '';
   const lastName = user?.profile?.lastName || '';
@@ -78,22 +80,26 @@ export const UserDropdown = () => {
 
           <DropdownMenuSeparator className="my-1 bg-border/60"/>
 
-          <Link to="/settings/profile">
-            <DropdownMenuItem className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors">
-              <User className="w-4 h-4 text-muted-foreground"/>
-              <span>Profile</span>
-            </DropdownMenuItem>
-          </Link>
-
-          <Link to="/settings/account">
-            <DropdownMenuItem className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors">
-              <Settings className="w-4 h-4 text-muted-foreground"/>
-              <span>Account Settings</span>
-            </DropdownMenuItem>
-          </Link>
+          <DropdownMenuItem
+            onClick={() => navigate('/settings/profile')}
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors"
+          >
+            <User className="w-4 h-4 text-muted-foreground"/>
+            <span>Profile</span>
+          </DropdownMenuItem>
 
           <DropdownMenuItem
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors">
+            onClick={() => navigate('/settings/account')}
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors"
+          >
+            <Settings className="w-4 h-4 text-muted-foreground"/>
+            <span>Account Settings</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={() => navigate('/settings/billing')}
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors"
+          >
             <CreditCard className="w-4 h-4 text-muted-foreground"/>
             <span>Billing</span>
           </DropdownMenuItem>
@@ -101,16 +107,20 @@ export const UserDropdown = () => {
           <DropdownMenuSeparator className="my-1 bg-border/60"/>
 
           <DropdownMenuItem
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/[0.08] focus:bg-emerald-500/[0.08] outline-hidden transition-colors font-medium">
-            <Sparkles className="w-4 h-4"/>
-            <span>Upgrade to Pro</span>
+            onClick={() => navigate('/settings/billing')}
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors"
+          >
+            <Zap className="w-4 h-4 !text-emerald-500 fill-emerald-500 shrink-0" />
+            <span className={`font-medium ${!isProActive ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
+              {isProActive ? 'Pro Plan' : 'Activate Pro Plan'}
+            </span>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator className="my-1 bg-border/60"/>
 
           <DropdownMenuItem
             className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-destructive hover:bg-destructive/[0.08] focus:bg-destructive/[0.08] outline-hidden transition-colors"
-            onClick={logout}
+            onClick={() => logout()}
           >
             <LogOut className="w-4 h-4"/>
             <span>Log out</span>
