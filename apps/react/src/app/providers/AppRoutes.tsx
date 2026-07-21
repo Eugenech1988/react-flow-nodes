@@ -55,7 +55,7 @@ export const AppRoutes = () => {
             <Route path="billing" element={<BillingPage />} />
           </Route>
 
-          <Route path="/settings/billing/plans" element={<PlansPage />} />
+          <Route path="/plans" element={<PlansPage />} />
         </Route>
 
         <Route path="/profile" element={<Navigate to="/settings/profile" replace />} />

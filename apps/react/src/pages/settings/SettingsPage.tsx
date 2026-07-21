@@ -51,7 +51,7 @@ export const SettingsPage = () => {
     { id: 'account', label: 'Account Settings', icon: Shield },
     {
       id: 'billing',
-      label: 'Billing & Plans',
+      label: 'Billing',
       icon: CreditCard,
       badge: isProActive ? 'PRO' : undefined
     },
@@ -115,6 +115,7 @@ export const SettingsPage = () => {
                 firstName={watchedFirstName}
                 lastName={watchedLastName}
                 jobTitle={user?.profile?.jobTitle || ''}
+                isTwoFactorEnabled={user?.isTwoFactorEnabled}
               />
             </div>
 

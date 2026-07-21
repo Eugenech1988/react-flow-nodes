@@ -10,6 +10,7 @@ interface ProfileSidebarProps {
   firstName: string;
   lastName: string;
   jobTitle: string;
+  isTwoFactorEnabled?: boolean;
 }
 
 export const ProfileSidebar = ({
@@ -21,6 +22,7 @@ export const ProfileSidebar = ({
                                  firstName,
                                  lastName,
                                  jobTitle,
+                                 isTwoFactorEnabled,
                                }: ProfileSidebarProps) => {
   return (
     <div className="md:col-span-1 flex flex-col items-center p-6 border border-border bg-card rounded-xl shadow-xs h-fit backdrop-blur-xs">
@@ -46,9 +48,14 @@ export const ProfileSidebar = ({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <KeyRound className="w-3.5 h-3.5 text-muted-foreground/80" />
+          <KeyRound className={`w-3.5 h-3.5 text-muted-foreground/80 ${isTwoFactorEnabled ? 'text-emerald-500' : ''}`} />
           <span>
-            Two-Factor Auth: <strong className="text-foreground/90 font-normal">Enabled</strong>
+            Two-Factor Auth:{' '}
+            {isTwoFactorEnabled ?
+            <strong className="text-emerald-500 font-medium">Enabled</strong>
+              :
+            <strong className="text-red-400 font-font-medium">Disabled</strong>
+            }
           </span>
         </div>
       </div>

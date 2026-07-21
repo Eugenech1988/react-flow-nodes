@@ -13,8 +13,6 @@ export const BillingPage = () => {
 
   const navigate = useNavigate();
 
-  console.log(subscription);
-
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
       setSuccessMessage('Payment successful! Your Pro plan is now active.');
@@ -77,7 +75,6 @@ export const BillingPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header c кнопкой перехода к выбору планов */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold tracking-tight">Subscription & Billing</h2>
@@ -86,9 +83,8 @@ export const BillingPage = () => {
           </p>
         </div>
 
-        {/* Кнопка "View All Plans" в шапке */}
         <button
-          onClick={() => navigate('/settings/billing/plans')}
+          onClick={() => navigate('/plans')}
           className="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl border border-border bg-card hover:bg-muted text-foreground text-xs font-medium transition-all cursor-pointer shadow-xs"
         >
           <Layers className="w-4 h-4 text-teal-500" />
@@ -187,7 +183,6 @@ export const BillingPage = () => {
               </>
             ) : (
               <div className="flex items-center gap-2">
-                {/* Кнопка мгновенной покупки Pro */}
                 <button
                   onClick={handleActivateSubscription}
                   disabled={isProcessing}
@@ -206,9 +201,8 @@ export const BillingPage = () => {
                   )}
                 </button>
 
-                {/* Вторичная кнопка для перехода к выбору вариантов */}
                 <button
-                  onClick={() => navigate('/settings/billing/plans')}
+                  onClick={() => navigate('/plans')}
                   className="px-3 py-2 rounded-xl border border-border bg-muted/20 text-foreground hover:bg-muted font-medium transition-all cursor-pointer text-sm"
                 >
                   Explore Plans
@@ -229,7 +223,7 @@ export const BillingPage = () => {
             For dedicated infrastructure workloads, tailored execution timeout scales, and customized deployment topology models.
           </p>
           <button
-            onClick={() => navigate('/settings/billing/plans')}
+            onClick={() => navigate('/plans')}
             className="text-xs font-medium text-teal-600 dark:text-teal-400 hover:underline cursor-pointer"
           >
             View Enterprise Plan details →
