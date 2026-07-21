@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useLogout, useUser } from '@/shared/hooks';
+import { useLogout, useSubscription, useUser } from '@/shared/hooks';
 import {
   LogOut,
   User,
@@ -23,11 +23,11 @@ const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 export const UserDropdown = () => {
   const navigate = useNavigate();
   const { user } = useUser();
+  const { subscription } = useSubscription();
   const { logout } = useLogout();
 
-  console.log(user);
+  const isFreePlan = subscription?.plan === 'FREE';
 
-  const isProActive = false;
 
   const firstName = user?.profile?.firstName || '';
   const lastName = user?.profile?.lastName || '';
@@ -108,17 +108,17 @@ export const UserDropdown = () => {
 
           <DropdownMenuSeparator className="my-1 bg-border/60"/>
 
+          {isFreePlan &&
           <DropdownMenuItem
             onClick={() => navigate('/settings/billing')}
             className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/4 focus:bg-foreground/4 outline-hidden transition-colors"
           >
             <Zap className="w-4 h-4 text-emerald-500! fill-emerald-500 shrink-0" />
             <span className={`font-medium ${!isProActive ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
-              {isProActive ? 'Pro Plan' : 'Activate Pro Plan'}
+              Activate Pro Plan
             </span>
           </DropdownMenuItem>
-
-          <DropdownMenuSeparator className="my-1 bg-border/60"/>
+          }
 
           <DropdownMenuItem
             className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-destructive hover:bg-destructive/8 focus:bg-destructive/8 outline-hidden transition-colors"
