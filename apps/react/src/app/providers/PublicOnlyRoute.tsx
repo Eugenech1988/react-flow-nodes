@@ -1,13 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useUser } from '@/shared/hooks';
-import { GlobalLoader } from '@/shared/ui/GlobalLoader.tsx';
 
 export const PublicOnlyRoute = () => {
-  const { isLoading, isAuth } = useUser();
-
-  if (isLoading) {
-    return <GlobalLoader />;
-  }
+  const { isAuth } = useUser();
 
   if (isAuth) {
     return <Navigate to="/" replace />;
