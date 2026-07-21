@@ -1,20 +1,42 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { User, Shield, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { ProfileSidebar } from './components/ProfileSidebar';
-import { useUser } from '@/features/hooks';
+import { useUser } from '@/shared/hooks';
+
+interface SubscriptionData {
+  plan: 'FREE' | 'PRO' | 'ENTERPRISE';
+  status: string;
+  currentPeriodEnd: string;
+}
 
 export const SettingsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isInitialMount = useRef(true);
   const { user } = useUser();
+  const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
 
   const currentTab = location.pathname.split('/').pop() || 'profile';
 
   useEffect(() => {
     isInitialMount.current = false;
+  }, []);
+
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      try {
+        const response = await fetch('/api/billing/subscription');
+        if (response.ok) {
+          const data = await response.json();
+          setSubscription(data);
+        }
+      } catch (error) {
+        console.error('Failed to load subscription status', error);
+      }
+    };
+    fetchSubscription();
   }, []);
 
   const handleTabChange = (tab: string) => () => {
@@ -45,15 +67,22 @@ export const SettingsPage = () => {
   const watchedLastName = user?.profile?.lastName || '';
   const initials = `${watchedFirstName[0] || ''}${watchedLastName[0] || ''}`.toUpperCase();
 
+  const isProActive = subscription?.plan === 'PRO' && subscription?.status === 'ACTIVE';
+
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'account', label: 'Account Settings', icon: Shield },
-    { id: 'billing', label: 'Billing & Plans', icon: CreditCard },
+    {
+      id: 'billing',
+      label: 'Billing & Plans',
+      icon: CreditCard,
+      badge: isProActive ? 'PRO' : undefined
+    },
   ];
 
   return (
     <motion.div
-      className="h-[calc(100vh-4rem)] bg-background text-foreground p-6 md:p-8 transition-colors duration-300 overflow-hidden flex flex-col"
+      className="h-[calc(100vh-4rem)] bg-background text-foreground p-4 md:p-6 transition-colors duration-300 overflow-hidden flex flex-col"
       variants={pageVariants}
       initial="initial"
       animate="animate"
@@ -87,7 +116,12 @@ export const SettingsPage = () => {
                     />
                   )}
                   <Icon className="w-4 h-4" />
-                  {tab.label}
+                  <span>{tab.label}</span>
+                  {tab.badge && (
+                    <span className="ml-1 px-1.5 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded">
+                      {tab.badge}
+                    </span>
+                  )}
                 </button>
               );
             })}

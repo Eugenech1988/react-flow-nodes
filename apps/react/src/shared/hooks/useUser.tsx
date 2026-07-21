@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api';
 import { USER_QUERY_KEY } from '@/shared';
 
@@ -32,8 +32,6 @@ export interface User {
 
 
 export function useUser() {
-  const queryClient = useQueryClient();
-
   const {
     data: user,
     isLoading,
@@ -58,22 +56,11 @@ export function useUser() {
     },
   });
 
-  const updateUserCache = (userData: User | null) => {
-    queryClient.setQueryData(USER_QUERY_KEY, userData);
-  };
-
-  const clearUserCache = () => {
-    queryClient.setQueryData(USER_QUERY_KEY, null);
-    queryClient.invalidateQueries();
-  };
-
   return {
     user: user ?? null,
     isAuth: !!user,
     isLoading,
     isError,
     error,
-    updateUserCache,
-    clearUserCache,
   };
 }

@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useUser } from '@/features/hooks';
+import { useUser } from '@/shared/hooks';
 
 export const ProtectedRoute = () => {
   const { isLoading, isAuth } = useUser();

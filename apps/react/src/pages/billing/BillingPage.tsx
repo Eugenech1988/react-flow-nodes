@@ -1,7 +1,11 @@
-import { CheckCircle2, Zap, ShieldCheck, Sparkles, XCircle } from 'lucide-react';
+import { useState } from 'react';
+import { CheckCircle2, Zap, ShieldCheck, Sparkles, XCircle, CreditCard } from 'lucide-react';
+import { useSubscription } from '@/shared/hooks';
+import { api } from '@/shared/api';
 
 export const BillingPage = () => {
-  const isProActive = false;
+  const { subscription, isProActive, isLoading } = useSubscription();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const features = [
     'Unlimited pipelines execution & storage',
@@ -10,8 +14,27 @@ export const BillingPage = () => {
     '24/7 Dedicated engineering support',
   ];
 
-  const handleCancelSubscription = () => {};
-  const handleActivateSubscription = () => {};
+  const handleActivateSubscription = async () => {
+    try {
+      setIsProcessing(true);
+      const data = await api.post<{ url: string }>('/billing/checkout', { plan: 'PRO' });
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Failed to create checkout session', error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleCancelSubscription = () => {
+    window.location.href = '/settings/billing';
+  };
+
+  if (isLoading) {
+    return <div className="text-sm text-muted-foreground p-6">Loading billing status...</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -42,7 +65,11 @@ export const BillingPage = () => {
 
           <div className="sm:text-right">
             <div className="text-2xl font-bold">{isProActive ? '$49' : '$0'}<span className="text-sm font-normal text-muted-foreground">/mo</span></div>
-            {isProActive && <p className="text-xs text-muted-foreground mt-0.5">Next billing date: April 15, 2026</p>}
+            {isProActive && subscription?.currentPeriodEnd && (
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Next billing date: {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
+              </p>
+            )}
           </div>
         </div>
 
@@ -80,10 +107,11 @@ export const BillingPage = () => {
             ) : (
               <button
                 onClick={handleActivateSubscription}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-br from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-medium shadow-sm active:scale-98 transition-all cursor-pointer text-sm"
+                disabled={isProcessing}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-br from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-medium shadow-sm active:scale-98 transition-all cursor-pointer text-sm disabled:opacity-50"
               >
-                <Zap className="w-4 h-4 fill-current" />
-                Activate Pro Plan
+                <CreditCard className="w-4 h-4" />
+                {isProcessing ? 'Redirecting...' : 'Activate Pro Plan'}
               </button>
             )}
           </div>
