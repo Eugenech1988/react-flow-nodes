@@ -1,15 +1,12 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useUser } from '@/shared/hooks';
+import { GlobalLoader } from '@/shared/ui/GlobalLoader.tsx';
 
 export const ProtectedRoute = () => {
   const { isLoading, isAuth } = useUser();
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-950 text-zinc-400 flex items-center justify-center">
-        <div className="animate-pulse tracking-wider text-sm">LOADING WORKSPACE...</div>
-      </div>
-    );
+    return <GlobalLoader />;
   }
 
   if (!isAuth) {
