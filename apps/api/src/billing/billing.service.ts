@@ -13,7 +13,7 @@ export class BillingService {
     private configService: ConfigService,
   ) {
     this.stripe = new Stripe(this.configService.get<string>('STRIPE_SECRET_KEY')!, {
-      apiVersion: '2025-02-28.acacia' as any,
+      apiVersion: '2023-10-16' as any,
     });
   }
 
@@ -53,13 +53,15 @@ export class BillingService {
       throw new BadRequestException('User not found');
     }
 
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
+
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'subscription',
       customer_email: user.email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${this.configService.get('FRONTEND_URL')}/settings/billing?success=true`,
-      cancel_url: `${this.configService.get('FRONTEND_URL')}/settings/billing?canceled=true`,
+      success_url: `${frontendUrl}/settings/billing?success=true`,
+      cancel_url: `${frontendUrl}/settings/billing?canceled=true`,
       metadata: { userId, plan },
     });
 
@@ -72,9 +74,11 @@ export class BillingService {
 
     try {
       event = this.stripe.webhooks.constructEvent(payload, signature, webhookSecret);
-    } catch (err) {
+    } catch (err: any) {
       throw new BadRequestException(`Webhook Error: ${err.message}`);
     }
+
+    console.log('EVENT:', event.type);
 
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
@@ -112,7 +116,7 @@ export class BillingService {
               currency: session.currency || 'usd',
               status: 'SUCCESS',
               plan,
-              invoiceId: session.id,
+              invoiceId: session.id as string,
               providerTxId: session.payment_intent as string,
               invoiceUrl: session.invoice as string,
             },

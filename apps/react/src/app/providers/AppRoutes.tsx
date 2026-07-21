@@ -9,7 +9,6 @@ import { BillingPage } from '@/pages/billing';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
 import { useProfileForm } from '@/pages/settings/hooks/useProfileForm';
 import { useAccountForm } from '@/pages/settings/hooks/useAccountForm';
-import { useUser } from '@/shared/hooks';
 
 const ProfileRouteWrapper = () => {
   const profile = useProfileForm();
@@ -37,16 +36,6 @@ const AccountRouteWrapper = () => {
   );
 };
 
-const WildcardRoute = () => {
-  const { isAuth } = useUser();
-
-  if (!isAuth) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <NotFoundPage />;
-};
-
 export const AppRoutes = () => {
   return (
     <Routes>
@@ -68,8 +57,7 @@ export const AppRoutes = () => {
 
         <Route path="/profile" element={<Navigate to="/settings/profile" replace />} />
       </Route>
-
-      <Route path="*" element={<WildcardRoute />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

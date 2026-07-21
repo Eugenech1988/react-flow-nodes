@@ -9,6 +9,7 @@ export function useSubscription() {
     isLoading,
     isError,
     error,
+    refetch
   } = useQuery<TSubscription | null, Error>({
     queryKey: SUBSCRIPTION_QUERY_KEY,
     queryFn: async () => {
@@ -30,9 +31,10 @@ export function useSubscription() {
 
   return {
     subscription: subscription ?? null,
-    isProActive: subscription?.plan === 'PRO' && subscription?.status === 'ACTIVE',
+    isProActive: subscription?.plan === 'PRO' && subscription?.planStatus === 'ACTIVE',
     isLoading,
     isError,
     error,
+    refetch
   };
 }
