@@ -87,7 +87,7 @@ export const SettingsPage = () => {
       initial="initial"
       animate="animate"
     >
-      <div className="max-w-4xl mx-auto w-full space-y-8 flex-1 flex flex-col min-h-0">
+      <div className="max-w-6xl mx-auto w-full space-y-8 flex-1 flex flex-col min-h-0">
         <div className="shrink-0">
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-muted-foreground text-sm mt-1">

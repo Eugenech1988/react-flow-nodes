@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { CheckCircle2, Zap, ShieldCheck, Sparkles, XCircle, CreditCard, Loader2 } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { CheckCircle2, Zap, ShieldCheck, Sparkles, XCircle, CreditCard, Loader2, Layers } from 'lucide-react';
 import { useSubscription } from '@/shared/hooks';
 import { api } from '@/shared/api';
 
@@ -11,7 +11,8 @@ export const BillingPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  console.log(subscription);
+  // Хук для навигации
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
@@ -75,11 +76,23 @@ export const BillingPage = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold tracking-tight">Subscription & Billing</h2>
-        <p className="text-muted-foreground text-sm mt-0.5">
-          Manage your billing cycle, plan tiers, and usage history.
-        </p>
+      {/* Header c кнопкой перехода к выбору планов */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight">Subscription & Billing</h2>
+          <p className="text-muted-foreground text-sm mt-0.5">
+            Manage your billing cycle, plan tiers, and usage history.
+          </p>
+        </div>
+
+        {/* Кнопка "View All Plans" в шапке */}
+        <button
+          onClick={() => navigate('/settings/billing/plans')}
+          className="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl border border-border bg-card hover:bg-muted text-foreground text-xs font-medium transition-all cursor-pointer shadow-xs"
+        >
+          <Layers className="w-4 h-4 text-teal-500" />
+          Compare All Plans
+        </button>
       </div>
 
       {successMessage && (
@@ -153,10 +166,16 @@ export const BillingPage = () => {
             <ShieldCheck className={`w-4 h-4 ${isProActive ? 'text-emerald-500' : 'text-muted-foreground/60'}`} />
             Secure payments via Stripe
           </div>
-          <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+          <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
             {isProActive ? (
               <>
-                <a href="#invoice" className="hover:text-foreground transition-colors underline underline-offset-4">View invoices</a>
+                <button
+                  type="button"
+                  onClick={() => navigate('/settings/billing/plans')}
+                  className="hover:text-foreground transition-colors underline underline-offset-4 cursor-pointer"
+                >
+                  Change plan
+                </button>
                 <button
                   onClick={handleCancelSubscription}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-muted/20 text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/[0.03] transition-all cursor-pointer font-medium"
@@ -166,23 +185,34 @@ export const BillingPage = () => {
                 </button>
               </>
             ) : (
-              <button
-                onClick={handleActivateSubscription}
-                disabled={isProcessing}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-br from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-medium shadow-sm active:scale-98 transition-all cursor-pointer text-sm disabled:opacity-50"
-              >
-                {isProcessing ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Redirecting to Stripe...
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="w-4 h-4" />
-                    Activate Pro Plan
-                  </>
-                )}
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Кнопка мгновенной покупки Pro */}
+                <button
+                  onClick={handleActivateSubscription}
+                  disabled={isProcessing}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-br from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-medium shadow-sm active:scale-98 transition-all cursor-pointer text-sm disabled:opacity-50"
+                >
+                  {isProcessing ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Redirecting...
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="w-4 h-4" />
+                      Activate Pro Plan
+                    </>
+                  )}
+                </button>
+
+                {/* Вторичная кнопка для перехода к выбору вариантов */}
+                <button
+                  onClick={() => navigate('/settings/billing/plans')}
+                  className="px-3 py-2 rounded-xl border border-border bg-muted/20 text-foreground hover:bg-muted font-medium transition-all cursor-pointer text-sm"
+                >
+                  Explore Plans
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -197,8 +227,11 @@ export const BillingPage = () => {
           <p className="text-xs text-muted-foreground leading-relaxed">
             For dedicated infrastructure workloads, tailored execution timeout scales, and customized deployment topology models.
           </p>
-          <button className="text-xs font-medium text-teal-600 dark:text-teal-400 hover:underline cursor-pointer">
-            Contact Enterprise Sales →
+          <button
+            onClick={() => navigate('/settings/billing/plans')}
+            className="text-xs font-medium text-teal-600 dark:text-teal-400 hover:underline cursor-pointer"
+          >
+            View Enterprise Plan details →
           </button>
         </div>
       </div>

@@ -6,6 +6,7 @@ import AppLayout from '@/app/AppLayout';
 import { CanvasPage } from '@/pages/canvas/CanvasPage';
 import { SettingsPage, ProfileForm, AccountForm } from '@/pages/settings';
 import { BillingPage } from '@/pages/billing';
+import { PlansPage } from '@/pages/plans';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
 import { useProfileForm } from '@/pages/settings/hooks/useProfileForm';
 import { useAccountForm } from '@/pages/settings/hooks/useAccountForm';
@@ -51,7 +52,10 @@ export const AppRoutes = () => {
             <Route index element={<Navigate to="profile" replace />} />
             <Route path="profile" element={<ProfileRouteWrapper />} />
             <Route path="account" element={<AccountRouteWrapper />} />
-            <Route path="billing" element={<BillingPage />} />
+            <Route path="billing">
+              <Route index element={<BillingPage />} />
+              <Route path="plans" element={<PlansPage />} />
+            </Route>
           </Route>
         </Route>
 
