@@ -183,7 +183,7 @@ export const validatePipeline = (
   for (const node of textNodes) {
     const text = node.data?.text ?? node.data?.content ?? '';
     if (typeof text !== 'string') continue;
-    const matches = text.matchAll(/\{\{\s*([^}]+?)\s*\}\}/g);
+    const matches = text.matchAll(/\{\{\s*([^}]+?)\s*}}/g);
     for (const match of matches) {
       variables.add(normalize(match[1]));
     }

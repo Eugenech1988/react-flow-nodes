@@ -93,7 +93,7 @@ export const createGraphSlice: StateCreator<
   },
 
   onEdgesChange: (changes) => {
-    const { edges } = get();
+    // const { edges } = get();
 
     const hasActualRemoval = changes.some((c) => c.type === 'remove');
     if (hasActualRemoval) {
