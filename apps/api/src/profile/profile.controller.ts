@@ -10,11 +10,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProfileService } from './profile.service';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; // Укажите ваш Guard доступа
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { diskStorage } from 'multer';
 import { extname } from 'node:path';
-import { UsersService } from '../users/users.service'; // Ваш декоратор получения юзера из req.user
+import { UsersService } from '../users/users.service';
 
 @Controller('profiles')
 export class ProfileController {

@@ -6,7 +6,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { RecoveryDto } from './dtos/recovery.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { GoogleOauthGuard } from './guards/google.guard';
 import { GithubOauthGuard } from './guards/github.guard';

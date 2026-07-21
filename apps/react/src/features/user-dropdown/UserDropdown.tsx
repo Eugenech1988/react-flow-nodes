@@ -25,6 +25,8 @@ export const UserDropdown = () => {
   const { user } = useUser();
   const { logout } = useLogout();
 
+  console.log(user);
+
   const isProActive = false;
 
   const firstName = user?.profile?.firstName || '';
@@ -51,7 +53,7 @@ export const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="flex items-center gap-1.5 p-1 hover:bg-foreground/[0.04] active:bg-foreground/[0.08] border border-transparent hover:border-border/60 rounded-full cursor-pointer transition-all outline-hidden select-none group">
+        className="flex items-center gap-1.5 p-1 hover:bg-foreground/4 active:bg-foreground/8 border border-transparent hover:border-border/60 rounded-full cursor-pointer transition-all outline-hidden select-none group">
         {displaySrc ? (
           <img
             src={displaySrc}
@@ -82,7 +84,7 @@ export const UserDropdown = () => {
 
           <DropdownMenuItem
             onClick={() => navigate('/settings/profile')}
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors"
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/4 focus:bg-foreground/4 outline-hidden transition-colors"
           >
             <User className="w-4 h-4 text-muted-foreground"/>
             <span>Profile</span>
@@ -90,7 +92,7 @@ export const UserDropdown = () => {
 
           <DropdownMenuItem
             onClick={() => navigate('/settings/account')}
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors"
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/4 focus:bg-foreground/4 outline-hidden transition-colors"
           >
             <Settings className="w-4 h-4 text-muted-foreground"/>
             <span>Account Settings</span>
@@ -98,7 +100,7 @@ export const UserDropdown = () => {
 
           <DropdownMenuItem
             onClick={() => navigate('/settings/billing')}
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors"
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/4 focus:bg-foreground/4 outline-hidden transition-colors"
           >
             <CreditCard className="w-4 h-4 text-muted-foreground"/>
             <span>Billing</span>
@@ -108,9 +110,9 @@ export const UserDropdown = () => {
 
           <DropdownMenuItem
             onClick={() => navigate('/settings/billing')}
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/[0.04] focus:bg-foreground/[0.04] outline-hidden transition-colors"
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/4 focus:bg-foreground/4 outline-hidden transition-colors"
           >
-            <Zap className="w-4 h-4 !text-emerald-500 fill-emerald-500 shrink-0" />
+            <Zap className="w-4 h-4 text-emerald-500! fill-emerald-500 shrink-0" />
             <span className={`font-medium ${!isProActive ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
               {isProActive ? 'Pro Plan' : 'Activate Pro Plan'}
             </span>
@@ -119,7 +121,7 @@ export const UserDropdown = () => {
           <DropdownMenuSeparator className="my-1 bg-border/60"/>
 
           <DropdownMenuItem
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-destructive hover:bg-destructive/[0.08] focus:bg-destructive/[0.08] outline-hidden transition-colors"
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-destructive hover:bg-destructive/8 focus:bg-destructive/8 outline-hidden transition-colors"
             onClick={() => logout()}
           >
             <LogOut className="w-4 h-4"/>

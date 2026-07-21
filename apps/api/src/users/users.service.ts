@@ -1,29 +1,24 @@
-import {
-  ConflictException,
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { ConflictException, BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdatePasswordDto } from './dtos/update-password.dto';
 import { Prisma } from '@prisma/client';
 import { hash, verify } from 'argon2';
 
-const userWithProfileValidator = Prisma.validator<Prisma.UserDefaultArgs>()({
-  include: { profile: true },
+const userWithRelationsValidator = Prisma.validator<Prisma.UserDefaultArgs>()({
+  include: { profile: true, subscription: true },
 });
 
-export type UserWithProfile = Prisma.UserGetPayload<typeof userWithProfileValidator>;
+export type UserWithRelations = Prisma.UserGetPayload<typeof userWithRelationsValidator>;
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<UserWithProfile[]> {
+  async findAll(): Promise<UserWithRelations[]> {
     try {
       return await this.prisma.user.findMany({
-        include: { profile: true },
+        include: { profile: true, subscription: true },
       });
     } catch (error) {
       console.error('Failed to fetch users:', error);
@@ -31,7 +26,7 @@ export class UsersService {
     }
   }
 
-  async register(createUserDto: CreateUserDto): Promise<UserWithProfile> {
+  async register(createUserDto: CreateUserDto): Promise<UserWithRelations> {
     const { email, password, firstName, lastName, avatarUrl, provider, providerId } = createUserDto;
 
     const existingUser = await this.prisma.user.findUnique({ where: { email } });
@@ -39,50 +34,59 @@ export class UsersService {
       throw new ConflictException('A user with this email already exists');
     }
 
-    try {
-      const hashedPassword = password ? await hash(password) : '';
+    const hashedPassword = password ? await hash(password) : '';
 
-      let nickName = createUserDto.nickName;
-      if (!nickName) {
-        nickName = email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 7);
-      }
-
-      const existingProfile = await this.prisma.profile.findFirst({ where: { nickName } });
-      if (existingProfile) {
-        nickName = `${nickName}_${Math.random().toString(36).substring(2, 5)}`;
-      }
-
-      const finalProvider = provider || 'local';
-      const finalProviderId = providerId || email;
-
-      return await this.prisma.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-          provider: finalProvider,
-          providerId: finalProviderId,
-          profile: {
-            create: {
-              nickName,
-              firstName: firstName || '',
-              lastName: lastName || null,
-              avatarUrl: avatarUrl || null,
-            },
-          },
-        },
-        include: { profile: true },
-      });
-    } catch (error) {
-      console.error('Failed to create user:', error);
-      throw new InternalServerErrorException('An unexpected error occurred while creating the user');
+    let nickName = createUserDto.nickName;
+    if (!nickName) {
+      nickName = email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 7);
     }
+
+    const existingProfile = await this.prisma.profile.findFirst({ where: { nickName } });
+    if (existingProfile) {
+      nickName = `${nickName}_${Math.random().toString(36).substring(2, 5)}`;
+    }
+
+    return this.create({
+      email,
+      password: hashedPassword,
+      provider: provider || 'local',
+      providerId: providerId || email,
+      profile: {
+        create: {
+          nickName,
+          firstName: firstName || '',
+          lastName: lastName || null,
+          avatarUrl: avatarUrl || null,
+        },
+      },
+    });
   }
 
-  async create(data: Prisma.UserCreateInput): Promise<UserWithProfile> {
+  async create(data: Prisma.UserCreateInput): Promise<UserWithRelations> {
     try {
-      return await this.prisma.user.create({
-        data,
-        include: { profile: true },
+      return await this.prisma.$transaction(async (tx) => {
+        const user = await tx.user.create({
+          data,
+          include: { profile: true, subscription: true },
+        });
+
+        const existingSub = await tx.subscription.findUnique({ where: { userId: user.id } });
+        if (!existingSub) {
+          await tx.subscription.create({
+            data: {
+              userId: user.id,
+              plan: 'FREE',
+              status: 'ACTIVE',
+              currentPeriodStart: new Date(),
+              currentPeriodEnd: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+            },
+          });
+        }
+
+        return (await tx.user.findUnique({
+          where: { id: user.id },
+          include: { profile: true, subscription: true },
+        })) as UserWithRelations;
       });
     } catch (error) {
       console.error('Failed in create operations:', error);
@@ -90,11 +94,11 @@ export class UsersService {
     }
   }
 
-  async findOneByEmail(email: string): Promise<UserWithProfile | null> {
+  async findOneByEmail(email: string): Promise<UserWithRelations | null> {
     try {
       return await this.prisma.user.findUnique({
         where: { email },
-        include: { profile: true },
+        include: { profile: true, subscription: true },
       });
     } catch (error) {
       console.error(`Failed to find user by email ${email}:`, error);
@@ -102,11 +106,11 @@ export class UsersService {
     }
   }
 
-  async findOneByProvider(provider: string, providerId: string): Promise<UserWithProfile | null> {
+  async findOneByProvider(provider: string, providerId: string): Promise<UserWithRelations | null> {
     try {
       return await this.prisma.user.findFirst({
         where: { provider, providerId },
-        include: { profile: true },
+        include: { profile: true, subscription: true },
       });
     } catch (error) {
       console.error(`Failed to find user by provider ${provider}:`, error);
@@ -114,11 +118,11 @@ export class UsersService {
     }
   }
 
-  async findOneById(id: string): Promise<UserWithProfile | null> {
+  async findOneById(id: string): Promise<UserWithRelations | null> {
     try {
       return await this.prisma.user.findUnique({
         where: { id },
-        include: { profile: true },
+        include: { profile: true, subscription: true },
       });
     } catch (error) {
       console.error(`Failed to find user by id ${id}:`, error);
@@ -126,12 +130,12 @@ export class UsersService {
     }
   }
 
-  async update(id: string, data: Prisma.UserUpdateInput): Promise<UserWithProfile> {
+  async update(id: string, data: Prisma.UserUpdateInput): Promise<UserWithRelations> {
     try {
       return await this.prisma.user.update({
         where: { id },
         data,
-        include: { profile: true },
+        include: { profile: true, subscription: true },
       });
     } catch (error) {
       console.error(`Failed to update user with id ${id}:`, error);
@@ -150,8 +154,6 @@ export class UsersService {
     if (!isMatch) {
       throw new BadRequestException('Invalid old password');
     }
-
-    console.log('here');
 
     const hashedPassword = await hash(dto.newPassword);
 

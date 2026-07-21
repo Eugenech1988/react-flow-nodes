@@ -1,4 +1,4 @@
-import { ConflictException, BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SigningOptions } from 'jsonwebtoken';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -7,7 +7,7 @@ import { RegisterDto } from './dtos/register.dto';
 import { RecoveryDto } from './dtos/recovery.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { IUserSafe, IJwtPayload, IOauthUser } from './types/auth.types';
-import { generateSecret,   verify as verifyOtp, generateURI } from 'otplib';
+import { generateSecret, verify as verifyOtp, generateURI } from 'otplib';
 import * as qrcode from 'qrcode';
 import { verify as verifyArgon, hash } from 'argon2';
 
@@ -58,9 +58,9 @@ export class AuthService {
             },
             update: {
               avatarUrl: emailUser.profile?.avatarUrl || profile.picture,
-            }
-          }
-        }
+            },
+          },
+        },
       });
       const { password, ...result } = updatedUser;
       return result as IUserSafe;
@@ -75,8 +75,8 @@ export class AuthService {
           firstName: profile.firstName,
           lastName: profile.lastName,
           avatarUrl: profile.picture,
-        }
-      }
+        },
+      },
     });
 
     const { password, ...result } = newUser;
@@ -84,25 +84,12 @@ export class AuthService {
   }
 
   async register(dto: RegisterDto): Promise<IUserSafe> {
-    const candidate = await this.usersService.findOneByEmail(dto.email);
-    if (candidate) {
-      throw new ConflictException('A user with this email already exists');
-    }
-
-    const hashedPassword = await hash(dto.password);
-
-    const user = await this.usersService.create({
+    const user = await this.usersService.register({
       email: dto.email,
-      password: hashedPassword,
-      provider: 'local',
-      providerId: dto.email,
-      profile: {
-        create: {
-          firstName: dto.firstName || '',
-          lastName: dto.lastName || null,
-          nickName: dto.nickName || dto.email.split('@')[0],
-        }
-      }
+      password: dto.password,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      nickName: dto.nickName,
     });
 
     const { password, ...result } = user;
@@ -133,21 +120,19 @@ export class AuthService {
       { userId: user.id, purpose: 'password_recovery' },
       {
         secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-        expiresIn: '15m',
+        expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES') as SigningOptions,
       },
     );
 
     const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
     const recoveryLink = `${clientUrl}/reset-password?token=${resetToken}`;
-
-    console.log(`Recovering token from ${clientUrl} ${resetToken}`);
   }
 
   generateTempToken(userId: string) {
     const payload = { userId, purpose: '2fa_pending' };
     return this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-      expiresIn: '5m',
+      expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_TEMP_EXPIRES') as SigningOptions,
     });
   }
 
@@ -268,6 +253,6 @@ export class AuthService {
     }
 
     const { password, twoFactorSecret, ...resultUser } = user;
-    return resultUser as IUserSafe;
+    return resultUser as unknown as IUserSafe;
   }
 }
