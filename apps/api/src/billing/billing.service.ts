@@ -188,4 +188,13 @@ export class BillingService {
 
     return { received: true };
   }
+
+  async getTransactionsByUserId(userId: string) {
+    return this.prisma.transaction.findMany({
+      where: { userId },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
 }

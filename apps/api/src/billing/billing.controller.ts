@@ -38,4 +38,10 @@ export class BillingController {
     }
     return this.billingService.handleWebhook(signature, payload);
   }
+
+  @Get('/transactions')
+  @UseGuards(JwtAuthGuard)
+  async getTransactions(@Req() req: Request & { user: { id: string } }) {
+    return this.billingService.getTransactionsByUserId(req.user.id);
+  }
 }

@@ -12,6 +12,19 @@ export type TProfile = {
   updatedAt: string;
 }
 
+export type TTransaction = {
+  id: string;
+  usedrId: string;
+  ivoiceId: string;
+  providerTxId: string;
+  amount: number;
+  currency: string;
+  plan: string;
+  invoiceUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type TSubscription = {
   id: string;
   userId: string;
@@ -35,6 +48,7 @@ export interface IUser {
   updatedAt: string;
   profile: TProfile | null;
   subscription: TSubscription | null;
+  transactions: TTransaction[];
   isTwoFactorEnabled?: boolean;
   twoFactorSecret?: string;
 }

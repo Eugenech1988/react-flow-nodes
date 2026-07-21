@@ -16,10 +16,9 @@ import {
   Cpu,
   ExternalLink
 } from 'lucide-react';
-import { useSubscription } from '@/shared/hooks';
+import { useSubscription, useTransactions } from '@/shared/hooks';
 import { api } from '@/shared/api';
 
-// Моковые данные для истории платежей (замените на реальные данные с бэкенда)
 const INVOICE_HISTORY = [
   { id: 'INV-2026-003', date: '2026-06-01', amount: '$49.00', status: 'Paid', pdfUrl: '#' },
   { id: 'INV-2026-002', date: '2026-05-01', amount: '$49.00', status: 'Paid', pdfUrl: '#' },
@@ -27,13 +26,15 @@ const INVOICE_HISTORY = [
 ];
 
 export const BillingPage = () => {
-  const { subscription, isProActive, isLoading, refetch } = useSubscription();
+  const { subscription, isProActive, isLoading: isSubscriptionLoading, refetch } = useSubscription();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
+  const { transactions, isLoading: isTransactionLoading } = useTransactions();
   const navigate = useNavigate();
+
+  console.log(transactions, isTransactionLoading);
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
@@ -86,7 +87,7 @@ export const BillingPage = () => {
     window.location.href = '/settings/billing/portal';
   };
 
-  if (isLoading) {
+  if (isSubscriptionLoading) {
     return (
       <div className="flex items-center justify-center p-12 text-sm text-muted-foreground gap-2">
         <Loader2 className="w-4 h-4 animate-spin" />
@@ -97,7 +98,6 @@ export const BillingPage = () => {
 
   return (
     <div className="space-y-8 max-w-5xl">
-      {/* HEADER */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold tracking-tight">Subscription & Billing</h2>
@@ -115,7 +115,6 @@ export const BillingPage = () => {
         </button>
       </div>
 
-      {/* NOTIFICATIONS */}
       {successMessage && (
         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm flex items-center justify-between">
           <span>{successMessage}</span>
@@ -140,7 +139,6 @@ export const BillingPage = () => {
         </div>
       )}
 
-      {/* ACTIVE PLAN CARD */}
       <div className={`relative border bg-card rounded-2xl p-6 shadow-md overflow-hidden backdrop-blur-xs transition-all ${isProActive ? 'border-emerald-500/20' : 'border-border'}`}>
         <div className={`absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl pointer-events-none ${isProActive ? 'bg-emerald-500/5' : 'bg-linear-to-br from-teal-500/5 to-emerald-500/5'}`} />
 
@@ -238,7 +236,6 @@ export const BillingPage = () => {
         </div>
       </div>
 
-      {/* NEW SECTION 1: USAGE METRICS */}
       <div className="space-y-4">
         <h3 className="text-sm font-semibold tracking-wide uppercase text-foreground/80">
           Current Usage
@@ -294,7 +291,6 @@ export const BillingPage = () => {
         </div>
       </div>
 
-      {/* NEW SECTION 2: PAYMENT METHOD & PAYMENT HISTORY */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Payment Method Details */}
         <div className="border border-border bg-card rounded-xl p-5 space-y-4">
@@ -326,7 +322,6 @@ export const BillingPage = () => {
           )}
         </div>
 
-        {/* Invoice History */}
         <div className="lg:col-span-2 border border-border bg-card rounded-xl p-5 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold tracking-wide uppercase text-foreground/80 flex items-center gap-2">
@@ -378,7 +373,6 @@ export const BillingPage = () => {
         </div>
       </div>
 
-      {/* ENTERPRISE BANNER */}
       <div className="border border-border bg-muted/5 rounded-xl p-5 space-y-3">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Sparkles className="w-4 h-4 text-teal-500" />
