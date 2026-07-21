@@ -26,8 +26,7 @@ export const UserDropdown = () => {
   const { subscription } = useSubscription();
   const { logout } = useLogout();
 
-  const isFreePlan = subscription?.plan === 'FREE';
-
+  const isFreePlan = subscription && subscription.plan === 'FREE';
 
   const firstName = user?.profile?.firstName || '';
   const lastName = user?.profile?.lastName || '';
@@ -114,7 +113,7 @@ export const UserDropdown = () => {
             className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-md cursor-pointer text-foreground/90 hover:bg-foreground/4 focus:bg-foreground/4 outline-hidden transition-colors"
           >
             <Zap className="w-4 h-4 text-emerald-500! fill-emerald-500 shrink-0" />
-            <span className={`font-medium ${!isProActive ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
+            <span className={`font-medium ${isFreePlan ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
               Activate Pro Plan
             </span>
           </DropdownMenuItem>

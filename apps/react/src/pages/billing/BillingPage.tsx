@@ -11,8 +11,9 @@ export const BillingPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Хук для навигации
   const navigate = useNavigate();
+
+  console.log(subscription);
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {

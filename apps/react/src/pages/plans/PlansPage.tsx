@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, type Variants } from 'framer-motion';
 import {
   CheckCircle2,
   ShieldCheck,
@@ -31,6 +32,15 @@ interface Plan {
   buttonText: string;
   buttonVariant: 'outline' | 'primary' | 'secondary';
 }
+
+const pageVariants: Variants = {
+  initial: { opacity: 0, y: 12 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: [0.21, 1.02, 0.43, 1.01] }
+  }
+};
 
 export const PlansPage = () => {
   const navigate = useNavigate();
@@ -147,7 +157,23 @@ export const PlansPage = () => {
   }
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto py-6 px-4 md:px-6">
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      className="space-y-8 max-w-6xl mx-auto py-6 px-4 md:px-6"
+    >
+      {/*<div>*/}
+      {/*  <button*/}
+      {/*    type="button"*/}
+      {/*    onClick={() => navigate('/settings/billing')}*/}
+      {/*    className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"*/}
+      {/*  >*/}
+      {/*    <ArrowLeft className="w-4 h-4" />*/}
+      {/*    <span>Back to Settings</span>*/}
+      {/*  </button>*/}
+      {/*</div>*/}
+
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <h2 className="text-3xl font-bold tracking-tight">Flexible Plans for Every Scale</h2>
         <p className="text-muted-foreground text-sm">
@@ -323,6 +349,6 @@ export const PlansPage = () => {
           </span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Plan } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
@@ -6,6 +6,7 @@ import Stripe from 'stripe';
 
 @Injectable()
 export class BillingService {
+  private readonly logger = new Logger(BillingService.name);
   private stripe: Stripe;
 
   constructor(
@@ -39,8 +40,8 @@ export class BillingService {
 
     if (!subscription) {
       return {
-        plan: 'FREE',
-        status: 'ACTIVE',
+        plan: Plan.FREE,
+        planStatus: 'ACTIVE',
         currentPeriodStart: new Date(),
         currentPeriodEnd: new Date(),
         cancelAtPeriodEnd: false,
@@ -59,7 +60,6 @@ export class BillingService {
     }
 
     const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
-    const isPaidPlan = plan === Plan.PRO || plan === Plan.ENTERPRISE;
 
     const session = await this.stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -71,7 +71,6 @@ export class BillingService {
       metadata: { userId, plan },
       subscription_data: {
         metadata: { userId, plan },
-        ...(isPaidPlan && { cancel_at_period_end: true }),
       },
     });
 
@@ -90,11 +89,9 @@ export class BillingService {
     }
 
     if (event.type === 'checkout.session.completed') {
-      const session = event.data.object as Stripe.Checkout.Session;
-      const userId = session.metadata?.userId;
-      const plan = session.metadata?.plan as Plan | undefined;
+      try {
+        const session = event.data.object as Stripe.Checkout.Session;
 
-      if (userId && plan) {
         const subscriptionId = typeof session.subscription === 'string'
           ? session.subscription
           : session.subscription?.id;
@@ -103,15 +100,40 @@ export class BillingService {
           throw new BadRequestException('Subscription ID missing in session');
         }
 
-        const stripeSubscription = await this.stripe.subscriptions.retrieve(subscriptionId);
-        const firstItem = stripeSubscription.items.data[0];
+        let stripeSubscription: Stripe.Subscription;
+        try {
+          stripeSubscription = await this.stripe.subscriptions.update(subscriptionId, {
+            cancel_at_period_end: true,
+          });
+        } catch {
+          stripeSubscription = await this.stripe.subscriptions.retrieve(subscriptionId);
+        }
+
+        const userId = session.metadata?.userId || stripeSubscription.metadata?.userId;
+        const plan = (session.metadata?.plan || stripeSubscription.metadata?.plan) as Plan | undefined;
+
+        if (!userId || !plan) {
+          throw new BadRequestException('User metadata missing in session and subscription');
+        }
+
+        const rawCustomer = session.customer ?? stripeSubscription.customer;
+        const customerId = typeof rawCustomer === 'string'
+          ? rawCustomer
+          : rawCustomer && 'id' in rawCustomer
+            ? rawCustomer.id
+            : null;
+
+        const firstItem = stripeSubscription.items.data[0] as (Stripe.SubscriptionItem & { current_period_start?: number; current_period_end?: number }) | undefined;
 
         const startTimestamp = firstItem?.current_period_start ?? Math.floor(Date.now() / 1000);
         const endTimestamp = firstItem?.current_period_end ?? Math.floor(Date.now() / 1000) + 30 * 86400;
 
         const currentPeriodStart = new Date(startTimestamp * 1000);
         const currentPeriodEnd = new Date(endTimestamp * 1000);
-        const cancelAtPeriodEnd = stripeSubscription.cancel_at_period_end;
+        const cancelAtPeriodEnd = stripeSubscription.cancel_at_period_end ?? false;
+
+        const rawPaymentIntent = typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id;
+        const providerTxId = rawPaymentIntent || `tx_${session.id}`;
 
         await this.prisma.$transaction([
           this.prisma.subscription.upsert({
@@ -120,6 +142,8 @@ export class BillingService {
               userId,
               plan,
               planStatus: 'ACTIVE',
+              customerId,
+              subscriptionId,
               currentPeriodStart,
               currentPeriodEnd,
               cancelAtPeriodEnd,
@@ -127,24 +151,38 @@ export class BillingService {
             update: {
               plan,
               planStatus: 'ACTIVE',
+              customerId,
+              subscriptionId,
               currentPeriodStart,
               currentPeriodEnd,
               cancelAtPeriodEnd,
             },
           }),
-          this.prisma.transaction.create({
-            data: {
+          this.prisma.transaction.upsert({
+            where: { providerTxId },
+            create: {
               userId,
               amount: session.amount_total || 0,
               currency: session.currency || 'usd',
               status: 'SUCCESS',
               plan,
               invoiceId: session.id,
-              providerTxId: typeof session.payment_intent === 'string' ? session.payment_intent : '',
+              providerTxId,
+              invoiceUrl: typeof session.invoice === 'string' ? session.invoice : '',
+            },
+            update: {
+              amount: session.amount_total || 0,
+              currency: session.currency || 'usd',
+              status: 'SUCCESS',
+              plan,
+              invoiceId: session.id,
               invoiceUrl: typeof session.invoice === 'string' ? session.invoice : '',
             },
           }),
         ]);
+      } catch (error) {
+        this.logger.error('CRITICAL ERROR IN HANDLE_WEBHOOK:', error);
+        throw error;
       }
     }
 
