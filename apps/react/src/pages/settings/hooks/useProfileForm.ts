@@ -1,13 +1,14 @@
 import { useState, useRef, type ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query'; // или старая версия без @tanstack
-import { useUser, type User } from '@/shared/hooks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { type TProfile, USER_QUERY_KEY } from '@/shared/lib';
+import { useUser } from '@/shared/hooks';
 import { api } from '@/shared/api';
 import { profileSchema, type IProfileFormData } from '../types';
 
 export const useProfileForm = () => {
-  const {user} = useUser();
+  const { user } = useUser();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -34,9 +35,9 @@ export const useProfileForm = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const {mutate: updateProfile, isPending} = useMutation({
-    mutationFn: (dataToSend: FormData) => api.patch<User>('/profiles/me', dataToSend),
+    mutationFn: (dataToSend: FormData) => api.patch<TProfile>('/profiles/me', dataToSend),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['current-user']});
+      queryClient.invalidateQueries({queryKey: USER_QUERY_KEY});
       form.reset(form.getValues());
       setAvatarFile(null);
       setAlert({type: 'success', message: 'Profile updated successfully.'});

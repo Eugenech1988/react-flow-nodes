@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useUser } from '@/shared/hooks';
-import { GlobalLoader } from '@/shared/ui/GlobalLoader.tsx';
+import { GlobalLoader } from '@/shared/ui';
 
 export const ProtectedRoute = () => {
   const { isLoading, isAuth } = useUser();

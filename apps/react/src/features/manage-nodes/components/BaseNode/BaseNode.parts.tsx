@@ -1,6 +1,6 @@
 import { type ChangeEvent, type ReactNode } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { AutosizeTextarea } from '@/shared';
+import { AutosizeTextarea } from '@/shared/ui';
 import {
   Input,
   Select,
@@ -21,7 +21,7 @@ export const NodeHandles = ({ handles, type }: { handles: HandleConfig[]; type: 
         position={handle.position || (type === 'target' ? Position.Left : Position.Right)}
         id={handle.id}
         style={handle.style}
-        className="w-2.5 h-2.5 border-2 border-card rounded-full bg-[var(--node-accent)]"
+        className="w-2.5 h-2.5 border-2 border-card rounded-full bg-(--node-accent)"
       />
     ))}
   </>
@@ -39,7 +39,7 @@ export const NodeHeader = ({
   <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-border/60 bg-muted/10 rounded-t-2xl select-none">
     <div className="flex items-center gap-3">
       {icon && (
-        <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-semibold shadow-xs shrink-0 bg-[var(--node-accent)]">
+        <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-semibold shadow-xs shrink-0 bg-(--node-accent)">
           {icon}
         </span>
       )}

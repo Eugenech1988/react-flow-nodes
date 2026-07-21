@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api';
-import { TRANSACTIONS_QUERY_KEY } from '@/shared';
-import type { TTransaction } from '@/shared';
+import { TRANSACTIONS_QUERY_KEY, type TTransaction } from '@/shared/lib';
 
 export function useTransactions() {
   const {

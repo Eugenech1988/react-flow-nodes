@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api';
-import { USER_QUERY_KEY } from '@/shared';
+import { USER_QUERY_KEY } from '@/shared/lib';
 import type { IUser } from '@/shared/lib';
 
 

@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Save, ArrowLeft, Loader2 } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
-import { FloatingInput } from '@/shared/ui/FloatingInput';
+import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { Button } from '@pipeline/ui';
-import { LocalAlert } from '@/shared';
 import type { IProfileFormData } from '../types';
 
 interface ProfileFormProps {

@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api';
-import { SUBSCRIPTION_QUERY_KEY } from '@/shared';
-import type { TSubscription } from '@/shared';
+import { SUBSCRIPTION_QUERY_KEY, type TSubscription } from '@/shared/lib';
 
 export function useSubscription() {
   const {
