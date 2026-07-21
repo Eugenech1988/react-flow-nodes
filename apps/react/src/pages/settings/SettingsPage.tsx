@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { User, Shield } from 'lucide-react';
+import { User, Shield, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import { ProfileSidebar } from './components/ProfileSidebar';
@@ -45,71 +45,69 @@ export const SettingsPage = () => {
   const watchedLastName = user?.profile?.lastName || '';
   const initials = `${watchedFirstName[0] || ''}${watchedLastName[0] || ''}`.toUpperCase();
 
+  const tabs = [
+    { id: 'profile', label: 'Profile', icon: User },
+    { id: 'account', label: 'Account Settings', icon: Shield },
+    { id: 'billing', label: 'Billing & Plans', icon: CreditCard },
+  ];
+
   return (
     <motion.div
-      className="min-h-screen bg-background text-foreground p-6 md:p-8 transition-colors duration-300"
+      className="h-[calc(100vh-4rem)] bg-background text-foreground p-6 md:p-8 transition-colors duration-300 overflow-hidden flex flex-col"
       variants={pageVariants}
       initial="initial"
       animate="animate"
     >
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div>
+      <div className="max-w-4xl mx-auto w-full space-y-8 flex-1 flex flex-col min-h-0">
+        <div className="shrink-0">
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-muted-foreground text-sm mt-1">
             Manage your account details, professional information, and security preferences.
           </p>
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-muted/30 border border-border p-1 rounded-xl inline-flex gap-1 backdrop-blur-xs relative">
-            <button
-              onClick={handleTabChange('profile')}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer border-0 outline-hidden relative z-10 ${
-                currentTab === 'profile' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {currentTab === 'profile' && (
-                <motion.div
-                  layoutId="activeTabIndicator"
-                  className="absolute inset-0 bg-card border border-border rounded-lg shadow-md -z-10"
-                  transition={{ type: "spring", stiffness: 300, damping: 28 }}
-                />
-              )}
-              <User className="w-4 h-4" />
-              Profile
-            </button>
-
-            <button
-              onClick={handleTabChange('account')}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer border-0 outline-hidden relative z-10 ${
-                currentTab === 'account' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {currentTab === 'account' && (
-                <motion.div
-                  layoutId="activeTabIndicator"
-                  className="absolute inset-0 bg-card border border-border rounded-lg shadow-md -z-10"
-                  transition={{ type: "spring", stiffness: 300, damping: 28 }}
-                />
-              )}
-              <Shield className="w-4 h-4" />
-              Account Settings
-            </button>
+        <div className="space-y-6 flex-1 flex flex-col min-h-0">
+          <div className="bg-muted/30 border border-border p-1 rounded-xl inline-flex gap-1 backdrop-blur-xs relative flex-wrap shrink-0">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = currentTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={handleTabChange(tab.id)}
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer border-0 outline-hidden relative z-10 ${
+                    isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeTabIndicator"
+                      className="absolute inset-0 bg-card border border-border rounded-lg shadow-md -z-10"
+                      transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                    />
+                  )}
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <ProfileSidebar
-              avatarPreview={user?.profile?.avatarUrl || null}
-              initials={initials}
-              onAvatarClick={() => navigate('/settings/profile')}
-              fileInputRef={{ current: null }}
-              onAvatarChange={() => {}}
-              firstName={watchedFirstName}
-              lastName={watchedLastName}
-              jobTitle={user?.profile?.jobTitle || ''}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start flex-1 min-h-0">
+            <div className="shrink-0">
+              <ProfileSidebar
+                avatarPreview={user?.profile?.avatarUrl || null}
+                initials={initials}
+                onAvatarClick={() => navigate('/settings/profile')}
+                fileInputRef={{ current: null }}
+                onAvatarChange={() => {}}
+                firstName={watchedFirstName}
+                lastName={watchedLastName}
+                jobTitle={user?.profile?.jobTitle || ''}
+              />
+            </div>
 
-            <div className="md:col-span-2 overflow-hidden">
+            <div className="md:col-span-2 h-full overflow-y-auto pr-2 pb-12 min-h-0">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={currentTab}

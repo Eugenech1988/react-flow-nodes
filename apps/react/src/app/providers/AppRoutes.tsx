@@ -4,12 +4,13 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { PublicOnlyRoute } from './PublicOnlyRoute';
 import AppLayout from '@/app/AppLayout';
 import { CanvasPage } from '@/pages/canvas/CanvasPage';
-import { SettingsPage, ProfileForm, AccountForm, ActiveProPlanPage } from '@/pages/settings';
+import { SettingsPage, ProfileForm, AccountForm } from '@/pages/settings';
+import { BillingPage } from '@/pages/billing';
 import { useProfileForm } from '@/pages/settings/hooks/useProfileForm';
 import { useAccountForm } from '@/pages/settings/hooks/useAccountForm';
 
 const ProfileRouteWrapper = () => {
-  const profile = useProfileForm(); // Хук вызывается локально при монтировании таба
+  const profile = useProfileForm();
   return (
     <ProfileForm
       alert={profile.alert}
@@ -22,7 +23,7 @@ const ProfileRouteWrapper = () => {
 };
 
 const AccountRouteWrapper = () => {
-  const account= useAccountForm();
+  const account = useAccountForm();
   return (
     <AccountForm
       form={account.form}
@@ -49,9 +50,8 @@ export const AppRoutes = () => {
             <Route index element={<Navigate to="profile" replace />} />
             <Route path="profile" element={<ProfileRouteWrapper />} />
             <Route path="account" element={<AccountRouteWrapper />} />
+            <Route path="billing" element={<BillingPage />} />
           </Route>
-
-          <Route path="/settings/billing" element={<ActiveProPlanPage />} />
         </Route>
 
         <Route path="/profile" element={<Navigate to="/settings/profile" replace />} />
