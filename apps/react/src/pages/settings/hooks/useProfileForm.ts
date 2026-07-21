@@ -2,7 +2,7 @@ import { useState, useRef, type ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query'; // или старая версия без @tanstack
-import { useUser, type User } from '@/features/auth';
+import { useUser, type User } from '@/features/hooks';
 import { api } from '@/shared/api';
 import { profileSchema, type IProfileFormData } from '../types';
 

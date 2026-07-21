@@ -1,45 +1,16 @@
-import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button } from '@pipeline/ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Button
-} from '@pipeline/ui';
-
 import { SocialLoginButtons } from './SocialLoginButtons';
 import { AuthModeToggle } from './AuthModeToggle';
 import { RegisterFields } from './RegisterFields';
 import { LoginFields } from './LoginFields';
 import { TwoFactorForm } from './TwoFactorForm';
-import { api } from '@/shared/api';
+import { useQueryClient } from '@tanstack/react-query';
 import { cn } from '@/shared/lib';
-import { useTwoFactorAuth } from '../hooks/useTwoFactorAuth';
-
-type FormMode = 'login' | 'register';
-
-const loginSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password is required'),
-});
-
-const registerSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password must be at least 6 characters long'),
-  confirmPassword: z.string().min(1, 'Please confirm your password'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
-type RegisterFormData = z.infer<typeof registerSchema>;
-export type CombinedFormData = LoginFormData & Partial<RegisterFormData>;
+import { useAuthStore } from '../model/authStore';
+import { loginSchema, registerSchema, type CombinedFormData } from '../model';
+import { USER_QUERY_KEY } from '@/shared/lib';
 
 const INPUT_CLASSES = cn(
   'block w-full bg-transparent text-sm outline-none transition-all duration-200',
@@ -48,85 +19,58 @@ const INPUT_CLASSES = cn(
 );
 
 export const AuthForm: React.FC = () => {
-  const [mode, setMode] = useState<FormMode>('login');
-  const [apiError, setApiError] = useState<string | null>(null);
-
   const {
+    mode,
     is2faRequired,
     qrCodeImage,
     secretKey,
-    error: twoFactorError,
     isLoading: is2faLoading,
-    handleLoginResponse,
+    apiError,
+    twoFactorError,
+    login,
+    register: registerAction,
     verifyTwoFactor,
-    resetState: reset2faState,
-  } = useTwoFactorAuth(() => {
-    window.location.href = '/';
-  });
+    toggleMode,
+    resetState,
+  } = useAuthStore();
+  const queryClient = useQueryClient();
+
+  const currentApiError = apiError || twoFactorError;
+  const isAuthError = currentApiError === 'Unauthorized' || currentApiError?.toLowerCase().includes('invalid');
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting }
+    formState: { errors, isSubmitting },
   } = useForm<CombinedFormData>({
     resolver: zodResolver(mode === 'login' ? loginSchema : registerSchema),
-    mode: "onSubmit",
-    reValidateMode: "onChange",
-    defaultValues: {
-      email: '',
-      password: '',
-      confirmPassword: ''
-    }
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+    defaultValues: { email: '', password: '', confirmPassword: '' },
   });
 
-  const toggleMode = () => {
-    setApiError(null);
-    reset2faState();
-    setMode((prev) => (prev === 'login' ? 'register' : 'login'));
-    reset({ email: '', password: '', confirmPassword: '' });
-  };
-
   const onSubmit = async (data: CombinedFormData) => {
-    setApiError(null);
-    try {
-      if (mode === 'login') {
-        const response = await api.post('/auth/login', {
-          email: data.email,
-          password: data.password
-        });
-
-        const requires2fa = handleLoginResponse(response);
-        if (!requires2fa) {
-          window.location.href = '/';
-        }
-      } else {
-        await api.post('/auth/register', {
-          email: data.email,
-          password: data.password,
-        });
-        toggleMode();
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setApiError(error.message);
-      } else if (typeof error === 'object' && error !== null && 'message' in error) {
-        setApiError(String((error as { message: unknown }).message));
-      } else {
-        setApiError('Something went wrong');
-      }
+    if (mode === 'login') {
+      await login(data.email, data.password, () => {
+        queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY });
+      });
+    } else {
+      await registerAction(data.email, data.password, () => {
+        reset({ email: '', password: '', confirmPassword: '' });
+      });
     }
   };
 
   const handleSocialLogin = (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.API_URL || 'http://localhost:3000';
-    window.location.href = `${apiUrl}/auth/${provider}`;
+    queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY });
+    if (provider === 'google' || provider === 'github') {
+      const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.API_URL || 'http://localhost:3000';
+      window.location.href = `${apiUrl}/auth/${provider}`;
+    }
   };
-
-  const currentApiError = apiError || twoFactorError;
-  const isAuthError = currentApiError === 'Unauthorized' || currentApiError?.toLowerCase().includes('invalid');
 
   return (
     <div className="bg-[url('/nodes-bg.png')] bg-cover bg-center flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300">
@@ -152,7 +96,7 @@ export const AuthForm: React.FC = () => {
               error={currentApiError}
               isLoading={is2faLoading}
               onVerify={verifyTwoFactor}
-              onBack={reset2faState}
+              onBack={resetState}
               inputClasses={INPUT_CLASSES}
             />
           ) : (

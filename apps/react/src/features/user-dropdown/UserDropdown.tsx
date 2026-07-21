@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useLogout, useUser } from '@/features/auth';
+import { useLogout, useUser } from '@/features/hooks';
 import {
   LogOut,
   User,

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@pipeline/ui';
-
-type FormMode = 'login' | 'register';
+import type { FormMode } from '../types';
 
 interface AuthModeToggleProps {
   mode: FormMode;

@@ -1,33 +1,37 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@pipeline/ui';
-import { cn } from '@/shared/lib';
-import { twoFactorSchema, type TwoFactorFormData } from '../hooks/useTwoFactorAuth';
+import { z } from 'zod';
+import { LocalAlert } from '@/shared/ui';
+const twoFactorSchema = z.object({
+  code: z.string().min(6, 'The 2FA code must be at least 6 characters').max(6),
+});
+
+type TwoFactorFormData = z.infer<typeof twoFactorSchema>;
 
 interface TwoFactorFormProps {
-  qrCodeImage: string | null;
-  secretKey: string | null;
-  error: string | null;
+  qrCodeImage?: string;
+  secretKey?: string;
+  error?: string | null;
   isLoading: boolean;
-  onVerify: (data: TwoFactorFormData) => Promise<void>;
+  onVerify: (data: TwoFactorFormData, onSuccess: () => void) => Promise<void>;
   onBack: () => void;
-  inputClasses: string;
+  inputClasses?: string;
 }
 
-export const TwoFactorForm: React.FC<TwoFactorFormProps> = ({
-                                                              qrCodeImage,
-                                                              secretKey,
-                                                              error,
-                                                              isLoading,
-                                                              onVerify,
-                                                              onBack,
-                                                              inputClasses,
-                                                            }) => {
+export const TwoFactorForm = ({
+                                qrCodeImage,
+                                secretKey,
+                                error,
+                                isLoading,
+                                onVerify,
+                                onBack,
+                                inputClasses,
+                              }: TwoFactorFormProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<TwoFactorFormData>({
     resolver: zodResolver(twoFactorSchema),
     defaultValues: {
@@ -35,64 +39,59 @@ export const TwoFactorForm: React.FC<TwoFactorFormProps> = ({
     },
   });
 
-  const fieldError = errors.code?.message;
+  const handleFormSubmit = async (data: TwoFactorFormData) => {
+    await onVerify(data, () => {
+      reset();
+    });
+  };
 
   return (
-    <form onSubmit={handleSubmit(onVerify)} className="space-y-6 pt-2">
-      {error && (
-        <div className="text-sm font-medium text-red-400 bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center antialiased">
-          {error}
-        </div>
-      )}
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+      {error && <LocalAlert hasError hasSuccess={false} alertMessage={error} />}
 
       {qrCodeImage && (
-        <div className="flex flex-col items-center justify-center p-4 bg-zinc-900/50 border border-zinc-800 rounded-xl space-y-3">
-          <p className="text-xs text-zinc-400 text-center">
-            Scan this QR code with Google Authenticator:
-          </p>
-          <img src={qrCodeImage} alt="2FA QR Code" className="w-40 h-40 bg-white p-2 rounded-lg" />
+        <div className="flex flex-col items-center justify-center space-y-3">
+          <img src={qrCodeImage} alt="2FA QR Code" className="w-40 h-40 rounded-lg border border-border" />
           {secretKey && (
-            <p className="text-[11px] text-zinc-500 break-all text-center">
-              Secret: <span className="text-zinc-300 font-mono">{secretKey}</span>
+            <p className="text-xs text-muted-foreground text-center">
+              Secret: <span className="font-mono text-foreground">{secretKey}</span>
             </p>
           )}
         </div>
       )}
 
       <div className="space-y-2">
+        <label htmlFor="code" className="text-sm font-medium leading-none">
+          Authentication Code
+        </label>
         <input
-          type="text"
-          placeholder="123456"
-          maxLength={6}
-          autoFocus
-          className={cn(
-            inputClasses,
-            'h-12 px-4 rounded-xl border border-zinc-800 text-center text-xl tracking-[0.5em] font-mono',
-            fieldError && 'border-red-500/50'
-          )}
           {...register('code')}
+          id="code"
+          type="text"
+          maxLength={6}
+          placeholder="123456"
+          className={inputClasses}
+          disabled={isLoading}
         />
-        {fieldError && (
-          <p className="text-xs text-red-400 text-center font-medium">{fieldError}</p>
-        )}
+        {errors.code && <p className="text-xs text-destructive">{errors.code.message}</p>}
       </div>
 
-      <div className="pt-2 flex gap-3">
-        <Button
+      <div className="flex gap-3">
+        <button
           type="button"
-          variant="outline"
           onClick={onBack}
-          className="cursor-pointer w-1/3 h-12 rounded-xl border-zinc-800 bg-transparent text-zinc-300 hover:bg-zinc-900 hover:text-white"
+          disabled={isLoading}
+          className="w-full px-4 py-2 text-sm font-medium border border-border rounded-lg hover:bg-muted transition-colors cursor-pointer disabled:opacity-50"
         >
           Back
-        </Button>
-        <Button
+        </button>
+        <button
           type="submit"
           disabled={isLoading}
-          className="cursor-pointer w-2/3 h-12 rounded-xl bg-teal-600 text-base font-medium tracking-wide text-white transition-all duration-300 hover:bg-teal-500 hover:shadow-[0_0_25px_rgba(20,184,166,0.3)] active:scale-[0.98]"
+          className="w-full px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors cursor-pointer disabled:opacity-50"
         >
-          {isLoading ? 'Verifying...' : 'Confirm'}
-        </Button>
+          {isLoading ? 'Verifying...' : 'Verify'}
+        </button>
       </div>
     </form>
   );

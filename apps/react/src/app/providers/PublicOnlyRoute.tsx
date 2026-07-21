@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useUser } from '@/features/auth';
+import { useUser } from '@/features/hooks';
 
 export const PublicOnlyRoute = () => {
   const { isLoading, isAuth } = useUser();

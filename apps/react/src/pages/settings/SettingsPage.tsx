@@ -1,9 +1,9 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { User, Shield } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import { ProfileSidebar } from './components/ProfileSidebar';
-import { useUser } from '@/features/auth';
+import { useUser } from '@/features/hooks';
 
 export const SettingsPage = () => {
   const location = useLocation();
@@ -21,7 +21,7 @@ export const SettingsPage = () => {
     navigate(`/settings/${tab}`);
   };
 
-  const pageVariants = {
+  const pageVariants: Variants = {
     initial: { opacity: 0, y: 12 },
     animate: {
       opacity: 1,
@@ -30,7 +30,7 @@ export const SettingsPage = () => {
     }
   };
 
-  const contentVariants = {
+  const contentVariants: Variants = {
     initial: (isInitial: boolean) => ({
       opacity: isInitial ? 1 : 0,
       y: isInitial ? 0 : 8,

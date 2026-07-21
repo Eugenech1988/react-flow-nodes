@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { FloatingInput } from '@/shared/ui';
-import type { CombinedFormData } from './AuthForm';
+import type { CombinedFormData } from '../types';
 
 interface RegisterFieldsProps {
   register: UseFormRegister<CombinedFormData>;

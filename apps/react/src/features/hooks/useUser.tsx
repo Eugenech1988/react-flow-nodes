@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/shared/api';
+import { USER_QUERY_KEY } from '@/shared';
 
 export interface Profile {
   id: string;
@@ -29,7 +30,6 @@ export interface User {
   twoFactorSecret?: string;
 }
 
-export const USER_QUERY_KEY = ['current-user'];
 
 export function useUser() {
   const queryClient = useQueryClient();
