@@ -11,12 +11,6 @@ model Profile {
   location String? @default("San Francisco, CA")
   jobTitle String? @default("Senior Pipeline Engineer") @map("job_title")
 
-  plan          Plan      @default(FREE)
-  planExpiresAt DateTime? @map("plan_expires_at")
-
-  customerId     String? @unique @map("customer_id")
-  subscriptionId String? @unique @map("subscription_id")
-
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

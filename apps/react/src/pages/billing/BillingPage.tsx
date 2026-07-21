@@ -5,6 +5,7 @@ import { api } from '@/shared/api';
 
 export const BillingPage = () => {
   const { subscription, isProActive, isLoading } = useSubscription();
+  console.log(subscription);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const features = [

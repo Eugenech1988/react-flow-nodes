@@ -1,34 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api';
 import { USER_QUERY_KEY } from '@/shared';
-
-export interface Profile {
-  id: string;
-  nickName: string;
-  firstName: string;
-  lastName?: string | null;
-  avatarUrl: string | null;
-  company?: string | null;
-  location?: string | null;
-  jobTitle?: string | null;
-  createdAt: string;
-  updatedAt: string;
-  plan?: string;
-  planExpiresAt?: string;
-
-}
-
-export interface User {
-  id: string;
-  email: string;
-  provider: 'google' | 'github' | 'local';
-  providerId: string;
-  createdAt: string;
-  updatedAt: string;
-  profile: Profile | null;
-  isTwoFactorEnabled?: boolean;
-  twoFactorSecret?: string;
-}
+import type { IUser } from '@/shared/lib';
 
 
 export function useUser() {
@@ -37,11 +10,11 @@ export function useUser() {
     isLoading,
     isError,
     error,
-  } = useQuery<User | null, Error>({
+  } = useQuery<IUser | null, Error>({
     queryKey: USER_QUERY_KEY,
     queryFn: async () => {
       try {
-        return await api.get<User>('/auth/me');
+        return await api.get<IUser>('/auth/me');
       } catch (err: any) {
         if (err.message === 'Unauthorized') {
           return null;

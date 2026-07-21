@@ -1,9 +1,11 @@
-import { User as PrismaUser, Profile as PrismaProfile } from '@prisma/client';
+import { User as PrismaUser, Profile as PrismaProfile, Subscription as PrismaSubscription } from '@prisma/client';
 
-export type IProfileSafe = PrismaProfile;
+export type TDescriptionSafe = PrismaSubscription;
 
-export type IUserSafe = Omit<PrismaUser, 'password'> & {
-  profile: IProfileSafe | null;
+export type TProfileSafe = PrismaProfile;
+
+export type TUserSafe = Omit<PrismaUser, 'password'> & {
+  profile: TProfileSafe | null;
 };
 
 export interface IJwtPayload {

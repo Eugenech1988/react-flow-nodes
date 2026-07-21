@@ -2,8 +2,11 @@ model Subscription {
   id     String @id @default(cuid())
   userId String @unique @map("user_id")
 
-  plan   Plan               @default(FREE)
-  status SubscriptionStatus @default(ACTIVE)
+  plan       Plan               @default(FREE)
+  planStatus SubscriptionStatus @default(ACTIVE)
+
+  customerId     String? @unique @map("customer_id")
+  subscriptionId String? @unique @map("subscription_id")
 
   currentPeriodStart DateTime @map("current_period_start")
   currentPeriodEnd   DateTime @map("current_period_end")

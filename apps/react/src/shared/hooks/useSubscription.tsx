@@ -1,12 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api';
 import { SUBSCRIPTION_QUERY_KEY } from '@/shared';
-
-export interface SubscriptionData {
-  plan: 'FREE' | 'PRO' | 'ENTERPRISE';
-  status: string;
-  currentPeriodEnd: string;
-}
+import type { TSubscription } from '@/shared';
 
 export function useSubscription() {
   const {
@@ -14,11 +9,11 @@ export function useSubscription() {
     isLoading,
     isError,
     error,
-  } = useQuery<SubscriptionData | null, Error>({
+  } = useQuery<TSubscription | null, Error>({
     queryKey: SUBSCRIPTION_QUERY_KEY,
     queryFn: async () => {
       try {
-        return await api.get<SubscriptionData>('/billing/subscription');
+        return await api.get<TSubscription>('/billing/subscription');
       } catch (err: any) {
         if (err.message === 'Unauthorized') {
           return null;

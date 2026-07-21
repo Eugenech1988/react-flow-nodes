@@ -94,13 +94,13 @@ export class BillingService {
             create: {
               userId,
               plan,
-              status: 'ACTIVE',
+              planStatus: 'ACTIVE',
               currentPeriodStart,
               currentPeriodEnd,
             },
             update: {
               plan,
-              status: 'ACTIVE',
+              planStatus: 'ACTIVE',
               currentPeriodStart,
               currentPeriodEnd,
             },

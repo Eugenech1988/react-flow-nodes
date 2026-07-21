@@ -15,11 +15,11 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdatePasswordDto } from './dtos/update-password.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { type IUserSafe } from './types';
+import { type TUserSafe } from './types';
 import type { Request } from 'express';
 
 interface IRequestWithUser extends Request {
-  user: IUserSafe;
+  user: TUserSafe;
 }
 
 @Controller('users')

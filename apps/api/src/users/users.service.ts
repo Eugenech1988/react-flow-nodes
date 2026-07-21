@@ -76,7 +76,7 @@ export class UsersService {
             data: {
               userId: user.id,
               plan: 'FREE',
-              status: 'ACTIVE',
+              planStatus: 'ACTIVE',
               currentPeriodStart: new Date(),
               currentPeriodEnd: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
             },

@@ -6,7 +6,7 @@ import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dtos/register.dto';
 import { RecoveryDto } from './dtos/recovery.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
-import { IUserSafe, IJwtPayload, IOauthUser } from './types/auth.types';
+import { TUserSafe, IJwtPayload, IOauthUser } from './types/auth.types';
 import { generateSecret, verify as verifyOtp, generateURI } from 'otplib';
 import * as qrcode from 'qrcode';
 import { verify as verifyArgon, hash } from 'argon2';
@@ -24,24 +24,24 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<IUserSafe | null> {
+  async validateUser(email: string, pass: string): Promise<TUserSafe | null> {
     const user = await this.usersService.findOneByEmail(email);
     if (user && user.password) {
       const isMatch = await verifyArgon(user.password, pass);
       if (isMatch) {
         const { password, ...result } = user;
-        return result as IUserSafe;
+        return result as TUserSafe;
       }
     }
     return null;
   }
 
-  async validateOauthUser(profile: IOauthUser): Promise<IUserSafe> {
+  async validateOauthUser(profile: IOauthUser): Promise<TUserSafe> {
     const existingUser = await this.usersService.findOneByProvider(profile.provider, profile.providerId);
 
     if (existingUser) {
       const { password, ...result } = existingUser;
-      return result as IUserSafe;
+      return result as TUserSafe;
     }
 
     const emailUser = await this.usersService.findOneByEmail(profile.email);
@@ -63,7 +63,7 @@ export class AuthService {
         },
       });
       const { password, ...result } = updatedUser;
-      return result as IUserSafe;
+      return result as TUserSafe;
     }
 
     const newUser = await this.usersService.create({
@@ -80,10 +80,10 @@ export class AuthService {
     });
 
     const { password, ...result } = newUser;
-    return result as IUserSafe;
+    return result as TUserSafe;
   }
 
-  async register(dto: RegisterDto): Promise<IUserSafe> {
+  async register(dto: RegisterDto): Promise<TUserSafe> {
     const user = await this.usersService.register({
       email: dto.email,
       password: dto.password,
@@ -93,7 +93,7 @@ export class AuthService {
     });
 
     const { password, ...result } = user;
-    return result as IUserSafe;
+    return result as TUserSafe;
   }
 
   async generateTokens(userId: string) {
@@ -253,6 +253,6 @@ export class AuthService {
     }
 
     const { password, twoFactorSecret, ...resultUser } = user;
-    return resultUser as unknown as IUserSafe;
+    return resultUser as unknown as TUserSafe;
   }
 }

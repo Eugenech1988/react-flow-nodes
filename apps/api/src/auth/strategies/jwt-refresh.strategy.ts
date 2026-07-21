@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { UsersService } from '../../users/users.service';
-import { IJwtPayload, IUserSafe } from '../types/auth.types';
+import { IJwtPayload, TUserSafe } from '../types/auth.types';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
@@ -21,12 +21,12 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
     });
   }
 
-  async validate(payload: IJwtPayload): Promise<IUserSafe> {
+  async validate(payload: IJwtPayload): Promise<TUserSafe> {
     const user = await this.usersService.findOneById(payload.userId);
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
     const { password, ...safeUser } = user;
-    return safeUser as unknown as IUserSafe;
+    return safeUser as unknown as TUserSafe;
   }
 }
