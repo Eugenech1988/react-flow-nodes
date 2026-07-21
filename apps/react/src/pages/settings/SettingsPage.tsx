@@ -1,42 +1,21 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { User, Shield, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { ProfileSidebar } from './components/ProfileSidebar';
-import { useUser } from '@/shared/hooks';
-
-interface SubscriptionData {
-  plan: 'FREE' | 'PRO' | 'ENTERPRISE';
-  status: string;
-  currentPeriodEnd: string;
-}
+import { useUser, useSubscription } from '@/shared/hooks';
 
 export const SettingsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isInitialMount = useRef(true);
   const { user } = useUser();
-  const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
+  const { isProActive } = useSubscription();
 
   const currentTab = location.pathname.split('/').pop() || 'profile';
 
   useEffect(() => {
     isInitialMount.current = false;
-  }, []);
-
-  useEffect(() => {
-    const fetchSubscription = async () => {
-      try {
-        const response = await fetch('/api/billing/subscription');
-        if (response.ok) {
-          const data = await response.json();
-          setSubscription(data);
-        }
-      } catch (error) {
-        console.error('Failed to load subscription status', error);
-      }
-    };
-    fetchSubscription();
   }, []);
 
   const handleTabChange = (tab: string) => () => {
@@ -66,8 +45,6 @@ export const SettingsPage = () => {
   const watchedFirstName = user?.profile?.firstName || '';
   const watchedLastName = user?.profile?.lastName || '';
   const initials = `${watchedFirstName[0] || ''}${watchedLastName[0] || ''}`.toUpperCase();
-
-  const isProActive = subscription?.plan === 'PRO' && subscription?.status === 'ACTIVE';
 
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },

@@ -1,17 +1,19 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   CheckCircle2,
-  Zap,
   ShieldCheck,
   Sparkles,
   CreditCard,
   Loader2,
   ArrowRight,
+  ArrowLeft,
   Building2,
   Check
 } from 'lucide-react';
 import { useSubscription } from '@/shared/hooks';
 import { api } from '@/shared/api';
+import { Switch } from '@pipeline/ui';
 
 interface PlanFeature {
   text: string;
@@ -31,7 +33,8 @@ interface Plan {
 }
 
 export const PlansPage = () => {
-  const { subscription, isProActive, isLoading } = useSubscription();
+  const navigate = useNavigate();
+  const { isProActive, isLoading } = useSubscription();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [processingPlan, setProcessingPlan] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -59,7 +62,7 @@ export const PlansPage = () => {
       name: 'Pro',
       description: 'Perfect for power users and growing teams needing raw performance.',
       monthlyPrice: 49,
-      yearlyPrice: 39, // ~$468 billed annually
+      yearlyPrice: 39,
       popular: true,
       buttonText: isProActive ? 'Current Plan' : 'Upgrade to Pro',
       buttonVariant: 'primary',
@@ -93,7 +96,6 @@ export const PlansPage = () => {
 
   const handleSelectPlan = async (planId: string) => {
     if (planId === 'free') {
-      // Если Pro активен, перенаправляем в портал управления для отмены/даунгрейда
       if (isProActive) {
         window.location.href = '/settings/billing/portal';
       }
@@ -101,7 +103,6 @@ export const PlansPage = () => {
     }
 
     if (planId === 'enterprise') {
-      // Перенаправление на форму контактов или открытие модалки
       window.location.href = 'mailto:enterprise@yourdomain.com?subject=Enterprise%20Plan%20Inquiry';
       return;
     }
@@ -146,31 +147,38 @@ export const PlansPage = () => {
   }
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto py-2">
-      {/* Header */}
+    <div className="space-y-8 max-w-6xl mx-auto py-6 px-4 md:px-6">
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <h2 className="text-3xl font-bold tracking-tight">Flexible Plans for Every Scale</h2>
         <p className="text-muted-foreground text-sm">
           Choose the plan that fits your execution volume and infrastructure needs. Upgrade, downgrade, or cancel anytime.
         </p>
 
-        {/* Toggle Billing Cycle */}
         <div className="pt-2 flex items-center justify-center gap-3">
-          <span className={`text-xs font-medium ${billingCycle === 'monthly' ? 'text-foreground' : 'text-muted-foreground'}`}>
+          <span
+            onClick={() => setBillingCycle('monthly')}
+            className={`text-xs font-medium cursor-pointer transition-colors ${
+              billingCycle === 'monthly' ? 'text-foreground' : 'text-muted-foreground'
+            }`}
+          >
             Monthly
           </span>
-          <button
-            type="button"
-            onClick={() => setBillingCycle(prev => prev === 'monthly' ? 'yearly' : 'monthly')}
-            className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-muted transition-colors duration-200 ease-in-out focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
+
+          <Switch
+            checked={billingCycle === 'yearly'}
+            onCheckedChange={(checked) => setBillingCycle(checked ? 'yearly' : 'monthly')}
+            style={{
+              backgroundColor: billingCycle === 'yearly' ? '#10b981' : undefined,
+            }}
+            className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent"
+          />
+
+          <span
+            onClick={() => setBillingCycle('yearly')}
+            className={`text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-colors ${
+              billingCycle === 'yearly' ? 'text-foreground' : 'text-muted-foreground'
+            }`}
           >
-            <span
-              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-foreground shadow-lg ring-0 transition duration-200 ease-in-out ${
-                billingCycle === 'yearly' ? 'translate-x-5 bg-emerald-500' : 'translate-x-0'
-              }`}
-            />
-          </button>
-          <span className={`text-xs font-medium flex items-center gap-1.5 ${billingCycle === 'yearly' ? 'text-foreground' : 'text-muted-foreground'}`}>
             Yearly
             <span className="px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
               Save 20%
@@ -179,7 +187,6 @@ export const PlansPage = () => {
         </div>
       </div>
 
-      {/* Error Alert */}
       {errorMessage && (
         <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center justify-between">
           <span>{errorMessage}</span>
@@ -192,8 +199,7 @@ export const PlansPage = () => {
         </div>
       )}
 
-      {/* Pricing Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch pt-4">
         {plans.map((plan) => {
           const isCurrent = (plan.id === 'pro' && isProActive) || (plan.id === 'free' && !isProActive);
           const price = billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice;
@@ -201,28 +207,27 @@ export const PlansPage = () => {
           return (
             <div
               key={plan.id}
-              className={`relative border bg-card rounded-2xl p-6 shadow-md flex flex-col justify-between transition-all backdrop-blur-xs ${
-                plan.popular
-                  ? 'border-emerald-500/40 ring-1 ring-emerald-500/20'
-                  : 'border-border'
+              className={`relative border bg-card rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 backdrop-blur-xs ${
+                isCurrent
+                  ? '-translate-y-3 shadow-xl border-emerald-500/60 ring-2 ring-emerald-500/30'
+                  : plan.popular
+                    ? 'border-emerald-500/40 shadow-md'
+                    : 'border-border shadow-md'
               }`}
             >
-              {/* Popular Badge */}
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[11px] font-semibold bg-linear-to-r from-teal-500 to-emerald-600 text-white shadow-sm flex items-center gap-1">
                   <Sparkles className="w-3 h-3" /> Most Popular
                 </div>
               )}
 
-              {/* Top Blur Glow */}
               <div
                 className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl pointer-events-none ${
-                  plan.popular ? 'bg-emerald-500/10' : 'bg-muted/20'
+                  isCurrent || plan.popular ? 'bg-emerald-500/10' : 'bg-muted/20'
                 }`}
               />
 
               <div className="space-y-6">
-                {/* Header Info */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xl font-bold">{plan.name}</h3>
@@ -237,7 +242,6 @@ export const PlansPage = () => {
                   </p>
                 </div>
 
-                {/* Price */}
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-extrabold">${price}</span>
                   <span className="text-xs text-muted-foreground font-normal">
@@ -247,7 +251,6 @@ export const PlansPage = () => {
 
                 <div className="border-t border-border/60 pt-4" />
 
-                {/* Features List */}
                 <div className="space-y-3">
                   <span className="text-xs font-semibold tracking-wide uppercase text-foreground/80">
                     What's included:
@@ -271,7 +274,6 @@ export const PlansPage = () => {
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="pt-6 mt-6 border-t border-border/60">
                 <button
                   type="button"
@@ -307,7 +309,6 @@ export const PlansPage = () => {
         })}
       </div>
 
-      {/* Footer Info */}
       <div className="pt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground gap-4 border-t border-border/40">
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-emerald-500" />

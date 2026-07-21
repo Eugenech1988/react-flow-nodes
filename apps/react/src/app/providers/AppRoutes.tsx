@@ -52,11 +52,10 @@ export const AppRoutes = () => {
             <Route index element={<Navigate to="profile" replace />} />
             <Route path="profile" element={<ProfileRouteWrapper />} />
             <Route path="account" element={<AccountRouteWrapper />} />
-            <Route path="billing">
-              <Route index element={<BillingPage />} />
-              <Route path="plans" element={<PlansPage />} />
-            </Route>
+            <Route path="billing" element={<BillingPage />} />
           </Route>
+
+          <Route path="/settings/billing/plans" element={<PlansPage />} />
         </Route>
 
         <Route path="/profile" element={<Navigate to="/settings/profile" replace />} />
