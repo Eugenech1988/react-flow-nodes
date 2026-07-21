@@ -1,10 +1,3 @@
-enum TransactionStatus {
-  PENDING
-  SUCCESS
-  FAILED
-  REFUNDED
-}
-
 model Transaction {
   id     String @id @default(cuid())
   userId String @map("user_id")
@@ -16,8 +9,7 @@ model Transaction {
   currency String            @default("USD")
   status   TransactionStatus @default(PENDING)
 
-  plan Plan
-
+  plan       Plan
   invoiceUrl String? @map("invoice_url")
 
   createdAt DateTime @default(now()) @map("created_at")
