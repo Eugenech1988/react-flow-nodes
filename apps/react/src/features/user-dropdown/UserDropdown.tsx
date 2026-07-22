@@ -6,7 +6,8 @@ import {
   Settings,
   CreditCard,
   ChevronDown,
-  Zap, Workflow
+  Zap,
+  Workflow
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -49,6 +50,21 @@ export const UserDropdown = () => {
       : `${BASE_URL}${avatarUrl}`
     : null;
 
+  // Стиль для стандартных пунктов (Профиль, Настройки, Билинг, Пайплайны)
+  const itemClasses = [
+    'flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors font-medium',
+    // Обычное состояние (серый текст и иконка):
+    'text-foreground [&>svg]:text-muted-foreground',
+    // Hover и Active/Highlighted состояния в Radix UI:
+    'hover:bg-teal-500/10! focus:bg-teal-500/10! data-[highlighted]:bg-teal-500/10!',
+    'hover:text-teal-600! focus:text-teal-600! data-[highlighted]:text-teal-600!',
+    'dark:hover:text-teal-400! dark:focus:text-teal-400! dark:data-[highlighted]:text-teal-400!',
+    // Красим SVG-иконку внутри пункта в зеленый при ховере/фокусе:
+    '[&>svg]:transition-colors',
+    'hover:[&>svg]:text-teal-600! focus:[&>svg]:text-teal-600! data-[highlighted]:[&>svg]:text-teal-600!',
+    'dark:hover:[&>svg]:text-teal-400! dark:focus:[&>svg]:text-teal-400! dark:data-[highlighted]:[&>svg]:text-teal-400!'
+  ].join(' ');
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -89,33 +105,33 @@ export const UserDropdown = () => {
 
           <DropdownMenuItem
             onClick={() => navigate('/settings/profile')}
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors"
+            className={itemClasses}
           >
-            <User className="w-4 h-4 text-muted-foreground" />
+            <User className="w-4 h-4 shrink-0" />
             <span>Profile</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={() => navigate('/settings/account')}
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors"
+            className={itemClasses}
           >
-            <Settings className="w-4 h-4 text-muted-foreground" />
+            <Settings className="w-4 h-4 shrink-0" />
             <span>Account Settings</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={() => navigate('/settings/billing')}
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors"
+            className={itemClasses}
           >
-            <CreditCard className="w-4 h-4 text-muted-foreground" />
+            <CreditCard className="w-4 h-4 shrink-0" />
             <span>Billing</span>
           </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={() => navigate('/pipelines')}
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors"
+            className={itemClasses}
           >
-            <Workflow className="w-4 h-4 text-muted-foreground" />
+            <Workflow className="w-4 h-4 shrink-0" />
             <span>Pipelines</span>
           </DropdownMenuItem>
 
@@ -125,7 +141,7 @@ export const UserDropdown = () => {
 
               <DropdownMenuItem
                 onClick={() => navigate('/settings/billing')}
-                className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer font-medium transition-colors hover:bg-teal-500/20 focus:bg-teal-500/20 data-[highlighted]:bg-teal-500/20 text-teal-600 hover:text-teal-500 focus:text-teal-500 data-[highlighted]:text-teal-500 dark:text-teal-300 dark:hover:text-teal-200 dark:focus:text-teal-200 dark:data-[highlighted]:text-teal-200"
+                className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer font-medium transition-colors hover:bg-teal-500/20! focus:bg-teal-500/20! data-[highlighted]:bg-teal-500/20! text-teal-600! hover:text-teal-500! focus:text-teal-500! data-[highlighted]:text-teal-500! dark:text-teal-300! dark:hover:text-teal-200! dark:focus:text-teal-200! dark:data-[highlighted]:text-teal-200!"
               >
                 <Zap className="w-4 h-4 fill-current text-current shrink-0" />
                 <span>Activate Pro Plan</span>
@@ -137,7 +153,7 @@ export const UserDropdown = () => {
 
           <DropdownMenuItem
             onClick={() => logout()}
-            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors font-medium text-rose-600! dark:text-rose-400! hover:text-rose-500! focus:text-rose-500! data-[highlighted]:text-rose-500! dark:hover:text-rose-300! dark:focus:text-rose-300! dark:data-[highlighted]:text-rose-300! hover:bg-rose-500/10 focus:bg-rose-500/10 data-[highlighted]:bg-rose-500/10"
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors font-medium text-rose-600! dark:text-rose-400! hover:text-rose-500! focus:text-rose-500! data-[highlighted]:text-rose-500! dark:hover:text-rose-300! dark:focus:text-rose-300! dark:data-[highlighted]:text-rose-300! hover:bg-rose-500/10! focus:bg-rose-500/10! data-[highlighted]:bg-rose-500/10!"
           >
             <LogOut className="w-4 h-4 text-current shrink-0" />
             <span>Log out</span>

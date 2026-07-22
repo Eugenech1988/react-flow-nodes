@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Delete } from '@nestjs/common';
 import { PipelinesService } from './pipelines.service';
 import { CreatePipelineDto } from './dtos/create-pipeline.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -33,5 +33,10 @@ export class PipelinesController {
   @Get('user/:userId')
   async findAllByUserId(@Param('userId') userId: string) {
     return this.pipelinesService.findAllByUserId(userId);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.pipelinesService.remove(id);
   }
 }

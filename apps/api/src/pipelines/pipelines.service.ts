@@ -1,6 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePipelineDto } from './dtos/create-pipeline.dto';
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
 
 @Injectable()
 export class PipelinesService {
@@ -36,5 +38,33 @@ export class PipelinesService {
         name: 'asc',
       },
     });
+  }
+
+  async remove(id: string) {
+    const pipeline = await this.prisma.pipeline.findUnique({
+      where: { id },
+    });
+
+    if (!pipeline) {
+      throw new NotFoundException('Pipeline not found');
+    }
+
+    if (pipeline.screenshotUrl) {
+      try {
+        const filePath = path.join(process.cwd(), pipeline.screenshotUrl);
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.warn(`Failed to delete file at ${pipeline.screenshotUrl}:`, err);
+      }
+    }
+
+    try {
+      return await this.prisma.pipeline.delete({
+        where: { id },
+      });
+    } catch (error) {
+      console.error('Failed to delete pipeline:', error);
+      throw new InternalServerErrorException('Error deleting pipeline');
+    }
   }
 }
