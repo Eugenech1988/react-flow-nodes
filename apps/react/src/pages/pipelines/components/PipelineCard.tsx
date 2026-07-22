@@ -29,14 +29,9 @@ export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
 
   return (
     <motion.div
-      layout="position"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{
-        opacity: { duration: 0.15, ease: 'easeOut' },
-        layout: { duration: 0.2, ease: 'easeOut' },
-      }}
+      transition={{ duration: 0.15, ease: 'easeOut' }}
       className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between"
     >
       <div className="space-y-3 p-5">
