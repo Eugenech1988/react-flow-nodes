@@ -44,4 +44,10 @@ export class BillingController {
   async getTransactions(@Req() req: Request & { user: { id: string } }) {
     return this.billingService.getTransactionsByUserId(req.user.id);
   }
+
+  @Post('cancel')
+  @UseGuards(JwtAuthGuard)
+  async cancelSubscription(@Req() req: Request & { user: { id: string } }) {
+    return this.billingService.cancelSubscription(req.user.id);
+  }
 }

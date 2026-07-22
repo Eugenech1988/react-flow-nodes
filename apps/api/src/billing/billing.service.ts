@@ -197,4 +197,38 @@ export class BillingService {
       },
     });
   }
+
+  async cancelSubscription(userId: string) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { userId },
+    });
+
+    if (!subscription) {
+      throw new BadRequestException('Active subscription not found');
+    }
+
+    if (subscription.subscriptionId) {
+      try {
+        await this.stripe.subscriptions.cancel(subscription.subscriptionId);
+      } catch (error) {
+        this.logger.warn(
+          `Failed to cancel Stripe subscription ${subscription.subscriptionId}: ${
+            error instanceof Error ? error.message : 'Unknown error'
+          }`,
+        );
+      }
+    }
+
+    const updatedSubscription = await this.prisma.subscription.update({
+      where: { userId },
+      data: {
+        plan: Plan.FREE,
+        planStatus: 'ACTIVE',
+        cancelAtPeriodEnd: false,
+        subscriptionId: null,
+      },
+    });
+
+    return updatedSubscription;
+  }
 }

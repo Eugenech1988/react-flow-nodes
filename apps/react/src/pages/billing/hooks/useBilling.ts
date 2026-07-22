@@ -1,65 +1,86 @@
-// src/pages/settings/billing/hooks/useBilling.ts
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSubscription, useTransactions } from '@/shared/hooks';
 import { api } from '@/shared/api';
+import { SUBSCRIPTION_QUERY_KEY } from '@/shared/lib';
+
+const parseErrorMessage = (error: any, fallback: string) => {
+  const msg = error?.response?.data?.message;
+  return (Array.isArray(msg) ? msg.join(', ') : msg) || error?.message || fallback;
+};
 
 export const useBilling = () => {
-  const { subscription, isProActive, isLoading: isSubscriptionLoading, refetch } = useSubscription();
-  const { transactions, isLoading: isTransactionLoading } = useTransactions();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const { subscription, isProActive, isLoading: isSubscriptionLoading } = useSubscription();
+  const { transactions, isLoading: isTransactionLoading } = useTransactions();
 
-  useEffect(() => {
+  const [bannerMessage, setBannerMessage] = useState<{ error: string | null; success: string | null }>(() => {
     if (searchParams.get('success') === 'true') {
-      setSuccessMessage('Payment successful! Your Pro plan is now active.');
-      refetch?.();
+      return { error: null, success: 'Payment successful! Your Pro plan is now active.' };
+    }
+    if (searchParams.get('canceled') === 'true') {
+      return { error: 'Payment was canceled.', success: null };
+    }
+    return { error: null, success: null };
+  });
+
+  const clearQueryParams = () => {
+    if (searchParams.has('success') || searchParams.has('canceled')) {
       searchParams.delete('success');
-      setSearchParams(searchParams, { replace: true });
-    } else if (searchParams.get('canceled') === 'true') {
-      setErrorMessage('Payment was canceled.');
       searchParams.delete('canceled');
       setSearchParams(searchParams, { replace: true });
     }
-  }, [searchParams, setSearchParams, refetch]);
-
-  const activateSubscription = async () => {
-    try {
-      setIsProcessing(true);
-      setErrorMessage(null);
-      setSuccessMessage(null);
-
-      const data = await api.post<{ url: string }>('/billing/checkout', {
-        plan: 'PRO',
-      });
-
-      if (data?.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error('Failed to retrieve payment link from server.');
-      }
-    } catch (error: any) {
-      console.error('Failed to create Stripe checkout session', error);
-      const serverMessage = error?.response?.data?.message;
-      const detailedMessage = Array.isArray(serverMessage) ? serverMessage.join(', ') : serverMessage;
-      setErrorMessage(
-        detailedMessage || error?.message || 'Failed to initialize payment. Please try again later.'
-      );
-    } finally {
-      setIsProcessing(false);
-    }
   };
 
-  const cancelSubscription = () => {
-    window.location.href = '/settings/billing/portal';
+  const checkoutMutation = useMutation({
+    mutationFn: async () => {
+      clearQueryParams();
+      setBannerMessage({ error: null, success: null });
+      const data = await api.post<{ url: string }>('/billing/checkout', { plan: 'PRO' });
+      if (!data?.url) throw new Error('Failed to retrieve payment link from server.');
+      return data.url;
+    },
+    onSuccess: (url) => {
+      window.location.href = url;
+    },
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: async () => {
+      clearQueryParams();
+      setBannerMessage({ error: null, success: null });
+      return api.post('/billing/cancel');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SUBSCRIPTION_QUERY_KEY });
+    },
+  });
+
+  const errorMessage =
+    (checkoutMutation.error && parseErrorMessage(checkoutMutation.error, 'Failed to initialize payment.')) ||
+    (cancelMutation.error && parseErrorMessage(cancelMutation.error, 'Failed to cancel subscription.')) ||
+    bannerMessage.error;
+
+  const successMessage = cancelMutation.isSuccess
+    ? 'Subscription successfully canceled.'
+    : bannerMessage.success;
+
+  const isProcessing = checkoutMutation.isPending || cancelMutation.isPending;
+
+  const dismissError = () => {
+    setBannerMessage((prev) => ({ ...prev, error: null }));
+    checkoutMutation.reset();
+    cancelMutation.reset();
   };
 
-  const dismissSuccess = () => setSuccessMessage(null);
-  const dismissError = () => setErrorMessage(null);
+  const dismissSuccess = () => {
+    setBannerMessage((prev) => ({ ...prev, success: null }));
+    cancelMutation.reset();
+  };
 
   return {
     subscription,
@@ -70,8 +91,8 @@ export const useBilling = () => {
     isProcessing,
     errorMessage,
     successMessage,
-    activateSubscription,
-    cancelSubscription,
+    activateSubscription: () => checkoutMutation.mutate(),
+    cancelSubscription: () => cancelMutation.mutate(),
     dismissSuccess,
     dismissError,
     navigate,

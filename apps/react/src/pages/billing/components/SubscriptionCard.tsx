@@ -102,7 +102,7 @@ export const SubscriptionCard = ({
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-muted/20 text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10 transition-all cursor-pointer font-medium"
               >
                 <XCircle className="w-3.5 h-3.5" />
-                Downgrade to free
+                Cancel subscription
               </button>
             </>
           ) : (
