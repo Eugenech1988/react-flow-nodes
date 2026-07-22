@@ -105,7 +105,7 @@ export const SettingsPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start pb-16">
-            <div className="md:col-span-1 sticky top-6 self-start">
+            <div className="md:col-span-1 sticky top-20 self-start">
               <ProfileSidebar
                 avatarPreview={user?.profile?.avatarUrl || null}
                 initials={initials}

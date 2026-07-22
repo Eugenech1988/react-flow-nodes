@@ -20,7 +20,7 @@ export const Header = () => {
   };
   return (
     <header
-      className={`flex h-14 w-full items-center justify-between px-6 bg-header-bg border-b border-border z-40 shrink-0 transition-colors duration-300 ${
+      className={`flex h-14 fixed bg-background top-0 w-full items-center justify-between px-6 bg-header-bg border-b border-border z-40 shrink-0 transition-colors duration-300 ${
         !isHome ? 'cursor-pointer hover:bg-foreground/1' : ''
       }`}
       onClick={handleHeaderClick}

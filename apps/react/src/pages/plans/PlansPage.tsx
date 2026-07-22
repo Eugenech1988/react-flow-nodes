@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
-import { ShieldCheck, Check } from 'lucide-react';
+import { ShieldCheck, Check, ArrowLeft, Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useSubscription } from '@/shared/hooks';
-import { Loader2 } from 'lucide-react';
 
 import { getPlans, getPlanMeta } from './constants';
 import { PricingHeader } from './components/PricingHeader';
@@ -45,6 +45,16 @@ export const PlansPage = () => {
       animate="animate"
       className="space-y-8 max-w-6xl mx-auto py-6 px-4 md:px-6"
     >
+      <div>
+        <Link
+          to="/settings/billing"
+          className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-teal-600 dark:hover:text-teal-400 transition-colors group cursor-pointer"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Billing Settings</span>
+        </Link>
+      </div>
+
       <PricingHeader
         billingCycle={billingCycle}
         onBillingCycleChange={setBillingCycle}
