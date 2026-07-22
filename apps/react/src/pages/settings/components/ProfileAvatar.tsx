@@ -19,7 +19,7 @@ export const ProfileAvatar = ({
                                 onAvatarChange,
                               }: ProfileAvatarProps) => {
   const displaySrc = avatarPreview
-    ? (avatarPreview?.startsWith('http') || avatarPreview?.startsWith('blob:'))
+    ? avatarPreview.startsWith('http') || avatarPreview.startsWith('blob:')
       ? avatarPreview
       : `${BASE_URL}${avatarPreview}`
     : null;
@@ -35,7 +35,7 @@ export const ProfileAvatar = ({
       />
       <div
         onClick={onAvatarClick}
-        className="relative group cursor-pointer w-24 h-24 rounded-full overflow-hidden shadow-md border border-border bg-linear-to-br from-teal-400 to-emerald-500"
+        className="relative group cursor-pointer w-24 h-24 rounded-full overflow-hidden shadow-xs border border-teal-500/30 bg-linear-to-br from-teal-500 to-teal-700 transition-transform active:scale-95"
       >
         {displaySrc ? (
           <img
@@ -44,12 +44,12 @@ export const ProfileAvatar = ({
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="flex items-center justify-center w-full h-full text-3xl font-bold text-white">
+          <div className="flex items-center justify-center w-full h-full text-3xl font-bold text-white tracking-wider">
             {initials}
           </div>
         )}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <Camera className="w-6 h-6 text-white" />
+        <div className="absolute inset-0 flex items-center justify-center bg-teal-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-200">
+          <Camera className="w-6 h-6 text-white drop-shadow-xs" />
         </div>
       </div>
     </>

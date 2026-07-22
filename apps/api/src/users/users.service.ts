@@ -187,4 +187,26 @@ export class UsersService {
       throw new InternalServerErrorException('Error updating 2FA settings');
     }
   }
+
+  async delete(id: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.transaction.deleteMany({ where: { userId: id } });
+
+        await tx.profile.deleteMany({ where: { userId: id } });
+        await tx.subscription.deleteMany({ where: { userId: id } });
+
+        await tx.user.delete({ where: { id } });
+      });
+    } catch (error) {
+      console.error(`Failed to delete user and related data for id ${id}:`, error);
+      throw new InternalServerErrorException('An unexpected error occurred while deleting the user account');
+    }
+  }
 }

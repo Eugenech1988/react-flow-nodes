@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Get,
+  Delete,
   Patch,
   Req,
   UseGuards,
@@ -9,7 +10,7 @@ import {
   HttpStatus,
   Body,
   UsePipes,
-  ValidationPipe
+  ValidationPipe, Param
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -59,6 +60,14 @@ export class UsersController {
     @Body() dto: Toggle2faDto,
   ): Promise<{ success: boolean }> {
     await this.usersService.update2fa(req.user.id, dto);
+    return { success: true };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteUser(@Param('id') id: string): Promise<{ success: boolean }> {
+    await this.usersService.delete(id);
     return { success: true };
   }
 }
