@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   AlertCircle,
   PauseCircle,
+  ImageOff,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -16,6 +17,8 @@ import {
   DropdownMenuTrigger,
 } from '@pipeline/ui';
 import type { IPipeline } from '../types';
+
+const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 
 interface PipelineCardProps {
   pipeline: IPipeline;
@@ -27,6 +30,9 @@ export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
 
   const handleDelete = () => onDelete(pipeline.id);
 
+  const imageSrc = `${BASE_URL}${pipeline.screenshotUrl}`;
+  const status = pipeline.status?.toUpperCase();
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -35,13 +41,22 @@ export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
       className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between"
     >
       <div className="space-y-3 p-5">
-        <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted border border-border/40">
-          <img
-            src={pipeline.thumbnail}
-            alt={pipeline.name}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted/40 border border-border/40">
+          {imageSrc ? (
+            <>
+              <img
+                src={imageSrc}
+                alt={pipeline.name}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            </>
+          ) : (
+            <div className="h-full w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/60 bg-muted/20 select-none">
+              <ImageOff className="w-12 h-12 stroke-[1.5]" />
+              <span className="text-base font-medium tracking-wide">No screenshot</span>
+            </div>
+          )}
         </div>
 
         <div className="space-y-1.5">
@@ -88,20 +103,20 @@ export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
 
       <div className="px-5 py-3.5 border-t border-border/50 bg-muted/20 flex items-center justify-between text-xs">
         <div className="flex items-center gap-1.5">
-          {pipeline.status === 'active' && (
+          {status === 'ACTIVE' && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
               <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
               Active
             </span>
           )}
-          {pipeline.status === 'paused' && (
+          {status === 'PAUSED' && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
               <PauseCircle className="w-3 h-3" />
               Paused
             </span>
           )}
-          {pipeline.status === 'draft' && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-muted-foreground">
+          {(status === 'DRAFT' || !status) && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-muted-foreground border border-border/50">
               Draft
             </span>
           )}

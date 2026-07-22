@@ -109,12 +109,12 @@ export const CreatePipelineDialog = ({
       >
         <DialogHeader className="px-6 py-4 border-b border-border/60 bg-muted/10 flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
-            <Workflow className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+            <Workflow className="w-6 h-6 text-teal-600 dark:text-teal-400" />
             <div>
-              <DialogTitle className="text-sm font-medium text-foreground/90">
+              <DialogTitle className="text-base font-medium text-foreground/90">
                 Create Pipeline
               </DialogTitle>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 Configure your new automation workflow
               </p>
             </div>

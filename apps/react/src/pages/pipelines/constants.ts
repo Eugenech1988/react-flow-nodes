@@ -18,7 +18,7 @@ export const MOCK_PIPELINES: IPipeline[] = [
     lastRunStatus: 'success',
     lastRunAt: '10 minutes ago',
     updatedAt: '2 hours ago',
-    thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
+    screenshotUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: '2',
@@ -28,7 +28,7 @@ export const MOCK_PIPELINES: IPipeline[] = [
     lastRunStatus: 'failed',
     lastRunAt: 'Yesterday at 23:00',
     updatedAt: '1 day ago',
-    thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+    screenshotUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: '3',
@@ -38,7 +38,7 @@ export const MOCK_PIPELINES: IPipeline[] = [
     lastRunStatus: 'success',
     lastRunAt: '3 days ago',
     updatedAt: '3 days ago',
-    thumbnail: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80',
+    screenshotUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80',
   },
 ];
 

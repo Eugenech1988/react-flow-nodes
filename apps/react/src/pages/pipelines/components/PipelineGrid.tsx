@@ -1,15 +1,15 @@
 import { AnimatePresence } from 'framer-motion';
-import type { IPipeline } from '../types';
 import { PipelineCard } from './PipelineCard';
 import { EmptyState } from './EmptyState';
+import { usePipelines } from '@/shared/hooks/usePipeLines.tsx';
 
 interface PipelineGridProps {
-  pipelines: IPipeline[];
   onDelete: (id: string) => void;
   searchQuery: string;
 }
 
-export const PipelineGrid = ({ pipelines, onDelete, searchQuery }: PipelineGridProps) => {
+export const PipelineGrid = ({ onDelete, searchQuery }: PipelineGridProps) => {
+  const { pipelines } = usePipelines();
   if (pipelines.length === 0) {
     return <EmptyState hasSearchQuery={searchQuery.length > 0} />;
   }
