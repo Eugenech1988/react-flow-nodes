@@ -1,0 +1,26 @@
+import { AnimatePresence } from 'framer-motion';
+import type { IPipeline } from '../types';
+import { PipelineCard } from './PipelineCard';
+import { EmptyState } from './EmptyState';
+
+interface PipelineGridProps {
+  pipelines: IPipeline[];
+  onDelete: (id: string) => void;
+  searchQuery: string;
+}
+
+export const PipelineGrid = ({ pipelines, onDelete, searchQuery }: PipelineGridProps) => {
+  if (pipelines.length === 0) {
+    return <EmptyState hasSearchQuery={searchQuery.length > 0} />;
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <AnimatePresence mode="popLayout">
+        {pipelines.map((pipeline) => (
+          <PipelineCard key={pipeline.id} pipeline={pipeline} onDelete={onDelete} />
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+};
