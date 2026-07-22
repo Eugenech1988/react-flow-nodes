@@ -1,4 +1,3 @@
-// src/pages/pipelines/hooks/usePipelineMutations.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/shared/api';
 import { PIPELINES_QUERY_KEY } from '@/shared/lib';

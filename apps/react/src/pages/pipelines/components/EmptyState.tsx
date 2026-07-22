@@ -1,4 +1,3 @@
-// src/pages/pipelines/components/EmptyState.tsx
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sparkles, Plus } from 'lucide-react';

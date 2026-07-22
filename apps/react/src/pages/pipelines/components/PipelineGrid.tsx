@@ -1,4 +1,3 @@
-// src/pages/pipelines/components/PipelineGrid.tsx
 import { AnimatePresence } from 'framer-motion';
 import { PipelineCard } from './PipelineCard';
 import { EmptyState } from './EmptyState';

@@ -1,16 +1,15 @@
-// src/pages/pipelines/hooks/usePipelinesFilter.ts
 import { useState, useMemo } from 'react';
 import type { IPipeline } from '../types';
-import type { TabType } from '../constants';
+import type { TabType, SortOption } from '../constants';
 
 export const usePipelinesFilter = (
   pipelines: IPipeline[],
-  initialSortBy: string = 'name',
+  initialSortBy: SortOption['value'] = 'name',
   initialSortOrder: 'asc' | 'desc' = 'asc'
 ) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<TabType>('all');
-  const [sortBy, setSortBy] = useState<string>(initialSortBy);
+  const [sortBy, setSortBy] = useState<SortOption['value']>(initialSortBy);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(initialSortOrder);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

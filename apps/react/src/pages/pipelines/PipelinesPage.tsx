@@ -1,4 +1,3 @@
-// src/pages/pipelines/PipelinesPage.tsx
 import { motion } from 'framer-motion';
 import { usePipelines } from '@/shared/hooks/usePipeLines.tsx';
 import { usePipelinesFilter } from './hooks/usePipelinesFilter';

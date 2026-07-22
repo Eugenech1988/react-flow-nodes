@@ -1,4 +1,3 @@
-// src/pages/pipelines/components/PipelineSearchAndFilter.tsx
 import { Search, ArrowUpDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { TAB_OPTIONS, SORT_OPTIONS, type TabType, type SortOption } from '../constants';

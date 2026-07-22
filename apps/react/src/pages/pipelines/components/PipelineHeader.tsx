@@ -1,4 +1,3 @@
-// src/pages/pipelines/components/PipelineHeader.tsx
 import { useState } from 'react';
 import { Workflow, Plus } from 'lucide-react';
 import { Button } from '@pipeline/ui';
