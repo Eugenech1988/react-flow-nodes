@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Save, ArrowLeft, Trash2, Loader2, ShieldCheck } from 'lucide-react';
+import { Save, ArrowLeft, Trash2, Loader2, ShieldCheck, KeyRound } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { Button, Switch } from '@pipeline/ui';
@@ -15,6 +15,7 @@ interface AccountFormProps {
   onToggle2fa: (value: boolean) => void;
   is2faPending?: boolean;
   onDeleteAccount?: () => void;
+  onGenerateBackupCodes?: () => void;
 }
 
 export const AccountForm = ({
@@ -27,6 +28,7 @@ export const AccountForm = ({
                               onToggle2fa,
                               is2faPending = false,
                               onDeleteAccount,
+                              onGenerateBackupCodes,
                             }: AccountFormProps) => {
   const {
     register,
@@ -53,6 +55,14 @@ export const AccountForm = ({
       onDeleteAccount();
     } else {
       console.log('deleteAccountClick', e);
+    }
+  };
+
+  const handleGenerateCodesClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (onGenerateBackupCodes) {
+      onGenerateBackupCodes();
+    } else {
+      console.log('generateCodesClick', e);
     }
   };
 
@@ -90,11 +100,36 @@ export const AccountForm = ({
             onCheckedChange={onToggle2fa}
             disabled={is2faPending}
             style={{
-              backgroundColor: user2fa ? 'oklch(77.7% 0.152 181.912)' : undefined,
+              backgroundColor: user2fa ? 'var(--color-teal-600, #0d9488)' : undefined,
             }}
             className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent"
           />
         </div>
+
+        {user2fa && (
+          <div className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/5 dark:bg-teal-950/20 flex items-center justify-between gap-4">
+            <div className="space-y-0.5">
+              <div className="flex items-center gap-2">
+                <KeyRound className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                <span className="text-sm font-semibold text-foreground">
+                  2FA Recovery Codes
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Generate backup codes to access your account if you lose your authentication device.
+              </p>
+            </div>
+
+            <Button
+              type="button"
+              onClick={handleGenerateCodesClick}
+              className="flex items-center gap-2 px-4 py-4.5 text-xs font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20"
+            >
+              <KeyRound className="w-3.5 h-3.5 text-white" />
+              Get Codes
+            </Button>
+          </div>
+        )}
 
         <form onSubmit={onSubmit} className="space-y-6 pt-4 border-t border-border/40">
           <div className="space-y-4">
@@ -142,7 +177,7 @@ export const AccountForm = ({
             <Button
               type="submit"
               disabled={isPristine || isPending}
-              className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
+              className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
             >
               {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Change Password
@@ -157,9 +192,9 @@ export const AccountForm = ({
 
           <div className="p-4 rounded-xl border border-rose-200/80 bg-rose-50/60 dark:bg-rose-950/20 dark:border-rose-900/40 flex items-center justify-between gap-4">
             <div className="space-y-0.5">
-      <span className="text-sm font-semibold text-foreground">
-        Delete Account
-      </span>
+              <span className="text-sm font-semibold text-foreground">
+                Delete Account
+              </span>
               <p className="text-sm text-muted-foreground">
                 Permanently delete your account and all associated pipelines data.
               </p>
@@ -168,7 +203,7 @@ export const AccountForm = ({
             <Button
               type="button"
               onClick={handleDeleteAccountClick}
-              className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-linear-to-r from-rose-700 to-rose-600 hover:from-rose-600 hover:to-rose-500 active:from-rose-800 active:to-rose-700 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20"
+              className="flex items-center gap-2 px-4 py-4.5 text-xs font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20"
             >
               <Trash2 className="w-3.5 h-3.5 text-white" />
               Delete Account
