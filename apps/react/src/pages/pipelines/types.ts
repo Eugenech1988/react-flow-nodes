@@ -1,3 +1,4 @@
+// src/pages/pipelines/types.ts
 export interface IPipeline {
   id: string;
   name: string;
@@ -7,9 +8,10 @@ export interface IPipeline {
   lastRunAt?: string;
   updatedAt: string;
   screenshotUrl?: string;
+  createdAt?: string;
 }
 
-export type TTabType = 'all' | 'active' | 'paused' | 'draft'
+export type TTabType = 'all' | 'active' | 'paused' | 'draft';
 
 import { z } from 'zod';
 

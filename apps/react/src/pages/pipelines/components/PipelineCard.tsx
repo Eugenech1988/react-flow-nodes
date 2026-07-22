@@ -1,3 +1,4 @@
+// src/pages/pipelines/components/PipelineCard.tsx
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -9,6 +10,7 @@ import {
   AlertCircle,
   PauseCircle,
   ImageOff,
+  Loader2,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -17,29 +19,38 @@ import {
   DropdownMenuTrigger,
 } from '@pipeline/ui';
 import type { IPipeline } from '../types';
+import { useDeletePipeline } from '../hooks/usePipelineHandler';
 
 const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 
 interface PipelineCardProps {
   pipeline: IPipeline;
-  onDelete: (id: string) => void;
 }
 
-export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
+export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
   const navigate = useNavigate();
+  const deleteMutation = useDeletePipeline();
 
-  const handleDelete = () => onDelete(pipeline.id);
+  const handleDelete = () => {
+    deleteMutation.mutate(pipeline.id);
+  };
 
-  const imageSrc = `${BASE_URL}${pipeline.screenshotUrl}`;
+  const imageSrc = pipeline.screenshotUrl ? `${BASE_URL}${pipeline.screenshotUrl}` : null;
   const status = pipeline.status?.toUpperCase();
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: deleteMutation.isPending ? 0.5 : 1 }}
       transition={{ duration: 0.15, ease: 'easeOut' }}
-      className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between"
+      className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between relative pointer-events-auto"
     >
+      {deleteMutation.isPending && (
+        <div className="absolute inset-0 bg-background/50 backdrop-blur-xs z-10 flex items-center justify-center">
+          <Loader2 className="w-6 h-6 animate-spin text-teal-600 dark:text-teal-400" />
+        </div>
+      )}
+
       <div className="space-y-3 p-5">
         <div className="space-y-1.5">
           <div className="flex items-start justify-between gap-2">
@@ -65,9 +76,9 @@ export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
                   <Edit3 className="w-3.5 h-3.5 text-muted-foreground" />
                   <span>Edit Workflow</span>
                 </DropdownMenuItem>
-
                 <DropdownMenuItem
                   onClick={handleDelete}
+                  disabled={deleteMutation.isPending}
                   className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg cursor-pointer text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 focus:bg-rose-500/10 transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5 text-current" />
@@ -99,7 +110,6 @@ export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
             </div>
           )}
         </div>
-
       </div>
 
       <div className="px-5 py-3.5 border-t border-border/50 bg-muted/20 flex items-center justify-between text-xs">

@@ -1,38 +1,79 @@
-import { useState, useCallback, type ChangeEvent } from 'react';
-import { debounce } from '@/shared/lib';
-import type { IPipeline, TTabType } from '../types';
+// src/pages/pipelines/hooks/usePipelinesFilter.ts
+import { useState, useMemo } from 'react';
+import type { IPipeline } from '../types';
+import type { TabType } from '../constants';
 
-export const usePipelinesFilter = (initialPipelines: IPipeline[]) => {
+export const usePipelinesFilter = (
+  pipelines: IPipeline[],
+  initialSortBy: string = 'name',
+  initialSortOrder: 'asc' | 'desc' = 'asc'
+) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<TTabType>('all');
+  const [statusFilter, setStatusFilter] = useState<TabType>('all');
+  const [sortBy, setSortBy] = useState<string>(initialSortBy);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(initialSortOrder);
 
-  const updateDebouncedSearch = useCallback(
-    debounce((value: string) => {
-      setDebouncedSearch(value);
-    }, 300),
-    []
-  );
-
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    updateDebouncedSearch(value);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
-  const filteredPipelines = initialPipelines.filter((pipeline) => {
-    const matchesSearch =
-      pipeline.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      pipeline.description.toLowerCase().includes(debouncedSearch.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || pipeline.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredPipelines = useMemo(() => {
+    let result = pipelines;
+
+    if (statusFilter !== 'all') {
+      result = result.filter((p) => p.status === statusFilter);
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          (p.description && p.description.toLowerCase().includes(q))
+      );
+    }
+
+    result = [...result].sort((a, b) => {
+      let valA: string | number;
+      let valB: string | number;
+
+      switch (sortBy) {
+        case 'name':
+          valA = a.name.toLowerCase();
+          valB = b.name.toLowerCase();
+          break;
+        case 'updatedAt':
+          valA = new Date(a.updatedAt).getTime();
+          valB = new Date(b.updatedAt).getTime();
+          break;
+        case 'status':
+          valA = a.status;
+          valB = b.status;
+          break;
+        default:
+          valA = a.name;
+          valB = b.name;
+      }
+
+      if (sortOrder === 'asc') {
+        return valA > valB ? 1 : -1;
+      } else {
+        return valA < valB ? 1 : -1;
+      }
+    });
+
+    return result;
+  }, [pipelines, searchQuery, statusFilter, sortBy, sortOrder]);
 
   return {
     searchQuery,
     statusFilter,
-    setStatusFilter,
+    sortBy,
+    sortOrder,
+    setSortBy,
+    setSortOrder,
     handleSearchChange,
+    setStatusFilter,
     filteredPipelines,
   };
 };

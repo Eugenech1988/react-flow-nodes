@@ -1,8 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { usePipelines } from '@/shared/hooks/usePipeLines.tsx';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useUser } from '@/shared/hooks';
 import { Workflow, X, Loader2, Image as ImageIcon, Trash2, Upload } from 'lucide-react';
 import {
   Dialog,
@@ -12,29 +11,16 @@ import {
   Button,
 } from '@pipeline/ui';
 import { FloatingInput, FloatingTextarea } from '@/shared/ui';
-import { api } from '@/shared/api';
-import { useUser } from '@/shared/hooks';
-import {
-  createPipelineSchema,
-  type CreatePipelineDto,
-} from '../types';
-import { PIPELINES_QUERY_KEY } from '@/shared/lib';
+import { createPipelineSchema, type CreatePipelineDto } from '../types';
+import { useCreatePipeline } from '../hooks/usePipelineHandler';
 
 interface CreatePipelineDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const CreatePipelineDialog = ({
-                                       isOpen,
-                                       onClose,
-                                     }: CreatePipelineDialogProps) => {
+export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogProps) => {
   const { user } = useUser();
-  const queryClient = useQueryClient();
-  const { pipelines } = usePipelines();
-
-  console.log(pipelines);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
@@ -46,32 +32,10 @@ export const CreatePipelineDialog = ({
     formState: { errors },
   } = useForm<CreatePipelineDto>({
     resolver: zodResolver(createPipelineSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      screenshotUrl: '',
-    },
+    defaultValues: { name: '', description: '', screenshotUrl: '' },
   });
 
-  const createMutation = useMutation({
-    mutationFn: async (data: CreatePipelineDto) => {
-      if (!user?.id) throw new Error('User not authenticated');
-
-      const formData = new FormData();
-      formData.append('name', data.name);
-      if (data.description) formData.append('description', data.description);
-
-      if (file) {
-        formData.append('file', file);
-      }
-
-      return api.post(`/pipelines/user/${user.id}`, formData);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [PIPELINES_QUERY_KEY] });
-      handleClose();
-    },
-  });
+  const createMutation = useCreatePipeline();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -85,9 +49,7 @@ export const CreatePipelineDialog = ({
     e?.stopPropagation();
     setFile(null);
     setFilePreview(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleClose = () => {
@@ -98,7 +60,8 @@ export const CreatePipelineDialog = ({
   };
 
   const onSubmit = (data: CreatePipelineDto) => {
-    createMutation.mutate(data);
+    if (!user?.id) return;
+    createMutation.mutate({ userId: user.id, data, file });
   };
 
   return (
@@ -182,7 +145,6 @@ export const CreatePipelineDialog = ({
                       alt="Pipeline preview"
                       className="w-full h-full object-cover"
                     />
-
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-[2px]">
                       <button
                         type="button"
@@ -195,7 +157,6 @@ export const CreatePipelineDialog = ({
                         <Upload className="w-3.5 h-3.5" />
                         <span>Change</span>
                       </button>
-
                       <button
                         type="button"
                         onClick={handleRemoveFile}
@@ -205,7 +166,6 @@ export const CreatePipelineDialog = ({
                         <span>Delete</span>
                       </button>
                     </div>
-
                   </>
                 )}
               </div>
@@ -221,7 +181,6 @@ export const CreatePipelineDialog = ({
             >
               Cancel
             </Button>
-
             <Button
               type="submit"
               disabled={createMutation.isPending}

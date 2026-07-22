@@ -1,7 +1,7 @@
-import { useState } from 'react';
+// src/pages/pipelines/PipelinesPage.tsx
 import { motion } from 'framer-motion';
+import { usePipelines } from '@/shared/hooks/usePipeLines.tsx';
 import { usePipelinesFilter } from './hooks/usePipelinesFilter';
-import { MOCK_PIPELINES } from './constants';
 import { PipelineHeader } from './components/PipelineHeader';
 import { PipelineSearchAndFilter } from './components/PipelineSearchAndFilter';
 import { PipelineGrid } from './components/PipelineGrid';
@@ -17,13 +17,18 @@ const pageVariants: Variants = {
 };
 
 export const PipelinesPage = () => {
-  const [pipelines, setPipelines] = useState(MOCK_PIPELINES);
-  const { searchQuery, statusFilter, setStatusFilter, handleSearchChange, filteredPipelines } =
-    usePipelinesFilter(pipelines);
-
-  const handleDelete = (id: string) => {
-    setPipelines((prev) => prev.filter((item) => item.id !== id));
-  };
+  const { pipelines } = usePipelines();
+  const {
+    searchQuery,
+    statusFilter,
+    sortBy,
+    sortOrder,
+    setSortBy,
+    setSortOrder,
+    handleSearchChange,
+    setStatusFilter,
+    filteredPipelines,
+  } = usePipelinesFilter(pipelines, 'name', 'asc');
 
   return (
     <motion.div
@@ -39,12 +44,14 @@ export const PipelinesPage = () => {
           onSearchChange={handleSearchChange}
           statusFilter={statusFilter}
           onStatusFilterChange={setStatusFilter}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={(by, order) => {
+            setSortBy(by);
+            setSortOrder(order);
+          }}
         />
-        <PipelineGrid
-          pipelines={filteredPipelines}
-          onDelete={handleDelete}
-          searchQuery={searchQuery}
-        />
+        <PipelineGrid pipelines={filteredPipelines} searchQuery={searchQuery} />
       </div>
     </motion.div>
   );
