@@ -7,6 +7,7 @@ import { CanvasPage } from '@/pages/canvas/CanvasPage';
 import { SettingsPage, ProfileForm, AccountForm } from '@/pages/settings';
 import { BillingPage } from '@/pages/billing';
 import { PlansPage } from '@/pages/plans';
+import { PipelinesPage } from '@/pages/pipelines';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
 import { useProfileForm } from '@/pages/settings/hooks/useProfileForm';
 import { useAccountForm } from '@/pages/settings/hooks/useAccountForm';
@@ -36,6 +37,8 @@ const AccountRouteWrapper = () => {
       user2fa={account.user2fa}
       onToggle2fa={account.onToggle2fa}
       is2faPending={account.is2faPending}
+      onDeleteAccount={account.onDeleteAccount}
+      isDeletePending={account.isDeletePending}
     />
   );
 };
@@ -59,6 +62,7 @@ export const AppRoutes = () => {
           </Route>
 
           <Route path="/plans" element={<PlansPage />} />
+          <Route path="/pipelines" element={<PipelinesPage />}></Route>
         </Route>
 
         <Route path="/profile" element={<Navigate to="/settings/profile" replace />} />

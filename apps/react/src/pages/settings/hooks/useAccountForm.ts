@@ -4,12 +4,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/shared/api';
 import { USER_QUERY_KEY } from '@/shared/lib';
-import { useUser } from '@/shared/hooks';
+import { useLogout, useUser } from '@/shared/hooks';
 import { accountSchema, type IAccountFormData } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 export const useAccountForm = () => {
   const queryClient = useQueryClient();
   const { user } = useUser();
+  const { logout } = useLogout();
+  const navigate = useNavigate();
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const form = useForm<IAccountFormData>({
@@ -58,6 +61,20 @@ export const useAccountForm = () => {
     },
   });
 
+  const { mutate: deleteAccount, isPending: isDeletePending } = useMutation({
+    mutationFn: () => api.delete<{ success: boolean }>('/users/me'),
+    onSuccess: () => {
+      queryClient.clear();
+      logout();
+      navigate('/login', { replace: true });
+    },
+    onError: (error) => {
+      console.error(error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete account.';
+      setAlert({ type: 'error', message: errorMessage });
+    },
+  });
+
   const onSubmit = (data: IAccountFormData) => {
     setAlert(null);
 
@@ -72,6 +89,11 @@ export const useAccountForm = () => {
     toggle2fa(value);
   };
 
+  const handleDeleteAccount = () => {
+    setAlert(null);
+    deleteAccount();
+  };
+
   return {
     form,
     onSubmit: form.handleSubmit(onSubmit),
@@ -81,5 +103,7 @@ export const useAccountForm = () => {
     user2fa: user?.isTwoFactorEnabled ?? false,
     onToggle2fa: handleToggle2fa,
     is2faPending,
+    onDeleteAccount: handleDeleteAccount,
+    isDeletePending,
   };
 };

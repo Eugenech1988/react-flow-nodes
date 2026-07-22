@@ -10,7 +10,8 @@ import {
   HttpStatus,
   Body,
   UsePipes,
-  ValidationPipe, Param
+  ValidationPipe,
+  BadRequestException
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -65,9 +66,13 @@ export class UsersController {
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  async deleteUser(@Param('id') id: string): Promise<{ success: boolean }> {
-    await this.usersService.delete(id);
+  @Delete('me')
+  async deleteAccount(@Req() req: IRequestWithUser): Promise<{ success: boolean }> {
+    if (!req.user?.id) {
+      throw new BadRequestException('User ID is missing from token session');
+    }
+
+    await this.usersService.delete(req.user.id);
     return { success: true };
   }
 }

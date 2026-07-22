@@ -59,7 +59,7 @@ export const SettingsPage = () => {
 
   return (
     <motion.div
-      className="bg-background text-foreground p-4 md:p-6 transition-colors duration-300 min-h-screen"
+      className="bg-background text-foreground p-4 md:p-6 transition-colors duration-300"
       variants={pageVariants}
       initial="initial"
       animate="animate"
@@ -106,7 +106,7 @@ export const SettingsPage = () => {
             })}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start pb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
             <div className="md:col-span-1 sticky top-20 self-start">
               <ProfileSidebar
                 avatarPreview={user?.profile?.avatarUrl || null}

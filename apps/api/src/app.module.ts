@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 // import { MailModule } from './mail/mail.module';
 import { ProfileModule } from './profile/profile.module';
 import { BillingModule } from './billing/billing.module';
+import { PipelinesModule } from './pipelines/pipelines.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { BillingModule } from './billing/billing.module';
     UsersModule,
     ProfileModule,
     BillingModule,
+    PipelinesModule,
     // MailModule
   ],
 })

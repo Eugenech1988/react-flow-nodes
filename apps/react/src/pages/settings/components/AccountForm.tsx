@@ -1,8 +1,18 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Save, ArrowLeft, Trash2, Loader2, ShieldCheck, KeyRound } from 'lucide-react';
+import { Save, ArrowLeft, Trash2, Loader2, ShieldCheck, KeyRound, AlertTriangle } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
-import { Button, Switch } from '@pipeline/ui';
+import {
+  Button,
+  Switch,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@pipeline/ui';
 import type { IAccountFormData } from '../types';
 
 interface AccountFormProps {
@@ -15,6 +25,7 @@ interface AccountFormProps {
   onToggle2fa: (value: boolean) => void;
   is2faPending?: boolean;
   onDeleteAccount?: () => void;
+  isDeletePending?: boolean;
   onGenerateBackupCodes?: () => void;
 }
 
@@ -28,8 +39,11 @@ export const AccountForm = ({
                               onToggle2fa,
                               is2faPending = false,
                               onDeleteAccount,
+                              isDeletePending = false,
                               onGenerateBackupCodes,
                             }: AccountFormProps) => {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
   const {
     register,
     formState: { errors },
@@ -50,19 +64,16 @@ export const AccountForm = ({
     onToggle2fa(!user2fa);
   };
 
-  const handleDeleteAccountClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (onDeleteAccount) {
-      onDeleteAccount();
-    } else {
-      console.log('deleteAccountClick', e);
-    }
+  const handleConfirmDelete = () => {
+    onDeleteAccount();
+    setIsDeleteDialogOpen(false);
   };
 
-  const handleGenerateCodesClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleGenerateCodesClick = () => {
     if (onGenerateBackupCodes) {
       onGenerateBackupCodes();
     } else {
-      console.log('generateCodesClick', e);
+      console.log('generateCodesClick');
     }
   };
 
@@ -202,15 +213,60 @@ export const AccountForm = ({
 
             <Button
               type="button"
-              onClick={handleDeleteAccountClick}
-              className="flex items-center gap-2 px-4 py-4.5 text-xs font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20"
+              disabled={isDeletePending}
+              onClick={() => setIsDeleteDialogOpen(true)}
+              className="flex items-center gap-2 px-4 py-4.5 text-xs font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20 disabled:opacity-50"
             >
-              <Trash2 className="w-3.5 h-3.5 text-white" />
+              {isDeletePending ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Trash2 className="w-3.5 h-3.5 text-white" />
+              )}
               Delete Account
             </Button>
           </div>
         </div>
       </div>
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-md border-border bg-card p-6 rounded-2xl shadow-lg backdrop-blur-md">
+          <DialogHeader className="space-y-2">
+            <div className="flex items-center gap-2 text-rose-600">
+              <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400" />
+              <DialogTitle className="text-lg font-semibold tracking-tight text-danger">
+                Delete Account
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-sm text-muted-foreground leading-relaxed pt-1">
+              Are you sure you want to delete your account? This action cannot be undone and all your data, transactions, and pipelines will be permanently removed.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-6">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+              className="px-4 py-4.5 text-xs font-medium text-muted-foreground hover:text-foreground border-border/80 hover:bg-muted/50 rounded-lg cursor-pointer transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={handleConfirmDelete}
+              disabled={isDeletePending}
+              className="flex items-center justify-center gap-2 px-4 py-4.5 text-xs font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20 disabled:opacity-50"
+            >
+              {isDeletePending ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+              ) : (
+                <Trash2 className="w-3.5 h-3.5 text-white" />
+              )}
+              Delete Permanently
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

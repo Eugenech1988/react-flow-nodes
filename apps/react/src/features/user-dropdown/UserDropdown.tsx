@@ -6,7 +6,7 @@ import {
   Settings,
   CreditCard,
   ChevronDown,
-  Zap
+  Zap, Workflow
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -111,13 +111,21 @@ export const UserDropdown = () => {
             <span>Billing</span>
           </DropdownMenuItem>
 
+          <DropdownMenuItem
+            onClick={() => navigate('/pipelines')}
+            className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors"
+          >
+            <Workflow className="w-4 h-4 text-muted-foreground" />
+            <span>Pipelines</span>
+          </DropdownMenuItem>
+
           {isFreePlan && (
             <>
               <DropdownMenuSeparator className="my-1 bg-border/60" />
 
               <DropdownMenuItem
                 onClick={() => navigate('/settings/billing')}
-                className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer font-semibold transition-colors hover:bg-teal-500/20 focus:bg-teal-500/20 data-[highlighted]:bg-teal-500/20 text-teal-600 hover:text-teal-500 focus:text-teal-500 data-[highlighted]:text-teal-500 dark:text-teal-300 dark:hover:text-teal-200 dark:focus:text-teal-200 dark:data-[highlighted]:text-teal-200"
+                className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer font-medium transition-colors hover:bg-teal-500/20 focus:bg-teal-500/20 data-[highlighted]:bg-teal-500/20 text-teal-600 hover:text-teal-500 focus:text-teal-500 data-[highlighted]:text-teal-500 dark:text-teal-300 dark:hover:text-teal-200 dark:focus:text-teal-200 dark:data-[highlighted]:text-teal-200"
               >
                 <Zap className="w-4 h-4 fill-current text-current shrink-0" />
                 <span>Activate Pro Plan</span>
