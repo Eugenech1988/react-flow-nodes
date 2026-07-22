@@ -41,24 +41,6 @@ export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
       className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between"
     >
       <div className="space-y-3 p-5">
-        <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted/40 border border-border/40">
-          {imageSrc ? (
-            <>
-              <img
-                src={imageSrc}
-                alt={pipeline.name}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            </>
-          ) : (
-            <div className="h-full w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/60 bg-muted/20 select-none">
-              <ImageOff className="w-12 h-12 stroke-[1.5]" />
-              <span className="text-base font-medium tracking-wide">No screenshot</span>
-            </div>
-          )}
-        </div>
-
         <div className="space-y-1.5">
           <div className="flex items-start justify-between gap-2">
             <span
@@ -99,6 +81,25 @@ export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
             {pipeline.description || 'No description provided.'}
           </p>
         </div>
+
+        <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted/40 border border-border/40">
+          {imageSrc ? (
+            <>
+              <img
+                src={imageSrc}
+                alt={pipeline.name}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            </>
+          ) : (
+            <div className="h-full w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/60 bg-muted/20 select-none">
+              <ImageOff className="w-12 h-12 stroke-[1.5]" />
+              <span className="text-base font-medium tracking-wide">No screenshot</span>
+            </div>
+          )}
+        </div>
+
       </div>
 
       <div className="px-5 py-3.5 border-t border-border/50 bg-muted/20 flex items-center justify-between text-xs">
