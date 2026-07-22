@@ -181,7 +181,7 @@ export const PlansPage = () => {
             checked={billingCycle === 'yearly'}
             onCheckedChange={(checked) => setBillingCycle(checked ? 'yearly' : 'monthly')}
             style={{
-              backgroundColor: billingCycle === 'yearly' ? '#10b981' : undefined,
+              backgroundColor: billingCycle === 'yearly' ? 'oklch(77.7% 0.152 181.912)' : undefined,
             }}
             className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent"
           />

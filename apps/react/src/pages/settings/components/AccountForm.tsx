@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Save, ArrowLeft, Loader2, ShieldCheck } from 'lucide-react';
+import { Save, ArrowLeft, Trash2, Loader2, ShieldCheck } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { Button, Switch } from '@pipeline/ui';
@@ -14,7 +14,9 @@ interface AccountFormProps {
   user2fa: boolean;
   onToggle2fa: (value: boolean) => void;
   is2faPending?: boolean;
+  onDeleteAccount?: () => void;
 }
+
 export const AccountForm = ({
                               form,
                               onSubmit,
@@ -24,6 +26,7 @@ export const AccountForm = ({
                               user2fa,
                               onToggle2fa,
                               is2faPending = false,
+                              onDeleteAccount,
                             }: AccountFormProps) => {
   const {
     register,
@@ -43,6 +46,14 @@ export const AccountForm = ({
 
     if (is2faPending) return;
     onToggle2fa(!user2fa);
+  };
+
+  const handleDeleteAccountClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (onDeleteAccount) {
+      onDeleteAccount();
+    } else {
+      console.log('deleteAccountClick', e);
+    }
   };
 
   return (
@@ -79,15 +90,13 @@ export const AccountForm = ({
             onCheckedChange={onToggle2fa}
             disabled={is2faPending}
             style={{
-              backgroundColor: user2fa ? '#10b981' : undefined,
+              backgroundColor: user2fa ? 'oklch(77.7% 0.152 181.912)' : undefined,
             }}
             className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent"
           />
-
-
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-6 pt-2 border-t border-border/40">
+        <form onSubmit={onSubmit} className="space-y-6 pt-4 border-t border-border/40">
           <div className="space-y-4">
             <FloatingInput
               {...register('currentPassword')}
@@ -136,10 +145,36 @@ export const AccountForm = ({
               className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
             >
               {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Changes
+              Change Password
             </Button>
           </div>
         </form>
+
+        <div className="pt-4 border-t border-border/40 space-y-3">
+          <h4 className="text-sm font-semibold tracking-wider text-rose-600">
+            Danger Zone
+          </h4>
+
+          <div className="p-4 rounded-xl border border-rose-200/80 bg-rose-50/60 dark:bg-rose-950/20 dark:border-rose-900/40 flex items-center justify-between gap-4">
+            <div className="space-y-0.5">
+      <span className="text-sm font-semibold text-foreground">
+        Delete Account
+      </span>
+              <p className="text-sm text-muted-foreground">
+                Permanently delete your account and all associated pipelines data.
+              </p>
+            </div>
+
+            <Button
+              type="button"
+              onClick={handleDeleteAccountClick}
+              className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-linear-to-r from-rose-700 to-rose-600 hover:from-rose-600 hover:to-rose-500 active:from-rose-800 active:to-rose-700 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20"
+            >
+              <Trash2 className="w-3.5 h-3.5 text-white" />
+              Delete Account
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
