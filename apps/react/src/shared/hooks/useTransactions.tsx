@@ -1,19 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api';
-import { PIPELINES_QUERY_KEY, type TPipeline } from '@/shared/lib';
+import { TRANSACTIONS_QUERY_KEY, type TTransaction } from '@/shared/lib';
 
-export function usePipelines() {
+export function useTransactions() {
   const {
-    data: pipelines,
+    data: transactions,
     isLoading,
     isError,
     error,
     refetch,
-  } = useQuery<TPipeline[] | null, Error>({
-    queryKey: PIPELINES_QUERY_KEY,
+  } = useQuery<TTransaction[] | null, Error>({
+    queryKey: TRANSACTIONS_QUERY_KEY,
     queryFn: async () => {
       try {
-        return await api.get<TPipeline[]>('/pipelines');
+        return await api.get<TTransaction[]>('/billing/transactions');
       } catch (err: any) {
         if (err.message === 'Unauthorized') {
           return null;
@@ -29,8 +29,8 @@ export function usePipelines() {
   });
 
   return {
-    pipelines: pipelines ?? [],
-    hasPipelines: Boolean(pipelines && pipelines.length > 0),
+    transactions: transactions ?? [],
+    hasTransactions: Boolean(transactions && transactions.length > 0),
     isLoading,
     isError,
     error,
