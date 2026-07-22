@@ -29,15 +29,15 @@ export const PipelineCard = ({ pipeline, onDelete }: PipelineCardProps) => {
 
   return (
     <motion.div
-      className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between"
-      variants={{
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { duration: 0.15, ease: 'easeOut' } },
-        exit: { opacity: 0, transition: { duration: 0.1, ease: 'easeIn' } },
+      layout="position"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{
+        opacity: { duration: 0.15, ease: 'easeOut' },
+        layout: { duration: 0.2, ease: 'easeOut' },
       }}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
+      className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between"
     >
       <div className="space-y-3 p-5">
         <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted border border-border/40">
