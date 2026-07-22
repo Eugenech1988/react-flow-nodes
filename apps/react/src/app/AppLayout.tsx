@@ -4,7 +4,7 @@ import { Toaster } from '@pipeline/ui';
 
 function AppLayout() {
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <Header />
       <main className="flex-1 min-h-0">
         <Outlet />

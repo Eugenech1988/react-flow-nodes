@@ -59,21 +59,21 @@ export const SettingsPage = () => {
 
   return (
     <motion.div
-      className="h-[calc(100vh-4rem)] bg-background text-foreground p-4 md:p-6 transition-colors duration-300 overflow-hidden flex flex-col"
+      className="bg-background text-foreground p-4 md:p-6 transition-colors duration-300 min-h-screen"
       variants={pageVariants}
       initial="initial"
       animate="animate"
     >
-      <div className="max-w-6xl mx-auto w-full space-y-8 flex-1 flex flex-col min-h-0">
-        <div className="shrink-0">
+      <div className="max-w-6xl mx-auto w-full space-y-8">
+        <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-muted-foreground text-sm mt-1">
             Manage your account details, professional information, and security preferences.
           </p>
         </div>
 
-        <div className="space-y-6 flex-1 flex flex-col min-h-0">
-          <div className="bg-muted/30 border border-border p-1 rounded-xl inline-flex gap-1 backdrop-blur-xs relative flex-wrap shrink-0">
+        <div className="space-y-6">
+          <div className="bg-muted/30 border border-border p-1 rounded-xl inline-flex gap-1 backdrop-blur-xs relative flex-wrap">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = currentTab === tab.id;
@@ -88,14 +88,14 @@ export const SettingsPage = () => {
                   {isActive && (
                     <motion.div
                       layoutId="activeTabIndicator"
-                      className="absolute inset-0 bg-card border border-border rounded-lg shadow-md -z-10"
+                      className="absolute inset-0 bg-card border border-border rounded-lg shadow-xs -z-10"
                       transition={{ type: "spring", stiffness: 300, damping: 28 }}
                     />
                   )}
                   <Icon className="w-4 h-4" />
                   <span>{tab.label}</span>
                   {tab.badge && (
-                    <span className="ml-1 px-1.5 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded">
+                    <span className="ml-1 px-1.5 py-0.5 text-[10px] font-semibold bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 rounded">
                       {tab.badge}
                     </span>
                   )}
@@ -104,8 +104,8 @@ export const SettingsPage = () => {
             })}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start flex-1 min-h-0">
-            <div className="shrink-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start pb-16">
+            <div className="md:col-span-1 sticky top-6 self-start">
               <ProfileSidebar
                 avatarPreview={user?.profile?.avatarUrl || null}
                 initials={initials}
@@ -119,7 +119,7 @@ export const SettingsPage = () => {
               />
             </div>
 
-            <div className="md:col-span-2 h-full overflow-y-auto pr-2 pb-12 min-h-0">
+            <div className="md:col-span-2">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={currentTab}
