@@ -33,6 +33,9 @@ const AccountRouteWrapper = () => {
       onSubmit={account.onSubmit}
       isPristine={account.isPristine}
       isPending={account.isPending}
+      user2fa={account.user2fa}
+      onToggle2fa={account.onToggle2fa}
+      is2faPending={account.is2faPending}
     />
   );
 };

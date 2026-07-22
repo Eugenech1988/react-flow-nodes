@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion, type Variants } from 'framer-motion';
 import {
   CheckCircle2,
@@ -8,7 +7,6 @@ import {
   CreditCard,
   Loader2,
   ArrowRight,
-  ArrowLeft,
   Building2,
   Check
 } from 'lucide-react';
@@ -43,7 +41,6 @@ const pageVariants: Variants = {
 };
 
 export const PlansPage = () => {
-  const navigate = useNavigate();
   const { isProActive, isLoading } = useSubscription();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [processingPlan, setProcessingPlan] = useState<string | null>(null);
@@ -163,16 +160,6 @@ export const PlansPage = () => {
       animate="animate"
       className="space-y-8 max-w-6xl mx-auto py-6 px-4 md:px-6"
     >
-      {/*<div>*/}
-      {/*  <button*/}
-      {/*    type="button"*/}
-      {/*    onClick={() => navigate('/settings/billing')}*/}
-      {/*    className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"*/}
-      {/*  >*/}
-      {/*    <ArrowLeft className="w-4 h-4" />*/}
-      {/*    <span>Back to Settings</span>*/}
-      {/*  </button>*/}
-      {/*</div>*/}
 
       <div className="text-center space-y-3 max-w-2xl mx-auto">
         <h2 className="text-3xl font-bold tracking-tight">Flexible Plans for Every Scale</h2>
@@ -263,7 +250,7 @@ export const PlansPage = () => {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed min-h-[36px]">
+                  <p className="text-xs text-muted-foreground leading-relaxed min-h-9">
                     {plan.description}
                   </p>
                 </div>

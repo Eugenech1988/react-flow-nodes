@@ -1,7 +1,6 @@
 import {
   Controller,
   Patch,
-  Get,
   Body,
   UseGuards,
   UseInterceptors,
@@ -14,22 +13,14 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { diskStorage } from 'multer';
 import { extname } from 'node:path';
-import { UsersService } from '../users/users.service';
 
-@Controller('profiles')
+@Controller('profile')
 export class ProfileController {
   constructor(
     private readonly profileService: ProfileService,
-    private readonly userService: UsersService,
   ) {}
 
-  @Get('me')
-  @UseGuards(JwtAuthGuard)
-  async getMyProfile(@CurrentUser('id') userId: string) {
-    return this.userService.findOneById(userId);
-  }
-
-  @Patch('me')
+  @Patch()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('avatar', {

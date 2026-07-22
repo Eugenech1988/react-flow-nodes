@@ -2,6 +2,7 @@ import { ConflictException, BadRequestException, Injectable, InternalServerError
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdatePasswordDto } from './dtos/update-password.dto';
+import { Toggle2faDto } from './dtos/toggle-2fa.dto';
 import { Prisma } from '@prisma/client';
 import { hash, verify } from 'argon2';
 
@@ -165,6 +166,25 @@ export class UsersService {
     } catch (error) {
       console.error(`Failed to update password for user ${id}:`, error);
       throw new InternalServerErrorException('Error updating account password');
+    }
+  }
+
+  async update2fa(id: string, dto: Toggle2faDto): Promise<UserWithRelations> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    try {
+      return await this.prisma.user.update({
+        where: { id },
+        data: { isTwoFactorEnabled: dto.user2fa },
+        include: { profile: true, subscription: true },
+      });
+    } catch (error) {
+      console.error(`Failed to update 2FA status for user ${id}:`, error);
+      throw new InternalServerErrorException('Error updating 2FA settings');
     }
   }
 }

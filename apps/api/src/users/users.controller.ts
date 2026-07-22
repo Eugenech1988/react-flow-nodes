@@ -17,6 +17,7 @@ import { UpdatePasswordDto } from './dtos/update-password.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { type TUserSafe } from './types';
 import type { Request } from 'express';
+import { Toggle2faDto } from './dtos/toggle-2fa.dto';
 
 interface IRequestWithUser extends Request {
   user: TUserSafe;
@@ -46,6 +47,18 @@ export class UsersController {
     @Body() dto: UpdatePasswordDto,
   ): Promise<{ success: boolean }> {
     await this.usersService.updatePassword(req.user.id, dto);
+    return { success: true };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Patch('2fa')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async update2fa(
+    @Req() req: IRequestWithUser,
+    @Body() dto: Toggle2faDto,
+  ): Promise<{ success: boolean }> {
+    await this.usersService.update2fa(req.user.id, dto);
     return { success: true };
   }
 }

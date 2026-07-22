@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Save, ArrowLeft, Loader2 } from 'lucide-react';
+import { Save, ArrowLeft, Loader2, ShieldCheck } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
-import { Button } from '@pipeline/ui';
+import { Button, Switch } from '@pipeline/ui';
 import type { IAccountFormData } from '../types';
 
 interface AccountFormProps {
@@ -11,18 +11,24 @@ interface AccountFormProps {
   isPristine: boolean;
   isPending?: boolean;
   alert?: { type: 'success' | 'error'; message: string } | null;
+  user2fa: boolean;
+  onToggle2fa: (value: boolean) => void;
+  is2faPending?: boolean;
 }
-
-//TODO check validations
-
 export const AccountForm = ({
                               form,
                               onSubmit,
                               isPristine,
                               isPending = false,
-                              alert = null
+                              alert = null,
+                              user2fa,
+                              onToggle2fa,
+                              is2faPending = false,
                             }: AccountFormProps) => {
-  const { register, formState: { errors } } = form;
+  const {
+    register,
+    formState: { errors },
+  } = form;
 
   const rootError = errors.root?.message || errors['' as keyof typeof errors]?.message;
 
@@ -30,71 +36,111 @@ export const AccountForm = ({
   const hasSuccess = alert?.type === 'success';
   const alertMessage = alert?.message || (rootError as string);
 
+  const handleBadgeClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('[role="switch"]')) {
+      return;
+    }
+
+    if (is2faPending) return;
+    onToggle2fa(!user2fa);
+  };
+
   return (
     <div className="border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
       <div className="px-6 py-4 border-b border-border/60 bg-muted/10">
         <h3 className="font-medium text-sm text-foreground/90">Security & Authentication</h3>
       </div>
 
-      <form onSubmit={onSubmit} className="p-6 space-y-6">
+      <div className="p-6 space-y-6">
         <LocalAlert
           hasSuccess={hasSuccess}
           hasError={hasError}
           alertMessage={alertMessage}
         />
 
-        <div className="space-y-4">
-          <FloatingInput
-            {...register('currentPassword')}
-            id="currentPassword"
-            label="Current Password"
-            type="password"
-            autoComplete="current-password"
-            error={!!errors.currentPassword}
-            errorMessage={errors.currentPassword?.message}
+        <div
+          onClick={handleBadgeClick}
+          className="group p-4 rounded-lg border border-border/60 bg-muted/5 hover:bg-muted/15 transition-colors flex items-center justify-between gap-4 cursor-pointer select-none"
+        >
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-teal-600 transition-transform group-hover:scale-105" />
+              <span className="text-sm font-medium text-foreground">
+                Two-Factor Authentication (2FA)
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Add an extra layer of security to your account during login.
+            </p>
+          </div>
+
+          <Switch
+            checked={user2fa}
+            onCheckedChange={onToggle2fa}
+            disabled={is2faPending}
+            style={{
+              backgroundColor: user2fa ? '#10b981' : undefined,
+            }}
+            className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent"
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-6 pt-2 border-t border-border/40">
+          <div className="space-y-4">
             <FloatingInput
-              {...register('newPassword')}
-              id="newPassword"
-              label="New Password"
+              {...register('currentPassword')}
+              id="currentPassword"
+              label="Current Password"
               type="password"
               autoComplete="current-password"
-              error={!!errors.newPassword}
-              errorMessage={errors.newPassword?.message}
+              error={!!errors.currentPassword}
+              errorMessage={errors.currentPassword?.message}
             />
-            <FloatingInput
-              {...register('confirmPassword')}
-              id="confirmPassword"
-              label="Confirm New Password"
-              type="password"
-              autoComplete="current-password"
-              error={!!errors.confirmPassword}
-              errorMessage={errors.confirmPassword?.message}
-            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FloatingInput
+                {...register('newPassword')}
+                id="newPassword"
+                label="New Password"
+                type="password"
+                autoComplete="new-password"
+                error={!!errors.newPassword}
+                errorMessage={errors.newPassword?.message}
+              />
+              <FloatingInput
+                {...register('confirmPassword')}
+                id="confirmPassword"
+                label="Confirm New Password"
+                type="password"
+                autoComplete="new-password"
+                error={!!errors.confirmPassword}
+                errorMessage={errors.confirmPassword?.message}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
-          <Link
-            to="/"
-            className="group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-md"
-          >
-            <ArrowLeft className="w-4 h-4"/>
-            Back to app
-          </Link>
+          <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
+            <Link
+              to="/"
+              className="group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-md"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to app
+            </Link>
 
-          <Button
-            type="submit"
-            disabled={isPristine || isPending}
-            className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
-          >
-            {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4"/>}
-            Save Changes
-          </Button>
-        </div>
-      </form>
+            <Button
+              type="submit"
+              disabled={isPristine || isPending}
+              className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
+            >
+              {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              Save Changes
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

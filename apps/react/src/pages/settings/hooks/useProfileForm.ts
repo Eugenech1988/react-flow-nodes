@@ -35,7 +35,7 @@ export const useProfileForm = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const {mutate: updateProfile, isPending} = useMutation({
-    mutationFn: (dataToSend: FormData) => api.patch<TProfile>('/profiles/me', dataToSend),
+    mutationFn: (dataToSend: FormData) => api.patch<TProfile>('/profile', dataToSend),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: USER_QUERY_KEY});
       form.reset(form.getValues());
