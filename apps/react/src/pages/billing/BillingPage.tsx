@@ -49,6 +49,7 @@ export const BillingPage = () => {
         </div>
 
         <button
+          type="button"
           onClick={() => navigate('/plans')}
           className="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl border border-border bg-card hover:bg-muted text-foreground text-xs font-medium transition-all cursor-pointer shadow-xs"
         >
@@ -58,9 +59,10 @@ export const BillingPage = () => {
       </div>
 
       {successMessage && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm flex items-center justify-between">
+        <div className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-600 dark:text-teal-400 text-sm flex items-center justify-between">
           <span>{successMessage}</span>
           <button
+            type="button"
             onClick={dismissSuccess}
             className="text-xs font-semibold hover:underline cursor-pointer"
           >
@@ -70,9 +72,10 @@ export const BillingPage = () => {
       )}
 
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center justify-between">
+        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-sm flex items-center justify-between">
           <span>{errorMessage}</span>
           <button
+            type="button"
             onClick={dismissError}
             className="text-xs font-semibold hover:underline cursor-pointer"
           >
@@ -93,7 +96,7 @@ export const BillingPage = () => {
       />
 
       <div className="space-y-4">
-        <h3 className="text-sm font-semibold tracking-wide uppercase text-foreground/80">
+        <h3 className="text-xs font-bold tracking-wider uppercase text-foreground/80">
           Current Usage
         </h3>
         <UsageStats isProActive={isProActive} />
@@ -110,7 +113,7 @@ export const BillingPage = () => {
         />
       </div>
 
-      <div className="border border-border bg-muted/5 rounded-xl p-5 space-y-3">
+      <div className="border border-border bg-card/60 rounded-xl p-5 space-y-3 shadow-xs">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Sparkles className="w-4 h-4 text-teal-500" />
           Need more performance?
@@ -120,8 +123,9 @@ export const BillingPage = () => {
           deployment topology models.
         </p>
         <button
+          type="button"
           onClick={() => navigate('/plans')}
-          className="text-xs font-medium text-teal-600 dark:text-teal-400 hover:underline cursor-pointer"
+          className="text-xs font-medium text-teal-600 dark:text-teal-400 hover:underline cursor-pointer inline-flex items-center gap-1"
         >
           View Enterprise Plan details →
         </button>

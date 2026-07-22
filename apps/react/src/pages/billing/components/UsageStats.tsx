@@ -1,4 +1,3 @@
-// src/pages/settings/billing/components/UsageStats.tsx
 import { Cpu, Clock, HardDrive } from 'lucide-react';
 
 interface UsageStat {
@@ -22,7 +21,7 @@ export const UsageStats = ({ isProActive }: UsageStatsProps) => {
       value: isProActive ? 'Unlimited' : '85 / 100',
       sub: 'Resets on the 1st of next month',
       percentage: isProActive ? 100 : 85,
-      barColor: isProActive ? 'bg-emerald-500' : 'bg-teal-500',
+      barColor: 'bg-teal-600 dark:bg-teal-500',
     },
     {
       label: 'Execution Time',
@@ -30,7 +29,7 @@ export const UsageStats = ({ isProActive }: UsageStatsProps) => {
       value: isProActive ? '12.4 hrs' : '4.2 / 5 hrs',
       sub: 'Compute hours consumed this cycle',
       percentage: isProActive ? 30 : 84,
-      barColor: isProActive ? 'bg-emerald-500' : 'bg-amber-500',
+      barColor: isProActive ? 'bg-teal-600 dark:bg-teal-500' : 'bg-amber-500',
     },
     {
       label: 'Pipeline Storage',
@@ -38,23 +37,23 @@ export const UsageStats = ({ isProActive }: UsageStatsProps) => {
       value: `1.2 GB / ${isProActive ? '100 GB' : '2 GB'}`,
       sub: 'Artifacts and cache storage',
       percentage: isProActive ? 1.2 : 60,
-      barColor: 'bg-teal-500',
+      barColor: 'bg-teal-600 dark:bg-teal-500',
     },
   ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {stats.map((stat, idx) => (
-        <div key={idx} className="border border-border bg-card rounded-xl p-4 space-y-3">
+        <div key={idx} className="border border-border bg-card rounded-xl p-4 space-y-3 shadow-xs">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5 font-medium text-foreground">
               {stat.icon} {stat.label}
             </span>
-            <span>{stat.value}</span>
+            <span className="font-medium text-foreground/90">{stat.value}</span>
           </div>
-          <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
+          <div className="w-full bg-muted/60 h-2 rounded-full overflow-hidden">
             <div
-              className={`h-full ${stat.barColor}`}
+              className={`h-full transition-all duration-500 ${stat.barColor}`}
               style={{ width: `${Math.min(stat.percentage, 100)}%` }}
             />
           </div>

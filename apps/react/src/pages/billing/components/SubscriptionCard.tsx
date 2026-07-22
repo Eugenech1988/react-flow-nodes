@@ -23,20 +23,20 @@ export const SubscriptionCard = ({
                                  }: SubscriptionCardProps) => {
   return (
     <div
-      className={`relative border bg-card rounded-2xl p-6 shadow-md overflow-hidden backdrop-blur-xs transition-all ${
-        isProActive ? 'border-emerald-500/20' : 'border-border'
+      className={`relative border bg-card rounded-2xl p-6 shadow-xs overflow-hidden backdrop-blur-xs transition-all ${
+        isProActive ? 'border-teal-500/30 ring-1 ring-teal-500/20' : 'border-border'
       }`}
     >
       <div
         className={`absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl pointer-events-none ${
-          isProActive ? 'bg-emerald-500/5' : 'bg-linear-to-br from-teal-500/5 to-emerald-500/5'
+          isProActive ? 'bg-teal-500/10' : 'bg-linear-to-br from-teal-500/5 to-teal-600/5'
         }`}
       />
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
         <div className="space-y-1.5">
           {isProActive ? (
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
               <Zap className="w-3.5 h-3.5 fill-current" />
               Active Plan
             </div>
@@ -70,7 +70,7 @@ export const SubscriptionCard = ({
             <li key={idx} className="flex items-start gap-2.5 text-sm text-foreground/90">
               <CheckCircle2
                 className={`w-4 h-4 shrink-0 mt-0.5 ${
-                  isProActive ? 'text-emerald-500' : 'text-muted-foreground/60'
+                  isProActive ? 'text-teal-600 dark:text-teal-400' : 'text-muted-foreground/60'
                 }`}
               />
               <span>{feature}</span>
@@ -82,7 +82,7 @@ export const SubscriptionCard = ({
       <div className="pt-6 border-t border-border/60 flex flex-col sm:flex-row gap-4 justify-between items-center text-xs text-muted-foreground">
         <div className="flex items-center gap-2">
           <ShieldCheck
-            className={`w-4 h-4 ${isProActive ? 'text-emerald-500' : 'text-muted-foreground/60'}`}
+            className={`w-4 h-4 ${isProActive ? 'text-teal-600 dark:text-teal-400' : 'text-muted-foreground/60'}`}
           />
           Secure payments via Stripe
         </div>
@@ -97,19 +97,21 @@ export const SubscriptionCard = ({
                 Change plan
               </button>
               <button
+                type="button"
                 onClick={onCancel}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-muted/20 text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/3 transition-all cursor-pointer font-medium"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-muted/20 text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10 transition-all cursor-pointer font-medium"
               >
                 <XCircle className="w-3.5 h-3.5" />
-                Manage subscription
+                Downgrade to free
               </button>
             </>
           ) : (
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={onActivate}
                 disabled={isProcessing}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-br from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-medium shadow-sm active:scale-98 transition-all cursor-pointer text-sm disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 text-white font-medium shadow-xs transition-all cursor-pointer text-sm disabled:opacity-50"
               >
                 {isProcessing ? (
                   <>
@@ -125,8 +127,9 @@ export const SubscriptionCard = ({
               </button>
 
               <button
+                type="button"
                 onClick={onExplorePlans}
-                className="px-3 py-2 rounded-xl border border-border bg-muted/20 text-foreground hover:bg-muted font-medium transition-all cursor-pointer text-sm"
+                className="px-3.5 py-2 rounded-xl border border-border bg-card hover:bg-muted text-foreground font-medium transition-all cursor-pointer text-sm"
               >
                 Explore Plans
               </button>

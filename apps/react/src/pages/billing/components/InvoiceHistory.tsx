@@ -9,7 +9,7 @@ interface InvoiceHistoryProps {
 
 export const InvoiceHistory = ({ transactions, isLoading }: InvoiceHistoryProps) => {
   return (
-    <div className="lg:col-span-2 border border-border bg-card rounded-2xl p-6 space-y-4 shadow-sm">
+    <div className="lg:col-span-2 border border-border bg-card rounded-2xl p-6 space-y-4 shadow-xs">
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-bold tracking-wider uppercase text-foreground/80 flex items-center gap-2">
           <Receipt className="w-4 h-4 text-teal-500" /> Invoice History
@@ -81,10 +81,10 @@ export const InvoiceHistory = ({ transactions, isLoading }: InvoiceHistoryProps)
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium border ${
                           tx.status === 'SUCCESS' || tx.status === 'PAID'
-                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                            ? 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20'
                             : tx.status === 'PENDING'
                               ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
-                              : 'bg-destructive/10 text-destructive border-destructive/20'
+                              : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
                         }`}
                       >
                         {statusText}
