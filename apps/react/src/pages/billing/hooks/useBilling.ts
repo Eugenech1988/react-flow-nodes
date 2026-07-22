@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSubscription, useTransactions } from '@/shared/hooks';
@@ -27,6 +27,12 @@ export const useBilling = () => {
     }
     return { error: null, success: null };
   });
+
+  useEffect(() => {
+    if (searchParams.get('success') === 'true') {
+      queryClient.invalidateQueries({ queryKey: SUBSCRIPTION_QUERY_KEY });
+    }
+  }, [searchParams, queryClient]);
 
   const clearQueryParams = () => {
     if (searchParams.has('success') || searchParams.has('canceled')) {

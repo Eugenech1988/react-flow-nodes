@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import {
   Plus,
   Search,
@@ -76,7 +76,7 @@ const MOCK_PIPELINES: IPipeline[] = [
   },
 ];
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
