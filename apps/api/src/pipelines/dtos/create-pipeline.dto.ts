@@ -24,9 +24,5 @@ export class CreatePipelineDto {
 
   @IsString()
   @IsOptional()
-  thumbnail?: string;
-
-  @IsString()
-  @IsOptional()
   screenshotUrl?: string;
 }

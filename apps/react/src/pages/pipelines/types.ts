@@ -1,12 +1,9 @@
-export interface IPipeline {
-  id: string;
-  name: string;
-  description: string;
-  status: 'active' | 'paused' | 'draft';
-  lastRunStatus?: 'success' | 'failed' | 'running';
-  lastRunAt?: string;
-  updatedAt: string;
-  thumbnail: string;
-}
+import { z } from 'zod';
 
-export type TTabType = 'all' | 'active' | 'paused' | 'draft'
+export const createPipelineSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
+  description: z.string().max(500, 'Description is too long').optional(),
+  screenshotUrl: z.string().optional().or(z.literal('')),
+});
+
+export type CreatePipelineDto = z.infer<typeof createPipelineSchema>;

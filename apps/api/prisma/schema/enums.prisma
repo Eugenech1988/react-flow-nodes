@@ -4,6 +4,12 @@ enum Plan {
   ENTERPRISE
 }
 
+enum PipelineStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+}
+
 enum SubscriptionStatus {
   ACTIVE
   CANCELED

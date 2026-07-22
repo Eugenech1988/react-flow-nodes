@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { TAB_OPTIONS, type TabType } from '../constants';
+import { FloatingInput } from '@/shared/ui';
 
 interface PipelineSearchAndFilterProps {
   searchQuery: string;
@@ -18,13 +19,12 @@ export const PipelineSearchAndFilter = ({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
       <div className="relative w-full sm:w-80 group">
-        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-teal-600 dark:group-focus-within:text-teal-400 transition-colors" />
-        <input
-          type="text"
-          placeholder="Search pipelines..."
+        <FloatingInput
+          fieldsetClasses="rounded-xl"
+          label="Search pipelines"
           value={searchQuery}
           onChange={onSearchChange}
-          className="w-full pl-9 pr-4 py-2 text-sm bg-card border border-border/80 rounded-xl placeholder:text-muted-foreground text-foreground focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:placeholder:opacity-0 transition-all"
+          icon={<Search className="w-4 h-4" />}
         />
       </div>
 

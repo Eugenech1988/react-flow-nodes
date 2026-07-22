@@ -3,12 +3,11 @@ model Pipeline {
   name        String
   description String?
 
-  status String?
+  status PipelineStatus? @default(DRAFT)
 
   lastRunAt     DateTime? @map("last_run_at")
   lastRunStatus String?   @map("last_run_status")
 
-  thumbnail     String?
   screenshotUrl String? @map("screenshot_url")
 
   userId String @map("user_id")

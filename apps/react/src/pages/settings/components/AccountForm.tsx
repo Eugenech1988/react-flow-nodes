@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Save, ArrowLeft, Trash2, Loader2, ShieldCheck, KeyRound, AlertTriangle } from 'lucide-react';
+import { Save, ArrowLeft, Trash2, Loader2, ShieldCheck, KeyRound, AlertTriangle, X } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import {
@@ -11,7 +11,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@pipeline/ui';
 import type { IAccountFormData } from '../types';
 
@@ -40,13 +40,13 @@ export const AccountForm = ({
                               is2faPending = false,
                               onDeleteAccount,
                               isDeletePending = false,
-                              onGenerateBackupCodes,
+                              onGenerateBackupCodes
                             }: AccountFormProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
     register,
-    formState: { errors },
+    formState: {errors}
   } = form;
 
   const rootError = errors.root?.message || errors['' as keyof typeof errors]?.message;
@@ -96,7 +96,7 @@ export const AccountForm = ({
         >
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-teal-600 transition-transform group-hover:scale-105" />
+              <ShieldCheck className="w-4 h-4 text-teal-600 transition-transform group-hover:scale-105"/>
               <span className="text-sm font-medium text-foreground">
                 Two-Factor Authentication (2FA)
               </span>
@@ -111,17 +111,18 @@ export const AccountForm = ({
             onCheckedChange={onToggle2fa}
             disabled={is2faPending}
             style={{
-              backgroundColor: user2fa ? 'var(--color-teal-600, #0d9488)' : undefined,
+              backgroundColor: user2fa ? 'var(--color-teal-600, #0d9488)' : undefined
             }}
             className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent"
           />
         </div>
 
         {user2fa && (
-          <div className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/5 dark:bg-teal-950/20 flex items-center justify-between gap-4">
+          <div
+            className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/5 dark:bg-teal-950/20 flex items-center justify-between gap-4">
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
-                <KeyRound className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                <KeyRound className="w-4 h-4 text-teal-600 dark:text-teal-400"/>
                 <span className="text-sm font-semibold text-foreground">
                   2FA Recovery Codes
                 </span>
@@ -136,7 +137,7 @@ export const AccountForm = ({
               onClick={handleGenerateCodesClick}
               className="flex items-center gap-2 px-4 py-4.5 text-xs font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20"
             >
-              <KeyRound className="w-3.5 h-3.5 text-white" />
+              <KeyRound className="w-3.5 h-3.5 text-white"/>
               Get Codes
             </Button>
           </div>
@@ -181,7 +182,7 @@ export const AccountForm = ({
               to="/"
               className="group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-md"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4"/>
               Back to app
             </Link>
 
@@ -190,7 +191,7 @@ export const AccountForm = ({
               disabled={isPristine || isPending}
               className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
             >
-              {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              {isPending ? <Loader2 className="w-4 h-4 animate-spin"/> : <Save className="w-4 h-4"/>}
               Change Password
             </Button>
           </div>
@@ -201,7 +202,8 @@ export const AccountForm = ({
             Danger Zone
           </h4>
 
-          <div className="p-4 rounded-xl border border-rose-200/80 bg-rose-50/60 dark:bg-rose-950/20 dark:border-rose-900/40 flex items-center justify-between gap-4">
+          <div
+            className="p-4 rounded-xl border border-rose-200/80 bg-rose-50/60 dark:bg-rose-950/20 dark:border-rose-900/40 flex items-center justify-between gap-4">
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-foreground">
                 Delete Account
@@ -218,9 +220,9 @@ export const AccountForm = ({
               className="flex items-center gap-2 px-4 py-4.5 text-xs font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20 disabled:opacity-50"
             >
               {isDeletePending ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin"/>
               ) : (
-                <Trash2 className="w-3.5 h-3.5 text-white" />
+                <Trash2 className="w-3.5 h-3.5 text-white"/>
               )}
               Delete Account
             </Button>
@@ -229,20 +231,32 @@ export const AccountForm = ({
       </div>
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-md border-border bg-card p-6 rounded-2xl shadow-lg backdrop-blur-md">
+        <DialogContent showCloseButton={false}
+                       className="sm:max-w-md border-border bg-card p-6 rounded-2xl shadow-lg backdrop-blur-md">
           <DialogHeader className="space-y-2">
-            <div className="flex items-center gap-2 text-rose-600">
-              <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400" />
-              <DialogTitle className="text-lg font-semibold tracking-tight text-danger">
-                Delete Account
-              </DialogTitle>
+            <div className="flex items-center justify-between gap-2 text-rose-600">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400"/>
+                <DialogTitle className="text-lg font-semibold tracking-tight text-danger">
+                  Delete Account
+                </DialogTitle>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsDeleteDialogOpen(false)}
+                className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              >
+                <X className="w-4 h-4"/>
+              </button>
             </div>
             <DialogDescription className="text-sm text-muted-foreground leading-relaxed pt-1">
-              Are you sure you want to delete your account? This action cannot be undone and all your data, transactions, and pipelines will be permanently removed.
+              Are you sure you want to delete your account? This action cannot be undone and all your data,
+              transactions, and pipelines will be permanently removed.
             </DialogDescription>
           </DialogHeader>
 
-          <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-6">
+
+          <DialogFooter className="flex flex-col-reverse bg-background sm:flex-row sm:justify-end gap-2 pt-6">
             <Button
               type="button"
               variant="outline"
@@ -258,9 +272,9 @@ export const AccountForm = ({
               className="flex items-center justify-center gap-2 px-4 py-4.5 text-xs font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20 disabled:opacity-50"
             >
               {isDeletePending ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-white"/>
               ) : (
-                <Trash2 className="w-3.5 h-3.5 text-white" />
+                <Trash2 className="w-3.5 h-3.5 text-white"/>
               )}
               Delete Permanently
             </Button>

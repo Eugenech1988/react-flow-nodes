@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import { Workflow, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@pipeline/ui';
+import { CreatePipelineDialog } from '@/pages/pipelines/components/CreatePipelineDialog.tsx';
 
 export const PipelineHeader = () => {
-  const navigate = useNavigate();
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
@@ -18,12 +19,16 @@ export const PipelineHeader = () => {
       </div>
 
       <Button
-        onClick={() => navigate('/pipelines/new')}
-        className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-xl cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20"
+        onClick={() => setIsCreateOpen(true)}
+        className="flex items-center justify-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-xl cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20"
       >
         <Plus className="w-4 h-4 text-white" />
         <span>Create Pipeline</span>
       </Button>
+      <CreatePipelineDialog
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+      />
     </div>
   );
 };

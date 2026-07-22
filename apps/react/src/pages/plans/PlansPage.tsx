@@ -48,7 +48,7 @@ export const PlansPage = () => {
       <div>
         <Link
           to="/settings/billing"
-          className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-teal-600 dark:hover:text-teal-400 transition-colors group cursor-pointer"
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Billing Settings</span>

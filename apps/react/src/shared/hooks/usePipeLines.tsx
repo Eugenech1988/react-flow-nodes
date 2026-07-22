@@ -1,8 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/shared/api';
+import { useUser } from '@/shared/hooks';
 import { PIPELINES_QUERY_KEY, type TPipeline } from '@/shared/lib';
 
 export function usePipelines() {
+  const { user } = useUser();
+  const userId = user?.id;
+
   const {
     data: pipelines,
     isLoading,
@@ -10,10 +14,12 @@ export function usePipelines() {
     error,
     refetch,
   } = useQuery<TPipeline[] | null, Error>({
-    queryKey: PIPELINES_QUERY_KEY,
+    queryKey: [PIPELINES_QUERY_KEY, userId],
     queryFn: async () => {
+      if (!userId) return null;
+
       try {
-        return await api.get<TPipeline[]>('/pipelines');
+        return await api.get<TPipeline[]>(`/pipelines/user/${userId}`);
       } catch (err: any) {
         if (err.message === 'Unauthorized') {
           return null;
@@ -21,6 +27,7 @@ export function usePipelines() {
         throw err;
       }
     },
+    enabled: Boolean(userId),
     staleTime: 5 * 60 * 1000,
     retry: (failureCount, error: any) => {
       if (error.message === 'Unauthorized') return false;
