@@ -216,3 +216,39 @@ body,
         @apply font-sans;
     }
 }
+@layer utilities {
+    .liquid-glass {
+        background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.5) 0%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.3) 100%
+        );
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        /* Внешняя мягкая тень + внутренние световые обводки для объема стекла */
+        box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.12),
+                inset 0 1px 2px rgba(255, 255, 255, 0.9),
+                inset 0 -2px 5px rgba(255, 255, 255, 0.4),
+                inset 0 20px 20px rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .dark .liquid-glass {
+        background: linear-gradient(
+                135deg,
+                rgba(15, 23, 42, 0.65) 0%,
+                rgba(15, 23, 42, 0.3) 50%,
+                rgba(30, 41, 59, 0.45) 100%
+        );
+        backdrop-filter: blur(24px) saturate(200%);
+        -webkit-backdrop-filter: blur(24px) saturate(200%);
+        box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 2px rgba(255, 255, 255, 0.25),
+                inset 0 -2px 5px rgba(0, 0, 0, 0.5),
+                inset 0 20px 20px rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+}

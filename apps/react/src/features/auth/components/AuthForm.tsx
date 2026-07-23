@@ -68,14 +68,20 @@ export const AuthForm: React.FC = () => {
 
   return (
     <div
-      className="bg-[url('/nodes-bg-light.png')] dark:bg-[url('/nodes-bg-dark.png')] bg-cover bg-center flex min-h-screen items-center justify-center dark:bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300">
+      className="bg-[url('/nodes-bg-light.png')] dark:bg-[url('/nodes-bg-dark.png')] bg-cover bg-center flex min-h-screen items-center justify-center dark:bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300 relative overflow-hidden">
+
+      {/* Декоративные размытые световые пятна сзади для создания «жидкого» перелива и объема под стеклом */}
+      <div className="absolute w-96 h-96 bg-teal-400/20 rounded-full blur-3xl pointer-events-none -top-10 -left-10 animate-pulse" />
+      <div className="absolute w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none -bottom-10 -right-10" />
+
       <Card
-        className="w-full p-8 max-w-lg rounded-2xl bg-slate-500/30 dark:bg-slate-950/70 backdrop-blur-md shadow-2xl space-y-2 overflow-hidden">
+        className="w-full p-8 max-w-lg rounded-3xl liquid-glass space-y-2 relative z-10 overflow-hidden">
+
         <CardHeader className="text-center p-0 space-y-2">
-          <CardTitle className="text-3xl font-normal tracking-tight text-white">
+          <CardTitle className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
             {is2faRequired ? 'Two-Factor Authentication' : mode === 'login' ? 'Sign In' : 'Create Account'}
           </CardTitle>
-          <CardDescription className="text-sm text-zinc-400">
+          <CardDescription className="text-sm text-zinc-700 dark:text-zinc-400">
             {is2faRequired ? (
               'Enter the 6-digit code from your authenticator app'
             ) : (
@@ -84,7 +90,7 @@ export const AuthForm: React.FC = () => {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-5.5 p-0">
+        <CardContent className="space-y-5.5 p-0 mt-6">
           {is2faRequired ? (
             <TwoFactorForm
               qrCodeImage={qrCodeImage}
@@ -103,7 +109,7 @@ export const AuthForm: React.FC = () => {
               />
 
               <div
-                className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-slate-400 before:h-[1px] before:flex-1 before:bg-slate-400 after:h-[1px] after:flex-1 after:bg-slate-400">
+                className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 before:h-[1px] before:flex-1 before:bg-slate-300 dark:before:bg-slate-700 after:h-[1px] after:flex-1 after:bg-slate-300 dark:after:bg-slate-700">
                 <span className="px-3">or</span>
               </div>
 
@@ -135,7 +141,7 @@ export const AuthForm: React.FC = () => {
                           <div>
                             <a
                               href="/forgot-password"
-                              className="text-teal-500 hover:text-teal-400 font-medium transition-colors duration-200 underline underline-offset-4"
+                              className="text-teal-600 dark:text-teal-400 font-medium transition-colors duration-200 underline underline-offset-4"
                             >
                               Forgot your password?
                             </a>
