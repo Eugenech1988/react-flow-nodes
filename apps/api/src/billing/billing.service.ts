@@ -1,8 +1,13 @@
-import { Injectable, BadRequestException, Logger } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Plan } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import Stripe from 'stripe';
+import * as fs from 'fs';
+import * as path from 'path';
+import { promisify } from 'util';
+
+const writeFileAsync = promisify(fs.writeFile);
 
 @Injectable()
 export class BillingService {
@@ -123,6 +128,40 @@ export class BillingService {
             ? rawCustomer.id
             : null;
 
+        let invoicePdfUrl = '';
+        const stripeInvoiceId = typeof session.invoice === 'string' ? session.invoice : session.invoice?.id;
+
+        if (stripeInvoiceId) {
+          try {
+            const stripeInvoice = await this.stripe.invoices.retrieve(stripeInvoiceId);
+            invoicePdfUrl = stripeInvoice.invoice_pdf || '';
+          } catch (e) {
+            this.logger.warn(`Could not retrieve stripe invoice ${stripeInvoiceId}:`, e);
+          }
+        }
+
+        let savedInvoicePath = '';
+        if (invoicePdfUrl) {
+          try {
+            const response = await fetch(invoicePdfUrl);
+            const arrayBuffer = await response.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+
+            const uploadDir = path.join(process.cwd(), 'uploads', 'invoices');
+
+            if (!fs.existsSync(uploadDir)) {
+              fs.mkdirSync(uploadDir, { recursive: true });
+            }
+
+            const fileName = `invoice_${userId}_${Date.now()}.pdf`;
+            savedInvoicePath = path.join('uploads', 'invoices', fileName);
+
+            await writeFileAsync(path.join(process.cwd(), savedInvoicePath), buffer);
+          } catch (error) {
+            this.logger.error(`Failed to download invoice PDF for user ${userId}:`, error);
+          }
+        }
+
         const firstItem = stripeSubscription.items.data[0] as (Stripe.SubscriptionItem & { current_period_start?: number; current_period_end?: number }) | undefined;
 
         const startTimestamp = firstItem?.current_period_start ?? Math.floor(Date.now() / 1000);
@@ -166,17 +205,17 @@ export class BillingService {
               currency: session.currency || 'usd',
               status: 'SUCCESS',
               plan,
-              invoiceId: session.id,
+              invoiceId: stripeInvoiceId || session.id,
               providerTxId,
-              invoiceUrl: typeof session.invoice === 'string' ? session.invoice : '',
+              invoiceUrl: savedInvoicePath,
             },
             update: {
               amount: session.amount_total || 0,
               currency: session.currency || 'usd',
               status: 'SUCCESS',
               plan,
-              invoiceId: session.id,
-              invoiceUrl: typeof session.invoice === 'string' ? session.invoice : '',
+              invoiceId: stripeInvoiceId || session.id,
+              invoiceUrl: savedInvoicePath,
             },
           }),
         ]);
@@ -196,6 +235,31 @@ export class BillingService {
         createdAt: 'desc',
       },
     });
+  }
+
+  async getInvoiceFilepath(userId: string, transactionId: string): Promise<string> {
+    const transaction = await this.prisma.transaction.findUnique({
+      where: { id: transactionId },
+    });
+
+    if (!transaction) {
+      throw new NotFoundException('Transaction not found');
+    }
+
+    if (transaction.userId !== userId) {
+      throw new UnauthorizedException('Access denied to this transaction');
+    }
+
+    if (!transaction.invoiceUrl) {
+      throw new BadRequestException('Invoice PDF is not available for this transaction');
+    }
+
+    const absolutePath = path.resolve(process.cwd(), transaction.invoiceUrl);
+    if (!fs.existsSync(absolutePath)) {
+      throw new NotFoundException('Invoice file is missing on the server');
+    }
+
+    return absolutePath;
   }
 
   async cancelSubscription(userId: string) {

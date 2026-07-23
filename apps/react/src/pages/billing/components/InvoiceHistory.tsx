@@ -7,7 +7,33 @@ interface InvoiceHistoryProps {
   isLoading: boolean;
 }
 
+const API_URL = import.meta.env.API_URL || 'http://localhost:3000';
+
 export const InvoiceHistory = ({ transactions, isLoading }: InvoiceHistoryProps) => {
+  const handleDownloadInvoice = async (transactionId: string) => {
+    try {
+      const response = await fetch(`${API_URL}/billing/transactions/${transactionId}/invoice`, {
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to download invoice');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `invoice_${transactionId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading invoice:', error);
+    }
+  };
+
   return (
     <div className="lg:col-span-2 border border-border bg-card rounded-2xl p-6 space-y-4 shadow-xs">
       <div className="flex items-center justify-between">
@@ -92,15 +118,13 @@ export const InvoiceHistory = ({ transactions, isLoading }: InvoiceHistoryProps)
                     </TableCell>
                     <TableCell className="text-right py-3 pr-4">
                       {tx.invoiceUrl ? (
-                        <a
-                          href={tx.invoiceUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 hover:underline font-medium text-xs transition-colors"
+                        <button
+                          onClick={() => handleDownloadInvoice(tx.id)}
+                          className="inline-flex items-center gap-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 hover:underline font-medium text-xs transition-colors cursor-pointer bg-transparent border-none"
                         >
                           <Download className="w-3 h-3" />
                           <span>PDF</span>
-                        </a>
+                        </button>
                       ) : (
                         <span className="text-muted-foreground/50 text-xs">—</span>
                       )}

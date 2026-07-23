@@ -1,7 +1,7 @@
-import { Controller, Post, Body, Req, Headers, BadRequestException, UseGuards, Get } from '@nestjs/common';
+import { Controller, Post, Body, Req, Headers, BadRequestException, UseGuards, Get, Param, Res } from '@nestjs/common';
 import { BillingService } from './billing.service';
 import { Plan } from '@prisma/client';
-import { Request } from 'express';
+import type { Request, Response } from 'express';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @Controller('billing')
@@ -43,6 +43,23 @@ export class BillingController {
   @UseGuards(JwtAuthGuard)
   async getTransactions(@Req() req: Request & { user: { id: string } }) {
     return this.billingService.getTransactionsByUserId(req.user.id);
+  }
+
+  @Get('transactions/:id/invoice')
+  @UseGuards(JwtAuthGuard)
+  async downloadInvoice(
+    @Req() req: Request & { user: { id: string } },
+    @Param('id') transactionId: string,
+    @Res() res: Response,
+  ) {
+    const userId = req.user.id;
+    const filePath = await this.billingService.getInvoiceFilepath(userId, transactionId);
+
+    return res.download(filePath, (err) => {
+      if (err) {
+        // Error handling
+      }
+    });
   }
 
   @Post('cancel')

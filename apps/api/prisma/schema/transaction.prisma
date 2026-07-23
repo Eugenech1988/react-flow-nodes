@@ -2,7 +2,7 @@ model Transaction {
   id     String @id @default(cuid())
   userId String @map("user_id")
 
-  invoiceId    String? @unique @map("invoice_id")
+  invoiceId    String? @map("invoice_id")
   providerTxId String? @unique @map("provider_tx_id")
 
   amount   Int
