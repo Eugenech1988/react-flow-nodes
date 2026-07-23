@@ -19,7 +19,7 @@ export const CancelButton = ({
     variant="outline"
     disabled={isDisabled}
     onClick={onClick}
-    className={cn('px-4 py-4.5 text-sm font-medium text-muted-foreground hover:text-foreground border-border/80 hover:bg-muted/50 rounded-lg cursor-pointer transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
+    className={cn('px-4 py-4.5 text-sm font-medium text-muted-foreground hover:text-foreground border-border/80 hover:bg-muted/50 rounded-lg cursor-pointer transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-xl',
       className
     )}
   >

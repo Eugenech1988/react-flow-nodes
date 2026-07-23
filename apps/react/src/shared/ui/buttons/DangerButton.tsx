@@ -27,7 +27,7 @@ export const DangerButton = ({
       type="button"
       disabled={isPending}
       onClick={onClick}
-      className={cn('flex items-center gap-2 px-4 py-4.5 font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20 disabled:opacity-50',
+      className={cn('flex items-center gap-2 px-4 py-4.5 font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20 disabled:opacity-50 rounded-xl',
         textSizeClass,
         className,
         )}

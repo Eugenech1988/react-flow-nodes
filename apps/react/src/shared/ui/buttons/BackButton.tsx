@@ -18,7 +18,7 @@ export const BackButton = ({
   <Link
     to={to}
     onClick={onClick}
-    className={cn('group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-md',
+    className={cn('group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-xl',
       className
     )}
   >

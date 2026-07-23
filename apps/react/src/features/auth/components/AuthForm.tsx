@@ -32,7 +32,7 @@ export const AuthForm: React.FC = () => {
     register: registerAction,
     verifyTwoFactor,
     toggleMode,
-    resetState,
+    resetState
   } = useAuthStore();
   const queryClient = useQueryClient();
 
@@ -43,22 +43,22 @@ export const AuthForm: React.FC = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting}
   } = useForm<CombinedFormData>({
     resolver: zodResolver(mode === 'login' ? loginSchema : registerSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
-    defaultValues: { email: '', password: '', confirmPassword: '' },
+    defaultValues: {email: '', password: '', confirmPassword: ''}
   });
 
   const onSubmit = async (data: CombinedFormData) => {
     if (mode === 'login') {
       await login(data.email, data.password, () => {
-        queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY });
+        queryClient.invalidateQueries({queryKey: USER_QUERY_KEY});
       });
     } else {
       await registerAction(data.email, data.password, () => {
-        reset({ email: '', password: '', confirmPassword: '' });
+        reset({email: '', password: '', confirmPassword: ''});
       });
     }
   };
@@ -66,7 +66,7 @@ export const AuthForm: React.FC = () => {
   const handleSocialLogin = (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY });
+    queryClient.invalidateQueries({queryKey: USER_QUERY_KEY});
     if (provider === 'google' || provider === 'github') {
       const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.API_URL || 'http://localhost:3000';
       window.location.href = `${apiUrl}/auth/${provider}`;
@@ -74,8 +74,10 @@ export const AuthForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-[url('/nodes-bg-light.png')] dark:bg-[url('/nodes-bg-dark.png)] bg-cover bg-center flex min-h-screen items-center justify-center dark:bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300">
-      <Card className="w-full p-8 max-w-lg rounded-2xl border border-zinc-800/60 bg-slate-950/70 backdrop-blur-md shadow-2xl space-y-2 overflow-hidden">
+    <div
+      className="bg-[url('/nodes-bg-light.png')] dark:bg-[url('/nodes-bg-dark.png')] bg-cover bg-center flex min-h-screen items-center justify-center dark:bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300">
+      <Card
+        className="w-full p-8 max-w-lg rounded-2xl border border-zinc-800/60 bg-slate-950/70 backdrop-blur-md shadow-2xl space-y-2 overflow-hidden">
         <CardHeader className="text-center p-0 space-y-2">
           <CardTitle className="text-3xl font-normal tracking-tight text-white">
             {is2faRequired ? 'Two-Factor Authentication' : mode === 'login' ? 'Sign In' : 'Create Account'}
@@ -84,7 +86,7 @@ export const AuthForm: React.FC = () => {
             {is2faRequired ? (
               'Enter the 6-digit code from your authenticator app'
             ) : (
-              <AuthModeToggle mode={mode} onToggle={toggleMode} />
+              <AuthModeToggle mode={mode} onToggle={toggleMode}/>
             )}
           </CardDescription>
         </CardHeader>
@@ -107,13 +109,15 @@ export const AuthForm: React.FC = () => {
                 onGithubClick={handleSocialLogin('github')}
               />
 
-              <div className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-slate-400 before:h-[1px] before:flex-1 before:bg-slate-400 after:h-[1px] after:flex-1 after:bg-slate-400">
+              <div
+                className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-slate-400 before:h-[1px] before:flex-1 before:bg-slate-400 after:h-[1px] after:flex-1 after:bg-slate-400">
                 <span className="px-3">or</span>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {currentApiError && !isAuthError && (
-                  <div className="text-sm font-medium text-red-400 bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center antialiased">
+                  <div
+                    className="text-sm font-medium text-red-400 bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center antialiased">
                     {currentApiError}
                   </div>
                 )}
@@ -151,15 +155,13 @@ export const AuthForm: React.FC = () => {
                   )}
                 </div>
 
-                <div className="pt-4">
-                  <SubmitButton
-                    isPending={isSubmitting}
-                    text={mode === 'login' ? 'Sign In' : 'Register'}
-                    pendingText="Processing..."
-                    icon={null}
-                    className="w-full h-11 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
-                  />
-                </div>
+                <SubmitButton
+                  isPending={isSubmitting}
+                  text={mode === 'login' ? 'Sign In' : 'Register'}
+                  pendingText="Processing..."
+                  icon={null}
+                  className="w-full h-11 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
+                />
               </form>
             </>
           )}
