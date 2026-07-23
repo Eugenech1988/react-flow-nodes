@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom';
-import { Save, ArrowLeft, Loader2 } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
-import { Button } from '@pipeline/ui';
+import { SubmitButton, BackButton } from '@/shared/ui/buttons';
 import type { IProfileFormData } from '../types';
 
 interface ProfileFormProps {
@@ -81,22 +80,15 @@ export const ProfileForm = ({ form, onSubmit, isPristine, isPending = false, ale
         </div>
 
         <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
-          <Link
-            to="/"
-            className="group flex items-center gap-2 px-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded-md"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to app
-          </Link>
+          <BackButton to="/" text="Back to app" />
 
-          <Button
-            type="submit"
-            disabled={isPristine || isPending}
-            className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 active:bg-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
-          >
-            {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            Save Changes
-          </Button>
+          <SubmitButton
+            isPending={isPending}
+            isDisabled={isPristine}
+            text="Save Changes"
+            pendingText="Saving..."
+            icon={Save}
+          />
         </div>
       </form>
     </div>

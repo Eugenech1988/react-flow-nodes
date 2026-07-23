@@ -1,4 +1,5 @@
-import { Zap, CheckCircle2, ShieldCheck, XCircle, CreditCard, Loader2 } from 'lucide-react';
+import { Zap, CheckCircle2, ShieldCheck, XCircle, CreditCard } from 'lucide-react';
+import { SubmitButton, CancelButton, DangerButton } from '@/shared/ui/buttons';
 
 interface SubscriptionCardProps {
   isProActive: boolean;
@@ -96,43 +97,29 @@ export const SubscriptionCard = ({
               >
                 Change plan
               </button>
-              <button
-                type="button"
+              <DangerButton
                 onClick={onCancel}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-muted/20 text-muted-foreground hover:text-destructive hover:border-destructive/30 hover:bg-destructive/10 transition-all cursor-pointer font-medium"
-              >
-                <XCircle className="w-3.5 h-3.5" />
-                Cancel subscription
-              </button>
+                isPending={false}
+                text="Cancel subscription"
+                icon={XCircle}
+                size="xs"
+              />
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <button
-                type="button"
+              <SubmitButton
+                isPending={isProcessing}
+                isDisabled={false}
+                text="Activate Pro Plan"
+                pendingText="Redirecting..."
+                icon={CreditCard}
                 onClick={onActivate}
-                disabled={isProcessing}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 text-white font-medium shadow-xs transition-all cursor-pointer text-sm disabled:opacity-50"
-              >
-                {isProcessing ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Redirecting...
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="w-4 h-4" />
-                    Activate Pro Plan
-                  </>
-                )}
-              </button>
+              />
 
-              <button
-                type="button"
+              <CancelButton
                 onClick={onExplorePlans}
-                className="px-3.5 py-2 rounded-xl border border-border bg-card hover:bg-muted text-foreground font-medium transition-all cursor-pointer text-sm"
-              >
-                Explore Plans
-              </button>
+                text="Explore Plans"
+              />
             </div>
           )}
         </div>
