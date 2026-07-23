@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useUser } from '@/shared/hooks';
 import { Workflow, Image as ImageIcon, Trash2, Upload } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
-import { FloatingInput, FloatingTextarea, DialogHeader, DialogFooter } from '@/shared/ui';
+import { FloatingInput, FloatingTextarea, DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
 import { createPipelineSchema, type CreatePipelineDto } from '../types';
 import { useCreatePipeline } from '../hooks/usePipelineHandler';
 
@@ -64,7 +64,7 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-md border border-border bg-card p-0 rounded-xl shadow-xs overflow-hidden backdrop-blur-xs"
+        className="sm:max-w-md border border-border bg-card p-0 gap-0 overflow-hidden rounded-xl shadow-xs backdrop-blur-xs"
       >
         <DialogHeader
           title="Create Pipeline"
@@ -73,8 +73,8 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
           onClose={handleClose}
         />
 
-        <form onSubmit={handleSubmit(onSubmit)} className="px-6 pt-2 pb-6 space-y-6">
-          <div className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogBody withBorder className="space-y-4">
             <FloatingInput
               {...register('name')}
               id="name"
@@ -134,7 +134,7 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
                           e.stopPropagation();
                           fileInputRef.current?.click();
                         }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-medium transition-colors backdrop-blur-md"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/25 hover:bg-white/35 text-white text-xs font-medium transition-colors backdrop-blur-md"
                       >
                         <Upload className="w-3.5 h-3.5" />
                         <span>Change</span>
@@ -142,7 +142,7 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
                       <button
                         type="button"
                         onClick={handleRemoveFile}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/80 hover:bg-red-500 text-white text-xs font-medium transition-colors backdrop-blur-md"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/85 hover:bg-red-500 text-white text-xs font-medium transition-colors backdrop-blur-md"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         <span>Delete</span>
@@ -152,13 +152,14 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
                 )}
               </div>
             </div>
-          </div>
+          </DialogBody>
 
           <DialogFooter
             onCancel={handleClose}
             isPending={createMutation.isPending}
             submitText="Create Pipeline"
             pendingText="Creating..."
+            withBorder={false}
           />
         </form>
       </DialogContent>

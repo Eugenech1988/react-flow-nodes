@@ -15,11 +15,11 @@ export const DialogHeader = ({
                                onClose,
                              }: DialogHeaderProps) => {
   return (
-    <UIDialogHeader className="px-6 py-4 border-b border-border/60 bg-muted/10 flex flex-row items-center justify-between">
-      <div className="flex items-center gap-2">
-        {icon}
-        <div>
-          <DialogTitle className="text-base font-medium text-foreground/90">
+    <UIDialogHeader className="relative p-4 bg-muted/10">
+      <div className="flex items-start gap-3">
+        <div className="space-y-0.5">
+          <DialogTitle className="text-base flex items-center gap-2 font-semibold text-foreground tracking-tight">
+            {icon}
             {title}
           </DialogTitle>
           {description && (
@@ -30,7 +30,7 @@ export const DialogHeader = ({
       <button
         type="button"
         onClick={onClose}
-        className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+        className="absolute right-4 top-4 p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
       >
         <X className="w-4 h-4" />
       </button>
