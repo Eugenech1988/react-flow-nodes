@@ -86,7 +86,7 @@ export const AccountForm = ({
 
         <div
           onClick={handleBadgeClick}
-          className="group p-4 rounded-lg border border-border/60 bg-muted/5 hover:bg-muted/15 transition-colors flex items-center justify-between gap-4 cursor-pointer select-none"
+          className="group p-4 rounded-xl border border-border/60 bg-muted/5 hover:bg-muted/15 transition-colors flex items-center justify-between gap-4 cursor-pointer select-none"
         >
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">

@@ -19,7 +19,7 @@ export const DeleteAccountDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-md border-border bg-card p-0 gap-0 overflow-hidden rounded-2xl shadow-lg backdrop-blur-md"
+        className="sm:max-w-md border-border bg-card p-0 gap-0 overflow-hidden rounded-xl shadow-lg backdrop-blur-md"
       >
         <DialogHeader
           title="Delete Account"

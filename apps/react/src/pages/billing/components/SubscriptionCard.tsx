@@ -24,7 +24,7 @@ export const SubscriptionCard = ({
                                  }: SubscriptionCardProps) => {
   return (
     <div
-      className={`relative border bg-card rounded-2xl p-6 shadow-xs overflow-hidden backdrop-blur-xs transition-all ${
+      className={`relative border bg-card rounded-xl p-6 shadow-xs overflow-hidden backdrop-blur-xs transition-all ${
         isProActive ? 'border-teal-500/30 ring-1 ring-teal-500/20' : 'border-border'
       }`}
     >
