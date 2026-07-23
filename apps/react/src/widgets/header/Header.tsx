@@ -1,14 +1,23 @@
 import { CloudCheck, Settings, Share2 } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
 import { UserDropdown } from '@/features/user-dropdown';
 import { WorkflowExecutionControl } from './components/WorkflowExecutionControl';
 
+const TABS = [
+  { id: 'editor', label: 'Editor', path: '/' },
+  { id: 'executions', label: 'Executions', path: '/executions' },
+  { id: 'tests', label: 'Tests', path: '/tests' },
+] as const;
+
 export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
+
+  const currentTab = TABS.find((tab) => tab.path === location.pathname)?.id || 'editor';
 
   const handleHeaderClick = () => {
     if (!isHome) {
@@ -27,34 +36,43 @@ export const Header = () => {
       }`}
       onClick={handleHeaderClick}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 w-[320px]" onClick={preventNavigation}>
         <Link to="/">
           <img className="h-6 w-auto object-contain" src={logo} alt="Pipeline logo"/>
         </Link>
         <div className="h-4 w-px bg-border"/>
         <div className="flex items-center gap-2">
-          <span className="font-medium text-sm text-foreground">untitled_pipeline_1</span>
-          <CloudCheck className="w-4 h-4 text-muted-foreground" />
+          <span className="font-medium text-sm text-foreground truncate">untitled_pipeline_1</span>
+          <CloudCheck className="w-4 h-4 text-muted-foreground shrink-0" />
         </div>
       </div>
 
-      <div className="flex bg-foreground/3 p-1 rounded-lg border border-border/50 text-sm">
-        <button className="px-3 py-1 rounded-md bg-card text-foreground font-medium shadow-xs cursor-pointer">
-          Editor
-        </button>
-        <button
-          className="px-3 py-1 rounded-md text-foreground/60 hover:text-foreground cursor-pointer transition-colors">
-          Executions
-        </button>
-        <button
-          className="px-3 py-1 rounded-md text-foreground/60 hover:text-foreground cursor-pointer transition-colors">
-          Tests
-        </button>
+      <div className="absolute left-1/2 -translate-x-1/2 flex bg-foreground/3 p-1 rounded-lg border border-border/50 text-sm" onClick={preventNavigation}>
+        {TABS.map((tab) => {
+          const isActive = currentTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => navigate(tab.path)}
+              className={`relative px-3 py-1 rounded-md text-sm font-medium cursor-pointer transition-colors z-10 ${
+                isActive ? 'text-foreground' : 'text-foreground/60 hover:text-foreground'
+              }`}
+            >
+              {isActive && (
+                <motion.div
+                  layoutId="header-active-tab-indicator"
+                  className="absolute inset-0 bg-card rounded-md shadow-xs border border-border/40 z-[-1]"
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                />
+              )}
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="flex items-center gap-3" onClick={preventNavigation}>
-        <WorkflowExecutionControl />
-
+      <div className="flex items-center gap-3 w-[320px] justify-end" onClick={preventNavigation}>
+        <WorkflowExecutionControl/>
         <button
           className="flex items-center gap-1.5 px-3 h-8 text-xs font-medium border border-border bg-card hover:bg-foreground/3 rounded-md cursor-pointer transition-colors">
           <Share2 className="w-3.5 h-3.5"/>
