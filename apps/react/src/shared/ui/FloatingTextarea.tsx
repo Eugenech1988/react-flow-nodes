@@ -41,6 +41,7 @@ export const FloatingTextarea = React.forwardRef<
     },
     ref
   ) => {
+    const hasValue = Boolean(props.value && String(props.value).trim() !== '');
     const roundedClass = roundedMap[rounded] || roundedMap.xl;
 
     return (
@@ -65,13 +66,14 @@ export const FloatingTextarea = React.forwardRef<
           <label
             className={cn(
               'absolute top-3.5 -translate-y-0 pointer-events-none text-sm font-sans transition-all duration-200 ease-in-out z-20 block select-none max-w-[calc(100%-24px)] truncate text-ellipsis origin-left left-3.5',
-              'text-muted-foreground/85 dark:text-muted-foreground/70',
+              'text-zinc-400 dark:text-zinc-500',
               'group-hover:text-teal-500 dark:group-hover:text-teal-500',
               'peer-focus:text-teal-500 peer-focus-visible:text-teal-500 peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:text-[10px]',
               'peer-not-placeholder-shown:text-teal-500 peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:text-[10px]',
+              hasValue && 'top-0 -translate-y-1/2 text-[10px] text-teal-500',
               error
                 ? 'text-red-500!'
-                : 'group-hover:text-teal-500 dark:group-hover:text-teal-500 peer-focus:text-teal-500 peer-focus-visible:text-teal-500 peer-not-placeholder-shown:text-teal-500 dark:peer-focus:text-teal-500 dark:peer-focus-visible:text-teal-500 dark:peer-not-placeholder-shown:text-teal-500',
+                : hasValue && 'text-teal-500 dark:text-teal-500',
               labelClasses
             )}
           >
@@ -85,17 +87,19 @@ export const FloatingTextarea = React.forwardRef<
               '[&_legend]:max-w-0 [&_legend]:transition-all [&_legend]:duration-200 [&_legend]:p-0 [&_legend]:invisible',
               'peer-focus:[&_legend]:max-w-full peer-focus:[&_legend]:px-1 peer-focus:[&_legend]:visible',
               'peer-not-placeholder-shown:[&_legend]:max-w-full peer-not-placeholder-shown:[&_legend]:px-1 peer-not-placeholder-shown:[&_legend]:visible',
-              'autofill:[&_legend]:max-w-full autofill:[&_legend]:px-1 autofill:[&_legend]:visible',
+              hasValue && '[&_legend]:max-w-full [&_legend]:px-1 [&_legend]:visible',
               'peer-disabled:bg-muted/30 peer-disabled:border-border/40 peer-disabled:opacity-80',
               error
                 ? 'border-red-500! shadow-[0_0_15px_rgba(239,68,68,0.02)]'
-                : 'border-zinc-300 dark:border-zinc-700/80 hover:border-teal-500 dark:hover:border-teal-500 group-hover:border-teal-500 dark:group-hover:border-teal-500 peer-focus:border-teal-500 peer-focus-visible:border-teal-500 peer-not-placeholder-shown:border-teal-500 dark:peer-focus:border-teal-500 dark:peer-focus-visible:border-teal-500 dark:peer-not-placeholder-shown:border-teal-500',
+                : 'border-zinc-400 dark:border-zinc-500 hover:border-teal-500 dark:hover:border-teal-500 group-hover:border-teal-500 dark:group-hover:border-teal-500 peer-focus:border-teal-500 peer-focus-visible:border-teal-500 peer-not-placeholder-shown:border-teal-500',
+              hasValue && '!border-teal-500 dark:!border-teal-500',
               fieldsetClasses
             )}
           >
             <legend
               className={cn(
-                'h-3 text-[10px] font-sans pointer-events-none block w-auto whitespace-nowrap box-border opacity-0 invisible select-none px-1 transition-all duration-200 ml-2.5'
+                'h-3 text-[10px] font-sans pointer-events-none block w-auto whitespace-nowrap box-border opacity-0 invisible select-none px-1 transition-all duration-200 ml-2.5',
+                hasValue && 'visible'
               )}
             >
               {label}

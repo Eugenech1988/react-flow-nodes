@@ -60,7 +60,6 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
   const id = useId();
 
   const hasValue = Boolean(value && value.trim() !== '');
-  // const isFloating = hasValue || isOpen;
   const selectedOption = options.find((opt) => opt.value === value);
   const roundedClass = roundedMap[rounded] || roundedMap.xl;
 
@@ -102,7 +101,7 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
               isOpen && 'rotate-180',
               error
                 ? 'text-red-500'
-                : 'text-muted-foreground/85 dark:text-muted-foreground/70 group-hover:text-teal-500 dark:group-hover:text-teal-500'
+                : 'text-zinc-400 dark:text-zinc-500 group-hover:text-teal-500 dark:group-hover:text-teal-500'
             )}
           />
 
@@ -110,7 +109,7 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
             htmlFor={id}
             className={cn(
               'absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-sm font-sans transition-all duration-200 ease-in-out z-20 block select-none max-w-[calc(100%-36px)] truncate text-ellipsis origin-left',
-              'text-muted-foreground/85 dark:text-muted-foreground/70',
+              'text-zinc-400 dark:text-zinc-500',
               'group-hover:text-teal-500 dark:group-hover:text-teal-500',
               (isOpen || hasValue) && 'top-0 -translate-y-1/2 text-[10px] text-teal-500',
               error ? 'text-red-500!' : (isOpen || hasValue) && 'text-teal-500 dark:text-teal-500',
@@ -130,7 +129,7 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
               'peer-disabled:bg-muted/30 peer-disabled:border-border/40 peer-disabled:opacity-80',
               error
                 ? 'border-red-500! shadow-[0_0_15px_rgba(239,68,68,0.02)]'
-                : 'border-zinc-300 dark:border-zinc-700/80 hover:border-teal-500 dark:hover:border-teal-500 group-hover:border-teal-500 dark:group-hover:border-teal-500',
+                : 'border-zinc-400 dark:border-zinc-500 hover:border-teal-500 dark:hover:border-teal-500 group-hover:border-teal-500 dark:group-hover:border-teal-500',
               (isOpen || hasValue) && '!border-teal-500 dark:!border-teal-500',
               fieldsetClasses
             )}
