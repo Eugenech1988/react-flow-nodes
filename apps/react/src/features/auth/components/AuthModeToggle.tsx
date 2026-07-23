@@ -14,7 +14,7 @@ export const AuthModeToggle: React.FC<AuthModeToggleProps> = ({ mode, onToggle }
       <Button
         type="button"
         onClick={onToggle}
-        className="cursor-pointer px-1 bg-transparent font-medium text-zinc-200 hover:text-white transition-colors hover:bg-transparent focus:outline-none hover:underline"
+        className="cursor-pointer px-1 bg-transparent font-medium text-zinc-100 hover:text-white transition-colors hover:bg-transparent focus:outline-none hover:underline"
       >
         {mode === 'login' ? 'Sign up' : 'Sign in'}
       </Button>
