@@ -1,5 +1,6 @@
 import { Save, Loader2, type LucideIcon } from 'lucide-react';
 import { Button } from '@pipeline/ui';
+import { cn } from '@/shared/lib';
 
 interface SubmitButtonProps {
   isPending: boolean;
@@ -8,6 +9,7 @@ interface SubmitButtonProps {
   pendingText?: string;
   icon?: LucideIcon | null;
   onClick?: () => void;
+  className?: string;
 }
 
 export const SubmitButton = ({
@@ -17,12 +19,15 @@ export const SubmitButton = ({
                                pendingText = 'Saving...',
                                icon: Icon = Save,
                                onClick,
+                               className
                              }: SubmitButtonProps) => (
   <Button
     type="submit"
     disabled={isDisabled || isPending}
     onClick={onClick}
-    className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
+    className={cn("flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none",
+      className
+    )}
   >
     {isPending ? (
       <>

@@ -15,7 +15,7 @@ export const DialogHeader = ({
                                onClose,
                              }: DialogHeaderProps) => {
   return (
-    <UIDialogHeader className="relative p-4 bg-muted/10">
+    <UIDialogHeader className="relative px-6 py-4 bg-muted/10">
       <div className="flex items-start gap-3">
         <div className="space-y-0.5">
           <DialogTitle className="text-base flex items-center gap-2 font-semibold text-foreground tracking-tight">

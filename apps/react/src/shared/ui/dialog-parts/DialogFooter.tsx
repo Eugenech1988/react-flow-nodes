@@ -26,7 +26,7 @@ export const DialogFooter = ({
                              }: DialogFooterProps) => {
   return (
     <div
-      className={`flex flex-col-reverse bg-background sm:flex-row sm:justify-end gap-2 px-6 py-4 ${
+      className={`flex flex-col-reverse bg-background sm:flex-row sm:justify-end gap-2 p-4 ${
         withBorder ? 'border-t border-b border-border/60' : ''
       }`}
     >

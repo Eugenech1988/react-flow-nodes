@@ -1,5 +1,6 @@
 import { Trash2, Loader2, type LucideIcon } from 'lucide-react';
 import { Button } from '@pipeline/ui';
+import { cn } from '@/shared/lib';
 
 interface DangerButtonProps {
   onClick: () => void;
@@ -7,6 +8,7 @@ interface DangerButtonProps {
   text?: string;
   size?: 'xs' | 'sm';
   icon?: LucideIcon | null;
+  className?: string;
 }
 
 export const DangerButton = ({
@@ -15,6 +17,7 @@ export const DangerButton = ({
                                text = 'Delete Account',
                                size = 'sm',
                                icon: Icon = Trash2,
+                               className
                              }: DangerButtonProps) => {
   const textSizeClass = size === 'xs' ? 'text-xs' : 'text-sm';
   const iconSizeClass = size === 'xs' ? 'w-3.5 h-3.5' : 'w-4 h-4';
@@ -24,13 +27,16 @@ export const DangerButton = ({
       type="button"
       disabled={isPending}
       onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-4.5 ${textSizeClass} font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20 disabled:opacity-50`}
+      className={cn('flex items-center gap-2 px-4 py-4.5 font-medium text-white bg-linear-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:from-rose-700 active:to-rose-600 rounded-lg cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-rose-500/20 disabled:opacity-50',
+        textSizeClass,
+        className,
+        )}
     >
       {isPending ? (
-        <Loader2 className={`${iconSizeClass} animate-spin text-white`} />
+        <Loader2 className={`${iconSizeClass} animate-spin text-white`}/>
       ) : (
         <>
-          {Icon && <Icon className={`${iconSizeClass} text-white`} />}
+          {Icon && <Icon className={`${iconSizeClass} text-white`}/>}
           <span>{text}</span>
         </>
       )}

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button } from '@pipeline/ui';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@pipeline/ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SocialLoginButtons } from './SocialLoginButtons';
@@ -7,6 +7,7 @@ import { RegisterFields } from './RegisterFields';
 import { LoginFields } from './LoginFields';
 import { TwoFactorForm } from './TwoFactorForm';
 import { useQueryClient } from '@tanstack/react-query';
+import { SubmitButton } from '@/shared/ui';
 import { cn } from '@/shared/lib';
 import { useAuthStore } from '../model/authStore';
 import { loginSchema, registerSchema, type CombinedFormData } from '../model';
@@ -73,7 +74,7 @@ export const AuthForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-[url('/nodes-bg.png')] bg-cover bg-center flex min-h-screen items-center justify-center bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300">
+    <div className="bg-[url('/nodes-bg-light.png')] dark:bg-[url('/nodes-bg-dark.png)] bg-cover bg-center flex min-h-screen items-center justify-center dark:bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300">
       <Card className="w-full p-8 max-w-lg rounded-2xl border border-zinc-800/60 bg-slate-950/70 backdrop-blur-md shadow-2xl space-y-2 overflow-hidden">
         <CardHeader className="text-center p-0 space-y-2">
           <CardTitle className="text-3xl font-normal tracking-tight text-white">
@@ -151,13 +152,13 @@ export const AuthForm: React.FC = () => {
                 </div>
 
                 <div className="pt-4">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="cursor-pointer w-full h-12 rounded-xl bg-teal-600 text-base font-medium tracking-wide text-white transition-all duration-300 hover:bg-teal-500 hover:shadow-[0_0_25px_rgba(20,184,166,0.3)] active:scale-[0.98]"
-                  >
-                    {isSubmitting ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Register'}
-                  </Button>
+                  <SubmitButton
+                    isPending={isSubmitting}
+                    text={mode === 'login' ? 'Sign In' : 'Register'}
+                    pendingText="Processing..."
+                    icon={null}
+                    className="w-full h-11 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
+                  />
                 </div>
               </form>
             </>
