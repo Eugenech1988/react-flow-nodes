@@ -3,6 +3,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
 import { UserDropdown } from '@/features/user-dropdown';
+import { WorkflowExecutionControl } from './components/WorkflowExecutionControl';
 
 export const Header = () => {
   const location = useLocation();
@@ -18,6 +19,7 @@ export const Header = () => {
   const preventNavigation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
   return (
     <header
       className={`flex h-14 fixed bg-background top-0 w-full items-center justify-between px-6 bg-header-bg border-b border-border z-40 shrink-0 transition-colors duration-300 ${
@@ -32,7 +34,7 @@ export const Header = () => {
         <div className="h-4 w-px bg-border"/>
         <div className="flex items-center gap-2">
           <span className="font-medium text-sm text-foreground">untitled_pipeline_1</span>
-          <CloudCheck className="w-4 h-4 text-muted-foreground"/>
+          <CloudCheck className="w-4 h-4 text-muted-foreground" />
         </div>
       </div>
 
@@ -51,6 +53,8 @@ export const Header = () => {
       </div>
 
       <div className="flex items-center gap-3" onClick={preventNavigation}>
+        <WorkflowExecutionControl />
+
         <button
           className="flex items-center gap-1.5 px-3 h-8 text-xs font-medium border border-border bg-card hover:bg-foreground/3 rounded-md cursor-pointer transition-colors">
           <Share2 className="w-3.5 h-3.5"/>

@@ -22,7 +22,7 @@ export const WorkflowExecutionControl = () => {
         variant="destructive"
         size="sm"
         onClick={stopWorkflow}
-        className="absolute top-4 left-[50%] translate-x-[-50%] ../l h-8 px-3.5 text-xs font-medium rounded-[var(--radius)] shadow-md transition-all duration-300 cursor-pointer select-none gap-1.5 bg-[var(--node-math)] text-white hover:opacity-90"
+        className=" ../l h-8 px-3.5 text-xs font-medium rounded-[var(--radius)] shadow-md transition-all duration-300 cursor-pointer select-none gap-1.5 bg-[var(--node-math)] text-white hover:opacity-90"
       >
         <Square className="w-3.5 h-3.5 fill-current animate-pulse" />
         Stop
@@ -60,7 +60,7 @@ export const WorkflowExecutionControl = () => {
       variant="default"
       size="sm"
       onClick={handleStartFlow}
-      className={`absolute top-4 left-[50%] translate-x-[-50%] z-40 h-8 px-3.5 text-xs font-semibold rounded-[var(--radius)] shadow-md transition-all duration-300 cursor-pointer select-none gap-1.5 border-none ${config.className}`}
+      className={` z-40 h-8 px-3.5 text-xs font-semibold rounded-[var(--radius)] shadow-md transition-all duration-300 cursor-pointer select-none gap-1.5 border-none ${config.className}`}
     >
       {config.icon}
       {config.text}

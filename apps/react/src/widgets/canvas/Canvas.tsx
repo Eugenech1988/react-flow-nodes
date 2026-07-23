@@ -18,7 +18,6 @@ import { HistoryControls } from './components/HistoryControls';
 import { ImportExportToolbar } from './components/ImportExportToolbar';
 import { AutoLayoutButton } from './components/AutoLayoutButton';
 import { ClearCanvasButton } from './components/ClearCanvasButton';
-import { WorkflowExecutionControl } from './components/WorkflowExecutionControl';
 import { ExecutionLogConsole } from './components/ExecutionLogConsole';
 import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES, NODE_COLORS, NODE_TYPE_TO_CATEGORY } from './config';
 import { useDragAndDrop, useKeyboardShortcuts } from './lib';
@@ -77,7 +76,6 @@ export const Canvas = () => {
       <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
       <AutoLayoutButton />
       <ClearCanvasButton />
-      <WorkflowExecutionControl />
       <ExecutionLogConsole />
       <ReactFlow<PipelineNode, PipelineEdge>
         nodes={nodes}
