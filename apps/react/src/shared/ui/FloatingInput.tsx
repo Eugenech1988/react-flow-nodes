@@ -2,6 +2,18 @@ import React from 'react';
 import { Input } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
 
+export type RoundedSize = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+
+const roundedMap: Record<RoundedSize, string> = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  '2xl': 'rounded-2xl',
+  full: 'rounded-full',
+};
+
 interface FloatingInputProps extends React.ComponentProps<typeof Input> {
   label: string;
   icon?: React.ReactNode;
@@ -10,6 +22,7 @@ interface FloatingInputProps extends React.ComponentProps<typeof Input> {
   labelClasses?: string;
   fieldsetClasses?: string;
   className?: string;
+  rounded?: RoundedSize;
 }
 
 export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
@@ -22,16 +35,17 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
       className = '',
       labelClasses = '',
       fieldsetClasses = '',
+      rounded = 'xl',
       ...props
     },
     ref
   ) => {
     const hasIcon = Boolean(icon);
+    const roundedClass = roundedMap[rounded] || roundedMap.xl;
 
     return (
-      <div className="w-full pt-2">
-        <div className="relative w-full group flex items-center">
-          {/* Иконка (фиксирована по центру вертикали) */}
+      <div className="w-full">
+        <div className={cn('relative w-full h-11 group flex items-center', roundedClass)}>
           {hasIcon && (
             <div
               className={cn(
@@ -49,7 +63,8 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             ref={ref}
             placeholder=" "
             className={cn(
-              'peer w-full rounded-md border-0 bg-transparent focus-visible:ring-0 pt-3 pb-3 h-11 placeholder:opacity-0 transition-all z-10 relative',
+              'peer w-full h-full border-0 bg-transparent focus-visible:ring-0 py-0 placeholder:opacity-0 transition-all z-10 relative',
+              roundedClass,
               hasIcon ? 'pl-10 pr-3' : 'px-3',
               'disabled:cursor-not-allowed disabled:text-muted-foreground/60',
               error
@@ -59,27 +74,27 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             )}
           />
 
-          {/* Плавающий Label */}
           <label
             className={cn(
-              'absolute top-0 -translate-y-1/2 pointer-events-none text-[10px] font-sans transition-all duration-200 ease-in-out z-20 block select-none max-w-[calc(100%-24px)] truncate text-ellipsis origin-left',
-              hasIcon ? 'left-10' : 'left-3.75',
+              'absolute top-1/2 -translate-y-1/2 pointer-events-none text-sm font-sans transition-all duration-200 ease-in-out z-20 block select-none max-w-[calc(100%-24px)] truncate text-ellipsis origin-left',
+              hasIcon ? 'left-10' : 'left-3.5',
               'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm',
               'peer-disabled:text-muted-foreground/50',
               error
                 ? 'text-red-500!'
                 : 'text-muted-foreground/80 peer-focus:text-foreground peer-focus-visible:text-foreground peer-not-placeholder-shown:text-foreground group-hover:text-foreground',
               'peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:text-[10px]',
+              'peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:text-[10px]',
               labelClasses
             )}
           >
             {label}
           </label>
 
-          {/* Fieldset рамка с вырезом под label */}
           <fieldset
             className={cn(
-              'pointer-events-none absolute inset-0 -top-1.5 m-0 min-w-0 rounded-md border transition-all duration-200 z-0 box-border',
+              'pointer-events-none absolute inset-0 -top-1.5 m-0 min-w-0 border transition-all duration-200 z-0 box-border',
+              roundedClass,
               '[&_legend]:max-w-0 [&_legend]:transition-all [&_legend]:duration-200 [&_legend]:p-0 [&_legend]:invisible',
               'peer-focus:[&_legend]:max-w-full peer-focus:[&_legend]:px-1 peer-focus:[&_legend]:visible',
               'peer-not-placeholder-shown:[&_legend]:max-w-full peer-not-placeholder-shown:[&_legend]:px-1 peer-not-placeholder-shown:[&_legend]:visible',

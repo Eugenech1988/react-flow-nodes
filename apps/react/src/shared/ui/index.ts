@@ -7,3 +7,4 @@ export * from './Loader.tsx';
 export * from './skeletons';
 export * from './dialog-parts';
 export * from './buttons';
+export * from './Tabs';

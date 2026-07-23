@@ -1,16 +1,15 @@
 import { Search, ArrowUpDown } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { TAB_OPTIONS, SORT_OPTIONS, type TabType, type SortOption } from '../constants';
-import { FloatingInput } from '@/shared/ui';
+import { TAB_OPTIONS, SORT_OPTIONS, type TTabType, type TSortOption } from '../constants';
+import { FloatingInput, Tabs } from '@/shared/ui';
 
 interface PipelineSearchAndFilterProps {
   searchQuery: string;
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  statusFilter: TabType;
-  onStatusFilterChange: (tab: TabType) => void;
-  sortBy: SortOption['value'];
+  statusFilter: TTabType;
+  onStatusFilterChange: (tab: TTabType) => void;
+  sortBy: TSortOption['value'];
   sortOrder: 'asc' | 'desc';
-  onSortChange: (by: SortOption['value'], order: 'asc' | 'desc') => void;
+  onSortChange: (by: TSortOption['value'], order: 'asc' | 'desc') => void;
 }
 
 export const PipelineSearchAndFilter = ({
@@ -26,11 +25,16 @@ export const PipelineSearchAndFilter = ({
     onSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
+  const formattedTabs = TAB_OPTIONS.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+  }));
+
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
       <div className="relative w-full sm:w-80 group">
         <FloatingInput
-          fieldsetClasses="rounded-xl"
+          rounded='xl'
           label="Search pipelines"
           value={searchQuery}
           onChange={onSearchChange}
@@ -39,37 +43,18 @@ export const PipelineSearchAndFilter = ({
       </div>
 
       <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-        <div className="bg-muted/40 border border-border/60 p-1.5 rounded-2xl inline-flex gap-1.5 backdrop-blur-md relative flex-wrap shadow-xs">
-          {TAB_OPTIONS.map((tab) => {
-            const isActive = statusFilter === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => onStatusFilterChange(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all cursor-pointer border-0 outline-none relative z-10 select-none ${
-                  isActive
-                    ? 'text-teal-700 dark:text-teal-300 font-semibold shadow-xs'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                }`}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="activePipelineTabIndicator"
-                    className="absolute inset-0 bg-teal-500/10 dark:bg-teal-500/20 border border-teal-500/30 rounded-xl -z-10"
-                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-                  />
-                )}
-                <span className="capitalize">{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
+        <Tabs
+          tabs={formattedTabs}
+          currentTab={statusFilter}
+          onTabChange={(id) => onStatusFilterChange(id as TTabType)}
+          capitalizeLabels
+        />
 
-        <div className="flex items-center gap-1.5 bg-muted/40 border border-border/60 p-1.5 rounded-2xl backdrop-blur-md shadow-xs">
+        <div className="h-11 flex items-center gap-1.5 bg-muted/40 border border-border/60 px-3 rounded-xl backdrop-blur-md shadow-xs">
           <select
             value={sortBy}
-            onChange={(e) => onSortChange(e.target.value as SortOption['value'], sortOrder)}
-            className="bg-transparent border-0 text-sm font-medium text-foreground outline-none cursor-pointer pr-1 py-1 pl-2"
+            onChange={(e) => onSortChange(e.target.value as TSortOption['value'], sortOrder)}
+            className="bg-transparent border-0 text-sm font-medium text-foreground outline-none cursor-pointer pr-1 py-1 pl-1"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -78,8 +63,9 @@ export const PipelineSearchAndFilter = ({
             ))}
           </select>
           <button
+            type="button"
             onClick={toggleSortOrder}
-            className="p-1.5 rounded-lg hover:bg-muted/60 transition-colors text-muted-foreground hover:text-foreground"
+            className="p-1.5 rounded-lg hover:bg-muted/60 transition-colors text-muted-foreground hover:text-foreground cursor-pointer"
             aria-label="Toggle sort order"
           >
             <ArrowUpDown className="w-4 h-4" />

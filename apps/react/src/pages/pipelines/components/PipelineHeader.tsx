@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Workflow, Plus } from 'lucide-react';
-import { Button } from '@pipeline/ui';
+import { SubmitButton } from '@/shared/ui/buttons';
 import { CreatePipelineDialog } from './CreatePipelineDialog';
 
 export const PipelineHeader = () => {
@@ -18,13 +18,15 @@ export const PipelineHeader = () => {
         </p>
       </div>
 
-      <Button
+      <SubmitButton
+        isPending={false}
+        isDisabled={false}
+        text="Create Pipeline"
+        pendingText="Creating..."
+        icon={Plus}
         onClick={() => setIsCreateOpen(true)}
-        className="flex items-center justify-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-xl cursor-pointer shadow-xs transition-all shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20"
-      >
-        <Plus className="w-4 h-4 text-white" />
-        <span>Create Pipeline</span>
-      </Button>
+      />
+
       <CreatePipelineDialog
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}

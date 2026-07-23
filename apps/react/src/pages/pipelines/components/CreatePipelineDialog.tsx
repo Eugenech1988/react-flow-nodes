@@ -76,6 +76,7 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogBody withBorder className="space-y-4">
             <FloatingInput
+              rounded="lg"
               {...register('name')}
               id="name"
               label="Pipeline Name *"

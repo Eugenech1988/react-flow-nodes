@@ -3,6 +3,7 @@ import { User, Shield, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import { ProfileSidebar } from './components/ProfileSidebar';
+import { Tabs } from '@/shared/ui';
 import { useUser, useSubscription } from '@/shared/hooks';
 
 export const SettingsPage = () => {
@@ -18,8 +19,8 @@ export const SettingsPage = () => {
     isInitialMount.current = false;
   }, []);
 
-  const handleTabChange = (tab: string) => () => {
-    navigate(`/settings/${tab}`);
+  const handleTabChange = (tabId: string) => {
+    navigate(`/settings/${tabId}`);
   };
 
   const pageVariants: Variants = {
@@ -73,38 +74,11 @@ export const SettingsPage = () => {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-muted/40 border border-border/60 p-1.5 rounded-2xl inline-flex gap-1.5 backdrop-blur-md relative flex-wrap shadow-xs">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = currentTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={handleTabChange(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all cursor-pointer border-0 outline-none relative z-10 select-none ${
-                    isActive
-                      ? 'text-teal-700 dark:text-teal-300 font-semibold shadow-xs'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                  }`}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeTabIndicator"
-                      className="absolute inset-0 bg-teal-500/10 dark:bg-teal-500/20 border border-teal-500/30 rounded-xl -z-10"
-                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                    />
-                  )}
-                  <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-teal-600 dark:text-teal-400' : ''}`} />
-                  <span>{tab.label}</span>
-                  {tab.badge && (
-                    <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold tracking-wider bg-teal-500/15 text-teal-700 dark:text-teal-300 border border-teal-500/30 rounded-md">
-                      {tab.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          <Tabs
+            tabs={tabs}
+            currentTab={currentTab}
+            onTabChange={handleTabChange}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
             <div className="md:col-span-1 sticky top-20 self-start">
