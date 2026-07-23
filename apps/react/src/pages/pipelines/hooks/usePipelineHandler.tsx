@@ -3,7 +3,11 @@ import { api } from '@/shared/api';
 import { PIPELINES_QUERY_KEY } from '@/shared/lib';
 import type { CreatePipelineDto } from '../types';
 
-export const useCreatePipeline = () => {
+interface UseCreatePipelineOptions {
+  onSuccess?: () => void;
+}
+
+export const useCreatePipeline = (options?: UseCreatePipelineOptions) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ userId, data, file }: { userId: string; data: CreatePipelineDto; file?: File }) => {
@@ -15,6 +19,7 @@ export const useCreatePipeline = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [PIPELINES_QUERY_KEY] });
+      options?.onSuccess?.();
     },
   });
 };

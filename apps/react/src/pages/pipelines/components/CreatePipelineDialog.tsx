@@ -35,8 +35,9 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
     defaultValues: { name: '', description: '', screenshotUrl: '' },
   });
 
-  const createMutation = useCreatePipeline();
-
+  const createMutation = useCreatePipeline({
+    onSuccess: () => handleClose(),
+  });
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
