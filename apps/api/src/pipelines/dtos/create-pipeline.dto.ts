@@ -1,5 +1,6 @@
-import { IsString, IsOptional, IsDate } from 'class-validator';
+import { IsString, IsOptional, IsDate, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
+import { PipelineStatus } from '@prisma/client';
 
 export class CreatePipelineDto {
   @IsString()
@@ -9,9 +10,9 @@ export class CreatePipelineDto {
   @IsOptional()
   description?: string;
 
-  @IsString()
+  @IsEnum(PipelineStatus)
   @IsOptional()
-  status?: string;
+  status?: PipelineStatus;
 
   @IsDate()
   @IsOptional()
