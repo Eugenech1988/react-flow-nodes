@@ -1,5 +1,6 @@
 import { CloudCheck, Settings, Share2 } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
@@ -7,9 +8,9 @@ import { UserDropdown } from '@/features/user-dropdown';
 import { WorkflowExecutionControl } from './components/WorkflowExecutionControl';
 
 const TABS = [
-  { id: 'editor', label: 'Editor', path: '/' },
-  { id: 'executions', label: 'Executions', path: '/executions' },
-  { id: 'tests', label: 'Tests', path: '/tests' },
+  { id: 'editor', label: 'Editor' },
+  { id: 'executions', label: 'Executions' },
+  { id: 'tests', label: 'Tests' },
 ] as const;
 
 export const Header = () => {
@@ -17,7 +18,13 @@ export const Header = () => {
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
 
-  const currentTab = TABS.find((tab) => tab.path === location.pathname)?.id || 'editor';
+  // Локальное состояние активной табы
+  const [activeTab, setActiveTab] = useState<'editor' | 'executions' | 'tests'>('editor');
+
+  const handleTabClick = (tabId: 'editor' | 'executions' | 'tests') => {
+    setActiveTab(tabId);
+    navigate('/');
+  };
 
   const handleHeaderClick = () => {
     if (!isHome) {
@@ -49,11 +56,11 @@ export const Header = () => {
 
       <div className="absolute left-1/2 -translate-x-1/2 flex bg-foreground/3 p-1 rounded-lg border border-border/50 text-sm" onClick={preventNavigation}>
         {TABS.map((tab) => {
-          const isActive = currentTab === tab.id;
+          const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
-              onClick={() => navigate(tab.path)}
+              onClick={() => handleTabClick(tab.id)}
               className={`relative px-3 py-1 rounded-md text-sm font-medium cursor-pointer transition-colors z-10 ${
                 isActive ? 'text-foreground' : 'text-foreground/60 hover:text-foreground'
               }`}
