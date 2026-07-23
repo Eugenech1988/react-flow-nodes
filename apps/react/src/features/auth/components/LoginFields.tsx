@@ -1,16 +1,16 @@
 import type { FC } from 'react';
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { FloatingInput } from '@/shared/ui';
-import type { CombinedFormData } from '../types';
+import type { CombinedFormData } from '../model/types';
 
 interface LoginFieldsProps {
   register: UseFormRegister<CombinedFormData>;
   errors: FieldErrors<CombinedFormData>;
-  inputClasses: string;
+  inputClasses?: string;
   error?: boolean;
 }
 
-export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, inputClasses, error }) => {
+export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, error }) => {
   return (
     <>
       <FloatingInput
@@ -18,7 +18,6 @@ export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, inputClass
         type="text"
         autoComplete="email"
         label="Email Address"
-        className={inputClasses}
         error={error || !!errors.email}
         errorMessage={errors.email?.message}
       />
@@ -28,7 +27,6 @@ export const LoginFields: FC<LoginFieldsProps> = ({ register, errors, inputClass
         type="password"
         autoComplete="current-password"
         label="Password"
-        className={inputClasses}
         error={error || !!errors.password}
         errorMessage={errors.password?.message}
       />

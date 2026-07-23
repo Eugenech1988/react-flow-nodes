@@ -8,16 +8,9 @@ import { LoginFields } from './LoginFields';
 import { TwoFactorForm } from './TwoFactorForm';
 import { useQueryClient } from '@tanstack/react-query';
 import { SubmitButton } from '@/shared/ui';
-import { cn } from '@/shared/lib';
 import { useAuthStore } from '../model/authStore';
 import { loginSchema, registerSchema, type CombinedFormData } from '../model';
 import { USER_QUERY_KEY } from '@/shared/lib';
-
-const INPUT_CLASSES = cn(
-  'block w-full bg-transparent text-sm outline-none transition-all duration-200',
-  '[transition:background-color_99999s_ease-in-out_0s] autofill:[transition:background-color_99999s_ease-in-out_0s]',
-  'autofill:text-sm text-zinc-200 placeholder:text-zinc-600 !focus:text-slate-400 !focus-visible:text-slate-400 [-webkit-text-fill-color:zinc-200] autofill:![-webkit-text-fill-color:theme(colors.slate.400)]'
-);
 
 export const AuthForm: React.FC = () => {
   const {
@@ -77,7 +70,7 @@ export const AuthForm: React.FC = () => {
     <div
       className="bg-[url('/nodes-bg-light.png')] dark:bg-[url('/nodes-bg-dark.png')] bg-cover bg-center flex min-h-screen items-center justify-center dark:bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300">
       <Card
-        className="w-full p-8 max-w-lg rounded-2xl border border-zinc-800/60 bg-slate-950/70 backdrop-blur-md shadow-2xl space-y-2 overflow-hidden">
+        className="w-full p-8 max-w-lg rounded-2xl bg-slate-500/30 dark:bg-slate-950/70 backdrop-blur-md shadow-2xl space-y-2 overflow-hidden">
         <CardHeader className="text-center p-0 space-y-2">
           <CardTitle className="text-3xl font-normal tracking-tight text-white">
             {is2faRequired ? 'Two-Factor Authentication' : mode === 'login' ? 'Sign In' : 'Create Account'}
@@ -100,7 +93,7 @@ export const AuthForm: React.FC = () => {
               isLoading={is2faLoading}
               onVerify={verifyTwoFactor}
               onBack={resetState}
-              inputClasses={INPUT_CLASSES}
+              inputClasses=''
             />
           ) : (
             <>
@@ -127,14 +120,12 @@ export const AuthForm: React.FC = () => {
                     <RegisterFields
                       register={register}
                       errors={errors}
-                      inputClasses={INPUT_CLASSES}
                     />
                   ) : (
                     <>
                       <LoginFields
                         register={register}
                         errors={errors}
-                        inputClasses={INPUT_CLASSES}
                         error={isAuthError || !!errors.email || !!errors.password}
                       />
 
@@ -160,7 +151,7 @@ export const AuthForm: React.FC = () => {
                   text={mode === 'login' ? 'Sign In' : 'Register'}
                   pendingText="Processing..."
                   icon={null}
-                  className="w-full h-11 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
+                  className="w-full text-base h-11 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
                 />
               </form>
             </>

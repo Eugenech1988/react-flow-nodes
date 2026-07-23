@@ -50,7 +50,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             <div
               className={cn(
                 'absolute left-3.5 top-1/2 -translate-y-1/2 z-20 pointer-events-none transition-colors duration-200',
-                'text-muted-foreground/80 group-hover:text-foreground peer-focus:text-foreground',
+                'text-muted-foreground/85 dark:text-muted-foreground/70 group-hover:text-teal-500 dark:group-hover:text-teal-500 peer-focus:text-teal-500 peer-not-placeholder-shown:text-teal-500',
                 error && 'text-red-500!'
               )}
             >
@@ -78,13 +78,13 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             className={cn(
               'absolute top-1/2 -translate-y-1/2 pointer-events-none text-sm font-sans transition-all duration-200 ease-in-out z-20 block select-none max-w-[calc(100%-24px)] truncate text-ellipsis origin-left',
               hasIcon ? 'left-10' : 'left-3.5',
-              'peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-sm',
-              'peer-disabled:text-muted-foreground/50',
+              'text-muted-foreground/85 dark:text-muted-foreground/70',
+              'group-hover:text-teal-500 dark:group-hover:text-teal-500',
+              'peer-focus:text-teal-500 peer-focus-visible:text-teal-500 peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:text-[10px]',
+              'peer-not-placeholder-shown:text-teal-500 peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:text-[10px]',
               error
                 ? 'text-red-500!'
-                : 'text-muted-foreground/80 peer-focus:text-foreground peer-focus-visible:text-foreground peer-not-placeholder-shown:text-foreground group-hover:text-foreground',
-              'peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:text-[10px]',
-              'peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:text-[10px]',
+                : 'group-hover:text-teal-500 dark:group-hover:text-teal-500 peer-focus:text-teal-500 peer-focus-visible:text-teal-500 peer-not-placeholder-shown:text-teal-500 dark:peer-focus:text-teal-500 dark:peer-focus-visible:text-teal-500 dark:peer-not-placeholder-shown:text-teal-500',
               labelClasses
             )}
           >
@@ -102,7 +102,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
               'peer-disabled:bg-muted/30 peer-disabled:border-border/40 peer-disabled:opacity-80',
               error
                 ? 'border-red-500! shadow-[0_0_15px_rgba(239,68,68,0.02)]'
-                : 'border-input group-hover:border-muted-foreground/50 peer-focus:border-foreground peer-focus-visible:border-foreground peer-not-placeholder-shown:border-foreground',
+                : 'border-zinc-300 dark:border-zinc-700/80 hover:border-teal-500 dark:hover:border-teal-500 group-hover:border-teal-500 dark:group-hover:border-teal-500 peer-focus:border-teal-500 peer-focus-visible:border-teal-500 peer-not-placeholder-shown:border-teal-500 dark:peer-focus:border-teal-500 dark:peer-focus-visible:border-teal-500 dark:peer-not-placeholder-shown:border-teal-500',
               fieldsetClasses
             )}
           >
