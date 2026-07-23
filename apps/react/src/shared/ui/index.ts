@@ -5,3 +5,4 @@ export * from './FloatigSelect';
 export * from './LocalAlert';
 export * from './Loader.tsx';
 export * from './skeletons';
+export * from './dialog-parts';

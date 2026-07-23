@@ -1,10 +1,10 @@
 import { Sun, Moon } from 'lucide-react';
-// Изменяем импорт: забираем хук напрямую из next-themes
 import { useTheme } from 'next-themes';
 import { Button } from '@pipeline/ui';
 
 export const ThemeToggle = () => {
   const { setTheme, resolvedTheme } = useTheme();
+
   const isDark = resolvedTheme === 'dark';
 
   const handleToggle = () => {

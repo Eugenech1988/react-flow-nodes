@@ -2,15 +2,9 @@ import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUser } from '@/shared/hooks';
-import { Workflow, X, Loader2, Image as ImageIcon, Trash2, Upload } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  Button,
-} from '@pipeline/ui';
-import { FloatingInput, FloatingTextarea } from '@/shared/ui';
+import { Workflow, Image as ImageIcon, Trash2, Upload } from 'lucide-react';
+import { Dialog, DialogContent } from '@pipeline/ui';
+import { FloatingInput, FloatingTextarea, DialogHeader, DialogFooter } from '@/shared/ui';
 import { createPipelineSchema, type CreatePipelineDto } from '../types';
 import { useCreatePipeline } from '../hooks/usePipelineHandler';
 
@@ -38,6 +32,7 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
   const createMutation = useCreatePipeline({
     onSuccess: () => handleClose(),
   });
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
@@ -71,26 +66,12 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
         showCloseButton={false}
         className="sm:max-w-md border border-border bg-card p-0 rounded-xl shadow-xs overflow-hidden backdrop-blur-xs"
       >
-        <DialogHeader className="px-6 py-4 border-b border-border/60 bg-muted/10 flex flex-row items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Workflow className="w-6 h-6 text-teal-600 dark:text-teal-400" />
-            <div>
-              <DialogTitle className="text-base font-medium text-foreground/90">
-                Create Pipeline
-              </DialogTitle>
-              <p className="text-sm text-muted-foreground">
-                Configure your new automation workflow
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </DialogHeader>
+        <DialogHeader
+          title="Create Pipeline"
+          description="Configure your new automation workflow"
+          icon={<Workflow className="w-6 h-6 text-teal-600 dark:text-teal-400" />}
+          onClose={handleClose}
+        />
 
         <form onSubmit={handleSubmit(onSubmit)} className="px-6 pt-2 pb-6 space-y-6">
           <div className="space-y-4">
@@ -173,30 +154,12 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-4 border-t border-border/60">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              className="px-4 py-4.5 text-xs font-medium text-muted-foreground hover:text-foreground border-border/80 hover:bg-muted/50 rounded-lg cursor-pointer transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={createMutation.isPending}
-              className="flex items-center gap-2 px-4 py-4.5 text-sm font-medium text-white bg-linear-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 active:from-teal-800 active:to-teal-700 rounded-lg cursor-pointer shadow-xs transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 disabled:opacity-50 disabled:pointer-events-none"
-            >
-              {createMutation.isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  <span>Creating...</span>
-                </>
-              ) : (
-                <span>Create Pipeline</span>
-              )}
-            </Button>
-          </div>
+          <DialogFooter
+            onCancel={handleClose}
+            isPending={createMutation.isPending}
+            submitText="Create Pipeline"
+            pendingText="Creating..."
+          />
         </form>
       </DialogContent>
     </Dialog>
