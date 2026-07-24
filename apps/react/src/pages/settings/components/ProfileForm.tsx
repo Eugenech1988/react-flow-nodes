@@ -2,7 +2,7 @@ import { Save } from 'lucide-react';
 import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { SubmitButton, BackButton } from '@/shared/ui/buttons';
-import type { IProfileFormData } from '../types';
+import type { IProfileFormData } from '@/pages/settings/types';
 
 interface ProfileFormProps {
   form: UseFormReturn<IProfileFormData>;

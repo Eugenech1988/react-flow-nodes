@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PipelinesService } from './pipelines.service';
-import { PipelinesController } from './pipelines.controller';
+import { PipelinesService } from '@/pipelines/pipelines.service';
+import { PipelinesController } from '@/pipelines/pipelines.controller';
 
 @Module({
   controllers: [PipelinesController],

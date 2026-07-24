@@ -1,16 +1,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@pipeline/ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SocialLoginButtons } from './SocialLoginButtons';
-import { AuthModeToggle } from './AuthModeToggle';
-import { RegisterFields } from './RegisterFields';
-import { LoginFields } from './LoginFields';
-import { TwoFactorForm } from './TwoFactorForm';
+import { SocialLoginButtons } from '@/features/auth/components/SocialLoginButtons';
+import { AuthModeToggle } from '@/features/auth/components/AuthModeToggle';
+import { RegisterFields } from '@/features/auth/components/RegisterFields';
+import { LoginFields } from '@/features/auth/components/LoginFields';
+import { TwoFactorForm } from '@/features/auth/components/TwoFactorForm';
 import { useQueryClient } from '@tanstack/react-query';
 import { SubmitButton } from '@/shared/ui';
-import { useAuthStore } from '../model/authStore';
-import { loginSchema, registerSchema, type CombinedFormData } from '../model';
+import { useAuthStore } from '@/features/auth/model/authStore';
+import { loginSchema, registerSchema, type CombinedFormData } from '@/features/auth/model';
 import { USER_QUERY_KEY } from '@/shared/lib';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthForm: React.FC = () => {
   const {
@@ -28,6 +29,7 @@ export const AuthForm: React.FC = () => {
     resetState
   } = useAuthStore();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const currentApiError = apiError || twoFactorError;
   const isAuthError = currentApiError === 'Unauthorized' || currentApiError?.toLowerCase().includes('invalid');
@@ -48,7 +50,7 @@ export const AuthForm: React.FC = () => {
     if (mode === 'login') {
       await login(data.email, data.password, () => {
         queryClient.invalidateQueries({queryKey: USER_QUERY_KEY});
-      });
+        navigate('/', { replace: true });      });
     } else {
       await registerAction(data.email, data.password, () => {
         reset({email: '', password: '', confirmPassword: ''});

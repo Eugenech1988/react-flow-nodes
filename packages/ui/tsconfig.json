@@ -1,8 +1,10 @@
 {
-  "extends": "@pipeline/typescript-config/react-library.json",
+  "extends": "@pipeline/typescript-config/react-library",
   "compilerOptions": {
     "outDir": "dist",
     "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "exactOptionalPropertyTypes": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

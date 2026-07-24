@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Canvas } from './Canvas';
+import { Canvas } from '@/widgets/canvas/Canvas';
 import { ReactFlowProvider } from '@xyflow/react';
 import type {
   ReactFlowProps,

@@ -2,7 +2,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { User, Shield, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useRef, useEffect } from 'react';
-import { ProfileSidebar } from './components/ProfileSidebar';
+import { ProfileSidebar } from '@/pages/settings/components/ProfileSidebar';
 import { Tabs } from '@/shared/ui';
 import { useUser, useSubscription } from '@/shared/hooks';
 

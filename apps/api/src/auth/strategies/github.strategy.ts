@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-github2';
-import type { IOauthUser } from '../types/auth.types';
+import type { IOauthUser } from '@/auth/types/auth.types';
 
 interface GithubApiEmail {
   email: string;

@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreatePipelineDto } from './create-pipeline.dto';
+import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
 import { IsEnum, IsOptional } from 'class-validator';
 import { PipelineStatus } from '@prisma/client'
 

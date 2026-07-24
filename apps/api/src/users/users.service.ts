@@ -1,8 +1,8 @@
 import { ConflictException, BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UpdatePasswordDto } from './dtos/update-password.dto';
-import { Toggle2faDto } from './dtos/toggle-2fa.dto';
+import { PrismaService } from '@/prisma/prisma.service';
+import { CreateUserDto } from '@/users/dtos/create-user.dto';
+import { UpdatePasswordDto } from '@/users/dtos/update-password.dto';
+import { Toggle2faDto } from '@/users/dtos/toggle-2fa.dto';
 import { Prisma } from '@prisma/client';
 import { hash, verify } from 'argon2';
 
@@ -14,7 +14,7 @@ export type UserWithRelations = Prisma.UserGetPayload<typeof userWithRelationsVa
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findAll(): Promise<UserWithRelations[]> {
     try {

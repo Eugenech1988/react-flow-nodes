@@ -1,3 +1,3 @@
-export { useDragAndDrop } from './useDragAndDrop';
-export { useKeyboardShortcuts } from './useKeyboardShortcuts';
-export { useAutoLayout } from './useAutoLayout';
+export { useDragAndDrop } from '@/widgets/canvas/lib/useDragAndDrop';
+export { useKeyboardShortcuts } from '@/widgets/canvas/lib/useKeyboardShortcuts';
+export { useAutoLayout } from '@/widgets/canvas/lib/useAutoLayout';

@@ -1,1 +1,1 @@
-export * from './ThemeToggle';
+export * from '@/features/theme-toggle/ThemeToggle';

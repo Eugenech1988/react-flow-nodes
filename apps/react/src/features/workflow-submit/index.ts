@@ -1,1 +1,1 @@
-export * from './WorkflowSubmit';
+export * from '@/features/workflow-submit/WorkflowSubmit';

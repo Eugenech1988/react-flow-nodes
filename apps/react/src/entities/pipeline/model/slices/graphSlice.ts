@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand';
 import { applyNodeChanges, applyEdgeChanges, addEdge } from '@xyflow/react';
-import type { PipelineStore, GraphState, GraphActions, PipelineNode, PipelineEdge } from '../types';
+import type { PipelineStore, GraphState, GraphActions, PipelineNode, PipelineEdge } from '@/entities/pipeline/model/types';
 
 export const createGraphSlice: StateCreator<
   PipelineStore,

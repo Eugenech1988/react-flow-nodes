@@ -1,9 +1,9 @@
 import { Loader2, Layers, Sparkles } from 'lucide-react';
-import { useBilling } from './hooks/useBilling';
-import { SubscriptionCard } from './components/SubscriptionCard';
-import { UsageStats } from './components/UsageStats';
-import { PaymentMethod } from './components/PaymentMethod';
-import { InvoiceHistory } from './components/InvoiceHistory';
+import { useBilling } from '@/pages/billing/hooks/useBilling';
+import { SubscriptionCard } from '@/pages/billing/components/SubscriptionCard';
+import { UsageStats } from '@/pages/billing/components/UsageStats';
+import { PaymentMethod } from '@/pages/billing/components/PaymentMethod';
+import { InvoiceHistory } from '@/pages/billing/components/InvoiceHistory';
 
 const features = [
   'Unlimited pipelines execution & storage',

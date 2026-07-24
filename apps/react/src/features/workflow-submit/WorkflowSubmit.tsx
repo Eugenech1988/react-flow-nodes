@@ -1,7 +1,7 @@
 import { Button } from '@pipeline/ui';
 import { Play } from 'lucide-react';
-import { useWorkflowSubmit } from './WorkflowSubmit.utils';
-import { WorkflowSubmitModal } from './WorkflowSubmit.parts';
+import { useWorkflowSubmit } from '@/features/workflow-submit/WorkflowSubmit.utils';
+import { WorkflowSubmitModal } from '@/features/workflow-submit/WorkflowSubmit.parts';
 
 export const WorkflowSubmit = () => {
   const {

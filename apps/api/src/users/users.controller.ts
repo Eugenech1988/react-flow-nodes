@@ -13,13 +13,13 @@ import {
   ValidationPipe,
   BadRequestException
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UpdatePasswordDto } from './dtos/update-password.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { type TUserSafe } from './types';
+import { UsersService } from '@/users/users.service';
+import { CreateUserDto } from '@/users/dtos/create-user.dto';
+import { UpdatePasswordDto } from '@/users/dtos/update-password.dto';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { type TUserSafe } from '@/users/types';
 import type { Request } from 'express';
-import { Toggle2faDto } from './dtos/toggle-2fa.dto';
+import { Toggle2faDto } from '@/users/dtos/toggle-2fa.dto';
 
 interface IRequestWithUser extends Request {
   user: TUserSafe;

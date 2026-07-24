@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthForm } from '@/features/auth';
-import { ProtectedRoute } from './ProtectedRoute';
-import { PublicOnlyRoute } from './PublicOnlyRoute';
+import { ProtectedRoute } from '@/app/providers/ProtectedRoute';
+import { PublicOnlyRoute } from '@/app/providers/PublicOnlyRoute';
 import AppLayout from '@/app/AppLayout';
 import { CanvasPage } from '@/pages/canvas/CanvasPage';
 import { SettingsPage, ProfileForm, AccountForm } from '@/pages/settings';

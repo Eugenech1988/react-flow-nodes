@@ -2,6 +2,13 @@
   "name": "@pipeline/typescript-config",
   "version": "0.0.0",
   "private": true,
+  "exports": {
+    "./base": "./base.json",
+    "./react": "./react.json",
+    "./node": "./node.json",
+    "./nest": "./nest.json",
+    "./react-library": "./react-library.json"
+  },
   "license": "MIT",
   "publishConfig": {
     "access": "public"

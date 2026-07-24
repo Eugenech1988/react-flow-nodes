@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
 import { UserDropdown } from '@/features/user-dropdown';
-import { WorkflowExecutionControl } from './components/WorkflowExecutionControl';
+import { WorkflowExecutionControl } from '@/widgets/header/components/WorkflowExecutionControl';
 
 const TABS = [
   { id: 'editor', label: 'Editor' },

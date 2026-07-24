@@ -1,32 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '@/shared/api';
-import { USER_QUERY_KEY } from '@/shared/lib';
-import type { IUser } from '@/shared/lib';
+import { useTRPC } from '@/shared/api';
 
 
 export function useUser() {
+  const trpc = useTRPC();
   const {
     data: user,
     isLoading,
     isError,
     error,
-  } = useQuery<IUser | null, Error>({
-    queryKey: USER_QUERY_KEY,
-    queryFn: async () => {
-      try {
-        return await api.get<IUser>('/auth/me');
-      } catch (err: any) {
-        if (err.message === 'Unauthorized') {
-          return null;
-        }
-        throw err;
-      }
-    },
+  } = useQuery({
+    ...trpc.auth.me.queryOptions(),
     staleTime: 5 * 60 * 1000,
-    retry: (failureCount, error: any) => {
-      if (error.message === 'Unauthorized') return false;
-      return failureCount < 2;
-    },
+    retry: false,
   });
 
   return {

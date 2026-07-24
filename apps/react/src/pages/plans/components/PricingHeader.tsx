@@ -1,4 +1,4 @@
-import { BillingToggle } from './BillingToggle';
+import { BillingToggle } from '@/pages/plans/components/BillingToggle';
 
 interface PricingHeaderProps {
   billingCycle: 'monthly' | 'yearly';

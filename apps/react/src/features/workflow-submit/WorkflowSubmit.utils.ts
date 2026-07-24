@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '@/entities';
 import { validatePipeline } from '@/entities/model/lib';
-import type { ParseResult, ValidationMetrics } from './WorkflowSubmit.types';
+import type { ParseResult, ValidationMetrics } from '@/features/workflow-submit/WorkflowSubmit.types';
 
 export const useWorkflowSubmit = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);

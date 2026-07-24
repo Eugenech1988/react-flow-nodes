@@ -2,16 +2,16 @@ import { Controller, Post, Get, Body, UseGuards, Req, Res, HttpCode, HttpStatus 
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from './auth.service';
-import { RegisterDto } from './dtos/register.dto';
-import { RecoveryDto } from './dtos/recovery.dto';
-import { ResetPasswordDto } from './dtos/reset-password.dto';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { GoogleOauthGuard } from './guards/google.guard';
-import { GithubOauthGuard } from './guards/github.guard';
-import type { TUserSafe, IOauthUser } from './types/auth.types';
+import { AuthService } from '@/auth/auth.service';
+import { RegisterDto } from '@/auth/dtos/register.dto';
+import { RecoveryDto } from '@/auth/dtos/recovery.dto';
+import { ResetPasswordDto } from '@/auth/dtos/reset-password.dto';
+import { LocalAuthGuard } from '@/auth/guards/local-auth.guard';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { JwtRefreshGuard } from '@/auth/guards/jwt-refresh.guard';
+import { GoogleOauthGuard } from '@/auth/guards/google.guard';
+import { GithubOauthGuard } from '@/auth/guards/github.guard';
+import type { TUserSafe, IOauthUser } from '@/auth/types/auth.types';
 
 interface IRequestWithUser extends Request {
   user: TUserSafe;

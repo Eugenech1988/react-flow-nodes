@@ -5,8 +5,8 @@ import { useUser } from '@/shared/hooks';
 import { Workflow, Image as ImageIcon, Trash2, Upload } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { FloatingInput, FloatingTextarea, DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
-import { createPipelineSchema, type CreatePipelineDto } from '../types';
-import { useCreatePipeline } from '../hooks/usePipelineHandler';
+import { createPipelineSchema, type CreatePipelineDto } from '@/pages/pipelines/types';
+import { useCreatePipeline } from '@/pages/pipelines/hooks/usePipelineHandler';
 
 interface CreatePipelineDialogProps {
   isOpen: boolean;

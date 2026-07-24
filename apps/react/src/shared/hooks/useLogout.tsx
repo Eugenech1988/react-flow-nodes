@@ -1,17 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/shared/api';
-import { USER_QUERY_KEY } from '@/shared/lib';
+import { useTRPC } from '@/shared/api';
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
+  const trpc = useTRPC();
 
   const mutation = useMutation({
-    mutationFn: async () => {
-      return await api.post<{ success: boolean }>('/auth/logout');
-    },
+    ...trpc.auth.logout.mutationOptions(),
     onSuccess: () => {
-      queryClient.setQueryData(USER_QUERY_KEY, null);
-
+      queryClient.setQueryData(trpc.auth.me.queryKey(), null);
     },
     onError: (error) => {
       console.error('Logout failed:', error);

@@ -2,13 +2,13 @@ import { useState, useEffect, type CSSProperties } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import { useStore } from '@/entities';
 import { extractVariables } from '@/features/manage-nodes/lib';
-import { type BaseNodeProps, type NodeConfigFactory } from './BaseNode.types';
+import { type BaseNodeProps, type NodeConfigFactory } from '@/features/manage-nodes/components/BaseNode/BaseNode.types';
 import {
   buildInitialValues,
   withAutoPositions,
   toVariableHandle,
-} from './BaseNode.utils';
-import { NodeHandles, NodeHeader, NodeField, VariableTags } from './BaseNode.parts';
+} from '@/features/manage-nodes/components/BaseNode/BaseNode.utils';
+import { NodeHandles, NodeHeader, NodeField, VariableTags } from '@/features/manage-nodes/components/BaseNode/BaseNode.parts';
 
 export const BaseNode = ({
                            id,

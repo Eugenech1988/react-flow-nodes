@@ -1,1 +1,1 @@
-export * from './useBilling';
+export * from '@/pages/billing/hooks/useBilling';

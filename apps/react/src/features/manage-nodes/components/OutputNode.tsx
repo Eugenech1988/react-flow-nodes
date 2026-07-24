@@ -1,5 +1,5 @@
 import { Position } from '@xyflow/react';
-import { createNode } from './BaseNode';
+import { createNode } from '@/features/manage-nodes/components/BaseNode';
 
 export const OutputNode = createNode({
   title: 'Output',

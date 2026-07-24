@@ -1,3 +1,3 @@
-export * from './types';
-export * from './authStore.ts';
-export * from './constants.ts';
+export * from '@/features/auth/model/types';
+export * from '@/features/auth/model/authStore.ts';
+export * from '@/features/auth/model/constants.ts';

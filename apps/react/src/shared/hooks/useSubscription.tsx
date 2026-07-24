@@ -1,31 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '@/shared/api';
-import { SUBSCRIPTION_QUERY_KEY, type TSubscription } from '@/shared/lib';
+import { useTRPC } from '@/shared/api';
 
 export function useSubscription() {
+  const trpc = useTRPC();
   const {
     data: subscription,
     isLoading,
     isError,
     error,
     refetch
-  } = useQuery<TSubscription | null, Error>({
-    queryKey: SUBSCRIPTION_QUERY_KEY,
-    queryFn: async () => {
-      try {
-        return await api.get<TSubscription>('/billing/subscription');
-      } catch (err: any) {
-        if (err.message === 'Unauthorized') {
-          return null;
-        }
-        throw err;
-      }
-    },
+  } = useQuery({
+    ...trpc.billing.subscription.queryOptions(),
     staleTime: 5 * 60 * 1000,
-    retry: (failureCount, error: any) => {
-      if (error.message === 'Unauthorized') return false;
-      return failureCount < 2;
-    },
+    retry: false,
   });
 
   return {

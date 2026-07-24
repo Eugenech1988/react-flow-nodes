@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Workflow, Plus } from 'lucide-react';
 import { SubmitButton } from '@/shared/ui/buttons';
-import { CreatePipelineDialog } from './CreatePipelineDialog';
+import { CreatePipelineDialog } from '@/pages/pipelines/components/CreatePipelineDialog';
 
 export const PipelineHeader = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);

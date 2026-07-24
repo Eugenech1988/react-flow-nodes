@@ -17,8 +17,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@pipeline/ui';
-import type { IPipeline } from '../types';
-import { useDeletePipeline } from '../hooks/usePipelineHandler';
+import type { IPipeline } from '@/pages/pipelines/types';
+import { useDeletePipeline } from '@/pages/pipelines/hooks/usePipelineHandler';
 
 const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 

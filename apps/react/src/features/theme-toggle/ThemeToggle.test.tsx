@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ThemeToggle } from './ThemeToggle';
+import { ThemeToggle } from '@/features/theme-toggle/ThemeToggle';
 
 const { useThemeMock } = vi.hoisted(() => ({
   useThemeMock: vi.fn(),

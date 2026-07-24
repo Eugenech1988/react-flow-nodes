@@ -1,1 +1,1 @@
-export * from './components';
+export * from '@/features/auth/components';

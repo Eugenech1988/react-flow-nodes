@@ -1,6 +1,6 @@
 import { Position } from '@xyflow/react';
 import type { FieldConfig, HandleConfig, NodeData, NodeFieldValues } from '@/entities';
-import type { Side } from './BaseNode.types';
+import type { Side } from '@/features/manage-nodes/components/BaseNode/BaseNode.types';
 
 export const sideOf = (handle: HandleConfig): Side => {
   const position = handle.position || (handle.type === 'target' ? Position.Left : Position.Right);

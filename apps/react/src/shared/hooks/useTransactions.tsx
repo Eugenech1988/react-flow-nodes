@@ -1,31 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '@/shared/api';
-import { TRANSACTIONS_QUERY_KEY, type TTransaction } from '@/shared/lib';
+import { useTRPC } from '@/shared/api';
 
 export function useTransactions() {
+  const trpc = useTRPC();
   const {
     data: transactions,
     isLoading,
     isError,
     error,
     refetch,
-  } = useQuery<TTransaction[] | null, Error>({
-    queryKey: TRANSACTIONS_QUERY_KEY,
-    queryFn: async () => {
-      try {
-        return await api.get<TTransaction[]>('/billing/transactions');
-      } catch (err: any) {
-        if (err.message === 'Unauthorized') {
-          return null;
-        }
-        throw err;
-      }
-    },
+  } = useQuery({
+    ...trpc.billing.transactions.queryOptions(),
     staleTime: 5 * 60 * 1000,
-    retry: (failureCount, error: any) => {
-      if (error.message === 'Unauthorized') return false;
-      return failureCount < 2;
-    },
+    retry: false,
   });
 
   return {

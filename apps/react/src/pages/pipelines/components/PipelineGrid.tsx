@@ -1,7 +1,7 @@
 import { AnimatePresence } from 'framer-motion';
-import { PipelineCard } from './PipelineCard';
-import { EmptyState } from './EmptyState';
-import type { IPipeline } from '../types';
+import { PipelineCard } from '@/pages/pipelines/components/PipelineCard';
+import { EmptyState } from '@/pages/pipelines/components/EmptyState';
+import type { IPipeline } from '@/pages/pipelines/types';
 
 interface PipelineGridProps {
   pipelines: IPipeline[];

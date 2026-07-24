@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ClearCanvasButton } from './ClearCanvasButton';
+import { ClearCanvasButton } from '@/widgets/canvas/components/ClearCanvasButton';
 import { useStore } from '@/entities';
 
 vi.mock('@/entities', () => ({

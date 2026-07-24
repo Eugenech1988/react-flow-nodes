@@ -1,10 +1,19 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from '@/app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { join } from 'node:path';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { AuthService } from '@/auth/auth.service';
+import { BillingService } from '@/billing/billing.service';
+import { PipelinesService } from '@/pipelines/pipelines.service';
+import { ProfileService } from '@/profile/profile.service';
+import { UsersService } from '@/users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { createAppRouter } from '@/trpc/app-router';
+import { createContext } from '@/trpc/context';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
@@ -23,6 +32,23 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   app.use(cookieParser());
+
+  const usersService = app.get(UsersService);
+  const router = createAppRouter({
+    authService: app.get(AuthService),
+    billingService: app.get(BillingService),
+    pipelinesService: app.get(PipelinesService),
+    profileService: app.get(ProfileService),
+    usersService,
+  });
+  const jwtService = app.get(JwtService);
+  app.getHttpAdapter().getInstance().use(
+    '/trpc',
+    createExpressMiddleware({
+      router,
+      createContext: ({ req, res }) => createContext({ req, res }, { jwtService, usersService }),
+    }),
+  );
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Pipeline Studio API')

@@ -7,10 +7,10 @@ import {
   UploadedFile
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ProfileService } from './profile.service';
-import { UpdateProfileDto } from './dtos/update-profile.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { ProfileService } from '@/profile/profile.service';
+import { UpdateProfileDto } from '@/profile/dtos/update-profile.dto';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { diskStorage } from 'multer';
 import { extname } from 'node:path';
 

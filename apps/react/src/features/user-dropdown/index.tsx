@@ -1,1 +1,1 @@
-export * from './UserDropdown';
+export * from '@/features/user-dropdown/UserDropdown';

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Header } from './Header';
+import { Header } from '@/widgets/header/Header';
 
 vi.mock('@/features/check-status', () => {
   const MockComponent = () => <div data-testid="server-status">ServerStatusBadge</div>;

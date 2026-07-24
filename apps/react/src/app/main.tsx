@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import '@pipeline/ui/globals.css';
 import './style.css';
-import { QueryProvider, AppRoutes } from './providers';
+import { QueryProvider, AppRoutes } from '@/app/providers';
 import { ThemeProvider } from 'next-themes';
 
 createRoot(document.getElementById('root')!).render(

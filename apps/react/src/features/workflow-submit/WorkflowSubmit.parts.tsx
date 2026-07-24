@@ -8,7 +8,7 @@ import {
 } from '@pipeline/ui';
 import { Button } from '@pipeline/ui';
 import { X, CheckCircle2, AlertTriangle, Loader2, HelpCircle } from 'lucide-react';
-import type { ParseResult, ValidationMetrics } from './WorkflowSubmit.types';
+import type { ParseResult, ValidationMetrics } from '@/features/workflow-submit/WorkflowSubmit.types';
 
 const VALIDATION_RULES: Array<{
   key: keyof ValidationMetrics;

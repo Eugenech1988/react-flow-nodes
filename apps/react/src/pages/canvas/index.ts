@@ -1,1 +1,1 @@
-export * from './CanvasPage';
+export * from '@/pages/canvas/CanvasPage';

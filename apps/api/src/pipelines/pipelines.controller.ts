@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Delete, Patch } from '@nestjs/common';
-import { PipelinesService } from './pipelines.service';
-import { CreatePipelineDto } from './dtos/create-pipeline.dto';
+import { PipelinesService } from '@/pipelines/pipelines.service';
+import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'node:path';
-import { UpdatePipelineDto } from './dtos/update-pipeline.dto';
+import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 
 @Controller('pipelines')
 export class PipelinesController {

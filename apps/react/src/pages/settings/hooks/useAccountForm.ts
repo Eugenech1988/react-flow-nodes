@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/shared/api';
 import { USER_QUERY_KEY } from '@/shared/lib';
 import { useLogout, useUser } from '@/shared/hooks';
-import { accountSchema, type IAccountFormData } from '../types';
+import { accountSchema, type IAccountFormData } from '@/pages/settings/types';
 import { useNavigate } from 'react-router-dom';
 
 export const useAccountForm = () => {

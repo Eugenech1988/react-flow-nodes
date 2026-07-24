@@ -1,5 +1,5 @@
 import { Shield, KeyRound } from 'lucide-react';
-import { ProfileAvatar } from './ProfileAvatar';
+import { ProfileAvatar } from '@/pages/settings/components/ProfileAvatar';
 
 interface ProfileSidebarProps {
   avatarPreview: string | null;

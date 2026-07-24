@@ -1,5 +1,5 @@
 import type { StateCreator } from 'zustand';
-import type { PipelineStore, ExecutionState, ExecutionActions } from '../types';
+import type { PipelineStore, ExecutionState, ExecutionActions } from '@/entities/pipeline/model/types';
 
 export const createExecutionSlice: StateCreator<
   PipelineStore,

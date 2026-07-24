@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ReactFlowProvider } from '@xyflow/react';
-import { WorkflowExecutionControl } from './WorkflowExecutionControl';
+import { WorkflowExecutionControl } from '@/widgets/header/components/WorkflowExecutionControl';
 
 const mockStore = {
   executionStatus: 'idle',

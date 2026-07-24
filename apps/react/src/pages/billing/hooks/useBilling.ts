@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSubscription, useTransactions } from '@/shared/hooks';
-import { api } from '@/shared/api';
-import { SUBSCRIPTION_QUERY_KEY } from '@/shared/lib';
+import { useTRPC } from '@/shared/api';
 
 const parseErrorMessage = (error: any, fallback: string) => {
   const msg = error?.response?.data?.message;
@@ -12,6 +11,7 @@ const parseErrorMessage = (error: any, fallback: string) => {
 
 export const useBilling = () => {
   const queryClient = useQueryClient();
+  const trpc = useTRPC();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -30,7 +30,7 @@ export const useBilling = () => {
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
-      queryClient.invalidateQueries({ queryKey: SUBSCRIPTION_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: trpc.billing.subscription.queryKey() });
     }
   }, [searchParams, queryClient]);
 
@@ -42,29 +42,30 @@ export const useBilling = () => {
     }
   };
 
-  const checkoutMutation = useMutation({
-    mutationFn: async () => {
+  const checkoutMutation = useMutation(
+    trpc.billing.checkout.mutationOptions({
+      onMutate: () => {
       clearQueryParams();
       setBannerMessage({ error: null, success: null });
-      const data = await api.post<{ url: string }>('/billing/checkout', { plan: 'PRO' });
-      if (!data?.url) throw new Error('Failed to retrieve payment link from server.');
-      return data.url;
-    },
-    onSuccess: (url) => {
-      window.location.href = url;
-    },
-  });
+      },
+      onSuccess: (data) => {
+        if (data.url) window.location.href = data.url;
+        else setBannerMessage({ error: 'Failed to retrieve payment link from server.', success: null });
+      },
+    }),
+  );
 
-  const cancelMutation = useMutation({
-    mutationFn: async () => {
+  const cancelMutation = useMutation(
+    trpc.billing.cancel.mutationOptions({
+      onMutate: () => {
       clearQueryParams();
       setBannerMessage({ error: null, success: null });
-      return api.post('/billing/cancel');
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: SUBSCRIPTION_QUERY_KEY });
-    },
-  });
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: trpc.billing.subscription.queryKey() });
+      },
+    }),
+  );
 
   const errorMessage =
     (checkoutMutation.error && parseErrorMessage(checkoutMutation.error, 'Failed to initialize payment.')) ||
@@ -97,7 +98,7 @@ export const useBilling = () => {
     isProcessing,
     errorMessage,
     successMessage,
-    activateSubscription: () => checkoutMutation.mutate(),
+    activateSubscription: () => checkoutMutation.mutate('PRO'),
     cancelSubscription: () => cancelMutation.mutate(),
     dismissSuccess,
     dismissError,

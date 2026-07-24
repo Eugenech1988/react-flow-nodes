@@ -1,1 +1,1 @@
-export * from './Header';
+export * from '@/widgets/header/Header';

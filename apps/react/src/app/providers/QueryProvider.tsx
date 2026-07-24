@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { TRPCProvider, trpcClient } from '@/shared/api';
 
 interface QueryProviderProps {
   children: React.ReactNode;
@@ -22,8 +23,10 @@ export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-      {children}
+      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        {children}
+      </TRPCProvider>
     </QueryClientProvider>
   );
 };

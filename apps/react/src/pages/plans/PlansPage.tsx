@@ -4,12 +4,12 @@ import { ShieldCheck, Check, ArrowLeft, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSubscription } from '@/shared/hooks';
 
-import { getPlans, getPlanMeta } from './constants';
-import { PricingHeader } from './components/PricingHeader';
-import { PlanCard } from './components/PlanCard';
-import { ErrorBanner } from './components/ErrorBanner';
-import { usePlanSelection } from './hooks/usePlanSelection';
-import type { TPlanId } from './types';
+import { getPlans, getPlanMeta } from '@/pages/plans/constants';
+import { PricingHeader } from '@/pages/plans/components/PricingHeader';
+import { PlanCard } from '@/pages/plans/components/PlanCard';
+import { ErrorBanner } from '@/pages/plans/components/ErrorBanner';
+import { usePlanSelection } from '@/pages/plans/hooks/usePlanSelection';
+import type { TPlanId } from '@/pages/plans/types';
 
 const pageVariants: Variants = {
   initial: { opacity: 0, y: 12 },

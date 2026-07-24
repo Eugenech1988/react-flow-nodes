@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type TProfile, USER_QUERY_KEY } from '@/shared/lib';
 import { useUser } from '@/shared/hooks';
 import { api } from '@/shared/api';
-import { profileSchema, type IProfileFormData } from '../types';
+import { profileSchema, type IProfileFormData } from '@/pages/settings/types';
 
 export const useProfileForm = () => {
   const { user } = useUser();

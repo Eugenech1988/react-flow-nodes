@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ImportExportToolbar } from './ImportExportToolbar';
+import { ImportExportToolbar } from '@/widgets/canvas/components/ImportExportToolbar';
 
 describe('ImportExportToolbar', () => {
   const onExportMock = vi.fn();

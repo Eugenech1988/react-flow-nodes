@@ -1,4 +1,4 @@
-import type { IPlan, TPlanId } from './types';
+import type { IPlan, TPlanId } from '@/pages/plans/types';
 
 export const BASE_PLANS: Omit<IPlan, 'popular'>[] = [
   {
@@ -48,7 +48,7 @@ export const BASE_PLANS: Omit<IPlan, 'popular'>[] = [
   },
 ];
 
-export const getPlans = (isProActive: boolean): IPlan[] => {
+export const getPlans = (): IPlan[] => {
   return BASE_PLANS.map((plan) => ({
     ...plan,
     popular: plan.id === 'pro' ? true : undefined,

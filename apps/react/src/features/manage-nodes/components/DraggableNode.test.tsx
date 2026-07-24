@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { DraggableNode } from './DraggableNode';
+import { DraggableNode } from '@/features/manage-nodes/components/DraggableNode';
 
 describe('DraggableNode', () => {
   it('renders label and icon', () => {

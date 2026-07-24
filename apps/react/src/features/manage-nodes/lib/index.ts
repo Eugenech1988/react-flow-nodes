@@ -1,1 +1,1 @@
-export { extractVariables } from './extractVariables';
+export { extractVariables } from '@/features/manage-nodes/lib/extractVariables';

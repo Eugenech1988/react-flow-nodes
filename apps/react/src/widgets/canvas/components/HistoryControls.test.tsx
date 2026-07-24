@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { HistoryControls } from './HistoryControls';
+import { HistoryControls } from '@/widgets/canvas/components/HistoryControls';
 
 const mockStore = vi.hoisted(() => ({
   nodes: [],

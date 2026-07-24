@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import { usePipelines } from '@/shared/hooks/usePipeLines.tsx';
-import { usePipelinesFilter } from './hooks/usePipelinesFilter';
-import { PipelineHeader } from './components/PipelineHeader';
-import { PipelineSearchAndFilter } from './components/PipelineSearchAndFilter';
-import { PipelineGrid } from './components/PipelineGrid';
+import { usePipelinesFilter } from '@/pages/pipelines/hooks/usePipelinesFilter';
+import { PipelineHeader } from '@/pages/pipelines/components/PipelineHeader';
+import { PipelineSearchAndFilter } from '@/pages/pipelines/components/PipelineSearchAndFilter';
+import { PipelineGrid } from '@/pages/pipelines/components/PipelineGrid';
 import type { Variants } from 'framer-motion';
 
 const pageVariants: Variants = {

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { AutoLayoutButton } from './AutoLayoutButton';
+import { AutoLayoutButton } from '@/widgets/canvas/components/AutoLayoutButton';
 
 const mockSetNodes = vi.fn();
 const mockLayoutedNodes = [{ id: '1', position: { x: 10, y: 10 } }];

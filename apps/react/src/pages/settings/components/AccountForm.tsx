@@ -4,8 +4,8 @@ import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { Switch } from '@pipeline/ui';
 import { SubmitButton, BackButton, DangerButton } from '@/shared/ui/buttons';
 import { ShieldCheck, KeyRound } from 'lucide-react';
-import type { IAccountFormData } from '../types';
-import { DeleteAccountDialog } from './DeleteAccountDialog';
+import type { IAccountFormData } from '@/pages/settings/types';
+import { DeleteAccountDialog } from '@/pages/settings/components/DeleteAccountDialog';
 
 interface AccountFormProps {
   form: UseFormReturn<IAccountFormData>;

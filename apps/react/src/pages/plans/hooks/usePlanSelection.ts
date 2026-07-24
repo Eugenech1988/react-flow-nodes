@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { api } from '@/shared/api';
-import type { TPlanId } from '../types';
+import { trpcClient } from '@/shared/api';
+import type { TPlanId } from '@/pages/plans/types';
 
 export const usePlanSelection = (isProActive: boolean) => {
   const [processingPlan, setProcessingPlan] = useState<TPlanId | null>(null);
@@ -8,7 +8,7 @@ export const usePlanSelection = (isProActive: boolean) => {
 
   const handleSelectPlan = async (
     planId: TPlanId,
-    billingCycle: 'monthly' | 'yearly'
+    _billingCycle: 'monthly' | 'yearly'
   ) => {
     if (planId === 'free') {
       if (isProActive) {
@@ -32,10 +32,7 @@ export const usePlanSelection = (isProActive: boolean) => {
         setProcessingPlan(planId);
         setErrorMessage(null);
 
-        const data = await api.post<{ url: string }>('/billing/checkout', {
-          plan: 'PRO',
-          interval: billingCycle,
-        });
+        const data = await trpcClient.billing.checkout.mutate('PRO');
 
         if (data?.url) {
           window.location.href = data.url;

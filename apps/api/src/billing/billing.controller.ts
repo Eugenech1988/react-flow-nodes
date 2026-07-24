@@ -1,8 +1,8 @@
 import { Controller, Post, Body, Req, Headers, BadRequestException, UseGuards, Get, Param, Res } from '@nestjs/common';
-import { BillingService } from './billing.service';
+import { BillingService } from '@/billing/billing.service';
 import { Plan } from '@prisma/client';
 import type { Request, Response } from 'express';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 
 @Controller('billing')
 export class BillingController {

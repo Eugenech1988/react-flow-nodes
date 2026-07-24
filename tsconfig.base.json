@@ -14,10 +14,16 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "verbatimModuleSyntax": false,
     "baseUrl": ".",
     "paths": {
       "@pipeline/ui/*": ["packages/ui/src/*"],
-      "@pipeline/ui": ["packages/ui/src/index.ts"]
+      "@pipeline/ui": ["packages/ui/src/index.ts"],
+      "@pipeline/contracts/*": ["packages/contracts/src/*"],
+      "@pipeline/contracts": ["packages/contracts/index.ts"]
     }
   }
 }

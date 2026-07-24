@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { api } from '@/shared/api';
-import type { FormMode, LoginResponseData, TwoFactorFormData } from './types';
+import { trpcClient } from '@/shared/api';
+import type { FormMode, LoginResponseData, TwoFactorFormData } from '@/features/auth/model/types';
 
 interface AuthState {
   mode: FormMode;
@@ -74,7 +74,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   login: async (email, password, onSuccess) => {
     set({ isLoading: true, apiError: null, twoFactorError: null });
     try {
-      const response = await api.post<LoginResponseData>('/auth/login', { email, password });
+      const response = await trpcClient.auth.login.mutate({ email, password });
       const requires2fa = get().handleLoginResponse(response);
       if (!requires2fa) {
         onSuccess();
@@ -90,7 +90,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   register: async (email, password, onSuccess) => {
     set({ isLoading: true, apiError: null });
     try {
-      await api.post('/auth/register', { email, password });
+      await trpcClient.auth.register.mutate({ email, password });
       // после успешной регистрации переключаем на логин
       get().setMode('login');
       onSuccess();
@@ -110,7 +110,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
     set({ isLoading: true, twoFactorError: null });
     try {
-      await api.post('/auth/login-2fa', { tempToken, code: data.code });
+      await trpcClient.auth.loginWith2fa.mutate({ tempToken, code: data.code });
       onSuccess();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Invalid verification code';

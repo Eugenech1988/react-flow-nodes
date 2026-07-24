@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import type { IPipeline } from '../types';
-import type { TabType, SortOption } from '../constants';
+import type { IPipeline } from '@/pages/pipelines/types';
+import type { TabType, SortOption } from '@/pages/pipelines/constants';
 
 export const usePipelinesFilter = (
   pipelines: IPipeline[],
