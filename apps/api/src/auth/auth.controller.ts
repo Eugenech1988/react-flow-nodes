@@ -111,8 +111,11 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('2fa/turn-on')
-  @ApiOperation({ summary: 'Enable 2FA for account' })
-  @ApiResponse({ status: 200, description: '2FA successfully enabled.' })
+  @ApiOperation({ summary: 'Enable 2FA for account and return recovery codes' })
+  @ApiResponse({
+    status: 200,
+    description: '2FA successfully enabled. Returns list of backup recovery codes.',
+  })
   async turnOn2fa(
     @Req() req: IRequestWithUser,
     @Body('code') code: string

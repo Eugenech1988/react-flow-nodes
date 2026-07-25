@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { SigningOptions } from 'jsonwebtoken';
+import { randomBytes } from 'node:crypto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@/users/users.service';
@@ -23,6 +24,15 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
+
+  private generateRecoveryCodes(): string[] {
+    const codes: string[] = [];
+    for (let i = 0; i < 10; i++) {
+      const code = randomBytes(4).toString('hex').toUpperCase();
+      codes.push(`${code.slice(0, 4)}-${code.slice(4)}`);
+    }
+    return codes;
+  }
 
   async validateUser(email: string, pass: string): Promise<TUserSafe | null> {
     const user = await this.usersService.findOneByEmail(email);
@@ -216,8 +226,21 @@ export class AuthService {
       throw new BadRequestException('Invalid authenticator code');
     }
 
-    await this.usersService.update(userId, { isTwoFactorEnabled: true });
-    return { success: true };
+    const rawRecoveryCodes = this.generateRecoveryCodes();
+
+    const hashedCodes = await Promise.all(
+      rawRecoveryCodes.map((c) => hash(c))
+    );
+
+    await this.usersService.update(userId, {
+      isTwoFactorEnabled: true,
+      recoveryCodes: hashedCodes,
+    });
+
+    return {
+      success: true,
+      recoveryCodes: rawRecoveryCodes,
+    };
   }
 
   async turnOffTwoFactor(userId: string, code: string) {
@@ -226,18 +249,29 @@ export class AuthService {
       throw new BadRequestException('2FA not initialized');
     }
 
-    const result = await verifyOtp({
-      token: code,
-      secret: user.twoFactorSecret,
-    });
+    let isValid = (
+      await verifyOtp({
+        token: code,
+        secret: user.twoFactorSecret
+      })).valid;
 
-    if (!result.valid) {
-      throw new BadRequestException('Invalid authenticator code');
+    if (!isValid && user.recoveryCodes?.length) {
+      for (const hashedCode of user.recoveryCodes) {
+        if (await verifyArgon(hashedCode, code)) {
+          isValid = true;
+          break;
+        }
+      }
+    }
+
+    if (!isValid) {
+      throw new BadRequestException('Invalid verification code');
     }
 
     await this.usersService.update(userId, {
       isTwoFactorEnabled: false,
       twoFactorSecret: null,
+      recoveryCodes: [],
     });
 
     return { success: true };
@@ -262,16 +296,52 @@ export class AuthService {
       throw new BadRequestException('User not found or 2FA not set up');
     }
 
-    const result = await verifyOtp({
+    const otpResult = await verifyOtp({
       token: code,
       secret: user.twoFactorSecret,
     });
 
-    if (!result.valid) {
+    let isVerified = otpResult.valid;
+    let usedCodeIndex = -1;
+
+    if (!isVerified && user.recoveryCodes?.length) {
+      for (let i = 0; i < user.recoveryCodes.length; i++) {
+        if (await verifyArgon(user.recoveryCodes[i], code)) {
+          isVerified = true;
+          usedCodeIndex = i;
+          break;
+        }
+      }
+    }
+
+    if (!isVerified) {
       throw new BadRequestException('Invalid authenticator code');
     }
 
-    const { password, twoFactorSecret, ...resultUser } = user;
+    if (usedCodeIndex !== -1) {
+      const updatedCodes = user.recoveryCodes.filter((_, idx) => idx !== usedCodeIndex);
+      await this.usersService.update(user.id, { recoveryCodes: updatedCodes });
+    }
+
+    const { password, twoFactorSecret, recoveryCodes, ...resultUser } = user;
     return resultUser as unknown as TUserSafe;
+  }
+
+  async regenerateRecoveryCodes(userId: string) {
+    const user = await this.usersService.findOneById(userId);
+    if (!user || !user.isTwoFactorEnabled) {
+      throw new BadRequestException('2FA is not enabled');
+    }
+
+    const rawRecoveryCodes = this.generateRecoveryCodes();
+    const hashedCodes = await Promise.all(
+      rawRecoveryCodes.map((c) => hash(c))
+    );
+
+    await this.usersService.update(userId, {
+      recoveryCodes: hashedCodes,
+    });
+
+    return { recoveryCodes: rawRecoveryCodes };
   }
 }
