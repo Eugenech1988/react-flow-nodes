@@ -1,5 +1,5 @@
-import { Controller, Post, Get, Body, UseGuards, Req, Res, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { Controller, Post, Get, Body, UseGuards, Req, Res, HttpCode, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '@/auth/auth.service';
@@ -8,7 +8,6 @@ import { RecoveryDto } from '@/auth/dtos/recovery.dto';
 import { ResetPasswordDto } from '@/auth/dtos/reset-password.dto';
 import { LocalAuthGuard } from '@/auth/guards/local-auth.guard';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { JwtRefreshGuard } from '@/auth/guards/jwt-refresh.guard';
 import { GoogleOauthGuard } from '@/auth/guards/google.guard';
 import { GithubOauthGuard } from '@/auth/guards/github.guard';
 import type { TUserSafe, IOauthUser } from '@/auth/types/auth.types';
@@ -49,12 +48,11 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
-  @ApiBody({ type: RegisterDto })
-  @ApiResponse({ status: 201, description: 'User successfully registered and tokens set in cookies.' })
-  @ApiResponse({ status: 400, description: 'Bad request (validation failed or email taken).' })
+  @ApiResponse({ status: 201, description: 'User successfully registered and logged in.' })
+  @ApiResponse({ status: 400, description: 'Bad request.' })
   async register(
     @Body() dto: RegisterDto,
-    @Res({passthrough: true}) res: Response
+    @Res({ passthrough: true }) res: Response
   ): Promise<TUserSafe> {
     const user = await this.authService.register(dto);
     const tokens = await this.authService.generateTokens(user.id);
@@ -66,17 +64,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiOperation({ summary: 'Login user with local credentials' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: { type: 'string', example: 'user@example.com' },
-        password: { type: 'string', example: 'StrongPassword123!' },
-      },
-      required: ['email', 'password'],
-    },
-  })
-  @ApiResponse({ status: 200, description: 'Login successful or requires 2FA verification.' })
+  @ApiResponse({ status: 200, description: 'Login successful or requires 2FA.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async login(
     @Req() req: IRequestWithUser,
@@ -100,17 +88,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login-2fa')
   @ApiOperation({ summary: 'Complete login using 2FA code and temporary token' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        tempToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
-        code: { type: 'string', example: '123456' },
-      },
-      required: ['tempToken', 'code'],
-    },
-  })
-  @ApiResponse({ status: 200, description: '2FA verified successfully, cookies set.' })
+  @ApiResponse({ status: 200, description: '2FA verified successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid code or expired temp token.' })
   async loginWith2fa(
     @Body('tempToken') tempToken: string,
@@ -123,31 +101,18 @@ export class AuthController {
     return user;
   }
 
-  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('2fa/generate')
-  @ApiOperation({ summary: 'Generate 2FA secret and QR code for authenticator' })
-  @ApiResponse({ status: 201, description: 'Returns secret and otpauth url.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiOperation({ summary: 'Generate 2FA secret and QR code' })
+  @ApiResponse({ status: 201, description: 'Returns secret and QR code.' })
   async generate2fa(@Req() req: IRequestWithUser) {
     return this.authService.generateTwoFactorSecret(req.user.id);
   }
 
-  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('2fa/turn-on')
-  @ApiOperation({ summary: 'Verify code and enable 2FA for account' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        code: { type: 'string', example: '123456' },
-      },
-      required: ['code'],
-    },
-  })
+  @ApiOperation({ summary: 'Enable 2FA for account' })
   @ApiResponse({ status: 200, description: '2FA successfully enabled.' })
-  @ApiResponse({ status: 400, description: 'Invalid verification code.' })
   async turnOn2fa(
     @Req() req: IRequestWithUser,
     @Body('code') code: string
@@ -155,21 +120,10 @@ export class AuthController {
     return this.authService.turnOnTwoFactor(req.user.id, code);
   }
 
-  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('2fa/turn-off')
   @ApiOperation({ summary: 'Disable 2FA for account' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        code: { type: 'string', example: '123456' },
-      },
-      required: ['code'],
-    },
-  })
   @ApiResponse({ status: 200, description: '2FA successfully disabled.' })
-  @ApiResponse({ status: 400, description: 'Invalid verification code.' })
   async turnOff2fa(
     @Req() req: IRequestWithUser,
     @Body('code') code: string
@@ -179,14 +133,12 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleOauthGuard)
-  @ApiOperation({ summary: 'Redirect to Google OAuth authentication page' })
-  @ApiResponse({ status: 302, description: 'Redirects to Google.' })
+  @ApiOperation({ summary: 'Login with Google' })
   async googleAuth() {}
 
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
-  @ApiOperation({ summary: 'Google OAuth callback endpoint' })
-  @ApiResponse({ status: 302, description: 'Redirects to frontend client URL with session cookies.' })
+  @ApiOperation({ summary: 'Google OAuth callback' })
   async googleAuthCallback(
     @Req() req: IRequestWithOauthUser,
     @Res() res: Response
@@ -201,14 +153,12 @@ export class AuthController {
 
   @Get('github')
   @UseGuards(GithubOauthGuard)
-  @ApiOperation({ summary: 'Redirect to GitHub OAuth authentication page' })
-  @ApiResponse({ status: 302, description: 'Redirects to GitHub.' })
+  @ApiOperation({ summary: 'Login with GitHub' })
   async githubAuth() {}
 
   @Get('github/callback')
   @UseGuards(GithubOauthGuard)
-  @ApiOperation({ summary: 'GitHub OAuth callback endpoint' })
-  @ApiResponse({ status: 302, description: 'Redirects to frontend client URL with session cookies.' })
+  @ApiOperation({ summary: 'GitHub OAuth callback' })
   async githubAuthCallback(
     @Req() req: IRequestWithOauthUser,
     @Res() res: Response
@@ -222,29 +172,32 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  @ApiOperation({ summary: 'Refresh access and refresh tokens using cookie' })
+  @ApiOperation({ summary: 'Refresh access token via cookie' })
   @ApiResponse({ status: 200, description: 'Tokens successfully refreshed.' })
   @ApiResponse({ status: 401, description: 'Invalid or missing refresh token.' })
   async refresh(
-    @Req() req: IRequestWithUser,
-    @Res({passthrough: true}) res: Response
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
   ): Promise<{ success: boolean }> {
-    const tokens = await this.authService.generateTokens(req.user.id);
+    const refreshToken = req.cookies?.['refreshToken'] || req.headers.authorization?.replace('Bearer ', '');
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token missing');
+    }
+
+    const tokens = await this.authService.refreshTokens(refreshToken);
     this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
-    return {success: true};
+    return { success: true };
   }
 
-  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  @ApiOperation({ summary: 'Get current authorized user info' })
-  @ApiResponse({ status: 200, description: 'Returns safe user object.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiOperation({ summary: 'Get current authorized user' })
+  @ApiResponse({ status: 200, description: 'Returns current user info.' })
   getMe(
     @Req() req: IRequestWithUser,
-    @Res({passthrough: true}) res: Response
+    @Res({ passthrough: true }) res: Response
   ): TUserSafe {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
@@ -253,10 +206,11 @@ export class AuthController {
     return req.user;
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('logout')
   @ApiOperation({ summary: 'Logout user and clear auth cookies' })
-  @ApiResponse({ status: 201, description: 'Cookies cleared successfully.' })
-  async logout(@Res({passthrough: true}) res: Response) {
+  @ApiResponse({ status: 200, description: 'Cookies cleared successfully.' })
+  async logout(@Res({ passthrough: true }) res: Response) {
     const isProd = process.env.NODE_ENV === 'production';
     const cookieOptions = {
       httpOnly: true,
@@ -267,27 +221,25 @@ export class AuthController {
     res.clearCookie('accessToken', cookieOptions);
     res.clearCookie('refreshToken', cookieOptions);
 
-    return {success: true};
+    return { success: true };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('recovery')
-  @ApiOperation({ summary: 'Request password reset email' })
-  @ApiBody({ type: RecoveryDto })
-  @ApiResponse({ status: 200, description: 'Password reset link sent message.' })
+  @ApiOperation({ summary: 'Request password recovery email' })
+  @ApiResponse({ status: 200, description: 'Recovery link generated.' })
   async recovery(@Body() dto: RecoveryDto): Promise<{ message: string }> {
     await this.authService.recovery(dto);
-    return {message: 'If the email exists, a reset link has been sent.'};
+    return { message: 'If the email exists, a reset link has been sent.' };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('reset-password')
-  @ApiOperation({ summary: 'Reset account password using token from email' })
-  @ApiBody({ type: ResetPasswordDto })
-  @ApiResponse({ status: 200, description: 'Password successfully updated.' })
+  @ApiOperation({ summary: 'Reset password using token' })
+  @ApiResponse({ status: 200, description: 'Password updated.' })
   @ApiResponse({ status: 400, description: 'Invalid or expired token.' })
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ success: boolean }> {
     await this.authService.resetPassword(dto);
-    return {success: true};
+    return { success: true };
   }
 }

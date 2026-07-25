@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { SigningOptions } from 'jsonwebtoken';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -110,6 +110,25 @@ export class AuthService {
     });
 
     return { accessToken, refreshToken };
+  }
+
+  async refreshTokens(refreshToken: string) {
+    let payload: IJwtPayload;
+
+    try {
+      payload = this.jwtService.verify<IJwtPayload>(refreshToken, {
+        secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
+      });
+    } catch {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+
+    const user = await this.usersService.findOneById(payload.userId);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    return this.generateTokens(user.id);
   }
 
   async recovery(dto: RecoveryDto): Promise<string | null> {
