@@ -29,6 +29,12 @@ export const updatePasswordInputSchema = z.object({
   newPassword: z.string().min(6),
 });
 
+export const twoFactorCodeInputSchema = z.object({
+  code: z.string().length(6, 'Code must be exactly 6 digits'),
+});
+
+export type TTwoFactorCodeInput = z.infer<typeof twoFactorCodeInputSchema>;
+
 export const updateTwoFactorInputSchema = z.object({
   user2fa: z.boolean(),
 });

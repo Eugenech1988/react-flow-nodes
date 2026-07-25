@@ -72,7 +72,7 @@ export const AccountForm = ({
           }
         }
       } catch (err: any) {
-        setModalError(err?.message || 'Не удалось сгенерировать 2FA секрет');
+        setModalError(err?.message || 'Failed to generate 2FA secret');
       } finally {
         setIsGenerating(false);
       }
@@ -85,7 +85,6 @@ export const AccountForm = ({
   };
 
   const handleConfirm2fa = (code: string) => {
-    console.log('submitting');
     const targetValue = modalMode === 'enable';
     onToggle2fa(targetValue, code);
     setIs2faModalOpen(false);
@@ -136,7 +135,7 @@ export const AccountForm = ({
           <Switch
             checked={user2fa}
             onCheckedChange={() => {}}
-            disabled={is2faPending}
+            disabled={is2faPending || isGenerating}
             style={{
               backgroundColor: user2fa ? 'var(--color-teal-600, #0d9488)' : undefined
             }}
@@ -246,7 +245,7 @@ export const AccountForm = ({
         mode={modalMode}
         qrCodeImage={qrCodeImage}
         modalError={modalError}
-        isPending={is2faPending}
+        isPending={is2faPending || isGenerating}
       />
 
       <DeleteAccountDialog

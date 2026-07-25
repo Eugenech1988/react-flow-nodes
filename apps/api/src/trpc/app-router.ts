@@ -7,7 +7,7 @@ import {
   updatePasswordInputSchema,
   updatePipelineInputSchema,
   updateProfileInputSchema,
-  updateTwoFactorInputSchema,
+  twoFactorCodeInputSchema,
 } from '@pipeline/contracts';
 import { AuthService } from '@/auth/auth.service';
 import { BillingService } from '@/billing/billing.service';
@@ -57,6 +57,16 @@ export function createAppRouter(services: RouterServices) {
       setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
       return toSafeUser(user);
     }),
+    generate2fa: protectedProcedure.mutation(async ({ ctx }) => {
+      return services.authService.generateTwoFactorSecret(ctx.user.id);
+    }),
+    turnOn2fa: protectedProcedure.input(twoFactorCodeInputSchema).mutation(async ({ ctx, input }) => {
+      return services.authService.turnOnTwoFactor(ctx.user.id, input.code);
+    }),
+
+    turnOff2fa: protectedProcedure.input(twoFactorCodeInputSchema).mutation(async ({ ctx, input }) => {
+      return services.authService.turnOffTwoFactor(ctx.user.id, input.code);
+    }),
     register: publicProcedure.input(registerInputSchema).mutation(async ({ ctx, input }) => {
       const user = await services.authService.register(input);
       const tokens = await services.authService.generateTokens(user.id);
@@ -75,10 +85,6 @@ export function createAppRouter(services: RouterServices) {
   const usersRouter = router({
     updatePassword: protectedProcedure.input(updatePasswordInputSchema).mutation(async ({ ctx, input }) => {
       await services.usersService.updatePassword(ctx.user.id, input);
-      return { success: true };
-    }),
-    updateTwoFactor: protectedProcedure.input(updateTwoFactorInputSchema).mutation(async ({ ctx, input }) => {
-      await services.usersService.update2fa(ctx.user.id, input);
       return { success: true };
     }),
     remove: protectedProcedure.mutation(async ({ ctx }) => {

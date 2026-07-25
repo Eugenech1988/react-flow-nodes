@@ -47,15 +47,37 @@ export const useAccountForm = () => {
     })
   );
 
-  const toggle2faMutation = useMutation(
-    trpc.users.updateTwoFactor.mutationOptions({
+  const generate2faMutation = useMutation(
+    trpc.auth.generate2fa.mutationOptions({
+      onError: (error) => {
+        console.error(error);
+        setAlert({ type: 'error', message: error.message || 'Failed to generate 2FA secret.' });
+      },
+    })
+  );
+
+  const turnOn2faMutation = useMutation(
+    trpc.auth.turnOn2fa.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries(trpc.auth.me.queryFilter());
-        setAlert({ type: 'success', message: '2FA settings updated.' });
+        setAlert({ type: 'success', message: 'Two-factor authentication enabled.' });
       },
       onError: (error) => {
         console.error(error);
-        setAlert({ type: 'error', message: error.message || 'Failed to update 2FA status.' });
+        setAlert({ type: 'error', message: error.message || 'Invalid code. Failed to enable 2FA.' });
+      },
+    })
+  );
+
+  const turnOff2faMutation = useMutation(
+    trpc.auth.turnOff2fa.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+        setAlert({ type: 'success', message: 'Two-factor authentication disabled.' });
+      },
+      onError: (error) => {
+        console.error(error);
+        setAlert({ type: 'error', message: error.message || 'Invalid code. Failed to disable 2FA.' });
       },
     })
   );
@@ -83,9 +105,20 @@ export const useAccountForm = () => {
     });
   };
 
-  const handleToggle2fa = (value: boolean) => {
+  // Метод для генерации секрета (вызывается из AccountForm)
+  const handleGenerate2faSecret = async () => {
     setAlert(null);
-    toggle2faMutation.mutate({ user2fa: value });
+    return await generate2faMutation.mutateAsync();
+  };
+
+  // Единая функция переключения 2FA
+  const handleToggle2fa = (value: boolean, code: string) => {
+    setAlert(null);
+    if (value) {
+      turnOn2faMutation.mutate({ code });
+    } else {
+      turnOff2faMutation.mutate({ code });
+    }
   };
 
   const handleDeleteAccount = () => {
@@ -100,8 +133,9 @@ export const useAccountForm = () => {
     isPristine: !isDirty,
     isPending: updatePasswordMutation.isPending,
     user2fa: user?.isTwoFactorEnabled ?? false,
+    onGenerate2faSecret: handleGenerate2faSecret, // <-- Добавлен в возврат
     onToggle2fa: handleToggle2fa,
-    is2faPending: toggle2faMutation.isPending,
+    is2faPending: turnOn2faMutation.isPending || turnOff2faMutation.isPending,
     onDeleteAccount: handleDeleteAccount,
     isDeletePending: deleteAccountMutation.isPending,
   };

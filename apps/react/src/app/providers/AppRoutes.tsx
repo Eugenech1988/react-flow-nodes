@@ -39,6 +39,7 @@ const AccountRouteWrapper = () => {
       is2faPending={account.is2faPending}
       onDeleteAccount={account.onDeleteAccount}
       isDeletePending={account.isDeletePending}
+      onGenerate2faSecret={account.onGenerate2faSecret}
     />
   );
 };
