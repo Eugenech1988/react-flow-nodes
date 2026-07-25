@@ -1,6 +1,10 @@
+import { z } from 'zod';
 import { create } from 'zustand';
 import { trpcClient } from '@/shared/api';
-import type { FormMode, LoginResponseData, TwoFactorFormData } from '@/pages/login/model/types';
+import type { FormMode, LoginResponseData } from '@/pages/login/model/types';
+import { twoFactorLoginInputSchema } from '@pipeline/contracts';
+
+type TTwoFactorLoginInputData = z.infer<typeof twoFactorLoginInputSchema>;
 
 interface AuthState {
   mode: FormMode;
@@ -21,7 +25,7 @@ interface AuthState {
   handleLoginResponse: (data: LoginResponseData) => boolean;
   login: (email: string, password: string, onSuccess: () => Promise<void> | void) => Promise<void>;
   register: (email: string, password: string, onSuccess: () => Promise<void> | void) => Promise<void>;
-  verifyTwoFactor: (data: TwoFactorFormData, onSuccess: () => Promise<void> | void) => Promise<void>;
+  verifyTwoFactor: (data: TTwoFactorLoginInputData, onSuccess: () => Promise<void> | void) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -34,9 +38,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   twoFactorError: null,
   isLoading: false,
 
-  setMode: (mode) => set({ mode }),
+  setMode: (mode) => set({mode}),
   toggleMode: () => {
-    const { mode } = get();
+    const {mode} = get();
     set({
       mode: mode === 'login' ? 'register' : 'login',
       apiError: null,
@@ -44,18 +48,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       is2faRequired: false,
       tempToken: null,
       qrCodeImage: null,
-      secretKey: null,
+      secretKey: null
     });
   },
-  setApiError: (error) => set({ apiError: error }),
-  setTwoFactorError: (error) => set({ twoFactorError: error }),
+  setApiError: (error) => set({apiError: error}),
+  setTwoFactorError: (error) => set({twoFactorError: error}),
   resetState: () => set({
     is2faRequired: false,
     tempToken: null,
     qrCodeImage: null,
     secretKey: null,
     twoFactorError: null,
-    apiError: null,
+    apiError: null
   }),
 
   handleLoginResponse: (data) => {
@@ -64,7 +68,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         is2faRequired: true,
         tempToken: data.tempToken || null,
         qrCodeImage: data.qrCodeImage || null,
-        secretKey: data.secret || null,
+        secretKey: data.secret || null
       });
       return true;
     }
@@ -72,9 +76,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   login: async (email, password, onSuccess) => {
-    set({ isLoading: true, apiError: null, twoFactorError: null });
+    set({isLoading: true, apiError: null, twoFactorError: null});
     try {
-      const response = await trpcClient.auth.login.mutate({ email, password });
+      const response = await trpcClient.auth.login.mutate({email, password});
       console.log('Вызываем логин...');
       const requires2fa = get().handleLoginResponse(response);
       if (!requires2fa) {
@@ -82,42 +86,42 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Something went wrong';
-      set({ apiError: message });
+      set({apiError: message});
     } finally {
-      set({ isLoading: false });
+      set({isLoading: false});
     }
   },
 
   register: async (email, password, onSuccess) => {
-    set({ isLoading: true, apiError: null });
+    set({isLoading: true, apiError: null});
     try {
-      await trpcClient.auth.register.mutate({ email, password });
+      await trpcClient.auth.register.mutate({email, password});
       console.log('Вызываем register...');
       get().setMode('login');
       await onSuccess();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Something went wrong';
-      set({ apiError: message });
+      set({apiError: message});
     } finally {
-      set({ isLoading: false });
+      set({isLoading: false});
     }
   },
 
   verifyTwoFactor: async (data, onSuccess) => {
-    const { tempToken } = get();
+    const {tempToken} = get();
     if (!tempToken) {
-      set({ twoFactorError: 'Missing temporary token' });
+      set({twoFactorError: 'Missing temporary token'});
       return;
     }
-    set({ isLoading: true, twoFactorError: null });
+    set({isLoading: true, twoFactorError: null});
     try {
-      await trpcClient.auth.loginWith2fa.mutate({ tempToken, code: data.code });
+      await trpcClient.auth.loginWith2fa.mutate({tempToken, code: data.code});
       await onSuccess();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Invalid verification code';
-      set({ twoFactorError: message });
+      set({twoFactorError: message});
     } finally {
-      set({ isLoading: false });
+      set({isLoading: false});
     }
-  },
+  }
 }));

@@ -1,17 +1,31 @@
 import React from 'react';
+import { z } from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@pipeline/ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SocialLoginButtons } from './components/SocialLoginButtons';
-import { AuthModeToggle } from './components/AuthModeToggle';
-import { RegisterFields } from './components/RegisterFields';
-import { LoginFields } from './components/LoginFields';
-import { TwoFactorForm } from './components/TwoFactorForm';
+import { SocialLoginButtons } from './components';
+import { AuthModeToggle } from './components';
+import { RegisterFields } from './components';
+import { LoginFields } from './components';
+import { TwoFactorForm } from './components';
 import { useQueryClient } from '@tanstack/react-query';
 import { SubmitButton } from '@/shared/ui';
 import { useTRPC } from '@/shared/api';
 import { useAuthStore } from './model/authStore';
-import { loginSchema, registerSchema, type CombinedFormData } from './model';
+import { loginInputSchema, registerInputSchema } from '@pipeline/contracts';
+
+export const registerFormInputSchema = registerInputSchema.extend({
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+type LoginInputData = z.infer<typeof loginInputSchema>;
+
+type RegisterFormInputData = z.infer<typeof registerFormInputSchema>;
+
+type LoginCombinedFormData = LoginInputData & Partial<RegisterFormInputData>;
 
 export const LoginPage: React.FC = () => {
   const {
@@ -39,14 +53,14 @@ export const LoginPage: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting }
-  } = useForm<CombinedFormData>({
-    resolver: zodResolver(mode === 'login' ? loginSchema : registerSchema),
+  } = useForm<LoginCombinedFormData>({
+    resolver: zodResolver(mode === 'login' ? loginInputSchema : registerFormInputSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: { email: '', password: '', confirmPassword: '' }
   });
 
-  const onSubmit = async (data: CombinedFormData) => {
+  const onSubmit = async (data: LoginCombinedFormData) => {
     if (mode === 'login') {
       await login(data.email, data.password, () => {
         queryClient.invalidateQueries(trpc.auth.me.queryFilter());
@@ -61,7 +75,6 @@ export const LoginPage: React.FC = () => {
   const handleSocialLogin = (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    queryClient.invalidateQueries(trpc.auth.me.queryFilter());
     if (provider === 'google' || provider === 'github') {
       const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.API_URL || 'http://localhost:3000';
       window.location.href = `${apiUrl}/auth/${provider}`;

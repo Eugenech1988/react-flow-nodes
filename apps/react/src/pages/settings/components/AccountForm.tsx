@@ -6,6 +6,7 @@ import { SubmitButton, BackButton, DangerButton } from '@/shared/ui/buttons';
 import { ShieldCheck, KeyRound } from 'lucide-react';
 import type { IAccountFormData } from '@/pages/settings/types';
 import { DeleteAccountDialog } from '@/pages/settings/components/DeleteAccountDialog';
+import { TwoFactorModal } from '@/pages/settings/components/TwoFactorModal';
 
 interface AccountFormProps {
   form: UseFormReturn<IAccountFormData>;
@@ -14,7 +15,8 @@ interface AccountFormProps {
   isPending?: boolean;
   alert?: { type: 'success' | 'error'; message: string } | null;
   user2fa: boolean;
-  onToggle2fa: (value: boolean) => void;
+  onToggle2fa: (value: boolean, code: string) => void;
+  onGenerate2faSecret: () => Promise<{ qrCodeImage: string; secret: string } | void>;
   is2faPending?: boolean;
   onDeleteAccount?: () => void;
   isDeletePending?: boolean;
@@ -29,31 +31,63 @@ export const AccountForm = ({
                               alert = null,
                               user2fa,
                               onToggle2fa,
+                              onGenerate2faSecret,
                               is2faPending = false,
                               onDeleteAccount,
                               isDeletePending = false,
                               onGenerateBackupCodes
                             }: AccountFormProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [is2faModalOpen, setIs2faModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'enable' | 'disable'>('enable');
+  const [qrCodeImage, setQrCodeImage] = useState<string | null>(null);
+  const [modalError, setModalError] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const {
     register,
-    formState: {errors}
+    formState: { errors }
   } = form;
 
   const rootError = errors.root?.message || errors['' as keyof typeof errors]?.message;
-
   const hasError = alert?.type === 'error' || !!rootError;
   const hasSuccess = alert?.type === 'success';
   const alertMessage = alert?.message || (rootError as string);
 
-  const handleBadgeClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest('[role="switch"]')) {
-      return;
-    }
+  const handleToggleClick = async () => {
+    if (is2faPending || isGenerating) return;
 
-    if (is2faPending) return;
-    onToggle2fa(!user2fa);
+    if (!user2fa) {
+      setModalMode('enable');
+      setModalError(null);
+      setQrCodeImage(null);
+      setIs2faModalOpen(true);
+      setIsGenerating(true);
+
+      try {
+        if (onGenerate2faSecret) {
+          const res = await onGenerate2faSecret();
+          if (res && res.qrCodeImage) {
+            setQrCodeImage(res.qrCodeImage);
+          }
+        }
+      } catch (err: any) {
+        setModalError(err?.message || 'Не удалось сгенерировать 2FA секрет');
+      } finally {
+        setIsGenerating(false);
+      }
+    } else {
+      setModalMode('disable');
+      setQrCodeImage(null);
+      setModalError(null);
+      setIs2faModalOpen(true);
+    }
+  };
+
+  const handleConfirm2fa = (code: string) => {
+    const targetValue = modalMode === 'enable';
+    onToggle2fa(targetValue, code);
+    setIs2faModalOpen(false);
   };
 
   const handleConfirmDelete = () => {
@@ -66,8 +100,6 @@ export const AccountForm = ({
   const handleGenerateCodesClick = () => {
     if (onGenerateBackupCodes) {
       onGenerateBackupCodes();
-    } else {
-      console.log('generateCodesClick');
     }
   };
 
@@ -85,12 +117,12 @@ export const AccountForm = ({
         />
 
         <div
-          onClick={handleBadgeClick}
+          onClick={handleToggleClick}
           className="group p-4 rounded-xl border border-border/60 bg-muted/5 hover:bg-muted/15 transition-colors flex items-center justify-between gap-4 cursor-pointer select-none"
         >
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-teal-600 transition-transform group-hover:scale-105"/>
+              <ShieldCheck className="w-4 h-4 text-teal-600 transition-transform group-hover:scale-105" />
               <span className="text-sm font-medium text-foreground">
                 Two-Factor Authentication (2FA)
               </span>
@@ -102,21 +134,20 @@ export const AccountForm = ({
 
           <Switch
             checked={user2fa}
-            onCheckedChange={onToggle2fa}
+            onCheckedChange={() => {}}
             disabled={is2faPending}
             style={{
               backgroundColor: user2fa ? 'var(--color-teal-600, #0d9488)' : undefined
             }}
-            className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent"
+            className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent pointer-events-none"
           />
         </div>
 
         {user2fa && (
-          <div
-            className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/5 dark:bg-teal-950/20 flex items-center justify-between gap-4">
+          <div className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/5 dark:bg-teal-950/20 flex items-center justify-between gap-4">
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
-                <KeyRound className="w-4 h-4 text-teal-600 dark:text-teal-400"/>
+                <KeyRound className="w-4 h-4 text-teal-600 dark:text-teal-400" />
                 <span className="text-sm font-semibold text-foreground">
                   2FA Recovery Codes
                 </span>
@@ -187,8 +218,7 @@ export const AccountForm = ({
             Danger Zone
           </h4>
 
-          <div
-            className="p-4 rounded-xl border border-rose-200/80 bg-rose-50/60 dark:bg-rose-950/20 dark:border-rose-900/40 flex items-center justify-between gap-4">
+          <div className="p-4 rounded-xl border border-rose-200/80 bg-rose-50/60 dark:bg-rose-950/20 dark:border-rose-900/40 flex items-center justify-between gap-4">
             <div className="space-y-0.5">
               <span className="text-sm font-semibold text-foreground">
                 Delete Account
@@ -207,6 +237,16 @@ export const AccountForm = ({
           </div>
         </div>
       </div>
+
+      <TwoFactorModal
+        isOpen={is2faModalOpen}
+        onClose={() => setIs2faModalOpen(false)}
+        onConfirm={handleConfirm2fa}
+        mode={modalMode}
+        qrCodeImage={qrCodeImage}
+        modalError={modalError}
+        isPending={is2faPending}
+      />
 
       <DeleteAccountDialog
         isOpen={isDeleteDialogOpen}

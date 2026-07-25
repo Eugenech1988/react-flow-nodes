@@ -18,6 +18,7 @@ export const twoFactorLoginInputSchema = z.object({
   code: z.string().min(1),
 });
 
+
 export const passwordResetInputSchema = z.object({
   token: z.string().min(1),
   password: z.string().min(6),
