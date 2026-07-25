@@ -19,7 +19,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Accept, Authorization',
@@ -29,24 +29,28 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   app.use(cookieParser());
 
   const usersService = app.get(UsersService);
+  const authService = app.get(AuthService);
+  const jwtService = app.get(JwtService);
+
   const router = createAppRouter({
-    authService: app.get(AuthService),
+    authService,
     billingService: app.get(BillingService),
     pipelinesService: app.get(PipelinesService),
     profileService: app.get(ProfileService),
     usersService,
   });
-  const jwtService = app.get(JwtService);
+
   app.getHttpAdapter().getInstance().use(
     '/trpc',
     createExpressMiddleware({
       router,
-      createContext: ({ req, res }) => createContext({ req, res }, { jwtService, usersService }),
+      createContext: ({ req, res }) =>
+        createContext({ req, res }, { jwtService, usersService, authService }),
     }),
   );
 

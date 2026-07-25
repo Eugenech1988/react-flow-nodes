@@ -19,9 +19,9 @@ interface AuthState {
   setTwoFactorError: (error: string | null) => void;
   resetState: () => void;
   handleLoginResponse: (data: LoginResponseData) => boolean;
-  login: (email: string, password: string, onSuccess: () => void) => Promise<void>;
-  register: (email: string, password: string, onSuccess: () => void) => Promise<void>;
-  verifyTwoFactor: (data: TwoFactorFormData, onSuccess: () => void) => Promise<void>;
+  login: (email: string, password: string, onSuccess: () => Promise<void> | void) => Promise<void>;
+  register: (email: string, password: string, onSuccess: () => Promise<void> | void) => Promise<void>;
+  verifyTwoFactor: (data: TwoFactorFormData, onSuccess: () => Promise<void> | void) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -75,9 +75,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true, apiError: null, twoFactorError: null });
     try {
       const response = await trpcClient.auth.login.mutate({ email, password });
+      console.log('Вызываем логин...');
       const requires2fa = get().handleLoginResponse(response);
       if (!requires2fa) {
-        onSuccess();
+        await onSuccess();
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Something went wrong';
@@ -91,9 +92,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true, apiError: null });
     try {
       await trpcClient.auth.register.mutate({ email, password });
-      // после успешной регистрации переключаем на логин
+      console.log('Вызываем register...');
       get().setMode('login');
-      onSuccess();
+      await onSuccess();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Something went wrong';
       set({ apiError: message });
@@ -111,7 +112,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true, twoFactorError: null });
     try {
       await trpcClient.auth.loginWith2fa.mutate({ tempToken, code: data.code });
-      onSuccess();
+      await onSuccess();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Invalid verification code';
       set({ twoFactorError: message });

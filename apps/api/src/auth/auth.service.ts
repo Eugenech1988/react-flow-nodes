@@ -112,9 +112,9 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async recovery(dto: RecoveryDto): Promise<void> {
+  async recovery(dto: RecoveryDto): Promise<string | null> {
     const user = await this.usersService.findOneByEmail(dto.email);
-    if (!user) return;
+    if (!user) return null;
 
     const resetToken = this.jwtService.sign(
       { userId: user.id, purpose: 'password_recovery' },
@@ -124,8 +124,8 @@ export class AuthService {
       },
     );
 
-    const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
-    const recoveryLink = `${clientUrl}/reset-password?token=${resetToken}`;
+    const clientUrl = this.configService.get<string>('CLIENT_URL') || this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
+    return `${clientUrl}/reset-password?token=${resetToken}`;
   }
 
   generateTempToken(userId: string) {

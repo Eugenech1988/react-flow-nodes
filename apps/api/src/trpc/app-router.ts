@@ -49,19 +49,19 @@ export function createAppRouter(services: RouterServices) {
 
       const tokens = await services.authService.generateTokens(user.id);
       setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
-      return { isTwoFactorRequired: false as const, user };
+      return { isTwoFactorRequired: false as const, user: toSafeUser(user) };
     }),
     loginWith2fa: publicProcedure.input(twoFactorLoginInputSchema).mutation(async ({ ctx, input }) => {
       const user = await services.authService.authenticateWith2Fa(input.tempToken, input.code);
       const tokens = await services.authService.generateTokens(user.id);
       setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
-      return user;
+      return toSafeUser(user);
     }),
     register: publicProcedure.input(registerInputSchema).mutation(async ({ ctx, input }) => {
       const user = await services.authService.register(input);
       const tokens = await services.authService.generateTokens(user.id);
       setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
-      return user;
+      return toSafeUser(user);
     }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const secure = process.env.NODE_ENV === 'production';
@@ -98,8 +98,9 @@ export function createAppRouter(services: RouterServices) {
 
   const pipelinesRouter = router({
     list: protectedProcedure.query(({ ctx }) => services.pipelinesService.findAllByUserId(ctx.user.id)),
-    remove: protectedProcedure.input(updatePipelineInputSchema.pick({ id: true })).mutation(({ input }) =>
-      services.pipelinesService.remove(input.id),
+    remove: protectedProcedure.input(updatePipelineInputSchema.pick({ id: true })).mutation(({ ctx, input }) =>
+      // Защита: передаем userId владельца
+      services.pipelinesService.remove(input.id, ctx.user.id),
     ),
   });
 

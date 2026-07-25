@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/shared/api';
-import { USER_QUERY_KEY } from '@/shared/lib';
+import { useTRPC } from '@/shared/api';
 import { useLogout, useUser } from '@/shared/hooks';
 import { accountSchema, type IAccountFormData } from '@/pages/settings/types';
 import { useNavigate } from 'react-router-dom';
 
 export const useAccountForm = () => {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
   const { user } = useUser();
   const { logout } = useLogout();
@@ -28,57 +28,56 @@ export const useAccountForm = () => {
 
   const { formState: { isDirty }, reset } = form;
 
-  const { mutate: updatePassword, isPending: isPasswordPending } = useMutation({
-    mutationFn: (payload: Pick<IAccountFormData, 'currentPassword' | 'newPassword'>) =>
-      api.patch<{ success: boolean }>('/users/password', payload),
-    onSuccess: (response) => {
-      if (response?.success) {
-        reset({
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: '',
-        });
-        setAlert({ type: 'success', message: 'Password updated successfully.' });
-      }
-    },
-    onError: (error) => {
-      console.error(error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update password.';
-      setAlert({ type: 'error', message: errorMessage });
-    },
-  });
+  const updatePasswordMutation = useMutation(
+    trpc.users.updatePassword.mutationOptions({
+      onSuccess: (data) => {
+        if (data?.success) {
+          reset({
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          });
+          setAlert({ type: 'success', message: 'Password updated successfully.' });
+        }
+      },
+      onError: (error) => {
+        console.error(error);
+        setAlert({ type: 'error', message: error.message || 'Failed to update password.' });
+      },
+    })
+  );
 
-  const { mutate: toggle2fa, isPending: is2faPending } = useMutation({
-    mutationFn: (user2fa: boolean) =>
-      api.patch<{ success: boolean }>('/users/2fa', { user2fa }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEY });
-    },
-    onError: (error) => {
-      console.error(error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update 2FA status.';
-      setAlert({ type: 'error', message: errorMessage });
-    },
-  });
+  const toggle2faMutation = useMutation(
+    trpc.users.updateTwoFactor.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+        setAlert({ type: 'success', message: '2FA settings updated.' });
+      },
+      onError: (error) => {
+        console.error(error);
+        setAlert({ type: 'error', message: error.message || 'Failed to update 2FA status.' });
+      },
+    })
+  );
 
-  const { mutate: deleteAccount, isPending: isDeletePending } = useMutation({
-    mutationFn: () => api.delete<{ success: boolean }>('/users/me'),
-    onSuccess: () => {
-      queryClient.clear();
-      logout();
-      navigate('/login', { replace: true });
-    },
-    onError: (error) => {
-      console.error(error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to delete account.';
-      setAlert({ type: 'error', message: errorMessage });
-    },
-  });
+  const deleteAccountMutation = useMutation(
+    trpc.users.remove.mutationOptions({
+      onSuccess: () => {
+        queryClient.clear();
+        logout();
+        navigate('/login', { replace: true });
+      },
+      onError: (error) => {
+        console.error(error);
+        setAlert({ type: 'error', message: error.message || 'Failed to delete account.' });
+      },
+    })
+  );
 
   const onSubmit = (data: IAccountFormData) => {
     setAlert(null);
 
-    updatePassword({
+    updatePasswordMutation.mutate({
       currentPassword: data.currentPassword || '',
       newPassword: data.newPassword || '',
     });
@@ -86,12 +85,12 @@ export const useAccountForm = () => {
 
   const handleToggle2fa = (value: boolean) => {
     setAlert(null);
-    toggle2fa(value);
+    toggle2faMutation.mutate({ user2fa: value });
   };
 
   const handleDeleteAccount = () => {
     setAlert(null);
-    deleteAccount();
+    deleteAccountMutation.mutate();
   };
 
   return {
@@ -99,11 +98,11 @@ export const useAccountForm = () => {
     onSubmit: form.handleSubmit(onSubmit),
     alert,
     isPristine: !isDirty,
-    isPending: isPasswordPending,
+    isPending: updatePasswordMutation.isPending,
     user2fa: user?.isTwoFactorEnabled ?? false,
     onToggle2fa: handleToggle2fa,
-    is2faPending,
+    is2faPending: toggle2faMutation.isPending,
     onDeleteAccount: handleDeleteAccount,
-    isDeletePending,
+    isDeletePending: deleteAccountMutation.isPending,
   };
 };

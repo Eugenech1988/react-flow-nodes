@@ -8,9 +8,9 @@ import { LoginFields } from '@/features/auth/components/LoginFields';
 import { TwoFactorForm } from '@/features/auth/components/TwoFactorForm';
 import { useQueryClient } from '@tanstack/react-query';
 import { SubmitButton } from '@/shared/ui';
+import { useTRPC } from '@/shared/api';
 import { useAuthStore } from '@/features/auth/model/authStore';
 import { loginSchema, registerSchema, type CombinedFormData } from '@/features/auth/model';
-import { USER_QUERY_KEY } from '@/shared/lib';
 import { useNavigate } from 'react-router-dom';
 
 export const AuthForm: React.FC = () => {
@@ -28,8 +28,8 @@ export const AuthForm: React.FC = () => {
     toggleMode,
     resetState
   } = useAuthStore();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const currentApiError = apiError || twoFactorError;
   const isAuthError = currentApiError === 'Unauthorized' || currentApiError?.toLowerCase().includes('invalid');
@@ -49,8 +49,8 @@ export const AuthForm: React.FC = () => {
   const onSubmit = async (data: CombinedFormData) => {
     if (mode === 'login') {
       await login(data.email, data.password, () => {
-        queryClient.invalidateQueries({queryKey: USER_QUERY_KEY});
-        navigate('/', { replace: true });      });
+        queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+      });
     } else {
       await registerAction(data.email, data.password, () => {
         reset({email: '', password: '', confirmPassword: ''});
@@ -61,7 +61,7 @@ export const AuthForm: React.FC = () => {
   const handleSocialLogin = (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    queryClient.invalidateQueries({queryKey: USER_QUERY_KEY});
+    queryClient.invalidateQueries(trpc.auth.me.queryFilter());
     if (provider === 'google' || provider === 'github') {
       const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.API_URL || 'http://localhost:3000';
       window.location.href = `${apiUrl}/auth/${provider}`;
