@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { SigningOptions } from 'jsonwebtoken';
 import { randomBytes } from 'node:crypto';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@/users/users.service';
 import { RegisterDto } from '@/auth/dtos/register.dto';
@@ -34,13 +33,17 @@ export class AuthService {
     return codes;
   }
 
+  private sanitizeUser(user: Record<string, any>): TUserSafe {
+    const { password, twoFactorSecret, recoveryCodes, ...safeUser } = user;
+    return safeUser as TUserSafe;
+  }
+
   async validateUser(email: string, pass: string): Promise<TUserSafe | null> {
     const user = await this.usersService.findOneByEmail(email);
     if (user && user.password) {
       const isMatch = await verifyArgon(user.password, pass);
       if (isMatch) {
-        const { password, ...result } = user;
-        return result as TUserSafe;
+        return this.sanitizeUser(user);
       }
     }
     return null;
@@ -50,8 +53,7 @@ export class AuthService {
     const existingUser = await this.usersService.findOneByProvider(profile.provider, profile.providerId);
 
     if (existingUser) {
-      const { password, ...result } = existingUser;
-      return result as TUserSafe;
+      return this.sanitizeUser(existingUser);
     }
 
     const emailUser = await this.usersService.findOneByEmail(profile.email);
@@ -72,8 +74,7 @@ export class AuthService {
           },
         },
       });
-      const { password, ...result } = updatedUser;
-      return result as TUserSafe;
+      return this.sanitizeUser(updatedUser);
     }
 
     const newUser = await this.usersService.create({
@@ -89,8 +90,7 @@ export class AuthService {
       },
     });
 
-    const { password, ...result } = newUser;
-    return result as TUserSafe;
+    return this.sanitizeUser(newUser);
   }
 
   async register(dto: RegisterDto): Promise<TUserSafe> {
@@ -102,8 +102,7 @@ export class AuthService {
       nickName: dto.nickName,
     });
 
-    const { password, ...result } = user;
-    return result as TUserSafe;
+    return this.sanitizeUser(user);
   }
 
   async generateTokens(userId: string) {
@@ -111,12 +110,12 @@ export class AuthService {
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-      expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES') as SigningOptions,
+      expiresIn: this.configService.getOrThrow<JwtSignOptions['expiresIn']>('JWT_ACCESS_EXPIRES'),
     });
 
     const refreshToken = this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
-      expiresIn: this.configService.getOrThrow<string>('JWT_REFRESH_EXPIRES') as SigningOptions,
+      expiresIn: this.configService.getOrThrow<JwtSignOptions['expiresIn']>('JWT_REFRESH_EXPIRES'),
     });
 
     return { accessToken, refreshToken };
@@ -149,7 +148,7 @@ export class AuthService {
       { userId: user.id, purpose: 'password_recovery' },
       {
         secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-        expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_EXPIRES') as SigningOptions,
+        expiresIn: this.configService.getOrThrow<JwtSignOptions['expiresIn']>('JWT_ACCESS_EXPIRES'),
       },
     );
 
@@ -161,7 +160,7 @@ export class AuthService {
     const payload = { userId, purpose: '2fa_pending' };
     return this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-      expiresIn: this.configService.getOrThrow<string>('JWT_ACCESS_TEMP_EXPIRES') as SigningOptions,
+      expiresIn: this.configService.getOrThrow<JwtSignOptions['expiresIn']>('JWT_ACCESS_TEMP_EXPIRES'),
     });
   }
 
@@ -172,7 +171,7 @@ export class AuthService {
       payload = this.jwtService.verify<IResetPasswordPayload>(dto.token, {
         secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
       });
-    } catch (error) {
+    } catch {
       throw new BadRequestException('Invalid or expired recovery token');
     }
 
@@ -252,7 +251,7 @@ export class AuthService {
     let isValid = (
       await verifyOtp({
         token: code,
-        secret: user.twoFactorSecret
+        secret: user.twoFactorSecret,
       })).valid;
 
     if (!isValid && user.recoveryCodes?.length) {
@@ -323,8 +322,7 @@ export class AuthService {
       await this.usersService.update(user.id, { recoveryCodes: updatedCodes });
     }
 
-    const { password, twoFactorSecret, recoveryCodes, ...resultUser } = user;
-    return resultUser as unknown as TUserSafe;
+    return this.sanitizeUser(user);
   }
 
   async regenerateRecoveryCodes(userId: string) {
