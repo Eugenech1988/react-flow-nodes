@@ -50,6 +50,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
               className={cn(
                 'absolute left-3.5 top-1/2 -translate-y-1/2 z-20 pointer-events-none transition-colors duration-200',
                 'text-zinc-400 dark:text-zinc-500 group-hover:text-teal-500 dark:group-hover:text-teal-500 peer-focus:text-teal-500 peer-not-placeholder-shown:text-teal-500',
+                'peer-disabled:text-muted-foreground/40 peer-disabled:group-hover:text-muted-foreground/40',
                 error && 'text-red-500!'
               )}
             >
@@ -65,7 +66,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
               'peer w-full h-full border-0 bg-transparent focus-visible:ring-0 py-0 placeholder:opacity-0 transition-all z-10 relative',
               roundedClass,
               hasIcon ? 'pl-10 pr-3' : 'px-3',
-              'disabled:cursor-not-allowed disabled:text-muted-foreground/60',
+              'disabled:cursor-not-allowed disabled:text-muted-foreground/70',
               error
                 ? 'text-red-500! [-webkit-text-fill-color:var(--color-red-500)]! autofill:[-webkit-text-fill-color:var(--color-red-500)]!'
                 : 'text-foreground autofill:[-webkit-text-fill-color:var(--foreground)]!',
@@ -81,6 +82,8 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
               'group-hover:text-teal-500 dark:group-hover:text-teal-500',
               'peer-focus:text-teal-500 peer-focus-visible:text-teal-500 peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:text-[10px]',
               'peer-not-placeholder-shown:text-teal-500 peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:text-[10px]',
+              // Disabled стили для label: принудительно делаем серым и убираем hover-эффекты
+              'peer-disabled:text-muted-foreground/60! peer-disabled:group-hover:text-muted-foreground/60! peer-disabled:top-0! peer-disabled:-translate-y-1/2! peer-disabled:text-[10px]!',
               error
                 ? 'text-red-500!'
                 : 'group-hover:text-teal-500 dark:group-hover:text-teal-500 peer-focus:text-teal-500 peer-focus-visible:text-teal-500 peer-not-placeholder-shown:text-teal-500 dark:peer-focus:text-teal-500 dark:peer-focus-visible:text-teal-500 dark:peer-not-placeholder-shown:text-teal-500',
@@ -98,7 +101,8 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
               'peer-focus:[&_legend]:max-w-full peer-focus:[&_legend]:px-1 peer-focus:[&_legend]:visible',
               'peer-not-placeholder-shown:[&_legend]:max-w-full peer-not-placeholder-shown:[&_legend]:px-1 peer-not-placeholder-shown:[&_legend]:visible',
               'autofill:[&_legend]:max-w-full autofill:[&_legend]:px-1 autofill:[&_legend]:visible',
-              'peer-disabled:bg-muted/30 peer-disabled:border-border/40 peer-disabled:opacity-80',
+              // Disabled стили для fieldset и legend:
+              'peer-disabled:bg-muted/30 peer-disabled:border-border/60 peer-disabled:[&_legend]:max-w-full peer-disabled:[&_legend]:px-1 peer-disabled:[&_legend]:visible',
               error
                 ? 'border-red-500! shadow-[0_0_15px_rgba(239,68,68,0.02)]'
                 : 'border-zinc-400 dark:border-zinc-500 hover:border-teal-500 dark:hover:border-teal-500 group-hover:border-teal-500 dark:group-hover:border-teal-500 peer-focus:border-teal-500 peer-focus-visible:border-teal-500 peer-not-placeholder-shown:border-teal-500 dark:peer-focus:border-teal-500 dark:peer-focus-visible:border-teal-500 dark:peer-not-placeholder-shown:border-teal-500',
