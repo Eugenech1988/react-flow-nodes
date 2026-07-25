@@ -1,5 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '@/prisma/prisma.service';
+import { Injectable, InternalServerErrorException, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';import { PrismaService } from '@/prisma/prisma.service';
 import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
 import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 import * as fs from 'node:fs/promises';
@@ -92,13 +91,17 @@ export class PipelinesService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
     const pipeline = await this.prisma.pipeline.findUnique({
       where: { id },
     });
 
     if (!pipeline) {
       throw new NotFoundException('Pipeline not found');
+    }
+
+    if (pipeline.userId !== userId) {
+      throw new ForbiddenException('You do not have permission to delete this pipeline');
     }
 
     if (pipeline.screenshotUrl) {

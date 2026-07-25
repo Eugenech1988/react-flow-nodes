@@ -1,2 +1,2 @@
-export * from '@/shared/api/api';
-export * from '@/shared/api/trpc';
+export * from './api';
+export * from './trpc';

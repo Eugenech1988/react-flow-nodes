@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthForm } from '@/features/auth';
 import { ProtectedRoute } from '@/app/providers/ProtectedRoute';
 import { PublicOnlyRoute } from '@/app/providers/PublicOnlyRoute';
 import AppLayout from '@/app/AppLayout';
+import { LoginPage } from '@/pages/login';
 import { CanvasPage } from '@/pages/canvas/CanvasPage';
 import { SettingsPage, ProfileForm, AccountForm } from '@/pages/settings';
 import { BillingPage } from '@/pages/billing';
@@ -47,7 +47,7 @@ export const AppRoutes = () => {
   return (
     <Routes>
       <Route element={<PublicOnlyRoute />}>
-        <Route path="/login" element={<AuthForm />} />
+        <Route path="/login" element={<LoginPage />} />
       </Route>
 
       <Route element={<ProtectedRoute />}>

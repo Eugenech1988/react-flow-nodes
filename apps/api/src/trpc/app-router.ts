@@ -99,7 +99,6 @@ export function createAppRouter(services: RouterServices) {
   const pipelinesRouter = router({
     list: protectedProcedure.query(({ ctx }) => services.pipelinesService.findAllByUserId(ctx.user.id)),
     remove: protectedProcedure.input(updatePipelineInputSchema.pick({ id: true })).mutation(({ ctx, input }) =>
-      // Защита: передаем userId владельца
       services.pipelinesService.remove(input.id, ctx.user.id),
     ),
   });

@@ -56,9 +56,11 @@ export class PipelinesController {
   ) {
     return this.pipelinesService.update(id, dto, file);
   }
-
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.pipelinesService.remove(id);
+  @Delete(':id/user/:userId')
+  async remove(
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+  ) {
+    return this.pipelinesService.remove(id, userId);
   }
 }

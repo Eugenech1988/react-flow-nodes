@@ -1,16 +1,16 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@pipeline/ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SocialLoginButtons } from '@/features/auth/components/SocialLoginButtons';
-import { AuthModeToggle } from '@/features/auth/components/AuthModeToggle';
-import { RegisterFields } from '@/features/auth/components/RegisterFields';
-import { LoginFields } from '@/features/auth/components/LoginFields';
-import { TwoFactorForm } from '@/features/auth/components/TwoFactorForm';
+import { SocialLoginButtons } from '@/pages/login/components/SocialLoginButtons';
+import { AuthModeToggle } from '@/pages/login/components/AuthModeToggle';
+import { RegisterFields } from '@/pages/login/components/RegisterFields';
+import { LoginFields } from '@/pages/login/components/LoginFields';
+import { TwoFactorForm } from '@/pages/login/components/TwoFactorForm';
 import { useQueryClient } from '@tanstack/react-query';
 import { SubmitButton } from '@/shared/ui';
 import { useTRPC } from '@/shared/api';
-import { useAuthStore } from '@/features/auth/model/authStore';
-import { loginSchema, registerSchema, type CombinedFormData } from '@/features/auth/model';
+import { useAuthStore } from '@/pages/login/model/authStore';
+import { loginSchema, registerSchema, type CombinedFormData } from '@/pages/login/model';
 
 export const AuthForm: React.FC = () => {
   const {

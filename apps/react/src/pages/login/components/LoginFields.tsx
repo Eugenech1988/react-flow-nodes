@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { FloatingInput } from '@/shared/ui';
-import type { CombinedFormData } from '@/features/auth/model/types';
-import { DEFAULT_TEXT_CLASSES, DEFAULT_LABEL_CLASSES, DEFAULT_FIELDSET_CLASSES } from '@/features/auth/model';
+import type { CombinedFormData } from '@/pages/login/model/types';
+import { DEFAULT_TEXT_CLASSES, DEFAULT_LABEL_CLASSES, DEFAULT_FIELDSET_CLASSES } from '@/pages/login/model';
 
 interface LoginFieldsProps {
   register: UseFormRegister<CombinedFormData>;
