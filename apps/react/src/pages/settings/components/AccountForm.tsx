@@ -85,6 +85,7 @@ export const AccountForm = ({
   };
 
   const handleConfirm2fa = (code: string) => {
+    console.log('submitting');
     const targetValue = modalMode === 'enable';
     onToggle2fa(targetValue, code);
     setIs2faModalOpen(false);

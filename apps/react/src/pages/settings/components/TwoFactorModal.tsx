@@ -1,17 +1,22 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ShieldCheck } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
-import { twoFactorLoginInputSchema } from '@pipeline/contracts';
 
-type ITwoFactorFormData = z.infer<typeof twoFactorLoginInputSchema>;
+const updateTwoFactorInputSchema = z.object({
+  user2fa: z.boolean(),
+  code: z.string().length(6, 'Code must be exactly 6 digits'),
+});
+
+type ITwoFactorFormData = z.infer<typeof updateTwoFactorInputSchema>;
 
 interface TwoFactorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (code: string) => void;
+  onConfirm: (data: ITwoFactorFormData) => void;
   mode: 'enable' | 'disable';
   qrCodeImage?: string | null;
   modalError?: string | null;
@@ -27,18 +32,32 @@ export const TwoFactorModal = ({
                                  modalError,
                                  isPending = false,
                                }: TwoFactorModalProps) => {
+  const isEnable = mode === 'enable';
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isValid },
   } = useForm<ITwoFactorFormData>({
-    resolver: zodResolver(twoFactorSchema),
+    resolver: zodResolver(updateTwoFactorInputSchema),
     mode: 'onChange',
+    defaultValues: {
+      user2fa: isEnable,
+      code: '',
+    },
   });
 
+  useEffect(() => {
+    setValue('user2fa', isEnable);
+  }, [isEnable, setValue]);
+
   const handleFormSubmit = (data: ITwoFactorFormData) => {
-    onConfirm(data.code);
+    onConfirm({
+      user2fa: isEnable,
+      code: data.code,
+    });
     reset();
   };
 
@@ -46,8 +65,6 @@ export const TwoFactorModal = ({
     reset();
     onClose();
   };
-
-  const isEnable = mode === 'enable';
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -62,6 +79,8 @@ export const TwoFactorModal = ({
         />
 
         <form onSubmit={handleSubmit(handleFormSubmit)}>
+          <input type="hidden" {...register('user2fa')} />
+
           <DialogBody withBorder className="space-y-4">
             {modalError && (
               <div className="text-sm text-rose-600">{modalError}</div>
@@ -104,7 +123,7 @@ export const TwoFactorModal = ({
 
           <DialogFooter
             onCancel={handleClose}
-            onSubmit={handleSubmit(handleFormSubmit)}
+            onSubmit={() => handleSubmit(handleFormSubmit)()}
             isPending={isPending}
             isDisabled={!isValid || (isEnable && !qrCodeImage)}
             submitText={isEnable ? 'Enable' : 'Disable'}
