@@ -8,10 +8,9 @@ import {
   SelectValue,
 } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
+import type { TRoundedSize } from '@/shared/lib';
 
-export type RoundedSize = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
-
-const roundedMap: Record<RoundedSize, string> = {
+const roundedMap: Record<TRoundedSize, string> = {
   none: 'rounded-none',
   sm: 'rounded-sm',
   md: 'rounded-md',
@@ -21,7 +20,7 @@ const roundedMap: Record<RoundedSize, string> = {
   full: 'rounded-full',
 };
 
-export interface FloatingSelectOption {
+export type TFloatingSelectOption = {
   value: string;
   label: string;
 }
@@ -30,7 +29,7 @@ export interface FloatingSelectProps {
   label: string;
   value?: string;
   onChange?: (value: string) => void;
-  options: FloatingSelectOption[];
+  options: TFloatingSelectOption[];
   placeholder?: string;
   error?: boolean;
   errorMessage?: string;
@@ -39,7 +38,7 @@ export interface FloatingSelectProps {
   labelClasses?: string;
   fieldsetClasses?: string;
   renderValue?: (value: string) => React.ReactNode;
-  rounded?: RoundedSize;
+  rounded?: TRoundedSize;
 }
 
 export const FloatingSelect: React.FC<FloatingSelectProps> = ({

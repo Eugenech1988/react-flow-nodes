@@ -1,1 +1,1 @@
-export * from '@/widgets/nodes-toolbar/NodesToolbar';
+export * from './NodesToolbar';

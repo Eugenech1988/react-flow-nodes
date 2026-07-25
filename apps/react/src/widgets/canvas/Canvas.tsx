@@ -14,13 +14,13 @@ import '@xyflow/react/dist/style.css';
 import { useStore } from '@/entities';
 import type { PipelineNode, PipelineEdge } from '@/entities';
 
-import { HistoryControls } from '@/widgets/canvas/components/HistoryControls';
-import { ImportExportToolbar } from '@/widgets/canvas/components/ImportExportToolbar';
-import { AutoLayoutButton } from '@/widgets/canvas/components/AutoLayoutButton';
-import { ClearCanvasButton } from '@/widgets/canvas/components/ClearCanvasButton';
-import { ExecutionLogConsole } from '@/widgets/canvas/components/ExecutionLogConsole';
-import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES, NODE_COLORS, NODE_TYPE_TO_CATEGORY } from '@/widgets/canvas/config';
-import { useDragAndDrop, useKeyboardShortcuts } from '@/widgets/canvas/lib';
+import { HistoryControls } from './components/HistoryControls';
+import { ImportExportToolbar } from './components/ImportExportToolbar';
+import { AutoLayoutButton } from './components/AutoLayoutButton';
+import { ClearCanvasButton } from './components/ClearCanvasButton';
+import { ExecutionLogConsole } from './components/ExecutionLogConsole';
+import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES, NODE_COLORS, NODE_TYPE_TO_CATEGORY } from './config';
+import { useDragAndDrop, useKeyboardShortcuts } from './hooks';
 
 export const Canvas = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);

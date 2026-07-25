@@ -1,4 +1,5 @@
-import { Injectable, InternalServerErrorException, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';import { PrismaService } from '@/prisma/prisma.service';
+import { Injectable, InternalServerErrorException, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { PrismaService } from '@/prisma/prisma.service';
 import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
 import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 import * as fs from 'node:fs/promises';

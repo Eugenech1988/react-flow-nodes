@@ -1,1 +1,1 @@
-export { useAutosizeTextarea } from '@/features/manage-nodes/hooks/useAutosizeTextarea';
+export { useAutosizeTextarea } from './useAutosizeTextarea';

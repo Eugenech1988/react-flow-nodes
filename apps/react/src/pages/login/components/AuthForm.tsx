@@ -1,11 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@pipeline/ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SocialLoginButtons } from '@/pages/login/components/SocialLoginButtons';
-import { AuthModeToggle } from '@/pages/login/components/AuthModeToggle';
-import { RegisterFields } from '@/pages/login/components/RegisterFields';
-import { LoginFields } from '@/pages/login/components/LoginFields';
-import { TwoFactorForm } from '@/pages/login/components/TwoFactorForm';
+import { SocialLoginButtons } from './SocialLoginButtons';
+import { AuthModeToggle } from './AuthModeToggle';
+import { RegisterFields } from './RegisterFields';
+import { LoginFields } from './LoginFields';
+import { TwoFactorForm } from './TwoFactorForm';
 import { useQueryClient } from '@tanstack/react-query';
 import { SubmitButton } from '@/shared/ui';
 import { useTRPC } from '@/shared/api';

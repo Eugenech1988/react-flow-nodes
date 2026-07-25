@@ -1,5 +1,5 @@
 import { useStore } from '@/entities';
-import { useAutoLayout } from '@/widgets/canvas/lib/useAutoLayout';
+import { useAutoLayout } from '../hooks/useAutoLayout';
 import { SquareCenterlineDashedVertical } from 'lucide-react';
 
 export const AutoLayoutButton = () => {

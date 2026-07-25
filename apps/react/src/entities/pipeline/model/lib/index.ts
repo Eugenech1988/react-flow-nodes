@@ -1,1 +1,1 @@
-export * from '@/entities/pipeline/model/lib/validatePipeline'
+export * from './validatePipeline'

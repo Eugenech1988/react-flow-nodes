@@ -1,4 +1,4 @@
-export { useStore } from '@/entities/pipeline/model/store';
+export { useStore } from './pipeline/model';
 export type {
   PipelineNode,
   PipelineEdge,
@@ -11,4 +11,4 @@ export type {
   NodeComponentProps,
   NodeFieldValues,
   HandleConfig
-} from '@/entities/pipeline/model/types';
+} from './pipeline/model';

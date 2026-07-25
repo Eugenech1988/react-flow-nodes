@@ -64,3 +64,6 @@ export interface IUser {
   isTwoFactorEnabled?: boolean;
   twoFactorSecret?: string;
 }
+
+export type TRoundedSize = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+

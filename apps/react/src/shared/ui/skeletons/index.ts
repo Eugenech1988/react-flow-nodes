@@ -1,1 +1,1 @@
-export * from '@/shared/ui/skeletons/TableSkeleton';
+export * from './TableSkeleton';

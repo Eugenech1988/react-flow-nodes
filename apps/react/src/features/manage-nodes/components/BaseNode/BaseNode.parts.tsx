@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@pipeline/ui';
 import type { FieldConfig, HandleConfig, NodeFieldValues } from '@/entities';
-import { inputFieldClassName } from '@/features/manage-nodes/components/BaseNode/BaseNode.utils';
+import { inputFieldClassName } from './BaseNode.utils';
 
 export const NodeHandles = ({ handles, type }: { handles: HandleConfig[]; type: 'target' | 'source' }) => (
   <>

@@ -50,16 +50,12 @@ export const UserDropdown = () => {
       : `${BASE_URL}${avatarUrl}`
     : null;
 
-  // Стиль для стандартных пунктов (Профиль, Настройки, Билинг, Пайплайны)
   const itemClasses = [
     'flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors font-medium',
-    // Обычное состояние (серый текст и иконка):
     'text-foreground [&>svg]:text-muted-foreground',
-    // Hover и Active/Highlighted состояния в Radix UI:
     'hover:bg-teal-500/10! focus:bg-teal-500/10! data-[highlighted]:bg-teal-500/10!',
     'hover:text-teal-600! focus:text-teal-600! data-[highlighted]:text-teal-600!',
     'dark:hover:text-teal-400! dark:focus:text-teal-400! dark:data-[highlighted]:text-teal-400!',
-    // Красим SVG-иконку внутри пункта в зеленый при ховере/фокусе:
     '[&>svg]:transition-colors',
     'hover:[&>svg]:text-teal-600! focus:[&>svg]:text-teal-600! data-[highlighted]:[&>svg]:text-teal-600!',
     'dark:hover:[&>svg]:text-teal-400! dark:focus:[&>svg]:text-teal-400! dark:data-[highlighted]:[&>svg]:text-teal-400!'

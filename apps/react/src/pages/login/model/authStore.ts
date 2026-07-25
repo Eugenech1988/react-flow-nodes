@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { trpcClient } from '@/shared/api';
-import type { FormMode, LoginResponseData, TwoFactorFormData } from '@/features/auth/model/types';
+import type { FormMode, LoginResponseData, TwoFactorFormData } from '@/pages/login/model/types';
 
 interface AuthState {
   mode: FormMode;

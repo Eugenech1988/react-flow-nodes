@@ -1,5 +1,5 @@
 import { Position } from '@xyflow/react';
-import { createNode } from '@/features/manage-nodes/components/BaseNode';
+import { createNode } from './BaseNode';
 
 const COMPARISON_OPERATORS = ['>', '<', '==', '!='] as const;
 

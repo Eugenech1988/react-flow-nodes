@@ -1,10 +1,9 @@
 import React from 'react';
 import { Input } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
+import type { TRoundedSize } from '@/shared/lib';
 
-export type RoundedSize = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
-
-const roundedMap: Record<RoundedSize, string> = {
+const roundedMap: Record<TRoundedSize, string> = {
   none: 'rounded-none',
   sm: 'rounded-sm',
   md: 'rounded-md',
@@ -22,7 +21,7 @@ interface FloatingInputProps extends React.ComponentProps<typeof Input> {
   labelClasses?: string;
   fieldsetClasses?: string;
   className?: string;
-  rounded?: RoundedSize;
+  rounded?: TRoundedSize;
 }
 
 export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(

@@ -3,16 +3,16 @@ const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 let isRefreshing = false;
 let refreshSubscribers: (() => void)[] = [];
 
-function subscribeTokenRefresh(cb: () => void) {
+const subscribeTokenRefresh = (cb: () => void) => {
   refreshSubscribers.push(cb);
-}
+};
 
-function onRefreshed() {
+const onRefreshed = () => {
   refreshSubscribers.forEach((cb) => cb());
   refreshSubscribers = [];
-}
+};
 
-async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+const request = async <T>(endpoint: string, options: RequestInit = {}): Promise<T> => {
   const url = `${BASE_URL}${endpoint}`;
   const isFormData = options.body instanceof FormData;
 
@@ -68,7 +68,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   }
 
   return {} as Promise<T>;
-}
+};
 
 export const api = {
   get: <T>(endpoint: string, options?: RequestInit) =>
@@ -78,21 +78,21 @@ export const api = {
     request<T>(endpoint, {
       ...options,
       method: 'POST',
-      body: body instanceof FormData ? body : JSON.stringify(body)
+      body: body instanceof FormData ? body : JSON.stringify(body),
     }),
 
   put: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
     request<T>(endpoint, {
       ...options,
       method: 'PUT',
-      body: body instanceof FormData ? body : JSON.stringify(body)
+      body: body instanceof FormData ? body : JSON.stringify(body),
     }),
 
   patch: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
     request<T>(endpoint, {
       ...options,
       method: 'PATCH',
-      body: body instanceof FormData ? body : JSON.stringify(body)
+      body: body instanceof FormData ? body : JSON.stringify(body),
     }),
 
   delete: <T>(endpoint: string, options?: RequestInit) =>

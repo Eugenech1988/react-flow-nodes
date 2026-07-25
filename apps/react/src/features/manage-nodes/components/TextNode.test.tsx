@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import { Position } from '@xyflow/react';
 import { describe, expect, it, vi } from 'vitest';
-import { TextNode } from '@/features/manage-nodes/components/TextNode';
-import type { BaseNodeProps } from '@/features/manage-nodes/components/BaseNode';
+import { TextNode } from './TextNode';
+import type { BaseNodeProps } from './BaseNode';
 
 const { baseNodeProps } = vi.hoisted(() => ({
   baseNodeProps: {

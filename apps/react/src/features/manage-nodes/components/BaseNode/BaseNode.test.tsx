@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { BaseNode, createNode } from '@/features/manage-nodes/components/BaseNode/BaseNode';
+import { BaseNode, createNode } from './BaseNode';
 import type { FieldConfig } from '@/entities';
 import type { ChangeEvent } from 'react';
 

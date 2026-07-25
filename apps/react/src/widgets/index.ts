@@ -1,3 +1,3 @@
-export * from '@/widgets/header';
-export * from '@/widgets/nodes-toolbar';
-export * from '@/widgets/canvas';
+export * from './header';
+export * from './nodes-toolbar';
+export * from './canvas';

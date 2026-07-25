@@ -1,15 +1,15 @@
 import { useState, useMemo } from 'react';
 import type { IPipeline } from '@/pages/pipelines/types';
-import type { TabType, SortOption } from '@/pages/pipelines/constants';
+import type { TTabType, TSortOption } from '@/pages/pipelines/constants';
 
 export const usePipelinesFilter = (
   pipelines: IPipeline[],
-  initialSortBy: SortOption['value'] = 'name',
+  initialSortBy: TSortOption['value'] = 'name',
   initialSortOrder: 'asc' | 'desc' = 'asc'
 ) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<TabType>('all');
-  const [sortBy, setSortBy] = useState<SortOption['value']>(initialSortBy);
+  const [statusFilter, setStatusFilter] = useState<TTabType>('all');
+  const [sortBy, setSortBy] = useState<TSortOption['value']>(initialSortBy);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>(initialSortOrder);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +20,7 @@ export const usePipelinesFilter = (
     let result = pipelines;
 
     if (statusFilter !== 'all') {
-      result = result.filter((p) => p.status === statusFilter);
+      result = result.filter((p) => p.status === statusFilter.toUpperCase());
     }
 
     if (searchQuery.trim()) {

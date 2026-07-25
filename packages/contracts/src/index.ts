@@ -51,3 +51,4 @@ export const createPipelineInputSchema = z.object({
 export const updatePipelineInputSchema = createPipelineInputSchema.partial().extend({
   id: z.string().min(1),
 });
+

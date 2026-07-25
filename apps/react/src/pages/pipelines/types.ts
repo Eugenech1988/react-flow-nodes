@@ -1,5 +1,4 @@
-// src/pages/pipelines/types.ts
-export interface IPipeline {
+export interface TPipeline {
   id: string;
   name: string;
   description: string;
