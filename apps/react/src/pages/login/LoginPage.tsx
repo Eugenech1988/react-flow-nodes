@@ -100,7 +100,7 @@ export const LoginPage: React.FC = () => {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-5.5 p-0 mt-6">
+        <CardContent className="space-y-5.5 p-0">
           {is2faRequired ? (
             <TwoFactorForm
               qrCodeImage={qrCodeImage ?? undefined}

@@ -15,7 +15,7 @@ export const registerInputSchema = loginInputSchema.extend({
 
 export const twoFactorLoginInputSchema = z.object({
   tempToken: z.string().min(1),
-  code: z.string().min(1),
+  code: z.string().length(6, 'Code must be exactly 6 digits'),
 });
 
 

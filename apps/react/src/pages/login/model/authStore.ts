@@ -79,7 +79,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({isLoading: true, apiError: null, twoFactorError: null});
     try {
       const response = await trpcClient.auth.login.mutate({email, password});
-      console.log('Вызываем логин...');
       const requires2fa = get().handleLoginResponse(response);
       if (!requires2fa) {
         await onSuccess();
