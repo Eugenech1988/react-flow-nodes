@@ -11,7 +11,6 @@ import { SubmitButton } from '@/shared/ui';
 import { useTRPC } from '@/shared/api';
 import { useAuthStore } from '@/features/auth/model/authStore';
 import { loginSchema, registerSchema, type CombinedFormData } from '@/features/auth/model';
-import { useNavigate } from 'react-router-dom';
 
 export const AuthForm: React.FC = () => {
   const {
@@ -94,9 +93,9 @@ export const AuthForm: React.FC = () => {
         <CardContent className="space-y-5.5 p-0 mt-6">
           {is2faRequired ? (
             <TwoFactorForm
-              qrCodeImage={qrCodeImage}
-              secretKey={secretKey}
-              error={currentApiError}
+              qrCodeImage={qrCodeImage ?? undefined}
+              secretKey={secretKey ?? undefined}
+              error={currentApiError ?? undefined}
               isLoading={is2faLoading}
               onVerify={verifyTwoFactor}
               onBack={resetState}
