@@ -1,5 +1,5 @@
-import { ProfileForm } from '@/pages/settings';
-import { useProfileForm } from '../hooks/useProfileForm';
+import { ProfileForm } from './components';
+import { useProfileForm } from './hooks';
 
 export const ProfileTab = () => {
   const profile = useProfileForm();

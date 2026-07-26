@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { ShieldCheck, Check, ArrowLeft, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useSubscription } from '@/shared/hooks';
-
+import { useUser } from '@/shared/hooks';
 import { getPlans, getPlanMeta } from '@/pages/plans/constants';
 import { PricingHeader } from '@/pages/plans/components/PricingHeader';
 import { PlanCard } from '@/pages/plans/components/PlanCard';
@@ -21,7 +20,7 @@ const pageVariants: Variants = {
 };
 
 export const PlansPage = () => {
-  const { isProActive, isLoading } = useSubscription();
+  const { isLoading, isProActive } = useUser();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
   const { processingPlan, errorMessage, setErrorMessage, handleSelectPlan } =

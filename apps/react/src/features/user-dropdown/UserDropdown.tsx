@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useLogout, useSubscription, useUser } from '@/shared/hooks';
+import { useLogout, useUser } from '@/shared/hooks';
 import {
   LogOut,
   User,
@@ -24,10 +24,9 @@ const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 export const UserDropdown = () => {
   const navigate = useNavigate();
   const { user } = useUser();
-  const { subscription } = useSubscription();
   const { logout } = useLogout();
 
-  const isFreePlan = subscription && subscription.plan === 'FREE';
+  const isFreePlan = user?.subscription && user?.subscription.plan === 'FREE';
 
   const firstName = user?.profile?.firstName || '';
   const lastName = user?.profile?.lastName || '';

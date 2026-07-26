@@ -1,5 +1,5 @@
-import { AccountForm } from '@/pages/settings';
-import { useAccountForm } from '../hooks/useAccountForm';
+import { AccountForm } from './components';
+import { useAccountForm } from './hooks/useAccountForm';
 
 export const AccountTab = () => {
   const account = useAccountForm();

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useUser } from '@/shared/hooks';
 import { useSubscription, useTransactions } from '@/shared/hooks';
 import { useTRPC } from '@/shared/api';
 
@@ -14,8 +15,9 @@ export const useBilling = () => {
   const trpc = useTRPC();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { isProActive } = useUser();
 
-  const { subscription, isProActive, isLoading: isSubscriptionLoading } = useSubscription();
+  const { subscription, isLoading: isSubscriptionLoading } = useSubscription();
   const { transactions, isLoading: isTransactionLoading } = useTransactions();
 
   const [bannerMessage, setBannerMessage] = useState<{ error: string | null; success: string | null }>(() => {

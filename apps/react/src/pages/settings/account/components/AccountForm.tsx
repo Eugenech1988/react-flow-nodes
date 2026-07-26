@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { Switch } from '@pipeline/ui';
-import { SubmitButton, BackButton, DangerButton } from '@/shared/ui/buttons';
+import { BackButton, DangerButton, SubmitButton } from '@/shared/ui/buttons';
 import { ShieldCheck } from 'lucide-react';
 import type { IAccountFormData } from '@/pages/settings/types';
-import { DeleteAccountModal } from '@/pages/settings/components/DeleteAccountModal.tsx';
-import { TwoFactorModal } from '@/pages/settings/components/TwoFactorModal';
+import { DeleteAccountModal } from './DeleteAccountModal';
+import { TwoFactorModal } from './TwoFactorModal';
 
 interface AccountFormProps {
   form: UseFormReturn<IAccountFormData>;
@@ -91,8 +91,7 @@ export const AccountForm = ({
     setModalError(null);
     try {
       if (modalMode === 'enable') {
-        const codes = await onToggle2fa(true, code);
-        return codes;
+        return await onToggle2fa(true, code);
       } else {
         await onToggle2fa(false, code);
         handleModalClose();

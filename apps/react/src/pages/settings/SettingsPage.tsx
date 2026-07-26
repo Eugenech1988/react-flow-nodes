@@ -2,17 +2,16 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { User, Shield, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useRef, useEffect } from 'react';
-import { ProfileSidebar } from '@/pages/settings/components/ProfileSidebar';
+import { ProfileSidebar } from './components';
 import { Tabs } from '@/shared/ui';
-import { useUser, useSubscription } from '@/shared/hooks';
-import { useProfileForm } from '@/pages/settings/hooks/useProfileForm';
+import { useUser } from '@/shared/hooks';
+import { useProfileForm } from './profile/hooks/useProfileForm';
 
 export const SettingsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isInitialMount = useRef(true);
-  const { user } = useUser();
-  const { isProActive } = useSubscription();
+  const { user, isProActive } = useUser();
 
   const profile = useProfileForm();
 
