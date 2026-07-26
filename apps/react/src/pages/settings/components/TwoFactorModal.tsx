@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ShieldCheck, Loader2, Copy, Check } from 'lucide-react';
-import { Dialog, DialogContent } from '@pipeline/ui';
+import { Dialog, DialogContent, Input } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter, SubmitButton } from '@/shared/ui';
 import {
   twoFactorTotpOnlySchema,
-  twoFactorCodeOrBackupSchema
+  twoFactorCodeOrBackupSchema,
 } from '@pipeline/contracts';
 
 interface TwoFactorModalProps {
@@ -71,8 +71,6 @@ export const TwoFactorModal = ({
         handleClose();
       }
     } catch {
-      // Ничего не закрываем и ничего не пишем в локальный state —
-      // родительский AccountForm сам установит modalError!
     }
   };
 
@@ -100,10 +98,11 @@ export const TwoFactorModal = ({
         {recoveryCodes ? (
           <div className="p-6 space-y-4">
             <div className="space-y-1">
-              <h3 className="text-sm font-semibold text-foreground">Save your recovery codes</h3>
+              <h3 className="text-sm font-semibold text-foreground">
+                Save your recovery codes
+              </h3>
               <p className="text-xs text-muted-foreground">
-                Store these backup codes in a safe place. You can use them to access your account if you lose your
-                authenticator device.
+                Store these backup codes in a safe place. You can use them to access your account if you lose your authenticator device.
               </p>
             </div>
 
@@ -119,7 +118,7 @@ export const TwoFactorModal = ({
               <button
                 type="button"
                 onClick={handleCopyCodes}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
               >
                 {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
                 {copied ? 'Copied to clipboard' : 'Copy codes'}
@@ -128,9 +127,9 @@ export const TwoFactorModal = ({
               <SubmitButton
                 isPending={false}
                 text="Done"
-                icon={Check}
+                icon={null}
                 onClick={handleClose}
-                className="flex-1 py-2 text-xs rounded-lg h-auto"
+                className="flex-1 py-2 text-sm rounded-lg h-auto"
               />
             </div>
           </div>
@@ -178,17 +177,17 @@ export const TwoFactorModal = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <input
+                      <Input
                         type="text"
                         maxLength={6}
                         autoFocus
                         autoComplete="one-time-code"
                         placeholder="123456"
                         {...register('code')}
-                        className={`w-full px-3 py-2 border rounded-lg text-center tracking-[0.25em] text-xl font-mono uppercase focus:outline-none focus:ring-2 transition-all ${
+                        className={`h-11 text-center font-mono text-3xl font-bold tracking-[0.3em] focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none transition-all ${
                           hasCodeError
-                            ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus:ring-rose-500/50'
-                            : 'border-border bg-background text-foreground focus:ring-teal-500/50'
+                            ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus-visible:border-rose-500 focus-visible:ring-rose-500/30'
+                            : 'border-border bg-background text-foreground focus-visible:border-teal-500 focus-visible:ring-teal-500/30'
                         }`}
                       />
                       {errors.code && (
@@ -206,17 +205,17 @@ export const TwoFactorModal = ({
                   </p>
 
                   <div className="space-y-1.5">
-                    <input
+                    <Input
                       type="text"
-                      maxLength={10}
+                      maxLength={32}
                       autoFocus
                       autoComplete="one-time-code"
                       placeholder="123456 or recovery code"
                       {...register('code')}
-                      className={`w-full px-3 py-2 border rounded-lg text-center tracking-[0.25em] text-xl font-mono uppercase focus:outline-none focus:ring-2 transition-all ${
+                      className={`h-11 text-center font-mono text-2xl font-bold tracking-normal placeholder:tracking-normal focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none transition-all ${
                         hasCodeError
-                          ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus:ring-rose-500/50'
-                          : 'border-border bg-background text-foreground focus:ring-teal-500/50'
+                          ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus-visible:border-rose-500 focus-visible:ring-rose-500/30'
+                          : 'border-border bg-background text-foreground focus-visible:border-teal-500 focus-visible:ring-teal-500/30'
                       }`}
                     />
                     {errors.code && (
