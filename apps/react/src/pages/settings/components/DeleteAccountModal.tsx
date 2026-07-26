@@ -9,7 +9,7 @@ interface DeleteAccountDialogProps {
   isDeletePending?: boolean;
 }
 
-export const DeleteAccountDialog = ({
+export const DeleteAccountModal = ({
                                       isOpen,
                                       onClose,
                                       onConfirm,

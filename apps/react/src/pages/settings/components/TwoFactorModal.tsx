@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ShieldCheck, Loader2, Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
-import { DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
+import { DialogHeader, DialogBody, DialogFooter, SubmitButton } from '@/shared/ui';
 import {
   twoFactorTotpOnlySchema,
   twoFactorCodeOrBackupSchema
@@ -119,18 +119,19 @@ export const TwoFactorModal = ({
               <button
                 type="button"
                 onClick={handleCopyCodes}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg border border-border bg-background hover:bg-muted/50 transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-xs font-medium rounded-lg border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
               >
                 {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
                 {copied ? 'Copied to clipboard' : 'Copy codes'}
               </button>
-              <button
-                type="button"
+
+              <SubmitButton
+                isPending={false}
+                text="Done"
+                icon={Check}
                 onClick={handleClose}
-                className="flex-1 px-4 py-2 text-xs font-medium rounded-lg bg-teal-600 hover:bg-teal-700 text-white transition-colors"
-              >
-                Done
-              </button>
+                className="flex-1 py-2 text-xs rounded-lg h-auto"
+              />
             </div>
           </div>
         ) : (

@@ -3,9 +3,9 @@ import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { Switch } from '@pipeline/ui';
 import { SubmitButton, BackButton, DangerButton } from '@/shared/ui/buttons';
-import { ShieldCheck, KeyRound } from 'lucide-react';
+import { ShieldCheck, } from 'lucide-react';
 import type { IAccountFormData } from '@/pages/settings/types';
-import { DeleteAccountDialog } from '@/pages/settings/components/DeleteAccountDialog';
+import { DeleteAccountModal } from '@/pages/settings/components/DeleteAccountModal.tsx';
 import { TwoFactorModal } from '@/pages/settings/components/TwoFactorModal';
 
 interface AccountFormProps {
@@ -20,7 +20,7 @@ interface AccountFormProps {
   is2faPending?: boolean;
   onDeleteAccount?: () => void;
   isDeletePending?: boolean;
-  onGenerateBackupCodes?: () => void;
+  // onGenerateBackupCodes?: () => void;
 }
 
 export const AccountForm = ({
@@ -35,7 +35,7 @@ export const AccountForm = ({
                               is2faPending = false,
                               onDeleteAccount,
                               isDeletePending = false,
-                              onGenerateBackupCodes,
+                              // onGenerateBackupCodes,
                             }: AccountFormProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [is2faModalOpen, setIs2faModalOpen] = useState(false);
@@ -101,11 +101,12 @@ export const AccountForm = ({
     setIsDeleteDialogOpen(false);
   };
 
-  const handleGenerateCodesClick = () => {
-    if (onGenerateBackupCodes) {
-      onGenerateBackupCodes();
-    }
-  };
+  //for the future admin role
+  // const handleGenerateCodesClick = () => {
+  //   if (onGenerateBackupCodes) {
+  //     onGenerateBackupCodes();
+  //   }
+  // };
 
   return (
     <div className="border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
@@ -147,29 +148,30 @@ export const AccountForm = ({
           />
         </div>
 
-        {user2fa && (
-          <div className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/5 dark:bg-teal-950/20 flex items-center justify-between gap-4">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <KeyRound className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-                <span className="text-sm font-semibold text-foreground">
-                  2FA Recovery Codes
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Generate backup codes to access your account if you lose your authentication device.
-              </p>
-            </div>
+        {/*for the future admin role*/}
+        {/*{user2fa && (*/}
+        {/*  <div className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/5 dark:bg-teal-950/20 flex items-center justify-between gap-4">*/}
+        {/*    <div className="space-y-0.5">*/}
+        {/*      <div className="flex items-center gap-2">*/}
+        {/*        <KeyRound className="w-4 h-4 text-teal-600 dark:text-teal-400" />*/}
+        {/*        <span className="text-sm font-semibold text-foreground">*/}
+        {/*          2FA Recovery Codes*/}
+        {/*        </span>*/}
+        {/*      </div>*/}
+        {/*      <p className="text-xs text-muted-foreground">*/}
+        {/*        Generate backup codes to access your account if you lose your authentication device.*/}
+        {/*      </p>*/}
+        {/*    </div>*/}
 
-            <SubmitButton
-              isPending={false}
-              isDisabled={false}
-              text="Get Codes"
-              icon={KeyRound}
-              onClick={handleGenerateCodesClick}
-            />
-          </div>
-        )}
+        {/*    <SubmitButton*/}
+        {/*      isPending={false}*/}
+        {/*      isDisabled={false}*/}
+        {/*      text="Get Codes"*/}
+        {/*      icon={KeyRound}*/}
+        {/*      onClick={handleGenerateCodesClick}*/}
+        {/*    />*/}
+        {/*  </div>*/}
+        {/*)}*/}
 
         <form onSubmit={onSubmit} className="space-y-6 pt-4 border-t border-border/40">
           <div className="space-y-4">
@@ -252,7 +254,7 @@ export const AccountForm = ({
         isPending={is2faPending || isGenerating}
       />
 
-      <DeleteAccountDialog
+      <DeleteAccountModal
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
         onConfirm={handleConfirmDelete}
