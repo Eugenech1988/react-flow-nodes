@@ -35,7 +35,7 @@ export const useProfileStore = create<TProfileState>((set) => ({
 
   setAlert: (alert) => set({ alert }),
   setAvatarPreview: (avatarPreview) => set({ avatarPreview }),
-  resetState: () => set({ alert: null, isAvatarUploading: false, isPending: false }),
+  resetState: () => set({ alert: null, avatarPreview: null, isAvatarUploading: false, isPending: false }),
 
   updateProfile: async (data, onSuccess) => {
     set({ isPending: true, alert: null });
