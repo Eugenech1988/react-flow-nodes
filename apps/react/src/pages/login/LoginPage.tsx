@@ -1,13 +1,10 @@
 import React from 'react';
 import { z } from 'zod';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@pipeline/ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SocialLoginButtons } from './components';
-import { AuthModeToggle } from './components';
-import { RegisterFields } from './components';
-import { LoginFields } from './components';
-import { TwoFactorForm } from './components';
+import { SocialLoginButtons, AuthModeToggle, RegisterFields, LoginFields, TwoFactorForm } from './components';
 import { useQueryClient } from '@tanstack/react-query';
 import { SubmitButton } from '@/shared/ui';
 import { useTRPC } from '@/shared/api';
@@ -22,12 +19,11 @@ export const registerFormInputSchema = registerInputSchema.extend({
 });
 
 type LoginInputData = z.infer<typeof loginInputSchema>;
-
 type RegisterFormInputData = z.infer<typeof registerFormInputSchema>;
-
 type LoginCombinedFormData = LoginInputData & Partial<RegisterFormInputData>;
 
 export const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
   const {
     mode,
     is2faRequired,
@@ -60,11 +56,15 @@ export const LoginPage: React.FC = () => {
     defaultValues: { email: '', password: '', confirmPassword: '' }
   });
 
+  const handleSuccessAuth = async () => {
+    await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+    resetState();
+    navigate('/', { replace: true });
+  };
+
   const onSubmit = async (data: LoginCombinedFormData) => {
     if (mode === 'login') {
-      await login(data.email, data.password, () => {
-        queryClient.invalidateQueries(trpc.auth.me.queryFilter());
-      });
+      await login(data.email, data.password, handleSuccessAuth);
     } else {
       await registerAction(data.email, data.password, () => {
         reset({ email: '', password: '', confirmPassword: '' });
@@ -105,9 +105,9 @@ export const LoginPage: React.FC = () => {
             <TwoFactorForm
               qrCodeImage={qrCodeImage ?? undefined}
               secretKey={secretKey ?? undefined}
-              error={currentApiError ?? undefined}
+              error={twoFactorError ?? undefined}
               isLoading={is2faLoading}
-              onVerify={verifyTwoFactor}
+              onVerify={(data) => verifyTwoFactor(data, handleSuccessAuth)}
               onBack={resetState}
               inputClasses=""
             />

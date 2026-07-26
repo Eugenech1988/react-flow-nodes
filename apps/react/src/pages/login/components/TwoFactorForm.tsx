@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@pipeline/ui';
 import { CancelButton, LocalAlert, SubmitButton } from '@/shared/ui';
 import { twoFactorLoginInputSchema } from '@pipeline/contracts';
 import { useAuthStore } from '@/pages/login/model';
@@ -33,7 +34,6 @@ export const TwoFactorForm = ({
     handleSubmit,
     setValue,
     formState: { errors },
-    reset,
   } = useForm<TTwoFactorLoginInputData>({
     resolver: zodResolver(twoFactorLoginInputSchema),
     defaultValues: {
@@ -49,10 +49,7 @@ export const TwoFactorForm = ({
   }, [tempToken, setValue]);
 
   const handleFormSubmit = async (data: TTwoFactorLoginInputData) => {
-    console.log(data);
-    await onVerify(data, () => {
-      reset();
-    });
+    await onVerify(data, () => {});
   };
 
   const hasCodeError = !!errors.code;
@@ -75,18 +72,17 @@ export const TwoFactorForm = ({
       )}
 
       <div className="space-y-1.5">
-        <input
+        <Input
           type="text"
-          inputMode="numeric"
-          maxLength={6}
+          maxLength={32}
           autoFocus
           autoComplete="one-time-code"
-          placeholder="123456"
+          placeholder="123456 or recovery code"
           {...register('code')}
-          className={`w-full px-3 py-2 border rounded-lg text-center tracking-[0.25em] text-xl font-mono focus:outline-none focus:ring-2 transition-all ${
+          className={`h-11 text-center font-mono text-2xl font-bold tracking-normal placeholder:tracking-normal focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none transition-all ${
             hasCodeError
-              ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus:ring-rose-500/50'
-              : 'border-border bg-background text-foreground focus:ring-teal-500/50'
+              ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus-visible:border-rose-500 focus-visible:ring-rose-500/30'
+              : 'border-border bg-background text-foreground focus-visible:border-teal-500 focus-visible:ring-teal-500/30'
           }`}
         />
         {errors.code && (
@@ -98,19 +94,17 @@ export const TwoFactorForm = ({
 
       <div className="grid grid-cols-2 gap-3">
         <CancelButton
-          type="button"
           onClick={onBack}
           isDisabled={isLoading}
-          className="w-full"
+          className="w-full text-sm"
         />
         <SubmitButton
-          type="submit"
           isPending={isLoading}
           isDisabled={isLoading}
           text="Verify"
           pendingText="Verifying..."
           icon={null}
-          className="w-full"
+          className="w-full text-sm"
         />
       </div>
     </form>
