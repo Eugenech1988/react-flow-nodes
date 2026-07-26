@@ -237,7 +237,7 @@ export const TwoFactorModal = ({
               submitText={isEnable ? 'Enable' : 'Disable'}
               pendingText="Verifying..."
               cancelText="Cancel"
-              variant={isEnable ? 'default' : 'danger'}
+              variant={isEnable ? 'submit' : 'danger'}
             />
           </form>
         )}

@@ -11,7 +11,8 @@ interface DialogFooterProps {
   variant?: 'submit' | 'danger';
   icon?: LucideIcon | null;
   withBorder?: boolean;
-  isReversedBtns?: boolean; // <-- Новый пропс
+  isReversedBtns?: boolean;
+  isDisabled?: boolean;
 }
 
 export const DialogFooter = ({
@@ -25,6 +26,7 @@ export const DialogFooter = ({
                                icon,
                                withBorder = false,
                                isReversedBtns = false,
+                               isDisabled = false,
                              }: DialogFooterProps) => {
   const renderActionBtn = () => {
     if (variant === 'danger') {
@@ -42,7 +44,7 @@ export const DialogFooter = ({
       <SubmitButton
         onClick={onSubmit}
         isPending={isPending}
-        isDisabled={false}
+        isDisabled={isDisabled}
         text={submitText}
         pendingText={pendingText}
         icon={icon}
