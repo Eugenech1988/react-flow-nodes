@@ -11,7 +11,7 @@ import { diskStorage } from 'multer';
 import { existsSync, mkdirSync } from 'node:fs';
 import { extname } from 'node:path';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
-import { CurrentUser } from '@/auth/decorators/current-user.decorator';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { ProfileService } from './profile.service';
 import { updateProfileInputSchema, type TUpdateProfileInput } from '@pipeline/contracts';
 
