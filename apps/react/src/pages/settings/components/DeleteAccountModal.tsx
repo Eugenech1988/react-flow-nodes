@@ -42,6 +42,7 @@ export const DeleteAccountModal = ({
           cancelText="Cancel"
           variant="danger"
           icon={Trash2}
+          isReversedBtns
         />
       </DialogContent>
     </Dialog>
