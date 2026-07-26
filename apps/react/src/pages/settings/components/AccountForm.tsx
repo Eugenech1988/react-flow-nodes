@@ -3,7 +3,7 @@ import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { Switch } from '@pipeline/ui';
 import { SubmitButton, BackButton, DangerButton } from '@/shared/ui/buttons';
-import { ShieldCheck, } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import type { IAccountFormData } from '@/pages/settings/types';
 import { DeleteAccountModal } from '@/pages/settings/components/DeleteAccountModal.tsx';
 import { TwoFactorModal } from '@/pages/settings/components/TwoFactorModal';
@@ -20,7 +20,6 @@ interface AccountFormProps {
   is2faPending?: boolean;
   onDeleteAccount?: () => void;
   isDeletePending?: boolean;
-  // onGenerateBackupCodes?: () => void;
 }
 
 export const AccountForm = ({
@@ -35,7 +34,6 @@ export const AccountForm = ({
                               is2faPending = false,
                               onDeleteAccount,
                               isDeletePending = false,
-                              // onGenerateBackupCodes,
                             }: AccountFormProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [is2faModalOpen, setIs2faModalOpen] = useState(false);
@@ -57,9 +55,10 @@ export const AccountForm = ({
   const handleToggleClick = async () => {
     if (is2faPending || isGenerating) return;
 
+    setModalError(null);
+
     if (!user2fa) {
       setModalMode('enable');
-      setModalError(null);
       setQrCodeImage(null);
       setIs2faModalOpen(true);
       setIsGenerating(true);
@@ -79,18 +78,36 @@ export const AccountForm = ({
     } else {
       setModalMode('disable');
       setQrCodeImage(null);
-      setModalError(null);
       setIs2faModalOpen(true);
     }
   };
 
+  const handleModalClose = () => {
+    setIs2faModalOpen(false);
+    setModalError(null);
+  };
+
   const handleConfirm2fa = async (code: string) => {
-    if (modalMode === 'enable') {
-      const codes = await onToggle2fa(true, code);
-      return codes;
-    } else {
-      await onToggle2fa(false, code);
-      setIs2faModalOpen(false);
+    setModalError(null);
+    try {
+      if (modalMode === 'enable') {
+        const codes = await onToggle2fa(true, code);
+        return codes;
+      } else {
+        await onToggle2fa(false, code);
+        handleModalClose();
+      }
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message || err?.message || 'Invalid verification code';
+
+      // Записываем ошибку ТОЛЬКО для модалки
+      setModalError(message);
+
+      // Останавливаем пробрасывание, если родительский мутатор/стор ловит ошибки глобально
+      // Если же TwoFactorModal сам должен понять, что отправка упала —
+      // перехватываем в модалке без ре-throw в родителя.
+      throw err;
     }
   };
 
@@ -101,25 +118,22 @@ export const AccountForm = ({
     setIsDeleteDialogOpen(false);
   };
 
-  //for the future admin role
-  // const handleGenerateCodesClick = () => {
-  //   if (onGenerateBackupCodes) {
-  //     onGenerateBackupCodes();
-  //   }
-  // };
-
   return (
     <div className="border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
       <div className="px-6 py-4 border-b border-border/60 bg-muted/10">
-        <h3 className="font-medium text-sm text-foreground/90">Security & Authentication</h3>
+        <h3 className="font-medium text-sm text-foreground/90">
+          Security & Authentication
+        </h3>
       </div>
 
       <div className="p-6 space-y-6">
-        <LocalAlert
-          hasSuccess={hasSuccess}
-          hasError={hasError}
-          alertMessage={alertMessage}
-        />
+        {!is2faModalOpen && (
+          <LocalAlert
+            hasSuccess={hasSuccess}
+            hasError={hasError}
+            alertMessage={alertMessage}
+          />
+        )}
 
         <div
           onClick={handleToggleClick}
@@ -147,31 +161,6 @@ export const AccountForm = ({
             className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent pointer-events-none"
           />
         </div>
-
-        {/*for the future admin role*/}
-        {/*{user2fa && (*/}
-        {/*  <div className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/5 dark:bg-teal-950/20 flex items-center justify-between gap-4">*/}
-        {/*    <div className="space-y-0.5">*/}
-        {/*      <div className="flex items-center gap-2">*/}
-        {/*        <KeyRound className="w-4 h-4 text-teal-600 dark:text-teal-400" />*/}
-        {/*        <span className="text-sm font-semibold text-foreground">*/}
-        {/*          2FA Recovery Codes*/}
-        {/*        </span>*/}
-        {/*      </div>*/}
-        {/*      <p className="text-xs text-muted-foreground">*/}
-        {/*        Generate backup codes to access your account if you lose your authentication device.*/}
-        {/*      </p>*/}
-        {/*    </div>*/}
-
-        {/*    <SubmitButton*/}
-        {/*      isPending={false}*/}
-        {/*      isDisabled={false}*/}
-        {/*      text="Get Codes"*/}
-        {/*      icon={KeyRound}*/}
-        {/*      onClick={handleGenerateCodesClick}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*)}*/}
 
         <form onSubmit={onSubmit} className="space-y-6 pt-4 border-t border-border/40">
           <div className="space-y-4">
@@ -246,7 +235,7 @@ export const AccountForm = ({
 
       <TwoFactorModal
         isOpen={is2faModalOpen}
-        onClose={() => setIs2faModalOpen(false)}
+        onClose={handleModalClose}
         onConfirm={handleConfirm2fa}
         mode={modalMode}
         qrCodeImage={qrCodeImage}

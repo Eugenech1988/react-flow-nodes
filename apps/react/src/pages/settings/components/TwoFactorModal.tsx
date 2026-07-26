@@ -70,9 +70,9 @@ export const TwoFactorModal = ({
       } else if (!isEnable) {
         handleClose();
       }
-    } catch (e: any) {
-      console.log(e);
-      handleClose();
+    } catch {
+      // Ничего не закрываем и ничего не пишем в локальный state —
+      // родительский AccountForm сам установит modalError!
     }
   };
 
