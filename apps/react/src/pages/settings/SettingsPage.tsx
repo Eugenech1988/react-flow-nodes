@@ -5,15 +5,12 @@ import { useRef, useEffect } from 'react';
 import { ProfileSidebar } from './components';
 import { Tabs } from '@/shared/ui';
 import { useUser } from '@/shared/hooks';
-import { useProfileForm } from './profile/hooks/useProfileForm';
 
 export const SettingsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isInitialMount = useRef(true);
-  const { user, isProActive } = useUser();
-
-  const profile = useProfileForm();
+  const { isProActive } = useUser();
 
   const currentTab = location.pathname.split('/').pop() || 'profile';
 
@@ -80,17 +77,7 @@ export const SettingsPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
             <div className="md:col-span-1 sticky top-20 self-start">
-              <ProfileSidebar
-                avatarPreview={profile.avatarPreview}
-                initials={profile.initials}
-                onAvatarClick={profile.handleAvatarClick}
-                fileInputRef={profile.fileInputRef}
-                onAvatarChange={profile.handleAvatarChange}
-                firstName={profile.firstName}
-                lastName={profile.lastName}
-                jobTitle={profile.jobTitle}
-                isTwoFactorEnabled={user?.isTwoFactorEnabled}
-              />
+              <ProfileSidebar/>
             </div>
 
             <div className="md:col-span-2">
