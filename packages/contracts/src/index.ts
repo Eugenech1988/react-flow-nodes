@@ -13,11 +13,33 @@ export const registerInputSchema = loginInputSchema.extend({
   nickName: z.string().min(3).optional(),
 });
 
-export const twoFactorLoginInputSchema = z.object({
-  tempToken: z.string().min(1),
-  code: z.string().length(6, 'Code must be exactly 6 digits'),
+export const twoFactorTotpOnlySchema = z.object({
+  code: z
+    .string()
+    .min(1, 'Code is required')
+    .transform((val) => val.trim())
+    .refine((val) => /^\d{6}$/.test(val), {
+      message: 'Code must be exactly 6 digits',
+    }),
 });
 
+export const twoFactorCodeOrBackupSchema = z.object({
+  code: z
+    .string()
+    .min(1, 'Code is required')
+    .transform((val) => val.trim().replace(/-/g, ''))
+    .refine(
+      (val) => /^\d{6}$/.test(val) || /^[a-zA-Z0-9]{8,10}$/.test(val),
+      {
+        message: 'Enter a valid 6-digit code or recovery code',
+      }
+    ),
+});
+
+export const twoFactorLoginInputSchema = z.object({
+  tempToken: z.string().min(1),
+  code: twoFactorCodeOrBackupSchema.shape.code,
+});
 
 export const passwordResetInputSchema = z.object({
   token: z.string().min(1),

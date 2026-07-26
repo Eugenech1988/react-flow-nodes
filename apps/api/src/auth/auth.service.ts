@@ -216,19 +216,28 @@ export class AuthService {
       throw new BadRequestException('2FA not initialized');
     }
 
-    const result = await verifyOtp({
-      token: code,
+    const cleanCode = code.trim().replace(/-/g, '');
+    const otpResult = await verifyOtp({
+      token: cleanCode,
       secret: user.twoFactorSecret,
     });
 
-    if (!result.valid) {
+    if (!otpResult.valid) {
       throw new BadRequestException('Invalid authenticator code');
     }
 
-    const rawRecoveryCodes = this.generateRecoveryCodes();
+    const rawCodes: string[] = [];
+    const displayCodes: string[] = [];
+
+    for (let i = 0; i < 10; i++) {
+      const raw = randomBytes(4).toString('hex').toUpperCase();
+      const formatted = `${raw.slice(0, 4)}-${raw.slice(4)}`;
+      rawCodes.push(raw);
+      displayCodes.push(formatted);
+    }
 
     const hashedCodes = await Promise.all(
-      rawRecoveryCodes.map((c) => hash(c))
+      rawCodes.map((c) => hash(c))
     );
 
     await this.usersService.update(userId, {
@@ -238,7 +247,7 @@ export class AuthService {
 
     return {
       success: true,
-      recoveryCodes: rawRecoveryCodes,
+      recoveryCodes: displayCodes,
     };
   }
 
@@ -248,18 +257,49 @@ export class AuthService {
       throw new BadRequestException('2FA not initialized');
     }
 
-    let isValid = (
-      await verifyOtp({
-        token: code,
-        secret: user.twoFactorSecret,
-      })).valid;
+    const rawCode = code.trim();
+    const cleanCode = rawCode.replace(/-/g, '');
+    let isValid = false;
+
+    if (/^\d{6}$/.test(cleanCode)) {
+      try {
+        const otpResult = await verifyOtp({
+          token: cleanCode,
+          secret: user.twoFactorSecret,
+        });
+        isValid = otpResult.valid;
+      } catch {
+        isValid = false;
+      }
+    }
 
     if (!isValid && user.recoveryCodes?.length) {
+      const formattedDash = cleanCode.length === 8
+        ? `${cleanCode.slice(0, 4)}-${cleanCode.slice(4)}`
+        : rawCode;
+
+      const candidates = Array.from(
+        new Set([
+          rawCode,
+          rawCode.toUpperCase(),
+          rawCode.toLowerCase(),
+          cleanCode,
+          cleanCode.toUpperCase(),
+          cleanCode.toLowerCase(),
+          formattedDash,
+          formattedDash.toUpperCase(),
+          formattedDash.toLowerCase(),
+        ])
+      );
+
       for (const hashedCode of user.recoveryCodes) {
-        if (await verifyArgon(hashedCode, code)) {
-          isValid = true;
-          break;
+        for (const candidate of candidates) {
+          if (await verifyArgon(hashedCode, candidate)) {
+            isValid = true;
+            break;
+          }
         }
+        if (isValid) break;
       }
     }
 
@@ -295,17 +335,26 @@ export class AuthService {
       throw new BadRequestException('User not found or 2FA not set up');
     }
 
-    const otpResult = await verifyOtp({
-      token: code,
-      secret: user.twoFactorSecret,
-    });
+    const cleanCode = code.trim().replace(/-/g, '');
+    let isVerified = false;
 
-    let isVerified = otpResult.valid;
+    if (/^\d{6}$/.test(cleanCode)) {
+      try {
+        const otpResult = await verifyOtp({
+          token: cleanCode,
+          secret: user.twoFactorSecret,
+        });
+        isVerified = otpResult.valid;
+      } catch {
+        isVerified = false;
+      }
+    }
+
     let usedCodeIndex = -1;
 
     if (!isVerified && user.recoveryCodes?.length) {
       for (let i = 0; i < user.recoveryCodes.length; i++) {
-        if (await verifyArgon(user.recoveryCodes[i], code)) {
+        if (await verifyArgon(user.recoveryCodes[i], cleanCode)) {
           isVerified = true;
           usedCodeIndex = i;
           break;

@@ -5,13 +5,10 @@ import { z } from 'zod';
 import { ShieldCheck, Loader2, Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
-import { twoFactorLoginInputSchema } from '@pipeline/contracts';
-
-const twoFactorCodeOnlySchema = twoFactorLoginInputSchema.omit({
-  tempToken: true,
-});
-
-type TFactorCodeOnlySchema = z.infer<typeof twoFactorCodeOnlySchema>;
+import {
+  twoFactorTotpOnlySchema,
+  twoFactorCodeOrBackupSchema
+} from '@pipeline/contracts';
 
 interface TwoFactorModalProps {
   isOpen: boolean;
@@ -36,13 +33,16 @@ export const TwoFactorModal = ({
   const [recoveryCodes, setRecoveryCodes] = useState<string[] | null>(null);
   const [copied, setCopied] = useState(false);
 
+  const activeSchema = isEnable ? twoFactorTotpOnlySchema : twoFactorCodeOrBackupSchema;
+  type TFormSchema = z.infer<typeof activeSchema>;
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isValid },
-  } = useForm<TFactorCodeOnlySchema>({
-    resolver: zodResolver(twoFactorCodeOnlySchema),
+  } = useForm<TFormSchema>({
+    resolver: zodResolver(activeSchema),
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: { code: '' },
@@ -62,7 +62,7 @@ export const TwoFactorModal = ({
     onClose();
   };
 
-  const handleFormSubmit = async (data: TFactorCodeOnlySchema) => {
+  const handleFormSubmit = async (data: TFormSchema) => {
     try {
       const result = await onConfirm(data.code);
       if (Array.isArray(result) && result.length > 0) {
@@ -179,7 +179,7 @@ export const TwoFactorModal = ({
                     <div className="space-y-1.5">
                       <input
                         type="text"
-                        maxLength={10}
+                        maxLength={6}
                         autoFocus
                         autoComplete="one-time-code"
                         placeholder="123456"
@@ -192,7 +192,7 @@ export const TwoFactorModal = ({
                       />
                       {errors.code && (
                         <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 text-center">
-                          {errors.code.message}
+                          {errors.code.message as string}
                         </p>
                       )}
                     </div>
@@ -220,7 +220,7 @@ export const TwoFactorModal = ({
                     />
                     {errors.code && (
                       <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 text-center">
-                        {errors.code.message}
+                        {errors.code.message as string}
                       </p>
                     )}
                   </div>

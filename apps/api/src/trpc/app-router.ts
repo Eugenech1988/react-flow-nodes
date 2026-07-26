@@ -7,7 +7,9 @@ import {
   updatePasswordInputSchema,
   updatePipelineInputSchema,
   updateProfileInputSchema,
-  twoFactorCodeInputSchema,
+  // twoFactorCodeInputSchema,
+  twoFactorTotpOnlySchema,
+  twoFactorCodeOrBackupSchema
 } from '@pipeline/contracts';
 import { AuthService } from '@/auth/auth.service';
 import { BillingService } from '@/billing/billing.service';
@@ -60,13 +62,17 @@ export function createAppRouter(services: RouterServices) {
     generate2fa: protectedProcedure.mutation(async ({ ctx }) => {
       return services.authService.generateTwoFactorSecret(ctx.user.id);
     }),
-    turnOn2fa: protectedProcedure.input(twoFactorCodeInputSchema).mutation(async ({ ctx, input }) => {
-      return services.authService.turnOnTwoFactor(ctx.user.id, input.code);
-    }),
+    turnOn2fa: protectedProcedure
+      .input(twoFactorTotpOnlySchema)
+      .mutation(async ({ ctx, input }) => {
+        return services.authService.turnOnTwoFactor(ctx.user.id, input.code);
+      }),
 
-    turnOff2fa: protectedProcedure.input(twoFactorCodeInputSchema).mutation(async ({ ctx, input }) => {
-      return services.authService.turnOffTwoFactor(ctx.user.id, input.code);
-    }),
+    turnOff2fa: protectedProcedure
+      .input(twoFactorCodeOrBackupSchema)
+      .mutation(async ({ ctx, input }) => {
+        return services.authService.turnOffTwoFactor(ctx.user.id, input.code);
+      }),
     register: publicProcedure.input(registerInputSchema).mutation(async ({ ctx, input }) => {
       const user = await services.authService.register(input);
       const tokens = await services.authService.generateTokens(user.id);
