@@ -4,45 +4,11 @@ import { PublicOnlyRoute } from '@/app/providers/PublicOnlyRoute';
 import AppLayout from '@/app/AppLayout';
 import { LoginPage } from '@/pages/login';
 import { CanvasPage } from '@/pages/canvas/CanvasPage';
-import { SettingsPage, ProfileForm, AccountForm } from '@/pages/settings';
+import { SettingsPage, ProfileTab, AccountTab } from '@/pages/settings';
 import { BillingPage } from '@/pages/billing';
 import { PlansPage } from '@/pages/plans';
 import { PipelinesPage } from '@/pages/pipelines';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
-import { useProfileForm } from '@/pages/settings/hooks/useProfileForm';
-import { useAccountForm } from '@/pages/settings/hooks/useAccountForm';
-
-const ProfileRouteWrapper = () => {
-  const profile = useProfileForm();
-  return (
-    <ProfileForm
-      alert={profile.alert}
-      form={profile.form}
-      onSubmit={profile.onSubmit}
-      isPristine={profile.isPristine}
-      isPending={profile.isPending}
-    />
-  );
-};
-
-const AccountRouteWrapper = () => {
-  const account = useAccountForm();
-  return (
-    <AccountForm
-      form={account.form}
-      alert={account.alert}
-      onSubmit={account.onSubmit}
-      isPristine={account.isPristine}
-      isPending={account.isPending}
-      user2fa={account.user2fa}
-      onToggle2fa={account.onToggle2fa}
-      is2faPending={account.is2faPending}
-      onDeleteAccount={account.onDeleteAccount}
-      isDeletePending={account.isDeletePending}
-      onGenerate2faSecret={account.onGenerate2faSecret}
-    />
-  );
-};
 
 export const AppRoutes = () => {
   return (
@@ -57,8 +23,8 @@ export const AppRoutes = () => {
 
           <Route path="/settings" element={<SettingsPage />}>
             <Route index element={<Navigate to="profile" replace />} />
-            <Route path="profile" element={<ProfileRouteWrapper />} />
-            <Route path="account" element={<AccountRouteWrapper />} />
+            <Route path="profile" element={<ProfileTab />} />
+            <Route path="account" element={<AccountTab />} />
             <Route path="billing" element={<BillingPage />} />
           </Route>
 
