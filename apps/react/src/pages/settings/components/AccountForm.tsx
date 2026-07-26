@@ -15,7 +15,7 @@ interface AccountFormProps {
   isPending?: boolean;
   alert?: { type: 'success' | 'error'; message: string } | null;
   user2fa: boolean;
-  onToggle2fa: (value: boolean, code: string) => void;
+  onToggle2fa: (value: boolean, code: string) => Promise<string[] | void> | void;
   onGenerate2faSecret: () => Promise<{ qrCodeImage: string; secret: string } | void>;
   is2faPending?: boolean;
   onDeleteAccount?: () => void;
@@ -35,7 +35,7 @@ export const AccountForm = ({
                               is2faPending = false,
                               onDeleteAccount,
                               isDeletePending = false,
-                              onGenerateBackupCodes
+                              onGenerateBackupCodes,
                             }: AccountFormProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [is2faModalOpen, setIs2faModalOpen] = useState(false);
@@ -46,7 +46,7 @@ export const AccountForm = ({
 
   const {
     register,
-    formState: { errors }
+    formState: { errors },
   } = form;
 
   const rootError = errors.root?.message || errors['' as keyof typeof errors]?.message;
@@ -84,10 +84,14 @@ export const AccountForm = ({
     }
   };
 
-  const handleConfirm2fa = (code: string) => {
-    const targetValue = modalMode === 'enable';
-    onToggle2fa(targetValue, code);
-    setIs2faModalOpen(false);
+  const handleConfirm2fa = async (code: string) => {
+    if (modalMode === 'enable') {
+      const codes = await onToggle2fa(true, code);
+      return codes;
+    } else {
+      await onToggle2fa(false, code);
+      setIs2faModalOpen(false);
+    }
   };
 
   const handleConfirmDelete = () => {
@@ -137,7 +141,7 @@ export const AccountForm = ({
             onCheckedChange={() => {}}
             disabled={is2faPending || isGenerating}
             style={{
-              backgroundColor: user2fa ? 'var(--color-teal-600, #0d9488)' : undefined
+              backgroundColor: user2fa ? 'var(--color-teal-600, #0d9488)' : undefined,
             }}
             className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent pointer-events-none"
           />

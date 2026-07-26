@@ -105,19 +105,18 @@ export const useAccountForm = () => {
     });
   };
 
-  // Метод для генерации секрета (вызывается из AccountForm)
   const handleGenerate2faSecret = async () => {
     setAlert(null);
     return await generate2faMutation.mutateAsync();
   };
 
-  // Единая функция переключения 2FA
-  const handleToggle2fa = (value: boolean, code: string) => {
+  const handleToggle2fa = async (value: boolean, code: string): Promise<string[] | void> => {
     setAlert(null);
     if (value) {
-      turnOn2faMutation.mutate({ code });
+      const res = await turnOn2faMutation.mutateAsync({ code });
+      return res?.recoveryCodes;
     } else {
-      turnOff2faMutation.mutate({ code });
+      await turnOff2faMutation.mutateAsync({ code });
     }
   };
 
@@ -133,7 +132,7 @@ export const useAccountForm = () => {
     isPristine: !isDirty,
     isPending: updatePasswordMutation.isPending,
     user2fa: user?.isTwoFactorEnabled ?? false,
-    onGenerate2faSecret: handleGenerate2faSecret, // <-- Добавлен в возврат
+    onGenerate2faSecret: handleGenerate2faSecret,
     onToggle2fa: handleToggle2fa,
     is2faPending: turnOn2faMutation.isPending || turnOff2faMutation.isPending,
     onDeleteAccount: handleDeleteAccount,
