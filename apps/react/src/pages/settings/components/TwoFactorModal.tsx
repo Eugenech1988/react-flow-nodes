@@ -5,15 +5,13 @@ import { z } from 'zod';
 import { ShieldCheck, Loader2, Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
+import { twoFactorLoginInputSchema } from '@pipeline/contracts';
 
-const twoFactorCodeSchema = z.object({
-  code: z
-    .string()
-    .length(6, 'Code must be exactly 6 digits')
-    .regex(/^\d+$/, 'Code must contain only numbers'),
+const twoFactorCodeOnlySchema = twoFactorLoginInputSchema.omit({
+  tempToken: true,
 });
 
-type ITwoFactorFormData = z.infer<typeof twoFactorCodeSchema>;
+type TFactorCodeOnlySchema = z.infer<typeof twoFactorCodeOnlySchema>;
 
 interface TwoFactorModalProps {
   isOpen: boolean;
@@ -43,13 +41,11 @@ export const TwoFactorModal = ({
     handleSubmit,
     reset,
     formState: { errors, isValid },
-  } = useForm<ITwoFactorFormData>({
-    resolver: zodResolver(twoFactorCodeSchema),
-    mode: 'onSubmit',
+  } = useForm<TFactorCodeOnlySchema>({
+    resolver: zodResolver(twoFactorCodeOnlySchema),
+    mode: 'onChange',
     reValidateMode: 'onChange',
-    defaultValues: {
-      code: '',
-    },
+    defaultValues: { code: '' },
   });
 
   useEffect(() => {
@@ -60,7 +56,13 @@ export const TwoFactorModal = ({
     }
   }, [isOpen, reset]);
 
-  const handleFormSubmit = async (data: ITwoFactorFormData) => {
+  const handleClose = () => {
+    reset({ code: '' });
+    setRecoveryCodes(null);
+    onClose();
+  };
+
+  const handleFormSubmit = async (data: TFactorCodeOnlySchema) => {
     try {
       const result = await onConfirm(data.code);
       if (Array.isArray(result) && result.length > 0) {
@@ -68,8 +70,9 @@ export const TwoFactorModal = ({
       } else if (!isEnable) {
         handleClose();
       }
-    } catch {
-
+    } catch (e: any) {
+      console.log(e);
+      handleClose();
     }
   };
 
@@ -78,12 +81,6 @@ export const TwoFactorModal = ({
     navigator.clipboard.writeText(recoveryCodes.join('\n'));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleClose = () => {
-    reset({ code: '' });
-    setRecoveryCodes(null);
-    onClose();
   };
 
   const hasCodeError = !!errors.code;
@@ -105,7 +102,8 @@ export const TwoFactorModal = ({
             <div className="space-y-1">
               <h3 className="text-sm font-semibold text-foreground">Save your recovery codes</h3>
               <p className="text-xs text-muted-foreground">
-                Store these backup codes in a safe place. You can use them to access your account if you lose your authenticator device.
+                Store these backup codes in a safe place. You can use them to access your account if you lose your
+                authenticator device.
               </p>
             </div>
 
@@ -174,20 +172,19 @@ export const TwoFactorModal = ({
                         2
                       </span>
                       <p className="text-xs font-medium text-foreground/90 leading-relaxed pt-0.5">
-                        Enter the 6-digit verification code from your app to confirm setup:
+                        Enter the verification code from your app to confirm setup:
                       </p>
                     </div>
 
                     <div className="space-y-1.5">
                       <input
                         type="text"
-                        inputMode="numeric"
-                        maxLength={6}
+                        maxLength={10}
                         autoFocus
                         autoComplete="one-time-code"
                         placeholder="123456"
                         {...register('code')}
-                        className={`w-full px-3 py-2 border rounded-lg text-center tracking-[0.25em] text-xl font-mono focus:outline-none focus:ring-2 transition-all ${
+                        className={`w-full px-3 py-2 border rounded-lg text-center tracking-[0.25em] text-xl font-mono uppercase focus:outline-none focus:ring-2 transition-all ${
                           hasCodeError
                             ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus:ring-rose-500/50'
                             : 'border-border bg-background text-foreground focus:ring-teal-500/50'
@@ -204,19 +201,22 @@ export const TwoFactorModal = ({
               ) : (
                 <div className="space-y-3">
                   <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                    Enter a valid 6-digit code from your authenticator app to confirm disabling Two-Factor Authentication:
+                    Enter a valid 6-digit code or a backup recovery code to confirm disabling Two-Factor Authentication:
                   </p>
 
                   <div className="space-y-1.5">
                     <input
                       type="text"
-                      inputMode="numeric"
-                      maxLength={6}
+                      maxLength={10}
                       autoFocus
                       autoComplete="one-time-code"
-                      placeholder="123456"
+                      placeholder="123456 or recovery code"
                       {...register('code')}
-                      className="w-full px-3 py-2 border border-border rounded-lg text-center tracking-[0.25em] text-xl font-mono bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                      className={`w-full px-3 py-2 border rounded-lg text-center tracking-[0.25em] text-xl font-mono uppercase focus:outline-none focus:ring-2 transition-all ${
+                        hasCodeError
+                          ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus:ring-rose-500/50'
+                          : 'border-border bg-background text-foreground focus:ring-teal-500/50'
+                      }`}
                     />
                     {errors.code && (
                       <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 text-center">
