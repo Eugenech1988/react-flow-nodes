@@ -1,17 +1,34 @@
-import { useState, useRef, type ChangeEvent } from 'react';
+import { useRef, useEffect, type ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
 import { useUser } from '@/shared/hooks';
 import { profileSchema, type IProfileFormData } from '@/pages/settings/types';
+import { useProfileStore } from '../model';
 
 export const useProfileForm = () => {
   const trpc = useTRPC();
   const { user } = useUser();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const {
+    alert,
+    avatarPreview,
+    isAvatarUploading,
+    isPending,
+    setAlert,
+    setAvatarPreview,
+    updateProfile,
+    uploadAvatar,
+  } = useProfileStore();
+
+  useEffect(() => {
+    if (user?.profile?.avatarUrl && !avatarPreview) {
+      setAvatarPreview(user.profile.avatarUrl);
+    }
+  }, [user?.profile?.avatarUrl, avatarPreview, setAvatarPreview]);
 
   const form = useForm<IProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -23,57 +40,33 @@ export const useProfileForm = () => {
       email: user?.email || '',
       company: user?.profile?.company || '',
       location: user?.profile?.location || '',
-      jobTitle: user?.profile?.jobTitle || ''
+      jobTitle: user?.profile?.jobTitle || '',
     },
     resetOptions: {
-      keepDirty: true
-    }
+      keepDirty: true,
+    },
   });
 
   const { formState: { isDirty } } = form;
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.profile?.avatarUrl || null);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-
-  const updateProfileMutation = useMutation(
-    trpc.profile.update.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
-        form.reset(form.getValues());
-        setAvatarFile(null);
-        setAlert({ type: 'success', message: 'Profile updated successfully.' });
-      },
-      onError: (error) => {
-        console.error(error);
-        setAlert({ type: 'error', message: error.message || 'Failed to update profile. Please try again.' });
-      }
-    })
-  );
 
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        setAlert({ type: 'error', message: 'File is too large. Maximum size is 5MB.' });
-        return;
-      }
-      setAvatarFile(file);
-      setAvatarPreview(URL.createObjectURL(file));
-    }
+    if (!file) return;
+
+    uploadAvatar(file, form.getValues(), async () => {
+      await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+    });
   };
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
   };
 
-  const onSubmit = (data: IProfileFormData) => {
+  const onSubmit = async (data: IProfileFormData) => {
     setAlert(null);
-
-    updateProfileMutation.mutate({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      company: data.company || '',
-      location: data.location || '',
-      jobTitle: data.jobTitle || ''
+    await updateProfile(data, async () => {
+      await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+      form.reset(form.getValues());
     });
   };
 
@@ -82,11 +75,10 @@ export const useProfileForm = () => {
   const watchedJobTitle = form.watch('jobTitle') ?? '';
 
   const initials = `${watchedFirstName[0] || ''}${watchedLastName[0] || ''}`.toUpperCase();
-  const isPristine = !isDirty && !avatarFile;
 
   return {
     form,
-    avatarPreview,
+    avatarPreview: avatarPreview || user?.profile?.avatarUrl || null,
     fileInputRef,
     handleAvatarChange,
     handleAvatarClick,
@@ -96,7 +88,7 @@ export const useProfileForm = () => {
     lastName: watchedLastName,
     jobTitle: watchedJobTitle,
     alert,
-    isPristine,
-    isPending: updateProfileMutation.isPending
+    isPristine: !isDirty,
+    isPending: isPending || isAvatarUploading,
   };
 };

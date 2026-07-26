@@ -5,7 +5,7 @@ import { ReactFlowProvider } from '@xyflow/react';
 
 function AppLayout() {
   return (
-    <div className="flex pt-14 flex-col min-h-screen h-[100%] bg-background text-foreground">
+    <div className="flex pt-14 flex-col min-h-screen h-full bg-background text-foreground">
       <ReactFlowProvider>
         <Header/>
         <main className="flex-1 min-h-0">

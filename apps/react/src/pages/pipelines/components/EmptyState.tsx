@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sparkles, Plus } from 'lucide-react';
-import { Button } from '@pipeline/ui';
+import { SubmitButton } from '@/shared/ui';
 
 interface EmptyStateProps {
   hasSearchQuery: boolean;
@@ -30,13 +30,13 @@ export const EmptyState = ({ hasSearchQuery }: EmptyStateProps) => {
         </p>
       </div>
       {!hasSearchQuery && (
-        <Button
+        <SubmitButton
+          isPending={false}
           onClick={() => navigate('/pipelines/new')}
-          className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-white bg-teal-600 hover:bg-teal-500 rounded-lg cursor-pointer"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          Create Pipeline
-        </Button>
+          text="Create Pipeline"
+          icon={Plus}
+          className="text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 rounded-lg cursor-pointer"
+        />
       )}
     </motion.div>
   );

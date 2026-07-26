@@ -4,12 +4,12 @@ import { Camera } from 'lucide-react';
 interface ProfileAvatarProps {
   avatarPreview: string | null;
   initials: string;
-  onAvatarClick: () => void;
+  onAvatarClick?: () => void;
   fileInputRef: RefObject<HTMLInputElement | null>;
   onAvatarChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export const ProfileAvatar = ({
                                 avatarPreview,
@@ -24,17 +24,33 @@ export const ProfileAvatar = ({
       : `${BASE_URL}${avatarPreview}`
     : null;
 
+  const handleContainerClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.click();
+    }
+    if (onAvatarClick) {
+      onAvatarClick();
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      onAvatarChange(e);
+    }
+  };
+
   return (
     <>
       <input
         type="file"
         ref={fileInputRef}
-        onChange={onAvatarChange}
+        onChange={handleFileChange}
         accept="image/*"
         className="hidden"
       />
       <div
-        onClick={onAvatarClick}
+        onClick={handleContainerClick}
         className="relative group cursor-pointer w-24 h-24 rounded-full overflow-hidden shadow-xs border border-teal-500/30 bg-linear-to-br from-teal-500 to-teal-700 transition-transform active:scale-95"
       >
         {displaySrc ? (

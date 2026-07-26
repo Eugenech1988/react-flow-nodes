@@ -38,7 +38,7 @@ export const ProfileSidebar = ({
         {firstName} {lastName}
       </h2>
       <p className="text-xs text-muted-foreground text-center mt-0.5">{jobTitle}</p>
-      <div className="w-full h-[1px] bg-border/60 my-4" />
+      <div className="w-full h-px bg-border/60 my-4" />
 
       <div className="w-full space-y-2 text-xs text-muted-foreground">
         <div className="flex items-center gap-2">
@@ -51,11 +51,11 @@ export const ProfileSidebar = ({
           <KeyRound className={`w-3.5 h-3.5 text-muted-foreground/80 ${isTwoFactorEnabled ? 'text-emerald-500' : ''}`} />
           <span>
             Two-Factor Auth:{' '}
-            {isTwoFactorEnabled ?
-            <strong className="text-emerald-500 font-medium">Enabled</strong>
-              :
-            <strong className="text-red-400 font-font-medium">Disabled</strong>
-            }
+            {isTwoFactorEnabled ? (
+              <strong className="text-emerald-500 font-medium">Enabled</strong>
+            ) : (
+              <strong className="text-red-400 font-font-medium">Disabled</strong>
+            )}
           </span>
         </div>
       </div>

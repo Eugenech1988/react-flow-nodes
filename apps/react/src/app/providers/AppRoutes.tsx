@@ -63,7 +63,7 @@ export const AppRoutes = () => {
           </Route>
 
           <Route path="/plans" element={<PlansPage />} />
-          <Route path="/pipelines" element={<PipelinesPage />}></Route>
+          <Route path="/pipelines" element={<PipelinesPage />} />
         </Route>
 
         <Route path="/profile" element={<Navigate to="/settings/profile" replace />} />

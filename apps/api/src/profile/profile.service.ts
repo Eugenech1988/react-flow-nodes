@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
-import { UpdateProfileDto } from '@/profile/dtos/update-profile.dto';
 import { PrismaService } from '@/prisma/prisma.service';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import type { TUpdateProfileInput } from '@pipeline/contracts';
 
 @Injectable()
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async update(userId: string, updateProfileDto: UpdateProfileDto, avatarFile?: Express.Multer.File) {
+  async update(userId: string, input: TUpdateProfileInput) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { profile: true },
@@ -16,10 +18,25 @@ export class ProfileService {
       throw new NotFoundException('User not found');
     }
 
-    let avatarUrl = user.profile?.avatarUrl;
+    let finalAvatarUrl = input.avatarUrl ?? user.profile?.avatarUrl;
 
-    if (avatarFile) {
-      avatarUrl = `/uploads/avatars/${avatarFile.filename}`;
+    if (input.avatarUrl && input.avatarUrl.startsWith('data:image')) {
+      const uploadDir = './uploads/avatars';
+      if (!existsSync(uploadDir)) {
+        mkdirSync(uploadDir, { recursive: true });
+      }
+
+      const match = input.avatarUrl.match(/^data:image\/(\w+);base64,/);
+      const ext = match ? `.${match[1]}` : '.jpg';
+      const base64Data = input.avatarUrl.replace(/^data:image\/\w+;base64,/, '');
+      const buffer = Buffer.from(base64Data, 'base64');
+
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      const filename = `${uniqueSuffix}${ext}`;
+      const filePath = join(uploadDir, filename);
+
+      writeFileSync(filePath, buffer);
+      finalAvatarUrl = `/uploads/avatars/${filename}`;
     }
 
     try {
@@ -29,21 +46,21 @@ export class ProfileService {
           profile: {
             upsert: {
               create: {
-                firstName: updateProfileDto.firstName || '',
-                lastName: updateProfileDto.lastName || null,
-                company: updateProfileDto.company || null,
-                location: updateProfileDto.location || null,
-                jobTitle: updateProfileDto.jobTitle || null,
-                avatarUrl: avatarUrl || null,
+                firstName: input.firstName || '',
+                lastName: input.lastName || null,
+                company: input.company || null,
+                location: input.location || null,
+                jobTitle: input.jobTitle || null,
+                avatarUrl: finalAvatarUrl || null,
                 nickName: user.email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 5),
               },
               update: {
-                firstName: updateProfileDto.firstName,
-                lastName: updateProfileDto.lastName,
-                company: updateProfileDto.company,
-                location: updateProfileDto.location,
-                jobTitle: updateProfileDto.jobTitle,
-                avatarUrl: avatarUrl,
+                firstName: input.firstName,
+                lastName: input.lastName,
+                company: input.company,
+                location: input.location,
+                jobTitle: input.jobTitle,
+                avatarUrl: finalAvatarUrl,
               },
             },
           },

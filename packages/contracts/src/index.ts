@@ -55,8 +55,6 @@ export const twoFactorCodeInputSchema = z.object({
   code: z.string().length(6, 'Code must be exactly 6 digits'),
 });
 
-export type TTwoFactorCodeInput = z.infer<typeof twoFactorCodeInputSchema>;
-
 export const updateTwoFactorInputSchema = z.object({
   user2fa: z.boolean(),
 });
@@ -67,7 +65,10 @@ export const updateProfileInputSchema = z.object({
   company: z.string().optional(),
   location: z.string().optional(),
   jobTitle: z.string().optional(),
+  avatarUrl: z.string().nullable().optional(),
 });
+
+export type TUpdateProfileInput = z.infer<typeof updateProfileInputSchema>;
 
 export const createPipelineInputSchema = z.object({
   name: z.string().min(1),

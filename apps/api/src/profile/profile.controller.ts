@@ -4,28 +4,33 @@ import {
   Body,
   UseGuards,
   UseInterceptors,
-  UploadedFile
+  UploadedFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ProfileService } from '@/profile/profile.service';
-import { UpdateProfileDto } from '@/profile/dtos/update-profile.dto';
+import { diskStorage } from 'multer';
+import { existsSync, mkdirSync } from 'node:fs';
+import { extname } from 'node:path';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { CurrentUser } from '@/auth/decorators/current-user.decorator';
-import { diskStorage } from 'multer';
-import { extname } from 'node:path';
+import { ProfileService } from './profile.service';
+import { updateProfileInputSchema, type TUpdateProfileInput } from '@pipeline/contracts';
 
 @Controller('profile')
 export class ProfileController {
-  constructor(
-    private readonly profileService: ProfileService,
-  ) {}
+  constructor(private readonly profileService: ProfileService) {}
 
   @Patch()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('avatar', {
       storage: diskStorage({
-        destination: './uploads/avatars',
+        destination: (req, file, callback) => {
+          const uploadPath = './uploads/avatars';
+          if (!existsSync(uploadPath)) {
+            mkdirSync(uploadPath, { recursive: true });
+          }
+          callback(null, uploadPath);
+        },
         filename: (req, file, callback) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           const ext = extname(file.originalname);
@@ -36,11 +41,19 @@ export class ProfileController {
   )
   async updateProfile(
     @CurrentUser('id') userId: string,
-    @Body() updateProfileDto: UpdateProfileDto,
+    @Body() body: TUpdateProfileInput,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    const updatedUser = await this.profileService.update(userId, updateProfileDto, file);
+    const validatedData = updateProfileInputSchema.parse(body);
+
+    const input: TUpdateProfileInput = {
+      ...validatedData,
+      avatarUrl: file ? `/uploads/avatars/${file.filename}` : validatedData.avatarUrl,
+    };
+
+    const updatedUser = await this.profileService.update(userId, input);
     const { password, ...safeUser } = updatedUser;
+
     return safeUser;
   }
 }

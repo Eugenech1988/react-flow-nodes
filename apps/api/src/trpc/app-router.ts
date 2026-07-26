@@ -7,7 +7,6 @@ import {
   updatePasswordInputSchema,
   updatePipelineInputSchema,
   updateProfileInputSchema,
-  // twoFactorCodeInputSchema,
   twoFactorTotpOnlySchema,
   twoFactorCodeOrBackupSchema
 } from '@pipeline/contracts';
@@ -116,9 +115,12 @@ export function createAppRouter(services: RouterServices) {
   });
 
   const profileRouter = router({
-    update: protectedProcedure.input(updateProfileInputSchema).mutation(({ ctx, input }) =>
-      services.profileService.update(ctx.user.id, input),
-    ),
+    update: protectedProcedure
+      .input(updateProfileInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const updatedUser = await services.profileService.update(ctx.user.id, input);
+        return toSafeUser(updatedUser);
+      }),
   });
 
   return router({

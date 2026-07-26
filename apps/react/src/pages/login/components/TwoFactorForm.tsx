@@ -6,12 +6,11 @@ import { Input } from '@pipeline/ui';
 import { CancelButton, LocalAlert, SubmitButton } from '@/shared/ui';
 import { twoFactorLoginInputSchema } from '@pipeline/contracts';
 import { useAuthStore } from '@/pages/login/model';
+import { Link } from 'react-router-dom';
 
 type TTwoFactorLoginInputData = z.infer<typeof twoFactorLoginInputSchema>;
 
 interface TwoFactorFormProps {
-  qrCodeImage?: string;
-  secretKey?: string;
   error?: string | null;
   isLoading: boolean;
   onVerify: (data: TTwoFactorLoginInputData, onSuccess: () => void) => Promise<void>;
@@ -20,8 +19,6 @@ interface TwoFactorFormProps {
 }
 
 export const TwoFactorForm = ({
-                                qrCodeImage,
-                                secretKey,
                                 error,
                                 isLoading,
                                 onVerify,
@@ -60,17 +57,6 @@ export const TwoFactorForm = ({
 
       {error && <LocalAlert hasError hasSuccess={false} alertMessage={error} />}
 
-      {qrCodeImage && (
-        <div className="flex flex-col items-center justify-center space-y-3">
-          <img src={qrCodeImage} alt="2FA QR Code" className="w-40 h-40 rounded-lg border border-border" />
-          {secretKey && (
-            <p className="text-xs text-muted-foreground text-center">
-              Secret: <span className="font-mono text-foreground">{secretKey}</span>
-            </p>
-          )}
-        </div>
-      )}
-
       <div className="space-y-1.5">
         <Input
           type="text"
@@ -107,6 +93,16 @@ export const TwoFactorForm = ({
           className="w-full text-sm"
         />
       </div>
+
+      <p className="text-center text-xs text-zinc-600 dark:text-zinc-400 pt-1">
+        Lost access to your authenticator?{' '}
+        <Link
+          to="/support"
+          className="text-teal-600 dark:text-teal-400 font-medium hover:underline focus:outline-none"
+        >
+          Contact support
+        </Link>
+      </p>
     </form>
   );
 };
