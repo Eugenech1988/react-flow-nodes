@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { trpcClient } from '@/shared/api';
-import type { IProfileFormData } from '@/pages/settings/types';
+import { type TUpdateProfileInputData } from '@pipeline/contracts';
 
 type TProfileAlert = { type: 'success' | 'error'; message: string } | null;
 
@@ -14,8 +14,8 @@ interface TProfileState {
   setAvatarPreview: (preview: string | null) => void;
   resetState: () => void;
 
-  updateProfile: (data: IProfileFormData, onSuccess?: () => Promise<void> | void) => Promise<void>;
-  uploadAvatar: (file: File, formValues: IProfileFormData, onSuccess?: () => Promise<void> | void) => Promise<void>;
+  updateProfile: (data: TUpdateProfileInputData, onSuccess?: () => Promise<void> | void) => Promise<void>;
+  uploadAvatar: (file: File, formValues: TUpdateProfileInputData, onSuccess?: () => Promise<void> | void) => Promise<void>;
 }
 
 const fileToBase64 = (file: File): Promise<string> => {

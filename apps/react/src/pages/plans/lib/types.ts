@@ -14,9 +14,3 @@ export interface IPlan {
   popular?: boolean;
   features: TPlanFeature[];
 }
-
-export interface IPlanWithMeta extends IPlan {
-  isCurrent: boolean;
-  buttonText: string;
-  buttonVariant: 'outline' | 'primary' | 'secondary';
-}

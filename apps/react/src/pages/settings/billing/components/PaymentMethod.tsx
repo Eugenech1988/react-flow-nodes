@@ -1,11 +1,10 @@
 import { CreditCard, ExternalLink } from 'lucide-react';
+import { useBilling } from '@/pages/settings/billing/hooks';
+import { useUser } from '@/shared/hooks';
 
-interface PaymentMethodProps {
-  isProActive: boolean;
-  onManageSubscription: () => void;
-}
-
-export const PaymentMethod = ({ isProActive, onManageSubscription }: PaymentMethodProps) => {
+export const PaymentMethod = () => {
+  const { isProActive } = useUser();
+  const { cancelSubscription } = useBilling();
   return (
     <div className="border border-border bg-card rounded-xl p-5 space-y-4 shadow-xs">
       <h3 className="text-xs font-bold tracking-wider uppercase text-foreground/80 flex items-center gap-2">
@@ -24,7 +23,7 @@ export const PaymentMethod = ({ isProActive, onManageSubscription }: PaymentMeth
           </div>
           <button
             type="button"
-            onClick={onManageSubscription}
+            onClick={cancelSubscription}
             className="text-xs text-teal-600 dark:text-teal-400 hover:underline flex items-center gap-1 font-medium cursor-pointer"
           >
             Update card details <ExternalLink className="w-3 h-3" />

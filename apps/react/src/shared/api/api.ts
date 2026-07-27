@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 let isRefreshing = false;
 let refreshSubscribers: (() => void)[] = [];
@@ -13,7 +13,7 @@ const onRefreshed = () => {
 };
 
 const request = async <T>(endpoint: string, options: RequestInit = {}): Promise<T> => {
-  const url = `${BASE_URL}${endpoint}`;
+  const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint}`;
   const isFormData = options.body instanceof FormData;
 
   const config: RequestInit = {
@@ -62,6 +62,10 @@ const request = async <T>(endpoint: string, options: RequestInit = {}): Promise<
     throw new Error(errorMessage);
   }
 
+  if (options.headers && (options.headers as Record<string, string>)['X-Response-Type'] === 'blob') {
+    return (await response.blob()) as unknown as T;
+  }
+
   const contentType = response.headers.get('content-type');
   if (contentType && contentType.includes('application/json')) {
     return response.json() as Promise<T>;
@@ -73,6 +77,13 @@ const request = async <T>(endpoint: string, options: RequestInit = {}): Promise<
 export const api = {
   get: <T>(endpoint: string, options?: RequestInit) =>
     request<T>(endpoint, { ...options, method: 'GET' }),
+
+  getBlob: (endpoint: string, options?: RequestInit): Promise<Blob> =>
+    request<Blob>(endpoint, {
+      ...options,
+      method: 'GET',
+      headers: { ...options?.headers, 'X-Response-Type': 'blob' },
+    }),
 
   post: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
     request<T>(endpoint, {

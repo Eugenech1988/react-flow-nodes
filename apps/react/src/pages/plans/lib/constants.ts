@@ -1,4 +1,4 @@
-import type { IPlan, TPlanId } from '@/pages/plans/types';
+import type { IPlan, TPlanId } from './types';
 
 export const BASE_PLANS: Omit<IPlan, 'popular'>[] = [
   {

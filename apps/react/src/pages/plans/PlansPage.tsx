@@ -1,23 +1,12 @@
 import { useState } from 'react';
-import { motion, type Variants } from 'framer-motion';
+import { motion, } from 'framer-motion';
 import { ShieldCheck, Check, ArrowLeft, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUser } from '@/shared/hooks';
-import { getPlans, getPlanMeta } from '@/pages/plans/constants';
-import { PricingHeader } from '@/pages/plans/components/PricingHeader';
-import { PlanCard } from '@/pages/plans/components/PlanCard';
-import { ErrorBanner } from '@/pages/plans/components/ErrorBanner';
-import { usePlanSelection } from '@/pages/plans/hooks/usePlanSelection';
-import type { TPlanId } from '@/pages/plans/types';
-
-const pageVariants: Variants = {
-  initial: { opacity: 0, y: 12 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.35, ease: [0.21, 1.02, 0.43, 1.01] },
-  },
-};
+import { getPlans, getPlanMeta, type TPlanId } from './lib';
+import { PricingHeader, PlanCard, ErrorBanner } from './components';
+import { usePlanSelection } from '@/pages/plans/hooks';
+import { PAGE_VARIANTS } from '@/shared/lib';
 
 export const PlansPage = () => {
   const { isLoading, isProActive } = useUser();
@@ -26,7 +15,7 @@ export const PlansPage = () => {
   const { processingPlan, errorMessage, setErrorMessage, handleSelectPlan } =
     usePlanSelection(isProActive);
 
-  const plans = getPlans(isProActive);
+  const plans = getPlans();
 
   if (isLoading) {
     return (
@@ -39,7 +28,7 @@ export const PlansPage = () => {
 
   return (
     <motion.div
-      variants={pageVariants}
+      variants={PAGE_VARIANTS}
       initial="initial"
       animate="animate"
       className="space-y-8 max-w-6xl mx-auto py-6 px-4 md:px-6"

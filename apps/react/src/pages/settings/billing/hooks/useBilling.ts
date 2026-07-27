@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useUser } from '@/shared/hooks';
 import { useSubscription, useTransactions } from '@/shared/hooks';
 import { useTRPC } from '@/shared/api';
 
@@ -13,9 +12,7 @@ const parseErrorMessage = (error: any, fallback: string) => {
 export const useBilling = () => {
   const queryClient = useQueryClient();
   const trpc = useTRPC();
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isProActive } = useUser();
 
   const { subscription, isLoading: isSubscriptionLoading } = useSubscription();
   const { transactions, isLoading: isTransactionLoading } = useTransactions();
@@ -93,7 +90,6 @@ export const useBilling = () => {
 
   return {
     subscription,
-    isProActive,
     isSubscriptionLoading,
     transactions,
     isTransactionLoading,
@@ -104,6 +100,5 @@ export const useBilling = () => {
     cancelSubscription: () => cancelMutation.mutate(),
     dismissSuccess,
     dismissError,
-    navigate,
   };
 };

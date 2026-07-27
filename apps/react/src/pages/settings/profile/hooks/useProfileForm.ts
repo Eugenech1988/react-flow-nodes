@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
 import { useUser } from '@/shared/hooks';
-import { profileSchema, type IProfileFormData } from '@/pages/settings/types';
+import { updateProfileInputSchema, type TUpdateProfileInputData } from '@pipeline/contracts';
 import { useProfileStore } from '../model';
 
 export const useProfileForm = () => {
@@ -30,14 +30,13 @@ export const useProfileForm = () => {
     }
   }, [user?.profile?.avatarUrl, avatarPreview, setAvatarPreview]);
 
-  const form = useForm<IProfileFormData>({
-    resolver: zodResolver(profileSchema),
+  const form = useForm<TUpdateProfileInputData>({
+    resolver: zodResolver(updateProfileInputSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     values: {
       firstName: user?.profile?.firstName || '',
       lastName: user?.profile?.lastName || '',
-      email: user?.email || '',
       company: user?.profile?.company || '',
       location: user?.profile?.location || '',
       jobTitle: user?.profile?.jobTitle || '',
@@ -62,7 +61,7 @@ export const useProfileForm = () => {
     fileInputRef.current?.click();
   };
 
-  const onSubmit = async (data: IProfileFormData) => {
+  const onSubmit = async (data: TUpdateProfileInputData) => {
     setAlert(null);
     await updateProfile(data, async () => {
       await queryClient.invalidateQueries(trpc.auth.me.queryFilter());

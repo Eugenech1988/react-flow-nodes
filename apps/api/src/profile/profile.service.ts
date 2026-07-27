@@ -2,13 +2,13 @@ import { Injectable, NotFoundException, InternalServerErrorException } from '@ne
 import { PrismaService } from '@/prisma/prisma.service';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { TUpdateProfileInput } from '@pipeline/contracts';
+import type { TUpdateProfileInputData } from '@pipeline/contracts';
 
 @Injectable()
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async update(userId: string, input: TUpdateProfileInput) {
+  async update(userId: string, input: TUpdateProfileInputData) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { profile: true },

@@ -1,30 +1,17 @@
 import { Loader2, Layers, Sparkles } from 'lucide-react';
 import { useBilling } from './hooks/useBilling';
 import { SubscriptionCard, UsageStats, PaymentMethod, InvoiceHistory} from './components';
-
-const features = [
-  'Unlimited pipelines execution & storage',
-  'Priority high-performance LLM node queue',
-  'Advanced analytics & multi-db integrations',
-  '24/7 Dedicated engineering support',
-];
+import { useNavigate } from 'react-router-dom';
 
 export const BillingTab = () => {
   const {
-    isProActive,
     isSubscriptionLoading,
-    transactions,
-    isTransactionLoading,
-    isProcessing,
     errorMessage,
     successMessage,
-    subscription,
-    activateSubscription,
-    cancelSubscription,
     dismissSuccess,
     dismissError,
-    navigate,
   } = useBilling();
+  const navigate = useNavigate();
 
   if (isSubscriptionLoading) {
     return (
@@ -81,33 +68,18 @@ export const BillingTab = () => {
         </div>
       )}
 
-      <SubscriptionCard
-        isProActive={isProActive}
-        isProcessing={isProcessing}
-        subscription={subscription}
-        features={features}
-        onActivate={activateSubscription}
-        onCancel={cancelSubscription}
-        onComparePlans={() => navigate('/plans')}
-        onExplorePlans={() => navigate('/plans')}
-      />
+      <SubscriptionCard/>
 
       <div className="space-y-4">
         <h3 className="text-xs font-bold tracking-wider uppercase text-foreground/80">
           Current Usage
         </h3>
-        <UsageStats isProActive={isProActive} />
+        <UsageStats />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <PaymentMethod
-          isProActive={isProActive}
-          onManageSubscription={cancelSubscription}
-        />
-        <InvoiceHistory
-          transactions={transactions}
-          isLoading={isTransactionLoading}
-        />
+        <PaymentMethod/>
+        <InvoiceHistory/>
       </div>
 
       <div className="border border-border bg-card/60 rounded-xl p-5 space-y-3 shadow-xs">

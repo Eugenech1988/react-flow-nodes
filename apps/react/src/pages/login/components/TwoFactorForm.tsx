@@ -1,14 +1,11 @@
 import { useEffect } from 'react';
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@pipeline/ui';
 import { CancelButton, LocalAlert, SubmitButton } from '@/shared/ui';
-import { twoFactorLoginInputSchema } from '@pipeline/contracts';
+import { twoFactorLoginInputSchema, type TTwoFactorLoginInputData } from '@pipeline/contracts';
 import { useAuthStore } from '@/pages/login/model';
 import { Link } from 'react-router-dom';
-
-type TTwoFactorLoginInputData = z.infer<typeof twoFactorLoginInputSchema>;
 
 interface TwoFactorFormProps {
   error?: string | null;

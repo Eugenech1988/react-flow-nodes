@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { trpcClient } from '@/shared/api';
-import type { TPlanId } from '@/pages/plans/types';
+import type { TPlanId } from '@/pages/plans/lib';
 
 export const usePlanSelection = (isProActive: boolean) => {
   const [processingPlan, setProcessingPlan] = useState<TPlanId | null>(null);
@@ -17,16 +17,14 @@ export const usePlanSelection = (isProActive: boolean) => {
       return;
     }
 
-    // Enterprise: open email
     if (planId === 'enterprise') {
       window.location.href =
         'mailto:enterprise@yourdomain.com?subject=Enterprise%20Plan%20Inquiry';
       return;
     }
 
-    // Pro plan: initiate checkout
     if (planId === 'pro') {
-      if (isProActive) return; // already on pro
+      if (isProActive) return;
 
       try {
         setProcessingPlan(planId);

@@ -13,7 +13,7 @@ import { extname } from 'node:path';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { ProfileService } from './profile.service';
-import { updateProfileInputSchema, type TUpdateProfileInput } from '@pipeline/contracts';
+import { updateProfileInputSchema, type TUpdateProfileInputData } from '@pipeline/contracts';
 
 @Controller('profile')
 export class ProfileController {
@@ -41,12 +41,12 @@ export class ProfileController {
   )
   async updateProfile(
     @CurrentUser('id') userId: string,
-    @Body() body: TUpdateProfileInput,
+    @Body() body: TUpdateProfileInputData,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     const validatedData = updateProfileInputSchema.parse(body);
 
-    const input: TUpdateProfileInput = {
+    const input: TUpdateProfileInputData = {
       ...validatedData,
       avatarUrl: file ? `/uploads/avatars/${file.filename}` : validatedData.avatarUrl,
     };

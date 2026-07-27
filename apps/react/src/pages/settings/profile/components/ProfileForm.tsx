@@ -1,9 +1,11 @@
 import { Save } from 'lucide-react';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { SubmitButton, BackButton } from '@/shared/ui/buttons';
+import { useUser } from '@/shared/hooks';
 import { useProfileForm } from '../hooks';
 
 export const ProfileForm = () => {
+  const { user } = useUser();
   const {
     form,
     onSubmit,
@@ -50,13 +52,11 @@ export const ProfileForm = () => {
         </div>
 
         <FloatingInput
-          {...register('email')}
           label="Email Address"
           type="email"
           id="email"
           disabled
-          error={!!errors.email}
-          errorMessage={errors.email?.message}
+          value={user?.email || ''}
           className="opacity-60"
         />
 

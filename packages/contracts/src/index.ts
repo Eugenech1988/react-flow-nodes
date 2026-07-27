@@ -41,6 +41,8 @@ export const twoFactorLoginInputSchema = z.object({
   code: twoFactorCodeOrBackupSchema.shape.code,
 });
 
+export type TTwoFactorLoginInputData = z.infer<typeof twoFactorLoginInputSchema>;
+
 export const passwordResetInputSchema = z.object({
   token: z.string().min(1),
   password: z.string().min(6),
@@ -68,7 +70,7 @@ export const updateProfileInputSchema = z.object({
   avatarUrl: z.string().nullable().optional(),
 });
 
-export type TUpdateProfileInput = z.infer<typeof updateProfileInputSchema>;
+export type TUpdateProfileInputData = z.infer<typeof updateProfileInputSchema>;
 
 export const createPipelineInputSchema = z.object({
   name: z.string().min(1),

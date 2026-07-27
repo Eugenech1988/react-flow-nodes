@@ -1,27 +1,25 @@
 import { Zap, CheckCircle2, ShieldCheck, XCircle, CreditCard } from 'lucide-react';
 import { SubmitButton, CancelButton, DangerButton } from '@/shared/ui/buttons';
+import { PLAN_FEATURES } from '@/pages/settings/lib';
+import { useBilling } from '@/pages/settings/billing/hooks';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '@/shared/hooks';
 
-interface SubscriptionCardProps {
-  isProActive: boolean;
-  isProcessing: boolean;
-  subscription?: { currentPeriodEnd?: string };
-  features: string[];
-  onActivate: () => void;
-  onCancel: () => void;
-  onComparePlans: () => void;
-  onExplorePlans: () => void;
-}
-
-export const SubscriptionCard = ({
-                                   isProActive,
-                                   isProcessing,
-                                   subscription,
-                                   features,
-                                   onActivate,
-                                   onCancel,
-                                   onComparePlans,
-                                   onExplorePlans,
-                                 }: SubscriptionCardProps) => {
+export const SubscriptionCard = () => {
+   const {
+     isProcessing,
+     subscription,
+     cancelSubscription,
+     activateSubscription
+   } = useBilling();
+   const { isProActive } = useUser();
+    const navigate = useNavigate();
+    const onExplorePlans = () => {
+      navigate('/plans')
+    }
+    const onComparePlans = () => {
+      navigate('/plans')
+    }
   return (
     <div
       className={`relative border bg-card rounded-xl p-6 shadow-xs overflow-hidden backdrop-blur-xs transition-all ${
@@ -67,7 +65,7 @@ export const SubscriptionCard = ({
           {isProActive ? 'Included features' : 'Unlock Pro features'}
         </h4>
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {features.map((feature, idx) => (
+          {PLAN_FEATURES.map((feature, idx) => (
             <li key={idx} className="flex items-start gap-2.5 text-sm text-foreground/90">
               <CheckCircle2
                 className={`w-4 h-4 shrink-0 mt-0.5 ${
@@ -98,7 +96,7 @@ export const SubscriptionCard = ({
                 Change plan
               </button>
               <DangerButton
-                onClick={onCancel}
+                onClick={cancelSubscription}
                 isPending={false}
                 text="Cancel subscription"
                 icon={XCircle}
@@ -113,7 +111,7 @@ export const SubscriptionCard = ({
                 text="Activate Pro Plan"
                 pendingText="Redirecting..."
                 icon={CreditCard}
-                onClick={onActivate}
+                onClick={activateSubscription}
               />
 
               <CancelButton

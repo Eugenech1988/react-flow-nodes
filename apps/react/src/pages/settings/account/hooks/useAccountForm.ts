@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
 import { useLogout, useUser } from '@/shared/hooks';
-import { accountSchema, type IAccountFormData } from '@/pages/settings/types';
+import { accountSchema, type IAccountFormData } from '../lib';
 import { useNavigate } from 'react-router-dom';
 
 export const useAccountForm = () => {
