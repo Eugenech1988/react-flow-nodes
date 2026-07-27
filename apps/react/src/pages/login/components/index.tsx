@@ -4,3 +4,4 @@ export * from './TwoFactorForm';
 export * from './SocialLoginButtons';
 export * from './RegisterFields';
 export * from './RecoveryForm'
+export * from './AuthForm';

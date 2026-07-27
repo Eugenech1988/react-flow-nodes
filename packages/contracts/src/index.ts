@@ -3,15 +3,30 @@ import { z } from 'zod';
 export const planSchema = z.enum(['FREE', 'PRO', 'ENTERPRISE']);
 
 export const loginInputSchema = z.object({
-  email: z.email(),
+  email: z.string().email(),
   password: z.string().min(6),
 });
+
+export type LoginInputData = z.infer<typeof loginInputSchema>;
 
 export const registerInputSchema = loginInputSchema.extend({
   firstName: z.string().min(1).optional(),
   lastName: z.string().optional(),
   nickName: z.string().min(3).optional(),
 });
+
+export type RegisterInputData = z.infer<typeof registerInputSchema>;
+
+export const registerFormInputSchema = registerInputSchema
+  .extend({
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
+
+export type RegisterFormInputData = z.infer<typeof registerFormInputSchema>;
 
 export const twoFactorTotpOnlySchema = z.object({
   code: z
@@ -47,6 +62,8 @@ export const passwordResetInputSchema = z.object({
   token: z.string().min(1),
   password: z.string().min(6),
 });
+
+export type TPasswordResetInputData = z.infer<typeof passwordResetInputSchema>;
 
 export const updatePasswordInputSchema = z.object({
   currentPassword: z.string().optional().or(z.literal('')),
@@ -87,4 +104,3 @@ export type TCurrentPipelineInputData = z.infer<typeof currentPipelineInputSchem
 export const updatePipelineInputSchema = createPipelineInputSchema.partial().extend({
   id: z.string().min(1),
 });
-

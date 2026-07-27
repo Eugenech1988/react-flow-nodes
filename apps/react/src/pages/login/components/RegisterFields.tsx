@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { FloatingInput } from '@/shared/ui';
-import type { CombinedFormData } from '@/pages/login/model/types';
-import { DEFAULT_FIELDSET_CLASSES, DEFAULT_LABEL_CLASSES, DEFAULT_TEXT_CLASSES } from '@/pages/login/model';
+import type { RegisterFormInputData } from '@pipeline/contracts';
+import { DEFAULT_FIELDSET_CLASSES, DEFAULT_LABEL_CLASSES, DEFAULT_TEXT_CLASSES } from '../model';
 
 interface RegisterFieldsProps {
-  register: UseFormRegister<CombinedFormData>;
-  errors: FieldErrors<CombinedFormData>;
+  register: UseFormRegister<RegisterFormInputData>;
+  errors: FieldErrors<RegisterFormInputData>;
   inputClasses?: string;
 }
 

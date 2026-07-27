@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { FloatingInput, LocalAlert, SubmitButton, CancelButton } from '@/shared/ui';
@@ -14,22 +14,8 @@ import {
   passwordResetInputSchema,
 } from '@pipeline/contracts';
 
-export type RecoveryMode = 'request' | 'reset';
+import type { TRecoveryMode, TResetFormData, TRequestFormData  } from '@/pages/login/model';
 
-export const requestSchema = loginInputSchema.pick({ email: true });
-
-export const resetSchema = z
-  .object({
-    password: passwordResetInputSchema.shape.password,
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  });
-
-export type RequestFormData = z.infer<typeof requestSchema>;
-export type ResetFormData = z.infer<typeof resetSchema>;
 
 const formSchema = z.discriminatedUnion('mode', [
   z.object({
@@ -51,12 +37,12 @@ const formSchema = z.discriminatedUnion('mode', [
 type CombinedRecoveryData = z.infer<typeof formSchema>;
 
 interface RecoveryFormProps {
-  mode: RecoveryMode;
+  mode: TRecoveryMode;
   error?: string | null;
   isSuccess?: boolean;
   isLoading: boolean;
-  onRequestSubmit: (data: RequestFormData) => Promise<void>;
-  onResetSubmit: (data: ResetFormData) => Promise<void>;
+  onRequestSubmit: (data: TRequestFormData) => Promise<void>;
+  onResetSubmit: (data: TResetFormData) => Promise<void>;
   onBack: () => void;
 }
 
@@ -76,13 +62,10 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
     handleSubmit,
     formState: { errors },
   } = useForm<CombinedRecoveryData>({
-    resolver: zodResolver(formSchema),
-    values: {
-      mode,
-      email: '',
-      password: '',
-      confirmPassword: '',
-    } as unknown as CombinedRecoveryData,
+    resolver: zodResolver(formSchema) as unknown as Resolver<CombinedRecoveryData>,
+    values: (mode === 'request'
+      ? { mode: 'request', email: '' }
+      : { mode: 'reset', password: '', confirmPassword: '' }) as CombinedRecoveryData,
   });
 
   const handleFormSubmit = async (data: CombinedRecoveryData) => {
@@ -110,7 +93,7 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
         />
         <CancelButton
           onClick={onBack}
-          text='Return to login form'
+          text="Return to login form"
           isDisabled={isLoading}
           className="w-full text-sm"
         />

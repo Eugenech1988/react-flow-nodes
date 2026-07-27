@@ -1,34 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { z } from 'zod';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@pipeline/ui';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
+import type { RegisterFormInputData } from '@pipeline/contracts';
 import {
-  SocialLoginButtons,
   AuthModeToggle,
-  RegisterFields,
-  LoginFields,
   TwoFactorForm,
-  RecoveryForm
+  RecoveryForm,
+  AuthForm
 } from './components';
-import { SubmitButton } from '@/shared/ui';
 import { useTRPC, api } from '@/shared/api';
 import { useAuthStore } from './model/authStore';
-import { loginInputSchema, registerInputSchema } from '@pipeline/contracts';
-import type { RequestFormData, ResetFormData } from '@/pages/login/components';
-
-export const registerFormInputSchema = registerInputSchema.extend({
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
-
-type LoginInputData = z.infer<typeof loginInputSchema>;
-type RegisterFormInputData = z.infer<typeof registerFormInputSchema>;
-type LoginCombinedFormData = LoginInputData & Partial<RegisterFormInputData>;
+import type { RequestFormData, ResetFormData } from './components';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -51,13 +34,11 @@ export const LoginPage: React.FC = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  // Состояния для работы режима восстановления
   const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [recoveryError, setRecoveryError] = useState<string | null>(null);
   const [isRecoverySuccess, setIsRecoverySuccess] = useState(false);
   const [isRecoveryLoading, setIsRecoveryLoading] = useState(false);
 
-  // Если в URL передан token (например, клик из письма), автоматически переключаем в сброс пароля
   useEffect(() => {
     if (tokenFromUrl) {
       setIsRecoveryMode(true);
@@ -65,19 +46,6 @@ export const LoginPage: React.FC = () => {
   }, [tokenFromUrl]);
 
   const currentApiError = apiError || twoFactorError;
-  const isAuthError = currentApiError === 'Unauthorized' || currentApiError?.toLowerCase().includes('invalid');
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting }
-  } = useForm<LoginCombinedFormData>({
-    resolver: zodResolver(mode === 'login' ? loginInputSchema : registerFormInputSchema),
-    mode: 'onSubmit',
-    reValidateMode: 'onChange',
-    defaultValues: { email: '', password: '', confirmPassword: '' }
-  });
 
   const handleSuccessAuth = async () => {
     await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
@@ -85,14 +53,14 @@ export const LoginPage: React.FC = () => {
     navigate('/', { replace: true });
   };
 
-  const onSubmit = async (data: LoginCombinedFormData) => {
-    if (mode === 'login') {
-      await login(data.email, data.password, handleSuccessAuth);
-    } else {
-      await registerAction(data.email, data.password, () => {
-        reset({ email: '', password: '', confirmPassword: '' });
-      });
-    }
+  const handleLogin = async (data: RegisterFormInputData) => {
+    await login(data.email, data.password, handleSuccessAuth);
+  };
+
+  const handleRegister = async (data: RegisterFormInputData) => {
+    await registerAction(data.email, data.password, () => {
+      toggleMode();
+    });
   };
 
   const handleSocialLogin = (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -123,7 +91,6 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  // Обработка установки нового пароля
   const handleResetPassword = async (data: ResetFormData) => {
     if (!tokenFromUrl) {
       setRecoveryError('Reset token is missing or invalid.');
@@ -215,67 +182,17 @@ export const LoginPage: React.FC = () => {
               inputClasses=""
             />
           ) : (
-            <>
-              <SocialLoginButtons
-                onGoogleClick={handleSocialLogin('google')}
-                onGithubClick={handleSocialLogin('github')}
-              />
-
-              <div className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 before:h-[1px] before:flex-1 before:bg-slate-300 dark:before:bg-slate-700 after:h-[1px] after:flex-1 after:bg-slate-300 dark:after:bg-slate-700">
-                <span className="px-3">or</span>
-              </div>
-
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {currentApiError && !isAuthError && (
-                  <div className="text-sm font-medium text-red-400 bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center antialiased">
-                    {currentApiError}
-                  </div>
-                )}
-
-                <div className="w-full space-y-5">
-                  {mode === 'register' ? (
-                    <RegisterFields register={register} errors={errors} />
-                  ) : (
-                    <>
-                      <LoginFields
-                        register={register}
-                        errors={errors}
-                        error={isAuthError || !!errors.email || !!errors.password}
-                      />
-
-                      <div className="flex items-center justify-between pt-1 pl-1">
-                        {isAuthError ? (
-                          <p className="text-xs text-red-500 antialiased">
-                            Incorrect email address or password.
-                          </p>
-                        ) : <span />}
-
-                        <button
-                          type="button"
-                          onClick={() => setIsRecoveryMode(true)}
-                          className="text-xs text-teal-600 dark:text-teal-400 font-medium transition-colors duration-200 hover:underline focus:outline-none ml-auto"
-                        >
-                          Forgot password?
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                <SubmitButton
-                  isPending={isSubmitting}
-                  text={mode === 'login' ? 'Sign In' : 'Register'}
-                  pendingText="Processing..."
-                  icon={null}
-                  className="w-full text-base h-11 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
-                />
-              </form>
-            </>
+            <AuthForm
+              mode={mode}
+              currentApiError={currentApiError}
+              onLogin={handleLogin}
+              onRegister={handleRegister}
+              onSocialLogin={handleSocialLogin}
+              onForgotPassword={() => setIsRecoveryMode(true)}
+            />
           )}
         </CardContent>
       </Card>
     </div>
   );
 };
-
-export default LoginPage;
