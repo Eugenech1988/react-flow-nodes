@@ -39,15 +39,7 @@ export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
   };
 
   const handleCardClick = () => {
-    setCurrentPipeline.mutate({
-      id: pipeline.id,
-      name: pipeline.name,
-      description: pipeline.description,
-      status: pipeline.status,
-      lastRunAt: pipeline.lastRunAt ? new Date(pipeline.lastRunAt) : null,
-      lastRunStatus: pipeline.lastRunStatus,
-      screenshotUrl: pipeline.screenshotUrl,
-    });
+    setCurrentPipeline.mutate(pipeline);
   }
 
   const imageSrc = pipeline.screenshotUrl ? `${BASE_URL}${pipeline.screenshotUrl}` : null;

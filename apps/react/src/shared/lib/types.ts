@@ -39,12 +39,12 @@ export type TSubscription = {
   updatedAt: string;
 }
 
-export interface TPipeline {
+export type TPipeline = {
   id: string;
   name: string;
   description?: string | null;
   screenshotUrl?: string | null;
-  status: 'ACTIVE' | 'PAUSED' | 'DRAFT' | 'ARCHIVED' | null;
+  status: 'ACTIVE' | 'PAUSED' | 'DRAFT' | 'ARCHIVED';
   createdAt: string;
   updatedAt: string;
   userId: string;

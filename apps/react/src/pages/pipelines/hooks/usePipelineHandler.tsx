@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, trpcClient, useTRPC } from '@/shared/api';
 import type { TCreatePipelineData } from '@/pages/pipelines/lib';
+import type { TPipeline } from '@/shared/lib';
 
 interface UsePipelineHandlersOptions {
   onCreateSuccess?: () => void;
@@ -33,15 +34,7 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
   });
 
   const setCurrentPipeline = useMutation({
-    mutationFn: (pipeline: {
-      id: string;
-      name: string;
-      description?: string | null;
-      status?: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
-      lastRunAt?: Date | null;
-      lastRunStatus?: string | null;
-      screenshotUrl?: string | null;
-    }) => trpcClient.users.setCurrentPipeline.mutate(pipeline),
+    mutationFn: (pipeline: TPipeline) => trpcClient.users.setCurrentPipeline.mutate(pipeline),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
       options?.onSetCurrentSuccess?.();
