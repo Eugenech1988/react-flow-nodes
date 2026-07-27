@@ -1,9 +1,10 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { User, Shield, CreditCard } from 'lucide-react';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import { ProfileSidebar } from './components';
 import { Tabs } from '@/shared/ui';
+import { PAGE_VARIANTS, SETTINGS_CONTENT_VARIANTS  } from '@/shared/lib';
+import { SETTINGS_TABS } from './lib';
 import { useUser } from '@/shared/hooks';
 
 export const SettingsPage = () => {
@@ -22,41 +23,10 @@ export const SettingsPage = () => {
     navigate(`/settings/${tabId}`);
   };
 
-  const pageVariants: Variants = {
-    initial: { opacity: 0, y: 12 },
-    animate: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.35, ease: [0.21, 1.02, 0.43, 1.01] },
-    },
-  };
-
-  const contentVariants: Variants = {
-    initial: (isInitial: boolean) => ({
-      opacity: isInitial ? 1 : 0,
-      y: isInitial ? 0 : 8,
-    }),
-    animate: {
-      opacity: 1,
-      y: 0,
-    },
-  };
-
-  const tabs = [
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'account', label: 'Account Settings', icon: Shield },
-    {
-      id: 'billing',
-      label: 'Billing',
-      icon: CreditCard,
-      badge: isProActive ? 'PRO' : undefined,
-    },
-  ];
-
   return (
     <motion.div
       className="bg-background text-foreground p-4 md:p-6 transition-colors duration-300"
-      variants={pageVariants}
+      variants={PAGE_VARIANTS}
       initial="initial"
       animate="animate"
     >
@@ -70,7 +40,7 @@ export const SettingsPage = () => {
 
         <div className="space-y-6">
           <Tabs
-            tabs={tabs}
+            tabs={SETTINGS_TABS(isProActive)}
             currentTab={currentTab}
             onTabChange={handleTabChange}
           />
@@ -85,7 +55,7 @@ export const SettingsPage = () => {
                 <motion.div
                   key={currentTab}
                   custom={isInitialMount.current}
-                  variants={contentVariants}
+                  variants={SETTINGS_CONTENT_VARIANTS}
                   initial="initial"
                   animate="animate"
                   transition={{ duration: 0.28, ease: [0.21, 1.02, 0.43, 1.01] }}

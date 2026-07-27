@@ -4,8 +4,7 @@ import { PublicOnlyRoute } from '@/app/providers/PublicOnlyRoute';
 import AppLayout from '@/app/AppLayout';
 import { LoginPage } from '@/pages/login';
 import { CanvasPage } from '@/pages/canvas/CanvasPage';
-import { SettingsPage, ProfileTab, AccountTab } from '@/pages/settings';
-import { BillingPage } from '@/pages/billing';
+import { SettingsPage, ProfileTab, AccountTab, BillingTab } from '@/pages/settings';
 import { PlansPage } from '@/pages/plans';
 import { PipelinesPage } from '@/pages/pipelines';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
@@ -25,7 +24,7 @@ export const AppRoutes = () => {
             <Route index element={<Navigate to="profile" replace />} />
             <Route path="profile" element={<ProfileTab />} />
             <Route path="account" element={<AccountTab />} />
-            <Route path="billing" element={<BillingPage />} />
+            <Route path="billing" element={<BillingTab />} />
           </Route>
 
           <Route path="/plans" element={<PlansPage />} />

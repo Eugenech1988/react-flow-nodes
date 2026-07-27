@@ -27,8 +27,6 @@ export const LoginPage: React.FC = () => {
   const {
     mode,
     is2faRequired,
-    qrCodeImage,
-    secretKey,
     isLoading: is2faLoading,
     apiError,
     twoFactorError,
@@ -103,8 +101,6 @@ export const LoginPage: React.FC = () => {
         <CardContent className="space-y-5.5 p-0">
           {is2faRequired ? (
             <TwoFactorForm
-              qrCodeImage={qrCodeImage ?? undefined}
-              secretKey={secretKey ?? undefined}
               error={twoFactorError ?? undefined}
               isLoading={is2faLoading}
               onVerify={(data) => verifyTwoFactor(data, handleSuccessAuth)}

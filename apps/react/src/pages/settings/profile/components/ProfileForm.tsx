@@ -1,20 +1,17 @@
-import React from 'react';
 import { Save } from 'lucide-react';
-import { type UseFormReturn } from 'react-hook-form';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { SubmitButton, BackButton } from '@/shared/ui/buttons';
-import type { IProfileFormData } from '@/pages/settings/types';
+import { useProfileForm } from '../hooks';
 
-interface ProfileFormProps {
-  form: UseFormReturn<IProfileFormData>;
-  onSubmit: (e: React.FormEvent) => void;
-  isPristine: boolean;
-  isPending?: boolean;
-  alert?: { type: 'success' | 'error'; message: string } | null;
-}
-
-export const ProfileForm = ({ form, onSubmit, isPristine, isPending = false, alert = null }: ProfileFormProps) => {
-  const { register, formState: { errors } } = form;
+export const ProfileForm = () => {
+  const {
+    form,
+    onSubmit,
+    isPristine,
+    isPending,
+    alert
+  } = useProfileForm();
+  const {register, formState: {errors}} = form;
 
   const rootError = errors.root?.message || errors['' as keyof typeof errors]?.message;
 
@@ -81,7 +78,7 @@ export const ProfileForm = ({ form, onSubmit, isPristine, isPending = false, ale
         </div>
 
         <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
-          <BackButton to="/" text="Back to app" />
+          <BackButton to="/" text="Back to app"/>
 
           <SubmitButton
             isPending={isPending}

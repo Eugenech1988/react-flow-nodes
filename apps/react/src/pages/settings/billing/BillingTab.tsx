@@ -1,9 +1,6 @@
 import { Loader2, Layers, Sparkles } from 'lucide-react';
-import { useBilling } from '@/pages/billing/hooks/useBilling';
-import { SubscriptionCard } from '@/pages/billing/components/SubscriptionCard';
-import { UsageStats } from '@/pages/billing/components/UsageStats';
-import { PaymentMethod } from '@/pages/billing/components/PaymentMethod';
-import { InvoiceHistory } from '@/pages/billing/components/InvoiceHistory';
+import { useBilling } from './hooks/useBilling';
+import { SubscriptionCard, UsageStats, PaymentMethod, InvoiceHistory} from './components';
 
 const features = [
   'Unlimited pipelines execution & storage',
@@ -12,7 +9,7 @@ const features = [
   '24/7 Dedicated engineering support',
 ];
 
-export const BillingPage = () => {
+export const BillingTab = () => {
   const {
     isProActive,
     isSubscriptionLoading,
