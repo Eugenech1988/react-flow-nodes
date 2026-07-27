@@ -16,14 +16,11 @@ export const NotFoundPage = () => {
         <p className="text-sm mb-8 text-muted-foreground">
           The page you are looking for doesn't exist or has been moved.
         </p>
-
-        <div className="w-full">
           <SubmitButton
             isPending={false}
             text='Back to App'
             onClick={() => {navigate('/')}}
           />
-        </div>
       </div>
     </div>
   );
