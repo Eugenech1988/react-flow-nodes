@@ -31,16 +31,22 @@ export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
   const { deletePipeline, setCurrentPipeline } = usePipelineHandler({
     onSetCurrentSuccess: () => {
       navigate('/');
-    }
+    },
   });
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Предотвращаем клик по карточке
     deletePipeline.mutate(pipeline.id);
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Предотвращаем клик по карточке
+    navigate(`/pipelines/${pipeline.id}`);
   };
 
   const handleCardClick = () => {
     setCurrentPipeline.mutate(pipeline);
-  }
+  };
 
   const imageSrc = pipeline.screenshotUrl ? `${BASE_URL}${pipeline.screenshotUrl}` : null;
   const status = pipeline.status?.toUpperCase();
@@ -58,41 +64,43 @@ export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
         </div>
       )}
 
-      <div className="space-y-3 p-5" onClick={handleCardClick}>
+      <div className="space-y-3 p-5 cursor-pointer" onClick={handleCardClick}>
         <div className="space-y-1.5">
           <div className="flex items-start justify-between gap-2">
             <span
-              onClick={() => navigate(`/pipelines/${pipeline.id}`)}
-              className="font-semibold text-base text-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 cursor-pointer transition-colors line-clamp-1"
+              onClick={handleEdit}
+              className="font-semibold text-base text-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors line-clamp-1"
             >
               {pipeline.name}
             </span>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors outline-none cursor-pointer shrink-0">
-                <MoreVertical className="w-4 h-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-40 border border-border/80 bg-card p-1 rounded-xl shadow-lg"
-              >
-                <DropdownMenuItem
-                  onClick={() => navigate(`/pipelines/${pipeline.id}`)}
-                  className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg cursor-pointer transition-colors"
+            <div onClick={(e) => e.stopPropagation()}>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors outline-none cursor-pointer shrink-0">
+                  <MoreVertical className="w-4 h-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-40 border border-border/80 bg-card p-1 rounded-xl shadow-lg"
                 >
-                  <Edit3 className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span>Edit Workflow</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={handleDelete}
-                  disabled={deletePipeline.isPending}
-                  className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg cursor-pointer text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 focus:bg-rose-500/10 transition-colors"
-                >
-                  <Trash2 className="w-3.5 h-3.5 text-current" />
-                  <span>Delete</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuItem
+                    onClick={handleEdit}
+                    className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg cursor-pointer transition-colors"
+                  >
+                    <Edit3 className="w-3.5 h-3.5 text-muted-foreground" />
+                    <span>Edit Workflow</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleDelete}
+                    disabled={deletePipeline.isPending}
+                    className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg cursor-pointer text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 focus:bg-rose-500/10 transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-current" />
+                    <span>Delete</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
 
           <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">

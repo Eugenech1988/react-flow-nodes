@@ -1,4 +1,4 @@
-import { CloudCheck, Settings, Share2 } from 'lucide-react';
+import { Settings, Share2 } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
 import { UserDropdown } from '@/features/user-dropdown';
 import { WorkflowExecutionControl } from '@/widgets/header/components/WorkflowExecutionControl';
+import { useUser } from '@/shared/hooks';
 
 const TABS = [
   {id: 'editor', label: 'Editor'},
@@ -17,7 +18,8 @@ export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
-
+  const {user} = useUser();
+  const currentPipelineName = user?.currentPipeline?.name;
   const [activeTab, setActiveTab] = useState<'editor' | 'executions' | 'tests'>('editor');
 
   const handleTabClick = (tabId: 'editor' | 'executions' | 'tests') => {
@@ -44,11 +46,17 @@ export const Header = () => {
         <Link to="/">
           <img className="h-6 w-auto object-contain" src={logo} alt="Pipeline logo"/>
         </Link>
-        <div className="h-4 w-px bg-border"/>
-        <div className="flex items-center gap-2">
-          <span className="font-medium text-sm text-foreground truncate">untitled_pipeline_1</span>
-          <CloudCheck className="w-4 h-4 text-muted-foreground shrink-0"/>
-        </div>
+        {currentPipelineName &&
+          <>
+            <div className="h-4 w-px bg-border"/>
+            <div className="flex items-center gap-2">
+          <span className="font-medium text-sm text-foreground truncate">
+            {currentPipelineName}
+          </span>
+              {/*<CloudCheck className="w-4 h-4 text-muted-foreground shrink-0"/>*/}
+            </div>
+          </>
+        }
       </div>
 
       <div

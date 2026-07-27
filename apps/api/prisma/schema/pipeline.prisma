@@ -5,6 +5,8 @@ model Pipeline {
 
   status PipelineStatus? @default(DRAFT)
 
+  graphData Json? @map("graph_data")
+
   lastRunAt     DateTime? @map("last_run_at")
   lastRunStatus String?   @map("last_run_status")
 

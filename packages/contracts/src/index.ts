@@ -67,10 +67,13 @@ export type TUpdateProfileInputData = z.infer<typeof updateProfileInputSchema>;
 export const createPipelineInputSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
-  status: z.enum(['DRAFT', 'ACTIVE', 'PAUSED', 'ARCHIVED']).optional(),
-  lastRunAt: z.coerce.date().optional(),
-  lastRunStatus: z.string().optional(),
+  // status: z.enum(['DRAFT', 'ACTIVE', 'PAUSED', 'ARCHIVED']).optional(),
+  // lastRunAt: z.coerce.date().optional(),
+  // lastRunStatus: z.string().optional(),
+  screenshotUrl: z.string().optional(),
 });
+
+export type TCreatePipelineInputData = z.infer<typeof createPipelineInputSchema>;
 
 export const currentPipelineInputSchema = z.object({
   id: z.string(),
