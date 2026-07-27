@@ -40,6 +40,7 @@ export const SettingsPage = () => {
 
         <div className="space-y-6">
           <Tabs
+            layoutId='settings-tabs'
             tabs={SETTINGS_TABS(isProActive)}
             currentTab={currentTab}
             onTabChange={handleTabChange}

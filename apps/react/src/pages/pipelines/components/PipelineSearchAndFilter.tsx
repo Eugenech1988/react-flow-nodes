@@ -45,6 +45,7 @@ export const PipelineSearchAndFilter = ({
       <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
         <Tabs
           tabs={formattedTabs}
+          layoutId='pipelines-search-tabs'
           currentTab={statusFilter}
           onTabChange={(id) => onStatusFilterChange(id as TTabType)}
           capitalizeLabels
