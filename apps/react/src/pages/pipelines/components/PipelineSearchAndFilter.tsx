@@ -1,6 +1,7 @@
 import { Search, ArrowUpDown } from 'lucide-react';
 import { TAB_OPTIONS, SORT_OPTIONS, type TTabType, type TSortOption } from '@/pages/pipelines/lib';
 import { FloatingInput, Tabs } from '@/shared/ui';
+import { usePipelines } from '@/shared/hooks';
 
 interface PipelineSearchAndFilterProps {
   searchQuery: string;
@@ -21,6 +22,8 @@ export const PipelineSearchAndFilter = ({
                                           sortOrder,
                                           onSortChange,
                                         }: PipelineSearchAndFilterProps) => {
+  const { pipelines } = usePipelines();
+
   const toggleSortOrder = () => {
     onSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc');
   };
@@ -30,6 +33,9 @@ export const PipelineSearchAndFilter = ({
     label: tab.label,
   }));
 
+  if (!pipelines || pipelines.length === 0) {
+    return null;
+  }
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
       <div className="relative w-full sm:w-80 group">
