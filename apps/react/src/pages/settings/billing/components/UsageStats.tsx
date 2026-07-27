@@ -23,7 +23,6 @@ export const UsageStats = () => {
               <span className="font-medium text-foreground/90">{stat.value}</span>
             </div>
 
-            {/* Прогресс-бар */}
             <div className="w-full bg-muted/60 h-2 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all duration-500 ${stat.barColor}`}
@@ -31,10 +30,13 @@ export const UsageStats = () => {
               />
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-              <span>{stat.sub}</span>
-              <span className="text-teal-600 dark:text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity font-medium">
-                View chart →
+            <div className="flex items-end justify-between gap-2 text-[11px] text-muted-foreground pt-0.5">
+              <span className="line-clamp-2 leading-tight">
+                {stat.sub}
+              </span>
+
+              <span className="shrink-0 whitespace-nowrap text-xs font-medium text-teal-600 dark:text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                View chart
               </span>
             </div>
           </div>

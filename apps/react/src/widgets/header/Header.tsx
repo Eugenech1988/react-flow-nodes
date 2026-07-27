@@ -8,9 +8,9 @@ import { UserDropdown } from '@/features/user-dropdown';
 import { WorkflowExecutionControl } from '@/widgets/header/components/WorkflowExecutionControl';
 
 const TABS = [
-  { id: 'editor', label: 'Editor' },
-  { id: 'executions', label: 'Executions' },
-  { id: 'tests', label: 'Tests' },
+  {id: 'editor', label: 'Editor'},
+  {id: 'executions', label: 'Executions'},
+  {id: 'tests', label: 'Tests'}
 ] as const;
 
 export const Header = () => {
@@ -18,7 +18,6 @@ export const Header = () => {
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
 
-  // Локальное состояние активной табы
   const [activeTab, setActiveTab] = useState<'editor' | 'executions' | 'tests'>('editor');
 
   const handleTabClick = (tabId: 'editor' | 'executions' | 'tests') => {
@@ -38,9 +37,7 @@ export const Header = () => {
 
   return (
     <header
-      className={`flex h-14 fixed bg-background top-0 w-full items-center justify-between px-6 bg-header-bg border-b border-border z-40 shrink-0 transition-colors duration-300 ${
-        !isHome ? 'cursor-pointer hover:bg-foreground/1' : ''
-      }`}
+      className="flex h-14 fixed bg-background top-0 w-full items-center justify-between px-6 bg-header-bg border-b border-border z-40 shrink-0 transition-colors duration-300"
       onClick={handleHeaderClick}
     >
       <div className="flex items-center gap-4 w-[320px]" onClick={preventNavigation}>
@@ -50,11 +47,13 @@ export const Header = () => {
         <div className="h-4 w-px bg-border"/>
         <div className="flex items-center gap-2">
           <span className="font-medium text-sm text-foreground truncate">untitled_pipeline_1</span>
-          <CloudCheck className="w-4 h-4 text-muted-foreground shrink-0" />
+          <CloudCheck className="w-4 h-4 text-muted-foreground shrink-0"/>
         </div>
       </div>
 
-      <div className="absolute left-1/2 -translate-x-1/2 flex bg-foreground/3 p-1 rounded-lg border border-border/50 text-sm" onClick={preventNavigation}>
+      <div
+        className="absolute left-1/2 -translate-x-1/2 flex bg-foreground/3 p-1 rounded-lg border border-border/50 text-sm"
+        onClick={preventNavigation}>
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
@@ -69,7 +68,7 @@ export const Header = () => {
                 <motion.div
                   layoutId="header-active-tab-indicator"
                   className="absolute inset-0 bg-card rounded-md shadow-xs border border-border/40 z-[-1]"
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  transition={{type: 'spring', stiffness: 400, damping: 30}}
                 />
               )}
               {tab.label}
