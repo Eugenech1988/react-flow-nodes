@@ -152,8 +152,7 @@ export class AuthService {
       },
     );
 
-    const clientUrl = this.configService.get<string>('CLIENT_URL') || this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
-    return `${clientUrl}/reset-password?token=${resetToken}`;
+    return resetToken;
   }
 
   generateTempToken(userId: string) {

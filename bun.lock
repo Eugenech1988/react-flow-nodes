@@ -40,6 +40,7 @@
         "class-validator": "^0.15.1",
         "cookie-parser": "^1.4.7",
         "dotenv": "^17.4.2",
+        "handlebars": "^4.7.9",
         "jsonwebtoken": "^9.0.3",
         "multer": "^2.2.0",
         "nodemailer": "^9.0.3",

@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '@/auth/auth.service';
+import { MailService } from '@/mail/mail.service';
 import { RegisterDto } from '@/auth/dtos/register.dto';
 import { RecoveryDto } from '@/auth/dtos/recovery.dto';
 import { ResetPasswordDto } from '@/auth/dtos/reset-password.dto';
@@ -25,7 +26,8 @@ interface IRequestWithOauthUser extends Request {
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly mailService: MailService
   ) {}
 
   private setTokenCookies(res: Response, accessToken: string, refreshToken: string) {
@@ -232,17 +234,32 @@ export class AuthController {
   @ApiOperation({ summary: 'Request password recovery email' })
   @ApiResponse({ status: 200, description: 'Recovery link generated.' })
   async recovery(@Body() dto: RecoveryDto): Promise<{ message: string }> {
-    await this.authService.recovery(dto);
+    const token = await this.authService.recovery(dto);
+
+    if (token) {
+      const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
+      const recoveryLink = `${clientUrl}/reset-password?token=${token}`;
+
+      await this.mailService.sendRecoveryEmail(dto.email, recoveryLink);
+    }
+
     return { message: 'If the email exists, a reset link has been sent.' };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('reset-password')
   @ApiOperation({ summary: 'Reset password using token' })
-  @ApiResponse({ status: 200, description: 'Password updated.' })
+  @ApiResponse({ status: 200, description: 'Password updated and user logged in.' })
   @ApiResponse({ status: 400, description: 'Invalid or expired token.' })
-  async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ success: boolean }> {
-    await this.authService.resetPassword(dto);
-    return { success: true };
+  async resetPassword(
+    @Body() dto: ResetPasswordDto,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<TUserSafe> {
+    const user = await this.authService.resetPassword(dto);
+
+    const tokens = await this.authService.generateTokens(user.id);
+    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+
+    return user;
   }
 }

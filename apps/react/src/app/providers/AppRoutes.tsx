@@ -12,6 +12,8 @@ import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
 export const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/reset-password" element={<LoginPage/>}/>
+
       <Route element={<PublicOnlyRoute />}>
         <Route path="/login" element={<LoginPage />} />
       </Route>
