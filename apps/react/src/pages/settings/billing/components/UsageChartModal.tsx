@@ -108,7 +108,7 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
               </div>
             </DialogBody>
 
-            <DialogFooter cancelText="Close" onCancel={onClose} withBorder={false} />
+            <DialogFooter showSubmit={false} cancelText="Close" onCancel={onClose} withBorder={false} />
           </>
         )}
       </DialogContent>

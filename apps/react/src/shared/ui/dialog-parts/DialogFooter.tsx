@@ -13,6 +13,8 @@ interface DialogFooterProps {
   withBorder?: boolean;
   isReversedBtns?: boolean;
   isDisabled?: boolean;
+  showSubmit?: boolean;
+  showCancel?: boolean;
 }
 
 export const DialogFooter = ({
@@ -27,8 +29,12 @@ export const DialogFooter = ({
                                withBorder = false,
                                isReversedBtns = false,
                                isDisabled = false,
+                               showSubmit = true,
+                               showCancel = true,
                              }: DialogFooterProps) => {
   const renderActionBtn = () => {
+    if (!showSubmit) return null;
+
     if (variant === 'danger') {
       return (
         <DangerButton
@@ -52,9 +58,17 @@ export const DialogFooter = ({
     );
   };
 
-  const renderCancelBtn = () => (
-    <CancelButton onClick={onCancel} isDisabled={isPending} text={cancelText} />
-  );
+  const renderCancelBtn = () => {
+    if (!showCancel) return null; // Не рендерим, если false
+
+    return (
+      <CancelButton onClick={onCancel} isDisabled={isPending} text={cancelText} />
+    );
+  };
+
+  if (!showSubmit && !showCancel) {
+    return null;
+  }
 
   return (
     <div
