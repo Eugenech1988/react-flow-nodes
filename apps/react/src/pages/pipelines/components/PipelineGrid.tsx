@@ -1,16 +1,17 @@
 import { AnimatePresence } from 'framer-motion';
 import { PipelineCard } from '@/pages/pipelines/components/PipelineCard';
 import { EmptyState } from '@/pages/pipelines/components/EmptyState';
-import type { IPipeline } from '@/pages/pipelines/types';
+import type { TPipeline } from '@/shared/lib';
 
 interface PipelineGridProps {
-  pipelines: IPipeline[];
+  pipelines: TPipeline[];
   searchQuery: string;
+  setIsCreateOpen: (isCreateOpen: boolean) => void;
 }
 
-export const PipelineGrid = ({ pipelines, searchQuery }: PipelineGridProps) => {
+export const PipelineGrid = ({ pipelines, setIsCreateOpen, searchQuery }: PipelineGridProps) => {
   if (pipelines.length === 0) {
-    return <EmptyState hasSearchQuery={searchQuery.length > 0} />;
+    return <EmptyState setIsCreateOpen={setIsCreateOpen} hasSearchQuery={searchQuery.length > 0} />;
   }
 
   return (

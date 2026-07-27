@@ -1,22 +1,16 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { usePipelines } from '@/shared/hooks';
-import { usePipelinesFilter } from './hooks/usePipelinesFilter';
-import { PipelineHeader } from './components/PipelineHeader';
-import { PipelineSearchAndFilter } from './components/PipelineSearchAndFilter';
-import { PipelineGrid } from './components/PipelineGrid';
-import type { Variants } from 'framer-motion';
-
-const pageVariants: Variants = {
-  initial: { opacity: 0, y: 12 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.35, ease: [0.21, 1.02, 0.43, 1.01] },
-  },
-};
+import { usePipelinesFilter } from './hooks';
+import { PAGE_VARIANTS } from '@/shared/lib';
+import { PipelineHeader, PipelineSearchAndFilter, PipelineGrid } from './components';
+import type { TPipeline } from '@/shared/lib';
+import { CreatePipelineDialog } from '@/pages/pipelines/components';
 
 export const PipelinesPage = () => {
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const { pipelines } = usePipelines();
+
   const {
     searchQuery,
     statusFilter,
@@ -27,17 +21,19 @@ export const PipelinesPage = () => {
     handleSearchChange,
     setStatusFilter,
     filteredPipelines,
-  } = usePipelinesFilter(pipelines, 'name', 'asc');
+  } = usePipelinesFilter((pipelines || []) as unknown as TPipeline[]);
 
   return (
     <motion.div
       className="bg-background text-foreground p-4 md:p-6 transition-colors duration-300"
-      variants={pageVariants}
+      variants={PAGE_VARIANTS}
       initial="initial"
       animate="animate"
     >
       <div className="max-w-7xl mx-auto space-y-8">
-        <PipelineHeader />
+        <PipelineHeader
+          setIsCreateOpen={setIsCreateOpen}
+        />
         <PipelineSearchAndFilter
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
@@ -50,7 +46,8 @@ export const PipelinesPage = () => {
             setSortOrder(order);
           }}
         />
-        <PipelineGrid pipelines={filteredPipelines} searchQuery={searchQuery} />
+        <PipelineGrid setIsCreateOpen={setIsCreateOpen} pipelines={filteredPipelines} searchQuery={searchQuery} />
+        <CreatePipelineDialog isOpen={isCreateOpen} onClose={() => {setIsCreateOpen(false)}}/>
       </div>
     </motion.div>
   );

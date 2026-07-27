@@ -5,8 +5,8 @@ import { useUser } from '@/shared/hooks';
 import { Workflow, Image as ImageIcon, Trash2, Upload } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { FloatingInput, FloatingTextarea, DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
-import { createPipelineSchema, type CreatePipelineDto } from '@/pages/pipelines/types';
-import { useCreatePipeline } from '@/pages/pipelines/hooks/usePipelineHandler';
+import { createPipelineSchema, type TCreatePipelineData } from '@/pages/pipelines/lib';
+import { useCreatePipeline } from '@/pages/pipelines/hooks';
 
 interface CreatePipelineDialogProps {
   isOpen: boolean;
@@ -24,7 +24,7 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CreatePipelineDto>({
+  } = useForm<TCreatePipelineData>({
     resolver: zodResolver(createPipelineSchema),
     defaultValues: { name: '', description: '', screenshotUrl: '' },
   });
@@ -55,9 +55,9 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
     onClose();
   };
 
-  const onSubmit = (data: CreatePipelineDto) => {
+  const onSubmit = (data: TCreatePipelineData) => {
     if (!user?.id) return;
-    createMutation.mutate({ userId: user.id, data, file });
+    createMutation.mutate({ userId: user.id, data, file: file ?? undefined });
   };
 
   return (

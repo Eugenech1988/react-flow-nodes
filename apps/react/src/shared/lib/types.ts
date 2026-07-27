@@ -39,16 +39,17 @@ export type TSubscription = {
   updatedAt: string;
 }
 
-export type TPipeline = {
+export interface TPipeline {
   id: string;
   name: string;
-  description: string;
-  status: 'active' | 'paused' | 'draft';
-  lastRunStatus?: 'success' | 'failed' | 'running';
-  lastRunAt?: string;
+  description?: string | null;
+  screenshotUrl?: string | null;
+  status: 'ACTIVE' | 'PAUSED' | 'DRAFT' | 'ARCHIVED' | null;
   createdAt: string;
   updatedAt: string;
-  thumbnail?: string;
+  userId: string;
+  lastRunAt?: string | null;
+  lastRunStatus?: 'SUCCESS' | 'FAILED' | 'RUNNING' | null;
 }
 
 export interface IUser {

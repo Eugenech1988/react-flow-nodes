@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react';
-import type { IPipeline } from '@/pages/pipelines/types';
-import type { TTabType, TSortOption } from '@/pages/pipelines/constants';
+import type { TTabType, TSortOption } from '@/pages/pipelines/lib';
+import type { TPipeline } from '@/shared/lib';
 
 export const usePipelinesFilter = (
-  pipelines: IPipeline[],
+  pipelines: TPipeline[],
   initialSortBy: TSortOption['value'] = 'name',
   initialSortOrder: 'asc' | 'desc' = 'asc'
 ) => {
@@ -46,8 +46,8 @@ export const usePipelinesFilter = (
           valB = new Date(b.updatedAt).getTime();
           break;
         case 'status':
-          valA = a.status;
-          valB = b.status;
+          valA = a.status ?? '';
+          valB = b.status ?? '';
           break;
         default:
           valA = a.name;
@@ -55,9 +55,9 @@ export const usePipelinesFilter = (
       }
 
       if (sortOrder === 'asc') {
-        return valA > valB ? 1 : -1;
+        return valA > valB ? 1 : valA < valB ? -1 : 0;
       } else {
-        return valA < valB ? 1 : -1;
+        return valA < valB ? 1 : valA > valB ? -1 : 0;
       }
     });
 

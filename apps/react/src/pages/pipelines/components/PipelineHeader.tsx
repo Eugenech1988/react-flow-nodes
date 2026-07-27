@@ -1,10 +1,11 @@
-import { useState } from 'react';
 import { Workflow, Plus } from 'lucide-react';
 import { SubmitButton } from '@/shared/ui/buttons';
-import { CreatePipelineDialog } from '@/pages/pipelines/components/CreatePipelineDialog';
 
-export const PipelineHeader = () => {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+type TPipelineHeaderProps = {
+  setIsCreateOpen: (isCreateOpen: boolean) => void;
+}
+
+export const PipelineHeader = ({setIsCreateOpen}: TPipelineHeaderProps) => {
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
@@ -25,11 +26,6 @@ export const PipelineHeader = () => {
         pendingText="Creating..."
         icon={Plus}
         onClick={() => setIsCreateOpen(true)}
-      />
-
-      <CreatePipelineDialog
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
       />
     </div>
   );

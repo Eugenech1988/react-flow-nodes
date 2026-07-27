@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
-import { Button } from '@pipeline/ui';
 import Logo from '@/assets/logo.svg';
+import { useNavigate } from 'react-router-dom';
+import { SubmitButton } from '@/shared/ui';
 
 export const NotFoundPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 transition-colors">
       <div className="flex flex-col items-center text-center max-w-md">
@@ -17,11 +18,11 @@ export const NotFoundPage = () => {
         </p>
 
         <div className="w-full">
-          <Button
-            className="cursor-pointer h-12 rounded-xl bg-teal-600 text-base font-medium tracking-wide text-white transition-all duration-300 hover:bg-teal-500 hover:shadow-[0_0_25px_rgba(20,184,166,0.3)] active:scale-[0.98] px-4"
-          >
-            <Link to="/">Back to Workspace</Link>
-          </Button>
+          <SubmitButton
+            isPending={false}
+            text='Back to App'
+            onClick={() => {navigate('/')}}
+          />
         </div>
       </div>
     </div>

@@ -17,13 +17,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@pipeline/ui';
-import type { IPipeline } from '@/pages/pipelines/types';
-import { useDeletePipeline } from '@/pages/pipelines/hooks/usePipelineHandler';
+import type { TPipeline } from '@/shared/lib';
+import { useDeletePipeline } from '@/pages/pipelines/hooks';
 
 const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 
 interface PipelineCardProps {
-  pipeline: IPipeline;
+  pipeline: TPipeline;
 }
 
 export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
@@ -135,10 +135,10 @@ export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
         <div className="flex items-center gap-1 text-muted-foreground">
           <Clock className="w-3.5 h-3.5" />
           <span>{pipeline.lastRunAt || 'Never run'}</span>
-          {pipeline.lastRunStatus === 'success' && (
+          {pipeline.lastRunStatus === 'SUCCESS' && (
             <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 ml-0.5" />
           )}
-          {pipeline.lastRunStatus === 'failed' && (
+          {pipeline.lastRunStatus === 'FAILED' && (
             <AlertCircle className="w-3.5 h-3.5 text-rose-500 ml-0.5" />
           )}
         </div>
