@@ -1,16 +1,18 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, trpcClient, useTRPC } from '@/shared/api';
-import type { CreatePipelineDto } from '@/pages/pipelines/types';
+import type { TCreatePipelineData } from '@/pages/pipelines/lib';
 
-interface UseCreatePipelineOptions {
-  onSuccess?: () => void;
+interface UsePipelineHandlersOptions {
+  onCreateSuccess?: () => void;
+  onSetCurrentSuccess?: () => void;
 }
 
-export const useCreatePipeline = (options?: UseCreatePipelineOptions) => {
+export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
   const queryClient = useQueryClient();
   const trpc = useTRPC();
-  return useMutation({
-    mutationFn: async ({ userId, data, file }: { userId: string; data: CreatePipelineDto; file?: File }) => {
+
+  const createPipeline = useMutation({
+    mutationFn: async ({ userId, data, file }: { userId: string; data: TCreatePipelineData; file?: File }) => {
       const formData = new FormData();
       formData.append('name', data.name);
       if (data.description) formData.append('description', data.description);
@@ -19,18 +21,36 @@ export const useCreatePipeline = (options?: UseCreatePipelineOptions) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: trpc.pipelines.list.queryKey() });
-      options?.onSuccess?.();
+      options?.onCreateSuccess?.();
     },
   });
-};
 
-export const useDeletePipeline = () => {
-  const queryClient = useQueryClient();
-  const trpc = useTRPC();
-  return useMutation({
+  const deletePipeline = useMutation({
     mutationFn: (pipelineId: string) => trpcClient.pipelines.remove.mutate({ id: pipelineId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: trpc.pipelines.list.queryKey() });
     },
   });
+
+  const setCurrentPipeline = useMutation({
+    mutationFn: (pipeline: {
+      id: string;
+      name: string;
+      description?: string | null;
+      status?: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+      lastRunAt?: Date | null;
+      lastRunStatus?: string | null;
+      screenshotUrl?: string | null;
+    }) => trpcClient.users.setCurrentPipeline.mutate(pipeline),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
+      options?.onSetCurrentSuccess?.();
+    },
+  });
+
+  return {
+    createPipeline,
+    deletePipeline,
+    setCurrentPipeline,
+  };
 };

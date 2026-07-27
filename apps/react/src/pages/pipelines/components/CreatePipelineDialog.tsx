@@ -6,7 +6,7 @@ import { Workflow, Image as ImageIcon, Trash2, Upload } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { FloatingInput, FloatingTextarea, DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
 import { createPipelineSchema, type TCreatePipelineData } from '@/pages/pipelines/lib';
-import { useCreatePipeline } from '@/pages/pipelines/hooks';
+import { usePipelineHandler } from '@/pages/pipelines/hooks';
 
 interface CreatePipelineDialogProps {
   isOpen: boolean;
@@ -15,6 +15,9 @@ interface CreatePipelineDialogProps {
 
 export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogProps) => {
   const { user } = useUser();
+  const { createPipeline } = usePipelineHandler({
+    onCreateSuccess: () => handleClose(),
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
@@ -27,10 +30,6 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
   } = useForm<TCreatePipelineData>({
     resolver: zodResolver(createPipelineSchema),
     defaultValues: { name: '', description: '', screenshotUrl: '' },
-  });
-
-  const createMutation = useCreatePipeline({
-    onSuccess: () => handleClose(),
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,13 +50,13 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
   const handleClose = () => {
     reset();
     handleRemoveFile();
-    createMutation.reset();
+    createPipeline.reset();
     onClose();
   };
 
   const onSubmit = (data: TCreatePipelineData) => {
     if (!user?.id) return;
-    createMutation.mutate({ userId: user.id, data, file: file ?? undefined });
+    createPipeline.mutate({ userId: user.id, data, file: file ?? undefined });
   };
 
   return (
@@ -157,7 +156,7 @@ export const CreatePipelineDialog = ({ isOpen, onClose }: CreatePipelineDialogPr
 
           <DialogFooter
             onCancel={handleClose}
-            isPending={createMutation.isPending}
+            isPending={createPipeline.isPending}
             submitText="Create Pipeline"
             pendingText="Creating..."
             withBorder={false}

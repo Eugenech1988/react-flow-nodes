@@ -1,7 +1,7 @@
 model User {
   id          String  @id @default(cuid())
   email       String  @unique
-  hasPassword Boolean @default(false)
+  hasPassword Boolean @default(false) @map("has_password")
   password    String?
 
   provider   String @default("local")
@@ -9,15 +9,17 @@ model User {
 
   isTwoFactorEnabled Boolean  @default(false) @map("is_two_factor_enabled")
   twoFactorSecret    String?  @map("two_factor_secret")
-  recoveryCodes      String[] @default([]) @map("recover_codes")
+  recoveryCodes      String[] @default([]) @map("recovery_codes")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  profile      Profile?
-  subscription Subscription?
-  pipelines    Pipeline[]
-  transactions Transaction[]
+  profile           Profile?
+  subscription      Subscription?
+  pipelines         Pipeline[]
+  transactions      Transaction[]
+  currentPipelineId String?       @map("current_pipeline_id")
+  currentPipeline   Pipeline?     @relation("UserCurrentPipeline", fields: [currentPipelineId], references: [id], onDelete: SetNull)
 
   @@unique([provider, providerId])
   @@map("users")

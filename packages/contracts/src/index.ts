@@ -72,6 +72,16 @@ export const createPipelineInputSchema = z.object({
   lastRunStatus: z.string().optional(),
 });
 
+export const currentPipelineInputSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable().optional(),
+  status: z.enum(['DRAFT', 'ACTIVE', 'PAUSED', 'ARCHIVED']).nullable().optional(),
+  lastRunAt: z.union([z.string(), z.date()]).nullable().optional(),
+  lastRunStatus: z.enum(['SUCCESS', 'FAILED', 'RUNNING']).nullable().optional(),
+  screenshotUrl: z.string().nullable().optional(),
+});
+
 export const updatePipelineInputSchema = createPipelineInputSchema.partial().extend({
   id: z.string().min(1),
 });

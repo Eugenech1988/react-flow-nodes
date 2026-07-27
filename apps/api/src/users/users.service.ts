@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 import { hash, verify } from 'argon2';
 
 const userWithRelationsValidator = Prisma.validator<Prisma.UserDefaultArgs>()({
-  include: { profile: true, subscription: true },
+  include: { profile: true, subscription: true, currentPipeline: true },
 });
 
 export type UserWithRelations = Prisma.UserGetPayload<typeof userWithRelationsValidator>;
@@ -18,7 +18,7 @@ export class UsersService {
   async findAll(): Promise<UserWithRelations[]> {
     try {
       return await this.prisma.user.findMany({
-        include: { profile: true, subscription: true },
+        include: { profile: true, subscription: true, currentPipeline: true },
       });
     } catch (error) {
       console.error('Failed to fetch users:', error);
@@ -70,7 +70,7 @@ export class UsersService {
       return await this.prisma.$transaction(async (tx) => {
         const user = await tx.user.create({
           data,
-          include: { profile: true, subscription: true },
+          include: { profile: true, subscription: true, currentPipeline: true },
         });
 
         const existingSub = await tx.subscription.findUnique({ where: { userId: user.id } });
@@ -88,7 +88,7 @@ export class UsersService {
 
         return (await tx.user.findUnique({
           where: { id: user.id },
-          include: { profile: true, subscription: true },
+          include: { profile: true, subscription: true, currentPipeline: true },
         })) as UserWithRelations;
       });
     } catch (error) {
@@ -101,7 +101,7 @@ export class UsersService {
     try {
       return await this.prisma.user.findUnique({
         where: { email },
-        include: { profile: true, subscription: true },
+        include: { profile: true, subscription: true, currentPipeline: true },
       });
     } catch (error) {
       console.error(`Failed to find user by email ${email}:`, error);
@@ -113,7 +113,7 @@ export class UsersService {
     try {
       return await this.prisma.user.findFirst({
         where: { provider, providerId },
-        include: { profile: true, subscription: true },
+        include: { profile: true, subscription: true, currentPipeline: true },
       });
     } catch (error) {
       console.error(`Failed to find user by provider ${provider}:`, error);
@@ -125,7 +125,7 @@ export class UsersService {
     try {
       return await this.prisma.user.findUnique({
         where: { id },
-        include: { profile: true, subscription: true },
+        include: { profile: true, subscription: true, currentPipeline: true },
       });
     } catch (error) {
       console.error(`Failed to find user by id ${id}:`, error);
@@ -138,7 +138,7 @@ export class UsersService {
       return await this.prisma.user.update({
         where: { id },
         data,
-        include: { profile: true, subscription: true },
+        include: { profile: true, subscription: true, currentPipeline: true },
       });
     } catch (error) {
       console.error(`Failed to update user with id ${id}:`, error);
@@ -205,6 +205,23 @@ export class UsersService {
     } catch (error) {
       console.error(`Failed to delete user and related data for id ${id}:`, error);
       throw new InternalServerErrorException('An unexpected error occurred while deleting the user account');
+    }
+  }
+
+  async setCurrentPipeline(userId: string, pipelineId: string): Promise<UserWithRelations> {
+    try {
+      return await this.prisma.user.update({
+        where: { id: userId },
+        data: { currentPipelineId: pipelineId },
+        include: {
+          profile: true,
+          subscription: true,
+          currentPipeline: true,
+        },
+      });
+    } catch (error) {
+      console.error(`Failed to set current pipeline for user ${userId}:`, error);
+      throw new InternalServerErrorException('Failed to set current pipeline');
     }
   }
 }

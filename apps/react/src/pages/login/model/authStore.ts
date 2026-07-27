@@ -95,7 +95,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({isLoading: true, apiError: null});
     try {
       await trpcClient.auth.register.mutate({email, password});
-      console.log('Вызываем register...');
       get().setMode('login');
       await onSuccess();
     } catch (error) {

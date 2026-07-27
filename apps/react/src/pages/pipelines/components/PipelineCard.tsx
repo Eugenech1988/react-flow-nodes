@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@pipeline/ui';
 import type { TPipeline } from '@/shared/lib';
-import { useDeletePipeline } from '@/pages/pipelines/hooks';
+import { usePipelineHandler } from '@/pages/pipelines/hooks';
 
 const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 
@@ -28,11 +28,27 @@ interface PipelineCardProps {
 
 export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
   const navigate = useNavigate();
-  const deleteMutation = useDeletePipeline();
+  const { deletePipeline, setCurrentPipeline } = usePipelineHandler({
+    onSetCurrentSuccess: () => {
+      navigate('/');
+    }
+  });
 
   const handleDelete = () => {
-    deleteMutation.mutate(pipeline.id);
+    deletePipeline.mutate(pipeline.id);
   };
+
+  const handleCardClick = () => {
+    setCurrentPipeline.mutate({
+      id: pipeline.id,
+      name: pipeline.name,
+      description: pipeline.description,
+      status: pipeline.status,
+      lastRunAt: pipeline.lastRunAt ? new Date(pipeline.lastRunAt) : null,
+      lastRunStatus: pipeline.lastRunStatus,
+      screenshotUrl: pipeline.screenshotUrl,
+    });
+  }
 
   const imageSrc = pipeline.screenshotUrl ? `${BASE_URL}${pipeline.screenshotUrl}` : null;
   const status = pipeline.status?.toUpperCase();
@@ -40,17 +56,17 @@ export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: deleteMutation.isPending ? 0.5 : 1 }}
+      animate={{ opacity: deletePipeline.isPending ? 0.5 : 1 }}
       transition={{ duration: 0.15, ease: 'easeOut' }}
       className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between relative pointer-events-auto"
     >
-      {deleteMutation.isPending && (
+      {deletePipeline.isPending && (
         <div className="absolute inset-0 bg-background/50 backdrop-blur-xs z-10 flex items-center justify-center">
           <Loader2 className="w-6 h-6 animate-spin text-teal-600 dark:text-teal-400" />
         </div>
       )}
 
-      <div className="space-y-3 p-5">
+      <div className="space-y-3 p-5" onClick={handleCardClick}>
         <div className="space-y-1.5">
           <div className="flex items-start justify-between gap-2">
             <span
@@ -77,7 +93,7 @@ export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleDelete}
-                  disabled={deleteMutation.isPending}
+                  disabled={deletePipeline.isPending}
                   className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg cursor-pointer text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 focus:bg-rose-500/10 transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5 text-current" />
