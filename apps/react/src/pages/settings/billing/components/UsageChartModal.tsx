@@ -40,9 +40,7 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
   const [timeRange, setTimeRange] = useState<TimeRange>('7d');
 
   return (
-    // 2. Оборачиваем в Dialog с пропом open
     <Dialog open={!!stat} onOpenChange={(open) => !open && onClose()}>
-      {/* 3. DialogContent создает нужный контекст useDialogRootContext */}
       <DialogContent showCloseButton={false} className="sm:max-w-2xl p-0 gap-0 overflow-hidden">
         {stat && (
           <>
