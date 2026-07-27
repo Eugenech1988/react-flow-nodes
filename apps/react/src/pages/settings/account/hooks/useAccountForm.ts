@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
 import { useLogout, useUser } from '@/shared/hooks';
-import { accountSchema, type IAccountFormData } from '../lib';
+import { accountPasswordSchema, type TAccountFormData } from '../lib';
 import { useNavigate } from 'react-router-dom';
 
 export const useAccountForm = () => {
@@ -15,8 +15,10 @@ export const useAccountForm = () => {
   const navigate = useNavigate();
   const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  const form = useForm<IAccountFormData>({
-    resolver: zodResolver(accountSchema),
+  const hasPassword = Boolean(user?.hasPassword);
+
+  const form = useForm<TAccountFormData>({
+    resolver: zodResolver(accountPasswordSchema(hasPassword)),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -32,6 +34,7 @@ export const useAccountForm = () => {
     trpc.users.updatePassword.mutationOptions({
       onSuccess: (data) => {
         if (data?.success) {
+          queryClient.invalidateQueries(trpc.auth.me.queryFilter());
           reset({
             currentPassword: '',
             newPassword: '',
@@ -96,7 +99,7 @@ export const useAccountForm = () => {
     })
   );
 
-  const onSubmit = (data: IAccountFormData) => {
+  const onSubmit = (data: TAccountFormData) => {
     setAlert(null);
 
     updatePasswordMutation.mutate({

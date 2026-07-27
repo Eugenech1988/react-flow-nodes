@@ -49,16 +49,8 @@ export const passwordResetInputSchema = z.object({
 });
 
 export const updatePasswordInputSchema = z.object({
-  currentPassword: z.string().min(1),
+  currentPassword: z.string().optional().or(z.literal('')),
   newPassword: z.string().min(6),
-});
-
-export const twoFactorCodeInputSchema = z.object({
-  code: z.string().length(6, 'Code must be exactly 6 digits'),
-});
-
-export const updateTwoFactorInputSchema = z.object({
-  user2fa: z.boolean(),
 });
 
 export const updateProfileInputSchema = z.object({

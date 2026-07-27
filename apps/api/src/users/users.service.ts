@@ -34,7 +34,9 @@ export class UsersService {
       throw new ConflictException('A user with this email already exists');
     }
 
-    const hashedPassword = password ? await hash(password) : '';
+    const isLocal = !provider || provider === 'local';
+    const hasPassword = isLocal && Boolean(password);
+    const hashedPassword = hasPassword ? await hash(password!) : null;
 
     let nickName = createUserDto.nickName;
     if (!nickName) {
@@ -49,6 +51,7 @@ export class UsersService {
     return this.create({
       email,
       password: hashedPassword,
+      hasPassword,
       provider: provider || 'local',
       providerId: providerId || email,
       profile: {
@@ -143,16 +146,26 @@ export class UsersService {
     }
   }
 
-  async updatePassword(id: string, dto: UpdatePasswordDto): Promise<void> {
+  async updatePassword(id: string, dto: UpdatePasswordDto): Promise<{ success: boolean }> {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
-    if (!user || !user.password) {
-      throw new BadRequestException('Local authentication password is not set for this account');
+    if (!user) {
+      throw new BadRequestException('User not found');
     }
 
-    const isMatch = await verify(user.password, dto.currentPassword);
-    if (!isMatch) {
-      throw new BadRequestException('Invalid old password');
+    if (user.hasPassword) {
+      if (!dto.currentPassword) {
+        throw new BadRequestException('Current password is required');
+      }
+
+      if (!user.password) {
+        throw new BadRequestException('Local authentication password is missing');
+      }
+
+      const isMatch = await verify(user.password, dto.currentPassword);
+      if (!isMatch) {
+        throw new BadRequestException('Invalid old password');
+      }
     }
 
     const hashedPassword = await hash(dto.newPassword);
@@ -160,8 +173,13 @@ export class UsersService {
     try {
       await this.prisma.user.update({
         where: { id },
-        data: { password: hashedPassword },
+        data: {
+          password: hashedPassword,
+          hasPassword: true,
+        },
       });
+
+      return { success: true };
     } catch (error) {
       console.error(`Failed to update password for user ${id}:`, error);
       throw new InternalServerErrorException('Error updating account password');

@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
+import { useUser } from '@/shared/hooks';
 import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { Switch } from '@pipeline/ui';
 import { BackButton, DangerButton, SubmitButton } from '@/shared/ui/buttons';
 import { ShieldCheck } from 'lucide-react';
-import type { IAccountFormData } from '@/pages/settings/types';
+import type { TAccountFormData } from '@/pages/settings/account/lib';
 import { DeleteAccountModal } from './DeleteAccountModal';
 import { TwoFactorModal } from './TwoFactorModal';
 
 interface AccountFormProps {
-  form: UseFormReturn<IAccountFormData>;
+  form: UseFormReturn<TAccountFormData>;
   onSubmit: (e: React.FormEvent) => void;
   isPristine: boolean;
   isPending?: boolean;
@@ -35,6 +36,9 @@ export const AccountForm = ({
                               onDeleteAccount,
                               isDeletePending = false,
                             }: AccountFormProps) => {
+  const { user } = useUser();
+  const hasPassword = Boolean(user?.hasPassword);
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [is2faModalOpen, setIs2faModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'enable' | 'disable'>('enable');
@@ -100,12 +104,7 @@ export const AccountForm = ({
       const message =
         err?.response?.data?.message || err?.message || 'Invalid verification code';
 
-      // Записываем ошибку ТОЛЬКО для модалки
       setModalError(message);
-
-      // Останавливаем пробрасывание, если родительский мутатор/стор ловит ошибки глобально
-      // Если же TwoFactorModal сам должен понять, что отправка упала —
-      // перехватываем в модалке без ре-throw в родителя.
       throw err;
     }
   };
@@ -163,36 +162,67 @@ export const AccountForm = ({
 
         <form onSubmit={onSubmit} className="space-y-6 pt-4 border-t border-border/40">
           <div className="space-y-4">
-            <FloatingInput
-              {...register('currentPassword')}
-              id="currentPassword"
-              label="Current Password"
-              type="password"
-              autoComplete="current-password"
-              error={!!errors.currentPassword}
-              errorMessage={errors.currentPassword?.message}
-            />
+            {hasPassword ? (
+              <>
+                <FloatingInput
+                  {...register('currentPassword')}
+                  id="currentPassword"
+                  label="Current Password"
+                  type="password"
+                  autoComplete="current-password"
+                  error={!!errors.currentPassword}
+                  errorMessage={errors.currentPassword?.message}
+                />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FloatingInput
-                {...register('newPassword')}
-                id="newPassword"
-                label="New Password"
-                type="password"
-                autoComplete="new-password"
-                error={!!errors.newPassword}
-                errorMessage={errors.newPassword?.message}
-              />
-              <FloatingInput
-                {...register('confirmPassword')}
-                id="confirmPassword"
-                label="Confirm New Password"
-                type="password"
-                autoComplete="new-password"
-                error={!!errors.confirmPassword}
-                errorMessage={errors.confirmPassword?.message}
-              />
-            </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <FloatingInput
+                    {...register('newPassword')}
+                    id="newPassword"
+                    label="New Password"
+                    type="password"
+                    autoComplete="new-password"
+                    error={!!errors.newPassword}
+                    errorMessage={errors.newPassword?.message}
+                  />
+                  <FloatingInput
+                    {...register('confirmPassword')}
+                    id="confirmPassword"
+                    label="Confirm New Password"
+                    type="password"
+                    autoComplete="new-password"
+                    error={!!errors.confirmPassword}
+                    errorMessage={errors.confirmPassword?.message}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-xs text-muted-foreground">
+                  You logged in via OAuth or don’t have a password set yet. Create a password to enable email login.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Используем те же поля newPassword и confirmPassword, чтобы данные уходили на бэкенд в том же формате */}
+                  <FloatingInput
+                    {...register('newPassword')}
+                    id="newPassword"
+                    label="Set Password"
+                    type="password"
+                    autoComplete="new-password"
+                    error={!!errors.newPassword}
+                    errorMessage={errors.newPassword?.message}
+                  />
+                  <FloatingInput
+                    {...register('confirmPassword')}
+                    id="confirmPassword"
+                    label="Confirm Password"
+                    type="password"
+                    autoComplete="new-password"
+                    error={!!errors.confirmPassword}
+                    errorMessage={errors.confirmPassword?.message}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
@@ -201,8 +231,8 @@ export const AccountForm = ({
             <SubmitButton
               isPending={isPending}
               isDisabled={isPristine}
-              text="Change Password"
-              pendingText="Saving..."
+              text={hasPassword ? 'Change Password' : 'Set Password'}
+              pendingText={hasPassword ? 'Saving...' : 'Setting Password...'}
             />
           </div>
         </form>
