@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { motion } from 'framer-motion'; // 1. Импортируем motion
 
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
@@ -65,20 +66,35 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-lg text-xs">
-                  {(['7d', '30d', '90d'] as TimeRange[]).map((range) => (
-                    <button
-                      key={range}
-                      onClick={() => setTimeRange(range)}
-                      className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
-                        timeRange === range
-                          ? 'bg-card text-teal-600 dark:text-teal-400 shadow-xs'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      {range.toUpperCase()}
-                    </button>
-                  ))}
+                {/* Табы с анимированной подложкой */}
+                <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-lg text-xs relative">
+                  {(['7d', '30d', '90d'] as TimeRange[]).map((range) => {
+                    const isActive = timeRange === range;
+
+                    return (
+                      <button
+                        key={range}
+                        onClick={() => setTimeRange(range)}
+                        className={`relative px-2.5 py-1 rounded-md font-medium transition-colors duration-200 cursor-pointer ${
+                          isActive
+                            ? 'text-teal-600 dark:text-teal-400'
+                            : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {/* Плавно передвигающийся фон */}
+                        {isActive && (
+                          <motion.div
+                            layoutId="activeTabIndicator"
+                            className="absolute inset-0 bg-card rounded-md shadow-xs"
+                            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                          />
+                        )}
+
+                        {/* Текст над подложкой */}
+                        <span className="relative z-10">{range.toUpperCase()}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
