@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -9,20 +10,17 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-import { Dialog, DialogContent } from '@pipeline/ui'; // или из '@/shared/ui'
-
-import { DialogHeader } from '@/shared/ui';
-import { DialogBody } from '@/shared/ui';
-import { DialogFooter } from '@/shared/ui';
+import { Dialog, DialogContent } from '@pipeline/ui';
+import { DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
 
 const MOCK_CHART_DATA = [
   { day: 'Mon', value: 30 },
   { day: 'Tue', value: 45 },
   { day: 'Wed', value: 35 },
   { day: 'Thu', value: 60 },
-  { day: 'Fri', value: 75 },
+  { day: 'Fri', value: 85 },
   { day: 'Sat', value: 50 },
-  { day: 'Sun', value: 85 },
+  { day: 'Sun', value: 95 },
 ];
 
 type TimeRange = '7d' | '30d' | '90d';
@@ -36,6 +34,13 @@ interface UsageChartModalProps {
   onClose: () => void;
 }
 
+const getBarColor = (value: number) => {
+  if (value >= 80) return '#ef4444';
+  if (value >= 60) return '#f97316';
+  if (value >= 40) return '#f59e0b';
+  return '#14b8a6';
+};
+
 export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
   const [timeRange, setTimeRange] = useState<TimeRange>('7d');
 
@@ -47,7 +52,7 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
             <DialogHeader
               title={`${stat.label} Usage`}
               description="Detailed breakdown and historical usage over time"
-              icon={stat.icon}
+              icon={<span className="text-teal-600 dark:text-teal-400">{stat.icon}</span>}
               onClose={onClose}
             />
 
@@ -55,17 +60,19 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-xs text-muted-foreground">Current Usage</span>
-                  <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+                  <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                    {stat.value}
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-lg text-xs">
+                <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-lg text-xs">
                   {(['7d', '30d', '90d'] as TimeRange[]).map((range) => (
                     <button
                       key={range}
                       onClick={() => setTimeRange(range)}
-                      className={`px-2.5 py-1 rounded-md font-medium transition-all ${
+                      className={`px-2.5 py-1 rounded-md font-medium transition-all cursor-pointer ${
                         timeRange === range
-                          ? 'bg-card text-foreground shadow-xs'
+                          ? 'bg-card text-teal-600 dark:text-teal-400 shadow-xs'
                           : 'text-muted-foreground hover:text-foreground'
                       }`}
                     >
@@ -77,24 +84,22 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
 
               <div className="h-64 w-full pt-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={MOCK_CHART_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="chartColor" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
+                  <BarChart data={MOCK_CHART_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
                     <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+                    <YAxis dataKey="value" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
                     <Tooltip
+                      cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
                       content={({ active, payload, label }) => {
                         if (active && payload && payload.length) {
+                          const val = Number(payload[0].value);
+                          const color = getBarColor(val);
                           return (
-                            <div className="bg-popover border border-border p-2.5 rounded-lg shadow-md text-xs">
-                              <p className="font-semibold text-popover-foreground mb-1">{label}</p>
-                              <p className="text-primary font-medium">
-                                {stat.label}: {payload[0].value}
+                            <div className="bg-popover border border-border p-2.5 rounded-lg shadow-md text-xs space-y-1">
+                              <p className="font-semibold text-popover-foreground">{label}</p>
+                              <p className="font-medium flex items-center gap-1.5" style={{ color }}>
+                                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                                {stat.label}: {val}%
                               </p>
                             </div>
                           );
@@ -102,8 +107,12 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
                         return null;
                       }}
                     />
-                    <Area type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} fillOpacity={1} fill="url(#chartColor)" />
-                  </AreaChart>
+                    <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                      {MOCK_CHART_DATA.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={getBarColor(entry.value)} />
+                      ))}
+                    </Bar>
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </DialogBody>
