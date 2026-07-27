@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,17 +11,16 @@ import { Link } from 'react-router-dom';
 interface TwoFactorFormProps {
   error?: string | null;
   isLoading: boolean;
-  onVerify: (data: TTwoFactorLoginInputData, onSuccess: () => void) => Promise<void>;
+  onVerify: (data: TTwoFactorLoginInputData) => Promise<void>;
   onBack: () => void;
-  inputClasses?: string;
 }
 
-export const TwoFactorForm = ({
-                                error,
-                                isLoading,
-                                onVerify,
-                                onBack,
-                              }: TwoFactorFormProps) => {
+export const TwoFactorForm: FC<TwoFactorFormProps> = ({
+                                                        error,
+                                                        isLoading,
+                                                        onVerify,
+                                                        onBack,
+                                                      }) => {
   const { tempToken } = useAuthStore();
 
   const {
@@ -43,7 +43,7 @@ export const TwoFactorForm = ({
   }, [tempToken, setValue]);
 
   const handleFormSubmit = async (data: TTwoFactorLoginInputData) => {
-    await onVerify(data, () => {});
+    await onVerify(data);
   };
 
   const hasCodeError = !!errors.code;

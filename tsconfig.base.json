@@ -23,7 +23,7 @@
       "@pipeline/ui/*": ["packages/ui/src/*"],
       "@pipeline/ui": ["packages/ui/src/index.ts"],
       "@pipeline/contracts/*": ["packages/contracts/src/*"],
-      "@pipeline/contracts": ["packages/contracts/index.ts"]
+      "@pipeline/contracts": ["packages/contracts/src/index.ts"]
     }
   }
 }

@@ -1,40 +1,17 @@
 import type { FC } from 'react';
-import { useForm, type Resolver } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { FloatingInput, LocalAlert, SubmitButton, CancelButton } from '@/shared/ui';
 import {
   DEFAULT_TEXT_CLASSES,
   DEFAULT_LABEL_CLASSES,
-  DEFAULT_FIELDSET_CLASSES
+  DEFAULT_FIELDSET_CLASSES,
+  requestSchema,
+  resetSchema,
+  type TRecoveryMode,
+  type TResetFormData,
+  type TRequestFormData
 } from '@/pages/login/model';
-
-import {
-  loginInputSchema,
-  passwordResetInputSchema,
-} from '@pipeline/contracts';
-
-import type { TRecoveryMode, TResetFormData, TRequestFormData  } from '@/pages/login/model';
-
-
-const formSchema = z.discriminatedUnion('mode', [
-  z.object({
-    mode: z.literal('request'),
-    email: loginInputSchema.shape.email,
-  }),
-  z
-    .object({
-      mode: z.literal('reset'),
-      password: passwordResetInputSchema.shape.password,
-      confirmPassword: z.string().min(1, 'Please confirm your password'),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: "Passwords don't match",
-      path: ['confirmPassword'],
-    }),
-]);
-
-type CombinedRecoveryData = z.infer<typeof formSchema>;
 
 interface RecoveryFormProps {
   mode: TRecoveryMode;
@@ -57,31 +34,15 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
                                                     }) => {
   const isRequest = mode === 'request';
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CombinedRecoveryData>({
-    resolver: zodResolver(formSchema) as unknown as Resolver<CombinedRecoveryData>,
-    values: (mode === 'request'
-      ? { mode: 'request', email: '' }
-      : { mode: 'reset', password: '', confirmPassword: '' }) as CombinedRecoveryData,
+  const requestForm = useForm<TRequestFormData>({
+    resolver: zodResolver(requestSchema),
+    defaultValues: { email: '' },
   });
 
-  const handleFormSubmit = async (data: CombinedRecoveryData) => {
-    if (data.mode === 'request') {
-      await onRequestSubmit({ email: data.email });
-    } else {
-      await onResetSubmit({
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-      });
-    }
-  };
-
-  const emailError = 'email' in errors ? errors.email : undefined;
-  const passwordError = 'password' in errors ? errors.password : undefined;
-  const confirmPasswordError = 'confirmPassword' in errors ? errors.confirmPassword : undefined;
+  const resetForm = useForm<TResetFormData>({
+    resolver: zodResolver(resetSchema),
+    defaultValues: { password: '', confirmPassword: '' },
+  });
 
   if (isSuccess && isRequest) {
     return (
@@ -102,18 +63,25 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
   }
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+    <form
+      onSubmit={
+        isRequest
+          ? requestForm.handleSubmit(onRequestSubmit)
+          : resetForm.handleSubmit(onResetSubmit)
+      }
+      className="space-y-6"
+    >
       {error && <LocalAlert hasError hasSuccess={false} alertMessage={error} />}
 
       <div className="space-y-1">
         {isRequest ? (
           <FloatingInput
-            {...register('email')}
+            {...requestForm.register('email')}
             type="email"
             autoComplete="email"
             label="Email Address"
-            error={!!emailError}
-            errorMessage={emailError?.message}
+            error={!!requestForm.formState.errors.email}
+            errorMessage={requestForm.formState.errors.email?.message}
             labelClasses={DEFAULT_LABEL_CLASSES}
             fieldsetClasses={DEFAULT_FIELDSET_CLASSES}
             className={DEFAULT_TEXT_CLASSES}
@@ -121,24 +89,24 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
         ) : (
           <>
             <FloatingInput
-              {...register('password')}
+              {...resetForm.register('password')}
               type="password"
               autoComplete="new-password"
               label="New Password"
-              error={!!passwordError}
-              errorMessage={passwordError?.message}
+              error={!!resetForm.formState.errors.password}
+              errorMessage={resetForm.formState.errors.password?.message}
               labelClasses={DEFAULT_LABEL_CLASSES}
               fieldsetClasses={DEFAULT_FIELDSET_CLASSES}
               className={DEFAULT_TEXT_CLASSES}
             />
 
             <FloatingInput
-              {...register('confirmPassword')}
+              {...resetForm.register('confirmPassword')}
               type="password"
               autoComplete="new-password"
               label="Confirm New Password"
-              error={!!confirmPasswordError}
-              errorMessage={confirmPasswordError?.message}
+              error={!!resetForm.formState.errors.confirmPassword}
+              errorMessage={resetForm.formState.errors.confirmPassword?.message}
               labelClasses={DEFAULT_LABEL_CLASSES}
               fieldsetClasses={DEFAULT_FIELDSET_CLASSES}
               className={DEFAULT_TEXT_CLASSES}

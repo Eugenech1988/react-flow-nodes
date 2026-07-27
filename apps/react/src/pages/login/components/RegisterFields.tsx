@@ -7,7 +7,6 @@ import { DEFAULT_FIELDSET_CLASSES, DEFAULT_LABEL_CLASSES, DEFAULT_TEXT_CLASSES }
 interface RegisterFieldsProps {
   register: UseFormRegister<RegisterFormInputData>;
   errors: FieldErrors<RegisterFormInputData>;
-  inputClasses?: string;
 }
 
 export const RegisterFields: FC<RegisterFieldsProps> = ({ register, errors }) => {

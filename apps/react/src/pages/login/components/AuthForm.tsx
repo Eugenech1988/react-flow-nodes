@@ -1,9 +1,10 @@
 import React from 'react';
-import { useForm, type Resolver } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   loginInputSchema,
   registerFormInputSchema,
+  type LoginInputData,
   type RegisterFormInputData,
 } from '@pipeline/contracts';
 import { SubmitButton } from '@/shared/ui';
@@ -14,7 +15,7 @@ import { RegisterFields } from './RegisterFields';
 interface AuthFormProps {
   mode: 'login' | 'register';
   currentApiError?: string | null;
-  onLogin: (data: RegisterFormInputData) => Promise<void>;
+  onLogin: (data: LoginInputData) => Promise<void>;
   onRegister: (data: RegisterFormInputData) => Promise<void>;
   onSocialLogin: (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => void;
   onForgotPassword: () => void;
@@ -32,26 +33,23 @@ export const AuthForm: React.FC<AuthFormProps> = ({
     currentApiError === 'Unauthorized' ||
     currentApiError?.toLowerCase().includes('invalid');
 
-  const activeSchema = mode === 'login' ? loginInputSchema : registerFormInputSchema;
+  const isLogin = mode === 'login';
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<RegisterFormInputData>({
-    resolver: zodResolver(activeSchema) as unknown as Resolver<RegisterFormInputData>,
+  const loginForm = useForm<LoginInputData>({
+    resolver: zodResolver(loginInputSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+    defaultValues: { email: '', password: '' },
+  });
+
+  const registerForm = useForm<RegisterFormInputData>({
+    resolver: zodResolver(registerFormInputSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: { email: '', password: '', confirmPassword: '' },
   });
 
-  const onSubmit = async (data: RegisterFormInputData) => {
-    if (mode === 'login') {
-      await onLogin(data);
-    } else {
-      await onRegister(data);
-    }
-  };
+  const isSubmitting = isLogin ? loginForm.formState.isSubmitting : registerForm.formState.isSubmitting;
 
   return (
     <>
@@ -64,7 +62,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         <span className="px-3">or</span>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={
+          isLogin
+            ? loginForm.handleSubmit(onLogin)
+            : registerForm.handleSubmit(onRegister)
+        }
+        className="space-y-6"
+      >
         {currentApiError && !isAuthError && (
           <div className="text-sm font-medium text-red-400 bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center antialiased">
             {currentApiError}
@@ -72,14 +77,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         )}
 
         <div className="w-full space-y-5">
-          {mode === 'register' ? (
-            <RegisterFields register={register} errors={errors} />
-          ) : (
+          {isLogin ? (
             <>
               <LoginFields
-                register={register}
-                errors={errors}
-                error={isAuthError || !!errors.email || !!errors.password}
+                register={loginForm.register}
+                errors={loginForm.formState.errors}
+                error={isAuthError || !!loginForm.formState.errors.email || !!loginForm.formState.errors.password}
               />
 
               <div className="flex items-center justify-between pt-1 pl-1">
@@ -100,12 +103,17 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 </button>
               </div>
             </>
+          ) : (
+            <RegisterFields
+              register={registerForm.register}
+              errors={registerForm.formState.errors}
+            />
           )}
         </div>
 
         <SubmitButton
           isPending={isSubmitting}
-          text={mode === 'login' ? 'Sign In' : 'Register'}
+          text={isLogin ? 'Sign In' : 'Register'}
           pendingText="Processing..."
           icon={null}
           className="w-full text-base h-11 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
