@@ -110,6 +110,7 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
         />
         <CancelButton
           onClick={onBack}
+          text='Return to login form'
           isDisabled={isLoading}
           className="w-full text-sm"
         />

@@ -104,7 +104,6 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  // Обработка запроса на отправку письма со ссылкой
   const handleRecoveryRequest = async (data: RequestFormData) => {
     setRecoveryError(null);
     setIsRecoverySuccess(false);
@@ -140,7 +139,6 @@ export const LoginPage: React.FC = () => {
         password: data.password,
       });
 
-      // Очищаем токен из URL и возвращаем пользователя на экран входа
       setSearchParams({}, { replace: true });
       setIsRecoveryMode(false);
       resetState();
