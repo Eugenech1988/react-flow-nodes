@@ -249,17 +249,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('reset-password')
   @ApiOperation({ summary: 'Reset password using token' })
-  @ApiResponse({ status: 200, description: 'Password updated and user logged in.' })
+  @ApiResponse({ status: 200, description: 'Password updated.' })
   @ApiResponse({ status: 400, description: 'Invalid or expired token.' })
-  async resetPassword(
-    @Body() dto: ResetPasswordDto,
-    @Res({ passthrough: true }) res: Response
-  ): Promise<TUserSafe> {
-    const user = await this.authService.resetPassword(dto);
-
-    const tokens = await this.authService.generateTokens(user.id);
-    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
-
-    return user;
+  async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ success: boolean }> {
+    await this.authService.resetPassword(dto);
+    return { success: true };
   }
 }

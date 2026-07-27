@@ -14,6 +14,7 @@ export const CanvasPage = () => {
   if (!pipelines || pipelines.length === 0) {
     return <Navigate to="/pipelines" replace />;
   }
+
   return (
     <div className="flex flex-col h-full w-full overflow-hidden">
       <NodesToolbar/>
