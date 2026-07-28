@@ -35,21 +35,29 @@ export const AuthForm: React.FC<AuthFormProps> = ({
 
   const isLogin = mode === 'login';
 
-  const loginForm = useForm<LoginInputData>({
+  const {
+    register: loginRegister,
+    handleSubmit: handleLoginSubmit,
+    formState: { errors: loginErrors, isSubmitting: isLoginSubmitting },
+  } = useForm<LoginInputData>({
     resolver: zodResolver(loginInputSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: { email: '', password: '' },
   });
 
-  const registerForm = useForm<RegisterFormInputData>({
+  const {
+    register: registerRegister,
+    handleSubmit: handleRegisterSubmit,
+    formState: { errors: registerErrors, isSubmitting: isRegisterSubmitting },
+  } = useForm<RegisterFormInputData>({
     resolver: zodResolver(registerFormInputSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: { email: '', password: '', confirmPassword: '' },
   });
 
-  const isSubmitting = isLogin ? loginForm.formState.isSubmitting : registerForm.formState.isSubmitting;
+  const isSubmitting = isLogin ? isLoginSubmitting : isRegisterSubmitting;
 
   return (
     <>
@@ -65,8 +73,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       <form
         onSubmit={
           isLogin
-            ? loginForm.handleSubmit(onLogin)
-            : registerForm.handleSubmit(onRegister)
+            ? handleLoginSubmit(onLogin)
+            : handleRegisterSubmit(onRegister)
         }
         className="space-y-6"
       >
@@ -80,9 +88,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           {isLogin ? (
             <>
               <LoginFields
-                register={loginForm.register}
-                errors={loginForm.formState.errors}
-                error={isAuthError || !!loginForm.formState.errors.email || !!loginForm.formState.errors.password}
+                register={loginRegister}
+                errors={loginErrors}
+                error={isAuthError || !!loginErrors.email || !!loginErrors.password}
               />
 
               <div className="flex items-center justify-between pt-1 pl-1">
@@ -105,8 +113,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             </>
           ) : (
             <RegisterFields
-              register={registerForm.register}
-              errors={registerForm.formState.errors}
+              register={registerRegister}
+              errors={registerErrors}
             />
           )}
         </div>
