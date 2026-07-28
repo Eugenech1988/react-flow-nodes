@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { trpcClient } from '@/shared/api';
-import type { TPlanId } from '@/pages/plans/lib';
+import type { TPlanId } from '@/pages/plans/model';
 
 export const usePlanSelection = (isProActive: boolean) => {
   const [processingPlan, setProcessingPlan] = useState<TPlanId | null>(null);

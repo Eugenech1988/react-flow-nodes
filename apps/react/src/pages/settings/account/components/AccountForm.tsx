@@ -5,7 +5,7 @@ import { FloatingInput, LocalAlert } from '@/shared/ui';
 import { Switch } from '@pipeline/ui';
 import { BackButton, DangerButton, SubmitButton } from '@/shared/ui/buttons';
 import { ShieldCheck } from 'lucide-react';
-import type { TAccountFormData } from '@/pages/settings/account/lib';
+import type { TAccountFormData } from '@/pages/settings/account/model';
 import { DeleteAccountModal } from './DeleteAccountModal';
 import { TwoFactorModal } from './TwoFactorModal';
 

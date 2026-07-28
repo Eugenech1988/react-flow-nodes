@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import type { TTabType, TSortOption } from '@/pages/pipelines/lib';
+import type { TTabType, TSortOption } from '@/pages/pipelines/model';
 import type { TPipeline } from '@/shared/lib';
 
 export const usePipelinesFilter = (

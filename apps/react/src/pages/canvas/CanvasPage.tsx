@@ -1,13 +1,11 @@
 import { NodesToolbar } from '@/widgets/nodes-toolbar';
 import { Canvas } from '@/widgets/canvas';
-import { usePipelines, useUser } from '@/shared/hooks';
+import { usePipelines } from '@/shared/hooks';
 import { GlobalLoader } from '@/shared/ui';
 import { Navigate } from 'react-router-dom';
 
 export const CanvasPage = () => {
   const { pipelines, isLoading } = usePipelines();
-  const { user } = useUser();
-  console.log(user);
 
   if (isLoading) {
     return <GlobalLoader />

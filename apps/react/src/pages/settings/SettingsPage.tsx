@@ -4,7 +4,7 @@ import { useRef, useEffect } from 'react';
 import { ProfileSidebar } from './components';
 import { Tabs } from '@/shared/ui';
 import { PAGE_VARIANTS, SETTINGS_CONTENT_VARIANTS  } from '@/shared/lib';
-import { SETTINGS_TABS } from './lib';
+import { SETTINGS_TABS } from './model';
 import { useUser } from '@/shared/hooks';
 
 export const SettingsPage = () => {

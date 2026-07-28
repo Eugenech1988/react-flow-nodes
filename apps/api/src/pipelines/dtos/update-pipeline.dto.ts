@@ -1,10 +1,31 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
-import { IsEnum, IsOptional } from 'class-validator';
-import { PipelineStatus } from '@prisma/client'
+import { IsOptional, IsObject, IsString, IsEnum, IsDate } from 'class-validator';
+import { Type } from 'class-transformer';
+import { PipelineStatus } from '@prisma/client';
+import type { IFlowGraphState } from '@/pipelines/types';
 
-export class UpdatePipelineDto extends PartialType(CreatePipelineDto) {
-  @IsEnum(PipelineStatus)
+export class UpdatePipelineDto {
   @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsEnum(PipelineStatus)
   status?: PipelineStatus;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  lastRunAt?: Date;
+
+  @IsOptional()
+  @IsString()
+  lastRunStatus?: string;
+
+  @IsOptional()
+  @IsObject()
+  graphData?: IFlowGraphState;
 }

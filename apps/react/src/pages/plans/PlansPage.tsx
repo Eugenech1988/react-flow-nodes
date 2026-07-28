@@ -3,7 +3,7 @@ import { motion, } from 'framer-motion';
 import { ShieldCheck, Check, ArrowLeft, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUser } from '@/shared/hooks';
-import { getPlans, getPlanMeta, type TPlanId } from './lib';
+import { getPlans, getPlanMeta, type TPlanId } from './model';
 import { PricingHeader, PlanCard, ErrorBanner } from './components';
 import { usePlanSelection } from '@/pages/plans/hooks';
 import { PAGE_VARIANTS } from '@/shared/lib';

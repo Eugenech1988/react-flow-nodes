@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useUser } from '@/shared/hooks';
-import { PLAN_USAGE_STATS } from '@/pages/settings/lib';
+import { PLAN_USAGE_STATS } from '@/pages/settings/model';
 import { UsageChartModal } from './UsageChartModal';
 
 export const UsageStats = () => {

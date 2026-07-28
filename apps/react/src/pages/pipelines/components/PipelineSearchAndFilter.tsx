@@ -1,5 +1,5 @@
 import { Search, ArrowUpDown } from 'lucide-react';
-import { TAB_OPTIONS, SORT_OPTIONS, type TTabType, type TSortOption } from '@/pages/pipelines/lib';
+import { TAB_OPTIONS, SORT_OPTIONS, type TTabType, type TSortOption } from '@/pages/pipelines/model';
 import { FloatingInput, Tabs } from '@/shared/ui';
 import { usePipelines } from '@/shared/hooks';
 

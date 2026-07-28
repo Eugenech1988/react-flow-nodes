@@ -116,7 +116,13 @@ export function createAppRouter(services: RouterServices) {
     list: protectedProcedure.query(({ctx}) => services.pipelinesService.findAllByUserId(ctx.user.id)),
     remove: protectedProcedure.input(updatePipelineInputSchema.pick({id: true})).mutation(({ctx, input}) =>
       services.pipelinesService.remove(input.id, ctx.user.id)
-    )
+    ),
+    update: protectedProcedure
+      .input(updatePipelineInputSchema)
+      .mutation(({ ctx, input }) => {
+        const { id, ...dto } = input;
+        return services.pipelinesService.update(id, dto);
+      }),
   });
 
   const profileRouter = router({

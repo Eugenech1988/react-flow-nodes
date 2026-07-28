@@ -4,6 +4,7 @@ import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
 import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PipelinesService {
@@ -75,11 +76,15 @@ export class PipelinesService {
       return await this.prisma.pipeline.update({
         where: { id },
         data: {
-          ...(dto.name && { name: dto.name }),
+          ...(dto.name !== undefined && { name: dto.name }),
           ...(dto.description !== undefined && { description: dto.description }),
-          ...(dto.status && { status: dto.status }),
-          ...(dto.lastRunAt && { lastRunAt: dto.lastRunAt }),
-          ...(dto.lastRunStatus && { lastRunStatus: dto.lastRunStatus }),
+          ...(dto.status !== undefined && { status: dto.status }),
+          ...(dto.lastRunAt !== undefined && { lastRunAt: dto.lastRunAt }),
+          ...(dto.lastRunStatus !== undefined && { lastRunStatus: dto.lastRunStatus }),
+          ...(dto.graphData !== undefined && {
+            graphData: dto.graphData as unknown as Prisma.InputJsonValue
+          }),
+
           screenshotUrl,
         },
       });

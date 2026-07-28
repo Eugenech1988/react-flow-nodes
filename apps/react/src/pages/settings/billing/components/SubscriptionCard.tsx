@@ -1,6 +1,6 @@
 import { Zap, CheckCircle2, ShieldCheck, XCircle, CreditCard } from 'lucide-react';
 import { SubmitButton, CancelButton, DangerButton } from '@/shared/ui/buttons';
-import { PLAN_FEATURES } from '@/pages/settings/lib';
+import { PLAN_FEATURES } from '@/pages/settings/model';
 import { useBilling } from '@/pages/settings/billing/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/shared/hooks';

@@ -7,7 +7,7 @@ import {
   ArrowRight,
   Loader2,
 } from 'lucide-react';
-import type { IPlan, TPlanId } from '@/pages/plans/types';
+import type { IPlan, TPlanId } from '@/pages/plans/model';
 
 interface PlanCardProps {
   plan: IPlan;
