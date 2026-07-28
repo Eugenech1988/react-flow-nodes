@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, trpcClient, useTRPC } from '@/shared/api';
-import type { TCreatePipelineInputData } from '@pipeline/contracts';
+import type { TCreatePipelineInputData, TUpdatePipelineInputData } from '@pipeline/contracts';
 import type { TPipeline } from '@/shared/lib';
 
 interface UsePipelineHandlersOptions {
   onCreateSuccess?: () => void;
   onSetCurrentSuccess?: () => void;
+  onUpdateSuccess?: () => void;
 }
 
 export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
@@ -23,6 +24,39 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: trpc.pipelines.list.queryKey() });
       options?.onCreateSuccess?.();
+    },
+  });
+
+  const updatePipeline = useMutation({
+    mutationFn: async ({
+                         data,
+                         file,
+                       }: {
+      data: TUpdatePipelineInputData;
+      file?: File;
+    }) => {
+      if (!data.id) {
+        throw new Error('Pipeline ID is required for update');
+      }
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('id', data.id);
+        if (data.name) formData.append('name', data.name);
+        if (data.description) formData.append('description', data.description);
+        if (data.status) formData.append('status', data.status);
+        if (data.graphData) formData.append('graphData', JSON.stringify(data.graphData));
+        formData.append('file', file);
+
+        return api.patch(`/pipelines/${data.id}`, formData);
+      }
+
+      return trpcClient.pipelines.update.mutate(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: trpc.pipelines.list.queryKey() });
+      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
+      options?.onUpdateSuccess?.();
     },
   });
 
@@ -46,5 +80,6 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
     createPipeline,
     deletePipeline,
     setCurrentPipeline,
+    updatePipeline
   };
 };
