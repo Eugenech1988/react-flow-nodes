@@ -30,6 +30,7 @@ export const useBilling = () => {
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
       queryClient.invalidateQueries({ queryKey: trpc.billing.subscription.queryKey() });
+      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
     }
   }, [searchParams, queryClient]);
 
@@ -62,6 +63,7 @@ export const useBilling = () => {
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: trpc.billing.subscription.queryKey() });
+        queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
       },
     }),
   );

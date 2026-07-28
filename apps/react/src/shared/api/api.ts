@@ -12,7 +12,11 @@ const onRefreshed = () => {
   refreshSubscribers = [];
 };
 
-const request = async <T>(endpoint: string, options: RequestInit = {}): Promise<T> => {
+const request = async <T>(
+  endpoint: string,
+  options: RequestInit = {},
+  responseType: 'json' | 'blob' = 'json',
+): Promise<T> => {
   const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint}`;
   const isFormData = options.body instanceof FormData;
 
@@ -37,7 +41,7 @@ const request = async <T>(endpoint: string, options: RequestInit = {}): Promise<
     if (isRefreshing) {
       return new Promise<T>((resolve) => {
         subscribeTokenRefresh(() => {
-          resolve(request<T>(endpoint, options));
+          resolve(request<T>(endpoint, options, responseType));
         });
       });
     }
@@ -48,8 +52,8 @@ const request = async <T>(endpoint: string, options: RequestInit = {}): Promise<
       await request('/auth/refresh', { method: 'POST' });
       isRefreshing = false;
       onRefreshed();
-      return await request<T>(endpoint, options);
-    } catch (refreshError) {
+      return await request<T>(endpoint, options, responseType);
+    } catch {
       isRefreshing = false;
       refreshSubscribers = [];
       throw new Error('Unauthorized');
@@ -58,32 +62,38 @@ const request = async <T>(endpoint: string, options: RequestInit = {}): Promise<
 
   if (!response.ok) {
     const errorData = (await response.json().catch(() => ({}))) as Record<string, unknown>;
-    const errorMessage = typeof errorData.message === 'string' ? errorData.message : 'API Error';
+    const errorMessage =
+      typeof errorData.message === 'string' ? errorData.message : 'API Error';
+
     throw new Error(errorMessage);
   }
 
-  if (options.headers && (options.headers as Record<string, string>)['X-Response-Type'] === 'blob') {
-    return (await response.blob()) as unknown as T;
+  if (responseType === 'blob') {
+    return (await response.blob()) as T;
   }
 
   const contentType = response.headers.get('content-type');
-  if (contentType && contentType.includes('application/json')) {
+
+  if (contentType?.includes('application/json')) {
     return response.json() as Promise<T>;
   }
 
-  return {} as Promise<T>;
+  return {} as T;
 };
 
 export const api = {
   get: <T>(endpoint: string, options?: RequestInit) =>
     request<T>(endpoint, { ...options, method: 'GET' }),
 
-  getBlob: (endpoint: string, options?: RequestInit): Promise<Blob> =>
-    request<Blob>(endpoint, {
-      ...options,
-      method: 'GET',
-      headers: { ...options?.headers, 'X-Response-Type': 'blob' },
-    }),
+  getBlob: (endpoint: string, options?: RequestInit) =>
+    request<Blob>(
+      endpoint,
+      {
+        ...options,
+        method: 'GET',
+      },
+      'blob',
+    ),
 
   post: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
     request<T>(endpoint, {
@@ -107,5 +117,8 @@ export const api = {
     }),
 
   delete: <T>(endpoint: string, options?: RequestInit) =>
-    request<T>(endpoint, { ...options, method: 'DELETE' }),
+    request<T>(endpoint, {
+      ...options,
+      method: 'DELETE',
+    }),
 };

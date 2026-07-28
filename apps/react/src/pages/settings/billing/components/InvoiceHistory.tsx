@@ -1,15 +1,22 @@
-import { Receipt, Download } from 'lucide-react';
+import { useState } from 'react';
+import { Receipt, Download, Loader2 } from 'lucide-react';
 import { api } from '@/shared/api';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@pipeline/ui';
 import { useBilling } from '@/pages/settings/billing/hooks';
-import { TableSkeleton } from '@/shared/ui'; // укажите ваш путь к TableSkeleton
+import { TableSkeleton } from '@/shared/ui';
 
 export const InvoiceHistory = () => {
   const { transactions, isTransactionLoading } = useBilling();
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const handleDownloadInvoice = async (transactionId: string) => {
     try {
-      const blob = await api.getBlob(`/billing/transactions/${transactionId}/invoice`);
+      setDownloadingId(transactionId);
+
+      const baseUrl = import.meta.env.VITE_API_URL || '';
+      const apiUrl = `${baseUrl}/billing/transactions/${transactionId}/invoice`;
+
+      const blob = await api.getBlob(apiUrl, {credentials: 'include'});
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -21,6 +28,8 @@ export const InvoiceHistory = () => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error downloading invoice:', error);
+    } finally {
+      setDownloadingId(null);
     }
   };
 
@@ -59,6 +68,7 @@ export const InvoiceHistory = () => {
                   const rawId = tx.invoiceId || tx.id;
                   const displayId =
                     rawId.length > 14 ? `${rawId.slice(0, 8)}...${rawId.slice(-4)}` : rawId;
+                  const isDownloading = downloadingId === tx.id;
 
                   return (
                     <TableRow
@@ -94,12 +104,17 @@ export const InvoiceHistory = () => {
                         </span>
                       </TableCell>
                       <TableCell className="text-right py-3 pr-4">
-                        {tx.invoiceUrl ? (
+                        {isPaid ? (
                           <button
+                            disabled={isDownloading}
                             onClick={() => handleDownloadInvoice(tx.id)}
-                            className="inline-flex items-center gap-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 hover:underline font-medium text-xs transition-colors cursor-pointer bg-transparent border-none"
+                            className="inline-flex items-center gap-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 hover:underline font-medium text-xs transition-colors cursor-pointer bg-transparent border-none disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            <Download className="w-3 h-3" />
+                            {isDownloading ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <Download className="w-3 h-3" />
+                            )}
                             <span>PDF</span>
                           </button>
                         ) : (

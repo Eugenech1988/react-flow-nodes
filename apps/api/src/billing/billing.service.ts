@@ -5,9 +5,6 @@ import { PrismaService } from '@/prisma/prisma.service';
 import Stripe from 'stripe';
 import * as fs from 'fs';
 import * as path from 'path';
-import { promisify } from 'util';
-
-const writeFileAsync = promisify(fs.writeFile);
 
 @Injectable()
 export class BillingService {
@@ -71,7 +68,7 @@ export class BillingService {
       mode: 'subscription',
       customer_email: user.email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${frontendUrl}/settings/billing?success=true`,
+      success_url: `${frontendUrl}/settings/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${frontendUrl}/settings/billing?canceled=true`,
       metadata: { userId, plan },
       subscription_data: {
@@ -94,138 +91,113 @@ export class BillingService {
     }
 
     if (event.type === 'checkout.session.completed') {
-      try {
-        const session = event.data.object as Stripe.Checkout.Session;
-
-        const subscriptionId = typeof session.subscription === 'string'
-          ? session.subscription
-          : session.subscription?.id;
-
-        if (!subscriptionId) {
-          throw new BadRequestException('Subscription ID missing in session');
-        }
-
-        let stripeSubscription: Stripe.Subscription;
-        try {
-          stripeSubscription = await this.stripe.subscriptions.update(subscriptionId, {
-            cancel_at_period_end: true,
-          });
-        } catch {
-          stripeSubscription = await this.stripe.subscriptions.retrieve(subscriptionId);
-        }
-
-        const userId = session.metadata?.userId || stripeSubscription.metadata?.userId;
-        const plan = (session.metadata?.plan || stripeSubscription.metadata?.plan) as Plan | undefined;
-
-        if (!userId || !plan) {
-          throw new BadRequestException('User metadata missing in session and subscription');
-        }
-
-        const rawCustomer = session.customer ?? stripeSubscription.customer;
-        const customerId = typeof rawCustomer === 'string'
-          ? rawCustomer
-          : rawCustomer && 'id' in rawCustomer
-            ? rawCustomer.id
-            : null;
-
-        let invoicePdfUrl = '';
-        const stripeInvoiceId = typeof session.invoice === 'string' ? session.invoice : session.invoice?.id;
-
-        if (stripeInvoiceId) {
-          try {
-            const stripeInvoice = await this.stripe.invoices.retrieve(stripeInvoiceId);
-            invoicePdfUrl = stripeInvoice.invoice_pdf || '';
-          } catch (e) {
-            this.logger.warn(`Could not retrieve stripe invoice ${stripeInvoiceId}:`, e);
-          }
-        }
-
-        let savedInvoicePath = '';
-        if (invoicePdfUrl) {
-          try {
-            const response = await fetch(invoicePdfUrl);
-            const arrayBuffer = await response.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
-
-            const uploadDir = path.join(process.cwd(), 'uploads', 'invoices');
-
-            if (!fs.existsSync(uploadDir)) {
-              fs.mkdirSync(uploadDir, { recursive: true });
-            }
-
-            const fileName = `invoice_${userId}_${Date.now()}.pdf`;
-            savedInvoicePath = path.join('uploads', 'invoices', fileName);
-
-            await writeFileAsync(path.join(process.cwd(), savedInvoicePath), buffer);
-          } catch (error) {
-            this.logger.error(`Failed to download invoice PDF for user ${userId}:`, error);
-          }
-        }
-
-        const firstItem = stripeSubscription.items.data[0] as (Stripe.SubscriptionItem & { current_period_start?: number; current_period_end?: number }) | undefined;
-
-        const startTimestamp = firstItem?.current_period_start ?? Math.floor(Date.now() / 1000);
-        const endTimestamp = firstItem?.current_period_end ?? Math.floor(Date.now() / 1000) + 30 * 86400;
-
-        const currentPeriodStart = new Date(startTimestamp * 1000);
-        const currentPeriodEnd = new Date(endTimestamp * 1000);
-        const cancelAtPeriodEnd = stripeSubscription.cancel_at_period_end ?? false;
-
-        const rawPaymentIntent = typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id;
-        const providerTxId = rawPaymentIntent || `tx_${session.id}`;
-
-        await this.prisma.$transaction([
-          this.prisma.subscription.upsert({
-            where: { userId },
-            create: {
-              userId,
-              plan,
-              planStatus: 'ACTIVE',
-              customerId,
-              subscriptionId,
-              currentPeriodStart,
-              currentPeriodEnd,
-              cancelAtPeriodEnd,
-            },
-            update: {
-              plan,
-              planStatus: 'ACTIVE',
-              customerId,
-              subscriptionId,
-              currentPeriodStart,
-              currentPeriodEnd,
-              cancelAtPeriodEnd,
-            },
-          }),
-          this.prisma.transaction.upsert({
-            where: { providerTxId },
-            create: {
-              userId,
-              amount: session.amount_total || 0,
-              currency: session.currency || 'usd',
-              status: 'SUCCESS',
-              plan,
-              invoiceId: stripeInvoiceId || session.id,
-              providerTxId,
-              invoiceUrl: savedInvoicePath,
-            },
-            update: {
-              amount: session.amount_total || 0,
-              currency: session.currency || 'usd',
-              status: 'SUCCESS',
-              plan,
-              invoiceId: stripeInvoiceId || session.id,
-              invoiceUrl: savedInvoicePath,
-            },
-          }),
-        ]);
-      } catch (error) {
-        this.logger.error('CRITICAL ERROR IN HANDLE_WEBHOOK:', error);
-        throw error;
-      }
+      const session = event.data.object as Stripe.Checkout.Session;
+      await this.processSuccessfulCheckout(session);
     }
 
     return { received: true };
+  }
+
+  private async processSuccessfulCheckout(session: Stripe.Checkout.Session) {
+    try {
+      const subscriptionId = typeof session.subscription === 'string'
+        ? session.subscription
+        : session.subscription?.id;
+
+      if (!subscriptionId) {
+        throw new BadRequestException('Subscription ID missing in session');
+      }
+
+      const stripeSubscription = await this.stripe.subscriptions.retrieve(subscriptionId);
+
+      const userId = session.metadata?.userId || stripeSubscription.metadata?.userId;
+      const plan = (session.metadata?.plan || stripeSubscription.metadata?.plan) as Plan | undefined;
+
+      if (!userId || !plan) {
+        throw new BadRequestException('User metadata missing in session and subscription');
+      }
+
+      const rawCustomer = session.customer ?? stripeSubscription.customer;
+      const customerId = typeof rawCustomer === 'string'
+        ? rawCustomer
+        : rawCustomer && 'id' in rawCustomer
+          ? rawCustomer.id
+          : null;
+
+      const stripeInvoiceId = typeof session.invoice === 'string'
+        ? session.invoice
+        : session.invoice?.id;
+
+      const firstItem = stripeSubscription.items.data[0] as (Stripe.SubscriptionItem & { current_period_start?: number; current_period_end?: number }) | undefined;
+
+      const startTimestamp = firstItem?.current_period_start ?? Math.floor(Date.now() / 1000);
+      const endTimestamp = firstItem?.current_period_end ?? Math.floor(Date.now() / 1000) + 30 * 86400;
+
+      const currentPeriodStart = new Date(startTimestamp * 1000);
+      const currentPeriodEnd = new Date(endTimestamp * 1000);
+      const cancelAtPeriodEnd = stripeSubscription.cancel_at_period_end ?? false;
+
+      const rawPaymentIntent = typeof session.payment_intent === 'string'
+        ? session.payment_intent
+        : session.payment_intent?.id;
+      const providerTxId = rawPaymentIntent || `tx_${session.id}`;
+
+      await this.prisma.$transaction([
+        this.prisma.subscription.upsert({
+          where: { userId },
+          create: {
+            userId,
+            plan,
+            planStatus: 'ACTIVE',
+            customerId,
+            subscriptionId,
+            currentPeriodStart,
+            currentPeriodEnd,
+            cancelAtPeriodEnd,
+          },
+          update: {
+            plan,
+            planStatus: 'ACTIVE',
+            customerId,
+            subscriptionId,
+            currentPeriodStart,
+            currentPeriodEnd,
+            cancelAtPeriodEnd,
+          },
+        }),
+        this.prisma.transaction.upsert({
+          where: { providerTxId },
+          create: {
+            userId,
+            amount: session.amount_total || 0,
+            currency: session.currency || 'usd',
+            status: 'SUCCESS',
+            plan,
+            invoiceId: stripeInvoiceId || session.id,
+            providerTxId,
+            invoiceUrl: null,
+          },
+          update: {
+            amount: session.amount_total || 0,
+            currency: session.currency || 'usd',
+            status: 'SUCCESS',
+            plan,
+            invoiceId: stripeInvoiceId || session.id,
+          },
+        }),
+      ]);
+    } catch (error) {
+      this.logger.error('CRITICAL ERROR IN PROCESS_SUCCESSFUL_CHECKOUT:', error);
+      throw error;
+    }
+  }
+
+  async syncCheckoutSession(userId: string, sessionId: string) {
+    const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    if (session.payment_status === 'paid' && session.metadata?.userId === userId) {
+      await this.processSuccessfulCheckout(session);
+    }
+    return this.getSubscriptionByUserId(userId);
   }
 
   async getTransactionsByUserId(userId: string) {
@@ -251,7 +223,35 @@ export class BillingService {
     }
 
     if (!transaction.invoiceUrl) {
-      throw new BadRequestException('Invoice PDF is not available for this transaction');
+      if (!transaction.invoiceId) {
+        throw new BadRequestException('Invoice ID is missing for this transaction');
+      }
+
+      const stripeInvoice = await this.stripe.invoices.retrieve(transaction.invoiceId);
+      if (!stripeInvoice.invoice_pdf) {
+        throw new NotFoundException('Invoice PDF is not ready on Stripe side yet');
+      }
+
+      const response = await fetch(stripeInvoice.invoice_pdf);
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const uploadDir = path.join(process.cwd(), 'uploads', 'invoices');
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      const fileName = `invoice_${userId}_${Date.now()}.pdf`;
+      const relativePath = path.join('uploads', 'invoices', fileName);
+
+      await fs.promises.writeFile(path.join(process.cwd(), relativePath), buffer);
+
+      await this.prisma.transaction.update({
+        where: { id: transactionId },
+        data: { invoiceUrl: relativePath },
+      });
+
+      return path.resolve(process.cwd(), relativePath);
     }
 
     const absolutePath = path.resolve(process.cwd(), transaction.invoiceUrl);
