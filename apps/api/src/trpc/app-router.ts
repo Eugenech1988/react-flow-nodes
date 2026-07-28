@@ -123,7 +123,7 @@ export function createAppRouter(services: RouterServices) {
       .input(updatePipelineInputSchema)
       .mutation(({ ctx, input }) => {
         const { id, ...dto } = input;
-        return services.pipelinesService.update(id, dto as UpdatePipelineDto);
+        return services.pipelinesService.update(id, dto as UpdatePipelineDto & { screenshotBase64?: string });
       }),
   });
 

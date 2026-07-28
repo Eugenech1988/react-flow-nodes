@@ -35,7 +35,6 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
         filter: (node) => {
           const classNames = node?.className;
           return !(typeof classNames === 'string' && classNames.includes('react-flow__controls'));
-
         },
       });
     } catch (error) {
@@ -45,7 +44,7 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
   }, [wrapperRef, resolvedTheme]);
 
   const handleSavePipeline = useCallback(async () => {
-    const id = user?.currentPipelineId;
+    const id = user?.currentPipelineId || user?.currentPipeline?.id;
     if (!id) return;
 
     await fitView({ padding: 0.2, duration: 300 });
@@ -59,17 +58,14 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
     }));
 
     updatePipeline.mutate({
-      data: {
-        id,
-        graphData: {
-          nodes: formattedNodes,
-          edges,
-        },
-        // Если схема принимает картинку/файл или url:
-        image: screenshotBase64,
+      id,
+      graphData: {
+        nodes: formattedNodes,
+        edges,
       },
+      screenshotBase64,
     });
-  }, [user?.currentPipelineId, fitView, captureScreenshot, nodes, edges, updatePipeline]);
+  }, [user, fitView, captureScreenshot, nodes, edges, updatePipeline]);
 
   useEffect(() => {
     setSaveAction(handleSavePipeline);

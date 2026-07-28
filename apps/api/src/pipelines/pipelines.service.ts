@@ -47,7 +47,7 @@ export class PipelinesService {
 
   async update(
     id: string,
-    dto: UpdatePipelineDto,
+    dto: UpdatePipelineDto & { screenshotBase64?: string },
     file?: Express.Multer.File,
   ) {
     const existingPipeline = await this.prisma.pipeline.findUnique({
@@ -60,7 +60,27 @@ export class PipelinesService {
 
     let screenshotUrl = existingPipeline.screenshotUrl;
 
-    if (file) {
+    if (dto.screenshotBase64) {
+      if (existingPipeline.screenshotUrl) {
+        try {
+          const oldFilePath = path.join(process.cwd(), existingPipeline.screenshotUrl);
+          await fs.unlink(oldFilePath);
+        } catch (err) {
+          console.warn(`Failed to delete old file:`, err);
+        }
+      }
+
+      const base64Data = dto.screenshotBase64.replace(/^data:image\/\w+;base64,/, '');
+      const buffer = Buffer.from(base64Data, 'base64');
+      const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}.png`;
+      const relativePath = `/uploads/screenshots/${fileName}`;
+      const fullPath = path.join(process.cwd(), 'uploads/screenshots', fileName);
+
+      await fs.mkdir(path.dirname(fullPath), { recursive: true });
+      await fs.writeFile(fullPath, buffer);
+
+      screenshotUrl = relativePath;
+    } else if (file) {
       screenshotUrl = `/uploads/screenshots/${file.filename}`;
       if (existingPipeline.screenshotUrl) {
         try {
@@ -82,9 +102,8 @@ export class PipelinesService {
           ...(dto.lastRunAt !== undefined && { lastRunAt: dto.lastRunAt }),
           ...(dto.lastRunStatus !== undefined && { lastRunStatus: dto.lastRunStatus }),
           ...(dto.graphData !== undefined && {
-            graphData: dto.graphData as unknown as Prisma.InputJsonValue
+            graphData: dto.graphData as unknown as Prisma.InputJsonValue,
           }),
-
           screenshotUrl,
         },
       });

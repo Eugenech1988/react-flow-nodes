@@ -28,29 +28,9 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
   });
 
   const updatePipeline = useMutation({
-    mutationFn: async ({
-                         data,
-                         file,
-                       }: {
-      data: TUpdatePipelineInputData;
-      file?: File;
-    }) => {
+    mutationFn: async (data: TUpdatePipelineInputData) => {
       if (!data.id) {
         throw new Error('Pipeline ID is required for update');
-      }
-
-      if (file) {
-        const formData = new FormData();
-        formData.append('id', data.id);
-        if (data.name) formData.append('name', data.name);
-        if (data.description) formData.append('description', data.description);
-        if (data.status) formData.append('status', data.status);
-        if (data.graphData) {
-          formData.append('graphData', JSON.stringify(data.graphData));
-        }
-        formData.append('file', file);
-
-        return api.patch(`/pipelines/${data.id}`, formData);
       }
 
       return trpcClient.pipelines.update.mutate(data);

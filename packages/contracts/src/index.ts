@@ -1,12 +1,7 @@
 import { z } from 'zod';
 
-//billing
-
 export const planSchema = z.enum(['FREE', 'PRO', 'ENTERPRISE']);
-
 export type PlanType = z.infer<typeof planSchema>;
-
-//auth
 
 export const loginInputSchema = z.object({
   email: z
@@ -18,7 +13,6 @@ export const loginInputSchema = z.object({
     .min(1, 'Password is required')
     .min(6, 'Password must be at least 6 characters'),
 });
-
 export type LoginInputData = z.infer<typeof loginInputSchema>;
 
 export const registerInputSchema = loginInputSchema.extend({
@@ -26,7 +20,6 @@ export const registerInputSchema = loginInputSchema.extend({
   lastName: z.string().optional(),
   nickName: z.string().min(3, 'Nickname must be at least 3 characters').optional(),
 });
-
 export type RegisterInputData = z.infer<typeof registerInputSchema>;
 
 export const registerFormInputSchema = registerInputSchema
@@ -37,7 +30,6 @@ export const registerFormInputSchema = registerInputSchema
     message: "Passwords don't match",
     path: ['confirmPassword'],
   });
-
 export type RegisterFormInputData = z.infer<typeof registerFormInputSchema>;
 
 export const twoFactorTotpOnlySchema = z.object({
@@ -67,7 +59,6 @@ export const twoFactorLoginInputSchema = z.object({
   tempToken: z.string().min(1, 'Temp token is required'),
   code: twoFactorCodeOrBackupSchema.shape.code,
 });
-
 export type TTwoFactorLoginInputData = z.infer<typeof twoFactorLoginInputSchema>;
 
 export const passwordResetInputSchema = z.object({
@@ -77,7 +68,6 @@ export const passwordResetInputSchema = z.object({
     .min(1, 'Password is required')
     .min(6, 'Password must be at least 6 characters'),
 });
-
 export type TPasswordResetInputData = z.infer<typeof passwordResetInputSchema>;
 
 export const updatePasswordInputSchema = z.object({
@@ -87,10 +77,7 @@ export const updatePasswordInputSchema = z.object({
     .min(1, 'New password is required')
     .min(6, 'Password must be at least 6 characters'),
 });
-
 export type TUpdatePasswordInputData = z.infer<typeof updatePasswordInputSchema>;
-
-//profile
 
 export const updateProfileInputSchema = z.object({
   firstName: z.string().optional(),
@@ -100,18 +87,13 @@ export const updateProfileInputSchema = z.object({
   jobTitle: z.string().optional(),
   avatarUrl: z.string().nullable().optional(),
 });
-
 export type TUpdateProfileInputData = z.infer<typeof updateProfileInputSchema>;
-
-
-//pipeline
 
 export const createPipelineInputSchema = z.object({
   name: z.string().min(1, 'Pipeline name is required'),
   description: z.string().optional(),
   screenshotUrl: z.string().optional(),
 });
-
 export type TCreatePipelineInputData = z.infer<typeof createPipelineInputSchema>;
 
 export const currentPipelineInputSchema = z.object({
@@ -123,13 +105,11 @@ export const currentPipelineInputSchema = z.object({
   lastRunStatus: z.enum(['SUCCESS', 'FAILED', 'RUNNING']).nullish(),
   screenshotUrl: z.string().nullish(),
 });
-
 export type TCurrentPipelineInputData = z.infer<typeof currentPipelineInputSchema>;
 
 export const removePipelineInputSchema = createPipelineInputSchema.partial().extend({
   id: z.string().min(1, 'Pipeline ID is required'),
 });
-
 export type TRemovePipelineInputData = z.infer<typeof removePipelineInputSchema>;
 
 const nodeSchema = z
@@ -167,7 +147,7 @@ export const updatePipelineInputSchema = z.object({
   lastRunAt: z.date().optional(),
   lastRunStatus: z.string().optional(),
   graphData: graphDataSchema.optional(),
+  screenshotBase64: z.string().optional(),
 });
-
 
 export type TUpdatePipelineInputData = z.infer<typeof updatePipelineInputSchema>;
