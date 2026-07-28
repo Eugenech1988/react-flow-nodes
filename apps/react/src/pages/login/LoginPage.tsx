@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@pipeline/ui';
 import { useQueryClient } from '@tanstack/react-query';
-import type { RegisterFormInputData } from '@pipeline/contracts';
+import type { RegisterFormInputData, LoginInputData } from '@pipeline/contracts';
 import {
   AuthModeToggle,
   TwoFactorForm,
@@ -11,7 +11,7 @@ import {
 } from './components';
 import { useTRPC, api } from '@/shared/api';
 import { useAuthStore } from './model/authStore';
-import type { RequestFormData, ResetFormData } from './components';
+import type { TRequestFormData, TResetFormData } from './model';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ export const LoginPage: React.FC = () => {
     navigate('/', { replace: true });
   };
 
-  const handleLogin = async (data: RegisterFormInputData) => {
+  const handleLogin = async (data: LoginInputData) => {
     await login(data.email, data.password, handleSuccessAuth);
   };
 
@@ -72,7 +72,7 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleRecoveryRequest = async (data: RequestFormData) => {
+  const handleRecoveryRequest = async (data: TRequestFormData) => {
     setRecoveryError(null);
     setIsRecoverySuccess(false);
     setIsRecoveryLoading(true);
@@ -91,7 +91,7 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleResetPassword = async (data: ResetFormData) => {
+  const handleResetPassword = async (data: TResetFormData) => {
     if (!tokenFromUrl) {
       setRecoveryError('Reset token is missing or invalid.');
       return;
@@ -179,7 +179,6 @@ export const LoginPage: React.FC = () => {
               isLoading={is2faLoading}
               onVerify={(data) => verifyTwoFactor(data, handleSuccessAuth)}
               onBack={resetState}
-              inputClasses=""
             />
           ) : (
             <AuthForm
