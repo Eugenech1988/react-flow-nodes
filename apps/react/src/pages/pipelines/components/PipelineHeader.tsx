@@ -1,41 +1,11 @@
-import { Workflow, Plus, UploadCloud } from 'lucide-react';
+import { Workflow, Plus } from 'lucide-react';
 import { SubmitButton } from '@/shared/ui/buttons';
-import { useStore } from '@/entities';
-import { usePipelineHandler } from '@/pages/pipelines/hooks';
-import { useUser } from '@/shared/hooks';
 
 type TPipelineHeaderProps = {
   setIsCreateOpen: (isCreateOpen: boolean) => void;
 }
 
 export const PipelineHeader = ({setIsCreateOpen}: TPipelineHeaderProps) => {
-  const { updatePipeline } = usePipelineHandler();
-  const { user } = useUser();
-  const id = user?.currentPipelineId;
-  const nodes = useStore((state) => state.nodes);
-  const edges = useStore((state) => state.edges);
-  console.log(user?.currentPipeline);
-
-  const handleUpdate = (e) => {
-    if (!id) return;
-    const formattedNodes = nodes.map((node) => ({
-      ...node,
-      type: node.type ?? 'default', // Гарантируем строку
-    }));
-    updatePipeline.mutate({
-      data: {
-        id,
-        description: 'some',
-        graphData: {
-          nodes: formattedNodes,
-          edges
-        }
-      }
-    })
-  }
-
-  console.log('nodes', nodes);
-  console.log('edges', edges);
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
       <div className="space-y-1">
@@ -47,14 +17,6 @@ export const PipelineHeader = ({setIsCreateOpen}: TPipelineHeaderProps) => {
           Manage, automate, and monitor your data workflows and integrations.
         </p>
       </div>
-
-      <SubmitButton
-        isPending={false}
-        isDisabled={false}
-        text="Update current pipeline"
-        icon={UploadCloud}
-        onClick={handleUpdate}
-      />
 
       <SubmitButton
         isPending={false}
