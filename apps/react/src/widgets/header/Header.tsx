@@ -5,7 +5,6 @@ import logo from '@/assets/logo.svg';
 import { UserDropdown } from '@/features/user-dropdown';
 import { WorkflowExecutionControl } from '@/widgets/header/components/WorkflowExecutionControl';
 import { useUser } from '@/shared/hooks';
-import { usePipelineHandler } from '@/pages/pipelines/hooks';
 import { useStore } from '@/entities';
 
 export const Header = () => {
@@ -13,30 +12,9 @@ export const Header = () => {
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
   const {user} = useUser();
-  const { updatePipeline } = usePipelineHandler();
   const currentPipelineName = user?.currentPipeline?.name;
-  const currenPipelineId = user?.currentPipelineId;
 
-  const nodes = useStore((state) => state.nodes);
-  const edges = useStore((state) => state.edges);
-
-
-  const handleSaveClick = () => {
-    if (!currenPipelineId) return
-    const formattedNodes = nodes.map((node) => ({
-      ...node,
-      type: node.type ?? 'default',
-    }));
-    updatePipeline.mutate({
-      data: {
-        id: currenPipelineId,
-        graphData: {
-          nodes: formattedNodes,
-          edges
-        }
-      }
-    })
-  }
+  const triggerSave = useStore((state) => state.triggerSave);
 
   const handleHeaderClick = () => {
     if (!isHome) {
@@ -82,7 +60,7 @@ export const Header = () => {
 
         <button
           className="p-2 text-foreground/70 hover:text-foreground hover:bg-foreground/3 border border-transparent hover:border-border rounded-md cursor-pointer transition-all"
-          onClick={handleSaveClick}
+          onClick={triggerSave}
         >
           <Save className="w-4 h-4"/>
         </button>

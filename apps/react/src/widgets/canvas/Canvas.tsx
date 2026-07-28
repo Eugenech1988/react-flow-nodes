@@ -14,13 +14,9 @@ import '@xyflow/react/dist/style.css';
 import { useStore } from '@/entities';
 import type { PipelineNode, PipelineEdge } from '@/entities';
 
-import { HistoryControls } from './components/HistoryControls';
-import { ImportExportToolbar } from './components/ImportExportToolbar';
-import { AutoLayoutButton } from './components/AutoLayoutButton';
-import { ClearCanvasButton } from './components/ClearCanvasButton';
-import { ExecutionLogConsole } from './components/ExecutionLogConsole';
+import { HistoryControls, ImportExportToolbar, AutoLayoutButton, ClearCanvasButton, ExecutionLogConsole } from './components';
 import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES, NODE_COLORS, NODE_TYPE_TO_CATEGORY } from './config';
-import { useDragAndDrop, useKeyboardShortcuts } from './hooks';
+import { useDragAndDrop, useKeyboardShortcuts, useSavePipeline } from './hooks';
 
 export const Canvas = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -43,6 +39,8 @@ export const Canvas = () => {
   const redo = useStore((state) => state.redo);
 
   const { getNodes, getEdges } = useReactFlow<PipelineNode, PipelineEdge>();
+
+  useSavePipeline({ wrapperRef });
 
   const { onDrop, onDragOver } = useDragAndDrop({
     rfInstance,

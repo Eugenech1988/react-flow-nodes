@@ -75,6 +75,7 @@ export interface GraphState {
   past: Array<{ nodes: PipelineNode[]; edges: PipelineEdge[] }>;
   future: Array<{ nodes: PipelineNode[]; edges: PipelineEdge[] }>;
   isHistoryAction: boolean;
+  saveAction: (() => Promise<void> | void) | null;
 }
 
 export interface GraphActions {
@@ -97,6 +98,8 @@ export interface GraphActions {
   canUndo: () => boolean;
   canRedo: () => boolean;
   takeSnapshot: () => void;
+  setSaveAction: (action: (() => Promise<void> | void) | null) => void;
+  triggerSave: () => Promise<void>;
 }
 
 export type ExecutionStatus = 'idle' | 'running' | 'success' | 'failed';

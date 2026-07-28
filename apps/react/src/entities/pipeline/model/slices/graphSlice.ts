@@ -16,6 +16,18 @@ export const createGraphSlice: StateCreator<
   past: [],
   future: [],
   isHistoryAction: false,
+  saveAction: null,
+
+  setSaveAction: (action) => set({ saveAction: action }),
+
+  triggerSave: async () => {
+    const { saveAction } = get();
+    if (saveAction) {
+      await saveAction();
+    } else {
+      console.warn('Save action is not registered yet.');
+    }
+  },
 
   getNodeID: (type) => {
     const { nodes } = get();

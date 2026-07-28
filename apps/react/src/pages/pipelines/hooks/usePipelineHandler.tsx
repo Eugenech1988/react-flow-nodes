@@ -45,7 +45,9 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
         if (data.name) formData.append('name', data.name);
         if (data.description) formData.append('description', data.description);
         if (data.status) formData.append('status', data.status);
-        if (data.graphData) formData.append('graphData', JSON.stringify(data.graphData));
+        if (data.graphData) {
+          formData.append('graphData', JSON.stringify(data.graphData));
+        }
         formData.append('file', file);
 
         return api.patch(`/pipelines/${data.id}`, formData);
@@ -80,6 +82,6 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
     createPipeline,
     deletePipeline,
     setCurrentPipeline,
-    updatePipeline
+    updatePipeline,
   };
 };
