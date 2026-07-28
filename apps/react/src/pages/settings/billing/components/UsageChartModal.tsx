@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import {
-  BarChart,
-  Bar,
-  Cell,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { motion } from 'framer-motion'; // 1. Импортируем motion
+import { motion } from 'framer-motion';
 
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
@@ -35,12 +34,34 @@ interface UsageChartModalProps {
   onClose: () => void;
 }
 
-const getBarColor = (value: number) => {
+const getLineColor = (value: number) => {
   if (value >= 80) return '#ef4444';
   if (value >= 60) return '#f97316';
   if (value >= 40) return '#f59e0b';
   return '#14b8a6';
 };
+
+const FILL_STOPS = [
+  { offset: '0%', color: '#ef4444' },
+  { offset: '20%', color: '#ef4444' },
+  { offset: '21%', color: '#f97316' },
+  { offset: '40%', color: '#f97316' },
+  { offset: '41%', color: '#f59e0b' },
+  { offset: '60%', color: '#f59e0b' },
+  { offset: '61%', color: '#14b8a6' },
+  { offset: '100%', color: '#14b8a6' },
+];
+
+const STROKE_STOPS = [
+  { offset: '0%', color: '#ef4444' },
+  { offset: '23%', color: '#ef4444' },
+  { offset: '24%', color: '#f97316' },
+  { offset: '53%', color: '#f97316' },
+  { offset: '54%', color: '#f59e0b' },
+  { offset: '84%', color: '#f59e0b' },
+  { offset: '85%', color: '#14b8a6' },
+  { offset: '100%', color: '#14b8a6' },
+];
 
 export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
   const [timeRange, setTimeRange] = useState<TimeRange>('7d');
@@ -66,7 +87,6 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
                   </div>
                 </div>
 
-                {/* Табы с анимированной подложкой */}
                 <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-lg text-xs relative">
                   {(['7d', '30d', '90d'] as TimeRange[]).map((range) => {
                     const isActive = timeRange === range;
@@ -81,7 +101,6 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
                             : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
-                        {/* Плавно передвигающийся фон */}
                         {isActive && (
                           <motion.div
                             layoutId="activeTabIndicator"
@@ -89,8 +108,6 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
                             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                           />
                         )}
-
-                        {/* Текст над подложкой */}
                         <span className="relative z-10">{range.toUpperCase()}</span>
                       </button>
                     );
@@ -100,16 +117,31 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
 
               <div className="h-64 w-full pt-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={MOCK_CHART_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <AreaChart data={MOCK_CHART_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="strokeGradient" x1="0" y1="0" x2="0" y2="1">
+                        {STROKE_STOPS.map((stop, i) => (
+                          <stop key={i} offset={stop.offset} stopColor={stop.color} />
+                        ))}
+                      </linearGradient>
+
+                      <linearGradient id="fillGradient" x1="0" y1="0" x2="0" y2="1">
+                        {FILL_STOPS.map((stop, i) => (
+                          <stop key={i} offset={stop.offset} stopColor={stop.color} stopOpacity={0.25} />
+                        ))}
+                      </linearGradient>
+                    </defs>
+
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
                     <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
                     <YAxis dataKey="value" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+
                     <Tooltip
-                      cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
+                      cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }}
                       content={({ active, payload, label }) => {
                         if (active && payload && payload.length) {
                           const val = Number(payload[0].value);
-                          const color = getBarColor(val);
+                          const color = getLineColor(val);
                           return (
                             <div className="bg-popover border border-border p-2.5 rounded-lg shadow-md text-xs space-y-1">
                               <p className="font-semibold text-popover-foreground">{label}</p>
@@ -123,12 +155,29 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
                         return null;
                       }}
                     />
-                    <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                      {MOCK_CHART_DATA.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={getBarColor(entry.value)} />
-                      ))}
-                    </Bar>
-                  </BarChart>
+
+                    <Area
+                      type="monotone"
+                      dataKey="value"
+                      stroke="url(#strokeGradient)"
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#fillGradient)"
+                      activeDot={({ cx, cy, payload }) => {
+                        const color = getLineColor(payload.value);
+                        return (
+                          <circle
+                            cx={cx}
+                            cy={cy}
+                            r={6}
+                            fill={color}
+                            stroke="hsl(var(--background))"
+                            strokeWidth={2}
+                          />
+                        );
+                      }}
+                    />
+                  </AreaChart>
                 </ResponsiveContainer>
               </div>
             </DialogBody>
