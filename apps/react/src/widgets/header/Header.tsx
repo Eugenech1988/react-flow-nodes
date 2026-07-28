@@ -23,11 +23,15 @@ export const Header = () => {
 
   const handleSaveClick = () => {
     if (!currenPipelineId) return
+    const formattedNodes = nodes.map((node) => ({
+      ...node,
+      type: node.type ?? 'default',
+    }));
     updatePipeline.mutate({
       data: {
         id: currenPipelineId,
         graphData: {
-          nodes,
+          nodes: formattedNodes,
           edges
         }
       }
