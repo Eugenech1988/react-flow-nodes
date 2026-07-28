@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, trpcClient, useTRPC } from '@/shared/api';
-import type { TCreatePipelineData } from '@/pages/pipelines/lib';
+import type { TCreatePipelineInputData } from '@pipeline/contracts';
 import type { TPipeline } from '@/shared/lib';
 
 interface UsePipelineHandlersOptions {
@@ -13,7 +13,7 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
   const trpc = useTRPC();
 
   const createPipeline = useMutation({
-    mutationFn: async ({ userId, data, file }: { userId: string; data: TCreatePipelineData; file?: File }) => {
+    mutationFn: async ({ userId, data, file }: { userId: string; data: TCreatePipelineInputData; file?: File }) => {
       const formData = new FormData();
       formData.append('name', data.name);
       if (data.description) formData.append('description', data.description);
@@ -29,6 +29,7 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
   const deletePipeline = useMutation({
     mutationFn: (pipelineId: string) => trpcClient.pipelines.remove.mutate({ id: pipelineId }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
       queryClient.invalidateQueries({ queryKey: trpc.pipelines.list.queryKey() });
     },
   });

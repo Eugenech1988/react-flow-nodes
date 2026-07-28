@@ -35,12 +35,12 @@ export const PipelineCard = ({ pipeline }: PipelineCardProps) => {
   });
 
   const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Предотвращаем клик по карточке
+    e.stopPropagation();
     deletePipeline.mutate(pipeline.id);
   };
 
   const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Предотвращаем клик по карточке
+    e.stopPropagation();
     navigate(`/pipelines/${pipeline.id}`);
   };
 
