@@ -126,8 +126,48 @@ export const currentPipelineInputSchema = z.object({
 
 export type TCurrentPipelineInputData = z.infer<typeof currentPipelineInputSchema>;
 
-export const updatePipelineInputSchema = createPipelineInputSchema.partial().extend({
+export const removePipelineInputSchema = createPipelineInputSchema.partial().extend({
   id: z.string().min(1, 'Pipeline ID is required'),
 });
+
+export type TRemovePipelineInputData = z.infer<typeof removePipelineInputSchema>;
+
+const nodeSchema = z
+  .object({
+    id: z.string(),
+    type: z.string(),
+    position: z.object({
+      x: z.number(),
+      y: z.number(),
+    }),
+    data: z.record(z.string(), z.unknown()),
+  })
+  .passthrough();
+
+const edgeSchema = z
+  .object({
+    id: z.string(),
+    source: z.string(),
+    target: z.string(),
+    sourceHandle: z.string().nullable().optional(),
+    targetHandle: z.string().nullable().optional(),
+  })
+  .passthrough();
+
+export const graphDataSchema = z.object({
+  nodes: z.array(nodeSchema),
+  edges: z.array(edgeSchema),
+});
+
+export const updatePipelineInputSchema = z.object({
+  id: z.string(),
+  name: z.string().optional(),
+  description: z.string().optional(),
+  status: z.enum(['DRAFT', 'ACTIVE', 'PAUSED', 'ARCHIVED']).optional(),
+  lastRunAt: z.date().optional(),
+  lastRunStatus: z.string().optional(),
+  graphData: graphDataSchema.optional(),
+});
+
 
 export type TUpdatePipelineInputData = z.infer<typeof updatePipelineInputSchema>;

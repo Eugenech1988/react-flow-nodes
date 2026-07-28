@@ -10,7 +10,7 @@ export class UpdatePipelineDto {
 
   @IsOptional()
   @IsString()
-  description?: string;
+  description?: string | null;
 
   @IsOptional()
   @IsEnum(PipelineStatus)

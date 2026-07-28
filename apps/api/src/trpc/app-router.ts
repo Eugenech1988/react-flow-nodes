@@ -1,15 +1,16 @@
 import { TRPCError } from '@trpc/server';
 import {
   loginInputSchema,
-  planSchema,
   registerInputSchema,
-  twoFactorLoginInputSchema,
-  updatePasswordInputSchema,
-  updatePipelineInputSchema,
-  updateProfileInputSchema,
   twoFactorTotpOnlySchema,
+  twoFactorLoginInputSchema,
   twoFactorCodeOrBackupSchema,
-  currentPipelineInputSchema
+  updatePasswordInputSchema,
+  updateProfileInputSchema,
+  updatePipelineInputSchema,
+  currentPipelineInputSchema,
+  removePipelineInputSchema,
+  planSchema
 } from '@pipeline/contracts';
 import { AuthService } from '@/auth/auth.service';
 import { BillingService } from '@/billing/billing.service';
@@ -17,6 +18,7 @@ import { PipelinesService } from '@/pipelines/pipelines.service';
 import { ProfileService } from '@/profile/profile.service';
 import { UsersService } from '@/users/users.service';
 import { protectedProcedure, publicProcedure, router } from '@/trpc/init';
+import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 
 interface RouterServices {
   authService: AuthService;
@@ -114,14 +116,14 @@ export function createAppRouter(services: RouterServices) {
 
   const pipelinesRouter = router({
     list: protectedProcedure.query(({ctx}) => services.pipelinesService.findAllByUserId(ctx.user.id)),
-    remove: protectedProcedure.input(updatePipelineInputSchema.pick({id: true})).mutation(({ctx, input}) =>
+    remove: protectedProcedure.input(removePipelineInputSchema.pick({id: true})).mutation(({ctx, input}) =>
       services.pipelinesService.remove(input.id, ctx.user.id)
     ),
     update: protectedProcedure
       .input(updatePipelineInputSchema)
       .mutation(({ ctx, input }) => {
         const { id, ...dto } = input;
-        return services.pipelinesService.update(id, dto);
+        return services.pipelinesService.update(id, dto as UpdatePipelineDto);
       }),
   });
 
