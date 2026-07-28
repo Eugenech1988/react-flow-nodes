@@ -61,6 +61,8 @@ export type ClipboardNodesData = {
   edges: PipelineEdge[];
 };
 
+export type LastRunStatus = 'SUCCESS' | 'FAILED' | 'RUNNING' | null;
+
 export interface HistoryState {
   past: Array<{ nodes: any[]; edges: any[] }>;
   future: Array<{ nodes: any[]; edges: any[] }>;
@@ -75,6 +77,8 @@ export interface GraphState {
   past: Array<{ nodes: PipelineNode[]; edges: PipelineEdge[] }>;
   future: Array<{ nodes: PipelineNode[]; edges: PipelineEdge[] }>;
   isHistoryAction: boolean;
+  lastRunAt: Date | string | null;
+  lastRunStatus: LastRunStatus;
   saveAction: (() => Promise<void> | void) | null;
 }
 
@@ -100,6 +104,7 @@ export interface GraphActions {
   takeSnapshot: () => void;
   setSaveAction: (action: (() => Promise<void> | void) | null) => void;
   triggerSave: () => Promise<void>;
+  setLastRunInfo: (status: LastRunStatus, date?: Date | string) => void;
 }
 
 export type ExecutionStatus = 'idle' | 'running' | 'success' | 'failed';

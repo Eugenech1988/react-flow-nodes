@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
 import { Sparkles, Plus } from 'lucide-react';
 import { SubmitButton } from '@/shared/ui';
+import { usePipelineDialogStore } from '@/pages/pipelines/model';
 
 interface EmptyStateProps {
   hasSearchQuery: boolean;
-  setIsCreateOpen: (open: boolean) => void;
 }
 
-export const EmptyState = ({ hasSearchQuery, setIsCreateOpen }: EmptyStateProps) => {
+export const EmptyState = ({ hasSearchQuery }: EmptyStateProps) => {
+  const openCreateModal = usePipelineDialogStore((state) => state.openCreateModal);
 
   return (
     <motion.div
@@ -31,7 +32,7 @@ export const EmptyState = ({ hasSearchQuery, setIsCreateOpen }: EmptyStateProps)
       {!hasSearchQuery && (
         <SubmitButton
           isPending={false}
-          onClick={() => {setIsCreateOpen(true)}}
+          onClick={openCreateModal}
           text="Create Pipeline"
           icon={Plus}
           className="text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 rounded-lg cursor-pointer"

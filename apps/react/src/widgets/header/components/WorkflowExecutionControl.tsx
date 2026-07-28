@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Play, Square, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -14,6 +15,17 @@ export const WorkflowExecutionControl = () => {
   const status = useStore((state) => state.executionStatus);
   const runWorkflow = useStore((state) => state.runWorkflow);
   const stopWorkflow = useStore((state) => state.stopWorkflow);
+  const setLastRunInfo = useStore((state) => state.setLastRunInfo);
+
+  useEffect(() => {
+    if (status === 'running') {
+      setLastRunInfo('RUNNING', new Date());
+    } else if (status === 'success') {
+      setLastRunInfo('SUCCESS', new Date());
+    } else if (status === 'failed') {
+      setLastRunInfo('FAILED', new Date());
+    }
+  }, [status, setLastRunInfo]);
 
   const handleStartFlow = () => {
     if (!isHome) {
@@ -32,7 +44,7 @@ export const WorkflowExecutionControl = () => {
           text: 'Stop',
           icon: <Square className="w-3.5 h-3.5 fill-current animate-pulse" />,
           className: 'bg-[var(--node-math)] text-white hover:opacity-90 active:scale-95 shadow-sm',
-          onClick: stopWorkflow, // Остановку можно выполнять со страницы редактора
+          onClick: stopWorkflow,
         };
       case 'success':
         return {

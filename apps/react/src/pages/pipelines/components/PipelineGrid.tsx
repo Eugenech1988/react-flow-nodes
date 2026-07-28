@@ -6,12 +6,11 @@ import type { TPipeline } from '@/shared/lib';
 interface PipelineGridProps {
   pipelines: TPipeline[];
   searchQuery: string;
-  setIsCreateOpen: (isCreateOpen: boolean) => void;
 }
 
-export const PipelineGrid = ({ pipelines, setIsCreateOpen, searchQuery }: PipelineGridProps) => {
+export const PipelineGrid = ({ pipelines, searchQuery }: PipelineGridProps) => {
   if (pipelines.length === 0) {
-    return <EmptyState setIsCreateOpen={setIsCreateOpen} hasSearchQuery={searchQuery.length > 0} />;
+    return <EmptyState hasSearchQuery={searchQuery.length > 0} />;
   }
 
   return (

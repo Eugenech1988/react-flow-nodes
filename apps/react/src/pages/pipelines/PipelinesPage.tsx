@@ -1,14 +1,13 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { usePipelines } from '@/shared/hooks';
 import { usePipelinesFilter } from './hooks';
 import { PAGE_VARIANTS } from '@/shared/lib';
-import { PipelineHeader, PipelineSearchAndFilter, PipelineGrid } from './components';
+import { PipelineHeader, PipelineSearchAndFilter, PipelineGrid, PipelineDialog } from './components';
 import type { TPipeline } from '@/shared/lib';
-import { CreatePipelineDialog } from '@/pages/pipelines/components';
+import { usePipelineDialogStore } from '@/pages/pipelines/model';
 
 export const PipelinesPage = () => {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const { isOpen, mode, pipelineToEdit, closeModal } = usePipelineDialogStore();
   const { pipelines } = usePipelines();
 
   const {
@@ -31,9 +30,7 @@ export const PipelinesPage = () => {
       animate="animate"
     >
       <div className="max-w-7xl mx-auto space-y-8">
-        <PipelineHeader
-          setIsCreateOpen={setIsCreateOpen}
-        />
+        <PipelineHeader />
         <PipelineSearchAndFilter
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
@@ -46,8 +43,13 @@ export const PipelinesPage = () => {
             setSortOrder(order);
           }}
         />
-        <PipelineGrid setIsCreateOpen={setIsCreateOpen} pipelines={filteredPipelines} searchQuery={searchQuery} />
-        <CreatePipelineDialog isOpen={isCreateOpen} onClose={() => {setIsCreateOpen(false)}}/>
+        <PipelineGrid pipelines={filteredPipelines} searchQuery={searchQuery}/>
+        <PipelineDialog
+          isOpen={isOpen}
+          mode={mode}
+          initialData={pipelineToEdit}
+          onClose={closeModal}
+        />
       </div>
     </motion.div>
   );

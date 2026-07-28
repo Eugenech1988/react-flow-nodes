@@ -144,7 +144,7 @@ export const updatePipelineInputSchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
   status: z.enum(['DRAFT', 'ACTIVE', 'PAUSED', 'ARCHIVED']).optional(),
-  lastRunAt: z.date().optional(),
+  lastRunAt: z.coerce.date().optional(),
   lastRunStatus: z.string().optional(),
   graphData: graphDataSchema.optional(),
   screenshotBase64: z.string().optional(),

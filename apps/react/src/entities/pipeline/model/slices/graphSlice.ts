@@ -16,7 +16,15 @@ export const createGraphSlice: StateCreator<
   past: [],
   future: [],
   isHistoryAction: false,
+  lastRunAt: null,
+  lastRunStatus: null,
   saveAction: null,
+
+  setLastRunInfo: (status, date = new Date()) =>
+    set({
+      lastRunAt: date,
+      lastRunStatus: status,
+    }),
 
   setSaveAction: (action) => set({ saveAction: action }),
 

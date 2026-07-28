@@ -19,6 +19,8 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
 
   const nodes = useStore((state) => state.nodes);
   const edges = useStore((state) => state.edges);
+  const lastRunAt = useStore((state) => state.lastRunAt);
+  const lastRunStatus = useStore((state) => state.lastRunStatus);
   const setSaveAction = useStore((state) => state.setSaveAction);
 
   const { fitView } = useReactFlow<PipelineNode, PipelineEdge>();
@@ -64,8 +66,10 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
         edges,
       },
       screenshotBase64,
+      ...(lastRunAt && { lastRunAt: new Date(lastRunAt).toISOString() as unknown as Date }),
+      ...(lastRunStatus && { lastRunStatus }),
     });
-  }, [user, fitView, captureScreenshot, nodes, edges, updatePipeline]);
+  }, [user, fitView, captureScreenshot, nodes, edges, lastRunAt, lastRunStatus, updatePipeline]);
 
   useEffect(() => {
     setSaveAction(handleSavePipeline);
