@@ -67,8 +67,15 @@ export const passwordResetInputSchema = z.object({
     .string()
     .min(1, 'Password is required')
     .min(6, 'Password must be at least 6 characters'),
-});
+})
 export type TPasswordResetInputData = z.infer<typeof passwordResetInputSchema>;
+
+export const requestResetInputSchema = z.object({
+  email: z
+    .string().min(1, 'Email is required')
+    .email('Invalid email address'),
+})
+export type TRequestResetInputData = z.infer<typeof requestResetInputSchema>;
 
 export const updatePasswordInputSchema = z.object({
   currentPassword: z.string().optional().or(z.literal('')),
@@ -149,5 +156,4 @@ export const updatePipelineInputSchema = z.object({
   graphData: graphDataSchema.optional(),
   screenshotBase64: z.string().optional(),
 });
-
 export type TUpdatePipelineInputData = z.infer<typeof updatePipelineInputSchema>;

@@ -3,6 +3,7 @@ import { randomBytes } from 'node:crypto';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@/users/users.service';
+import { MailService } from '@/mail/mail.service';
 import { RegisterDto } from '@/auth/dtos/register.dto';
 import { RecoveryDto } from '@/auth/dtos/recovery.dto';
 import { ResetPasswordDto } from '@/auth/dtos/reset-password.dto';
@@ -22,6 +23,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly mailService: MailService,
   ) {}
 
   private generateRecoveryCodes(): string[] {
@@ -183,6 +185,24 @@ export class AuthService {
     await this.usersService.update(payload.userId, {
       password: hashedPassword,
     });
+  }
+
+  async publicRequestResetPassword(dto: RecoveryDto): Promise<{ message: string }> {
+    const token = await this.recovery(dto);
+
+    if (token) {
+      const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
+      const recoveryLink = `${clientUrl}/login?token=${token}`;
+
+      await this.mailService.sendRecoveryEmail(dto.email, recoveryLink);
+    }
+
+    return { message: 'If the email exists, a reset link has been sent.' };
+  }
+
+  async publicResetPassword(dto: ResetPasswordDto): Promise<{ success: boolean }> {
+    await this.resetPassword(dto);
+    return { success: true };
   }
 
   async generateTwoFactorSecret(userId: string) {

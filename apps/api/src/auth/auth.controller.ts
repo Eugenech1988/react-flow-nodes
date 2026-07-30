@@ -3,7 +3,6 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '@/auth/auth.service';
-import { MailService } from '@/mail/mail.service';
 import { RegisterDto } from '@/auth/dtos/register.dto';
 import { RecoveryDto } from '@/auth/dtos/recovery.dto';
 import { ResetPasswordDto } from '@/auth/dtos/reset-password.dto';
@@ -27,7 +26,6 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
-    private readonly mailService: MailService
   ) {}
 
   private setTokenCookies(res: Response, accessToken: string, refreshToken: string) {
@@ -232,18 +230,9 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('recovery')
   @ApiOperation({ summary: 'Request password recovery email' })
-  @ApiResponse({ status: 200, description: 'Recovery link generated.' })
+  @ApiResponse({ status: 200, description: 'Recovery link generated and sent if email exists.' })
   async recovery(@Body() dto: RecoveryDto): Promise<{ message: string }> {
-    const token = await this.authService.recovery(dto);
-
-    if (token) {
-      const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
-      const recoveryLink = `${clientUrl}/reset-password?token=${token}`;
-
-      await this.mailService.sendRecoveryEmail(dto.email, recoveryLink);
-    }
-
-    return { message: 'If the email exists, a reset link has been sent.' };
+    return this.authService.publicRequestResetPassword(dto);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -252,7 +241,6 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Password updated.' })
   @ApiResponse({ status: 400, description: 'Invalid or expired token.' })
   async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ success: boolean }> {
-    await this.authService.resetPassword(dto);
-    return { success: true };
+    return this.authService.publicResetPassword(dto);
   }
 }

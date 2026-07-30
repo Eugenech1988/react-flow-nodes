@@ -10,7 +10,7 @@ import {
   updatePipelineInputSchema,
   currentPipelineInputSchema,
   removePipelineInputSchema,
-  planSchema
+  planSchema, passwordResetInputSchema, requestResetInputSchema
 } from '@pipeline/contracts';
 import { AuthService } from '@/auth/auth.service';
 import { BillingService } from '@/billing/billing.service';
@@ -87,7 +87,17 @@ export function createAppRouter(services: RouterServices) {
       ctx.res.clearCookie('accessToken', options);
       ctx.res.clearCookie('refreshToken', options);
       return {success: true};
-    })
+    }),
+    requestPasswordReset: publicProcedure
+      .input(requestResetInputSchema)
+      .mutation(async ({ input }) => {
+        return services.authService.publicRequestResetPassword(input);
+      }),
+    resetPassword: publicProcedure
+      .input(passwordResetInputSchema)
+      .mutation(async ({ input }) => {
+        return services.authService.publicResetPassword(input);
+      }),
   });
 
   const usersRouter = router({
@@ -121,7 +131,7 @@ export function createAppRouter(services: RouterServices) {
     ),
     update: protectedProcedure
       .input(updatePipelineInputSchema)
-      .mutation(({ ctx, input }) => {
+      .mutation(({ input }) => {
         const { id, ...dto } = input;
         return services.pipelinesService.update(id, dto as UpdatePipelineDto & { screenshotBase64?: string });
       }),

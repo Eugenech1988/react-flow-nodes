@@ -9,7 +9,7 @@ import {
   RecoveryForm,
   AuthForm
 } from './components';
-import { useTRPC, api } from '@/shared/api';
+import { useTRPC } from '@/shared/api';
 import { useAuthStore } from './model/authStore';
 import type { TRequestFormData, TResetFormData } from './model';
 
@@ -21,12 +21,17 @@ export const LoginPage: React.FC = () => {
   const {
     mode,
     is2faRequired,
+    isLoading,
     isLoading: is2faLoading,
     apiError,
     twoFactorError,
+    recoveryError,
+    isRecoverySuccess,
     login,
     register: registerAction,
     verifyTwoFactor,
+    requestPasswordReset,
+    resetPassword,
     toggleMode,
     resetState
   } = useAuthStore();
@@ -35,9 +40,6 @@ export const LoginPage: React.FC = () => {
   const queryClient = useQueryClient();
 
   const [isRecoveryMode, setIsRecoveryMode] = useState(false);
-  const [recoveryError, setRecoveryError] = useState<string | null>(null);
-  const [isRecoverySuccess, setIsRecoverySuccess] = useState(false);
-  const [isRecoveryLoading, setIsRecoveryLoading] = useState(false);
 
   useEffect(() => {
     if (tokenFromUrl) {
@@ -73,51 +75,20 @@ export const LoginPage: React.FC = () => {
   };
 
   const handleRecoveryRequest = async (data: TRequestFormData) => {
-    setRecoveryError(null);
-    setIsRecoverySuccess(false);
-    setIsRecoveryLoading(true);
-
-    try {
-      await api.post('/auth/recovery', { email: data.email });
-      setIsRecoverySuccess(true);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setRecoveryError(err.message);
-      } else {
-        setRecoveryError('Failed to send recovery email. Please try again.');
-      }
-    } finally {
-      setIsRecoveryLoading(false);
-    }
+    await requestPasswordReset(data.email);
   };
 
   const handleResetPassword = async (data: TResetFormData) => {
     if (!tokenFromUrl) {
-      setRecoveryError('Reset token is missing or invalid.');
+      useAuthStore.getState().setRecoveryError('Reset token is missing or invalid.');
       return;
     }
 
-    setRecoveryError(null);
-    setIsRecoveryLoading(true);
-
-    try {
-      await api.post('/auth/reset-password', {
-        token: tokenFromUrl,
-        password: data.password,
-      });
-
+    await resetPassword(tokenFromUrl, data.password, () => {
       setSearchParams({}, { replace: true });
       setIsRecoveryMode(false);
       resetState();
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setRecoveryError(err.message);
-      } else {
-        setRecoveryError('Failed to reset password. Please try again.');
-      }
-    } finally {
-      setIsRecoveryLoading(false);
-    }
+    });
   };
 
   const handleBackFromRecovery = () => {
@@ -125,8 +96,7 @@ export const LoginPage: React.FC = () => {
       setSearchParams({}, { replace: true });
     }
     setIsRecoveryMode(false);
-    setRecoveryError(null);
-    setIsRecoverySuccess(false);
+    resetState();
   };
 
   const getTitle = () => {
@@ -168,7 +138,7 @@ export const LoginPage: React.FC = () => {
               mode={tokenFromUrl ? 'reset' : 'request'}
               error={recoveryError}
               isSuccess={isRecoverySuccess}
-              isLoading={isRecoveryLoading}
+              isLoading={isLoading}
               onRequestSubmit={handleRecoveryRequest}
               onResetSubmit={handleResetPassword}
               onBack={handleBackFromRecovery}
