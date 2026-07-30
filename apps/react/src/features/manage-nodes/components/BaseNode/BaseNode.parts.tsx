@@ -9,10 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@pipeline/ui';
-import type { FieldConfig, HandleConfig, NodeFieldValues } from '@/entities';
+import type { TFieldConfig, THandleConfig, TNodeFieldValues } from '@/entities';
 import { inputFieldClassName } from './BaseNode.utils';
 
-export const NodeHandles = ({ handles, type }: { handles: HandleConfig[]; type: 'target' | 'source' }) => (
+export const NodeHandles = ({ handles, type }: { handles: THandleConfig[]; type: 'target' | 'source' }) => (
   <>
     {handles.map((handle) => (
       <Handle
@@ -60,8 +60,8 @@ export const NodeField = ({
                             value,
                             onChange,
                           }: {
-  field: FieldConfig;
-  value: NodeFieldValues[string];
+  field: TFieldConfig;
+  value: TNodeFieldValues[string];
   onChange: (value: string) => void;
 }) => (
   <label className="flex flex-col gap-1.5">
@@ -73,7 +73,7 @@ export const NodeField = ({
       <div className="nodrag nopan pointer-events-auto">
         <Select
           value={String(value)}
-          onValueChange={onChange}
+          onValueChange={(val) => onChange(val ?? '')}
         >
           <SelectTrigger className="w-full h-9 bg-background/50 border-slate-200 dark:border-zinc-800 transition-colors hover:border-slate-300 dark:hover:border-zinc-700 rounded-md px-3 text-left font-normal text-xs">
             <SelectValue placeholder="Select option" />

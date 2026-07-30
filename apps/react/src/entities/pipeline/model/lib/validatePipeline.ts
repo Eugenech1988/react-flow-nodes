@@ -1,4 +1,4 @@
-import type { PipelineNode, PipelineEdge } from '@/entities';
+import type { TPipelineNode, TPipelineEdge } from '@/entities';
 
 export interface ValidationReport {
   isDag: boolean;
@@ -16,7 +16,7 @@ export interface ValidationReport {
 const normalize = (value: unknown) =>
   String(value ?? '').trim().toLowerCase();
 
-const getInputName = (node: PipelineNode) => {
+const getInputName = (node: TPipelineNode) => {
   const type = String(node.type ?? '').toLowerCase();
   const nodeType = String(node.data?.nodeType ?? '').toLowerCase();
 
@@ -38,7 +38,7 @@ const getInputName = (node: PipelineNode) => {
   return '';
 };
 
-const getOutputName = (node: PipelineNode) => {
+const getOutputName = (node: TPipelineNode) => {
   const type = String(node.type ?? '').toLowerCase();
   const nodeType = String(node.data?.nodeType ?? '').toLowerCase();
 
@@ -61,8 +61,8 @@ const getOutputName = (node: PipelineNode) => {
 };
 
 export const validatePipeline = (
-  nodes: PipelineNode[],
-  edges: PipelineEdge[]
+  nodes: TPipelineNode[],
+  edges: TPipelineEdge[]
 ): ValidationReport => {
   const errors: string[] = [];
 

@@ -2,7 +2,7 @@ import { useState, useEffect, type CSSProperties } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import { useStore } from '@/entities';
 import { extractVariables } from '@/shared/lib';
-import { type BaseNodeProps, type NodeConfigFactory } from './BaseNode.types';
+import { type IBaseNodeProps, type NodeConfigFactory } from './BaseNode.types';
 import {
   buildInitialValues,
   withAutoPositions,
@@ -22,7 +22,7 @@ export const BaseNode = ({
                            minWidth = 220,
                            withVariables = false,
                            selected,
-                         }: BaseNodeProps) => {
+                         }: IBaseNodeProps) => {
   const updateNodeField = useStore((state) => state.updateNodeField);
   const activeNodeId = useStore((state) => state.activeNodeId);
   const successNodeIds = useStore((state) => state.successNodeIds);

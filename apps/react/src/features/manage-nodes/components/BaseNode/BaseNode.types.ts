@@ -4,7 +4,7 @@ import type { TNodeConfig, TNodeData } from '@/entities';
 
 export type Side = 'left' | 'right';
 
-export interface BaseNodeProps extends Omit<NodeProps, 'data'>, TNodeConfig {
+export interface IBaseNodeProps extends Omit<NodeProps, 'data'>, TNodeConfig {
   data: TNodeData;
   withVariables?: boolean;
 }
