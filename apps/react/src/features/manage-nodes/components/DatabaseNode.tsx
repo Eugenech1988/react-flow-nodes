@@ -1,8 +1,8 @@
 import { Position, type NodeProps } from '@xyflow/react';
 import { BaseNode } from './BaseNode';
-import type { NodeComponentProps } from '@/entities';
+import type { TNodeComponentProps } from '@/entities';
 
-type DatabaseNodeProps = Omit<NodeProps, keyof NodeComponentProps> & NodeComponentProps;
+type DatabaseNodeProps = Omit<NodeProps, keyof TNodeComponentProps> & TNodeComponentProps;
 
 export const DatabaseNode = (props: DatabaseNodeProps) => (
   <BaseNode

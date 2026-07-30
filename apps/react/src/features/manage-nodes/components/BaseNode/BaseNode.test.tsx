@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BaseNode, createNode } from './BaseNode';
-import type { FieldConfig } from '@/entities';
+import type { TFieldConfig } from '@/entities';
 import type { ChangeEvent } from 'react';
 
 const { updateNodeField, deleteElements, extractVariables } = vi.hoisted(() => ({
@@ -85,7 +85,7 @@ describe('BaseNode', () => {
   });
 
   it('updates input field and triggers updateNodeField', () => {
-    const fields: FieldConfig[] = [{ key: 'name', label: 'Name', type: 'text' }];
+    const fields: TFieldConfig[] = [{ key: 'name', label: 'Name', type: 'text' }];
     render(<BaseNode {...createMockNodeProps('node-1')} fields={fields} />);
 
     fireEvent.change(screen.getByTestId('input'), { target: { value: 'John' } });

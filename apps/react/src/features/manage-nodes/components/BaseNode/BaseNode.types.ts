@@ -1,12 +1,12 @@
 import { type JSX } from 'react';
 import type { NodeProps } from '@xyflow/react';
-import type { NodeConfig, NodeData } from '@/entities';
+import type { TNodeConfig, TNodeData } from '@/entities';
 
 export type Side = 'left' | 'right';
 
-export interface BaseNodeProps extends Omit<NodeProps, 'data'>, NodeConfig {
-  data: NodeData;
+export interface BaseNodeProps extends Omit<NodeProps, 'data'>, TNodeConfig {
+  data: TNodeData;
   withVariables?: boolean;
 }
 
-export type NodeConfigFactory = NodeConfig | ((props: NodeProps) => JSX.Element);
+export type NodeConfigFactory = TNodeConfig | ((props: NodeProps) => JSX.Element);

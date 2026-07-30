@@ -1,8 +1,8 @@
 import { Position, type NodeProps } from '@xyflow/react';
 import { BaseNode } from './BaseNode';
-import type { NodeData } from '@/entities';
+import type { TNodeData } from '@/entities';
 
-export const TextNode = ({ id, data, selected, ...rest }: NodeProps & { data: NodeData }) => {
+export const TextNode = ({ id, data, selected, ...rest }: NodeProps & { data: TNodeData }) => {
   return (
     <BaseNode
       id={id}

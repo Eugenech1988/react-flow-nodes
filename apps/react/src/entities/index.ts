@@ -1,14 +1,14 @@
 export { useStore } from './pipeline/model';
 export type {
-  PipelineNode,
-  PipelineEdge,
-  NodeData,
-  ExecutionStatus,
-  ExecutionLog,
-  NodeConfig,
-  FieldConfig,
-  SelectOption,
-  NodeComponentProps,
-  NodeFieldValues,
-  HandleConfig
+  TPipelineNode,
+  TPipelineEdge,
+  TNodeData,
+  TExecutionStatus,
+  TExecutionLog,
+  TNodeConfig,
+  TFieldConfig,
+  TSelectOption,
+  TNodeComponentProps,
+  TNodeFieldValues,
+  THandleConfig
 } from './pipeline/model';
