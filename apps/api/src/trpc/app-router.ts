@@ -10,7 +10,9 @@ import {
   updatePipelineInputSchema,
   currentPipelineInputSchema,
   removePipelineInputSchema,
-  planSchema, passwordResetInputSchema, requestResetInputSchema
+  planSchema,
+  passwordResetInputSchema,
+  requestResetInputSchema
 } from '@pipeline/contracts';
 import { AuthService } from '@/auth/auth.service';
 import { BillingService } from '@/billing/billing.service';

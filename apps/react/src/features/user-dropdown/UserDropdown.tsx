@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLogout, useUser } from '@/shared/hooks';
 import {
   LogOut,
@@ -22,7 +22,6 @@ import {
 const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
 
 export const UserDropdown = () => {
-  const navigate = useNavigate();
   const { user } = useUser();
   const { logout } = useLogout();
 
@@ -98,36 +97,32 @@ export const UserDropdown = () => {
 
           <DropdownMenuSeparator className="my-1 bg-border/60" />
 
-          <DropdownMenuItem
-            onClick={() => navigate('/settings/profile')}
-            className={itemClasses}
-          >
-            <User className="w-4 h-4 shrink-0" />
-            <span>Profile</span>
+          <DropdownMenuItem className={itemClasses}>
+            <Link to="/settings/profile">
+              <User className="w-4 h-4 shrink-0" />
+              <span>Profile</span>
+            </Link>
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => navigate('/settings/account')}
-            className={itemClasses}
-          >
-            <Settings className="w-4 h-4 shrink-0" />
-            <span>Account Settings</span>
+          <DropdownMenuItem className={itemClasses}>
+            <Link to="/settings/account">
+              <Settings className="w-4 h-4 shrink-0" />
+              <span>Account Settings</span>
+            </Link>
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => navigate('/settings/billing')}
-            className={itemClasses}
-          >
-            <CreditCard className="w-4 h-4 shrink-0" />
-            <span>Billing</span>
+          <DropdownMenuItem className={itemClasses}>
+            <Link to="/settings/billing">
+              <CreditCard className="w-4 h-4 shrink-0" />
+              <span>Billing</span>
+            </Link>
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            onClick={() => navigate('/pipelines')}
-            className={itemClasses}
-          >
-            <Workflow className="w-4 h-4 shrink-0" />
-            <span>Pipelines</span>
+          <DropdownMenuItem className={itemClasses}>
+            <Link to="/pipelines">
+              <Workflow className="w-4 h-4 shrink-0" />
+              <span>Pipelines</span>
+            </Link>
           </DropdownMenuItem>
 
           {isFreePlan && (
@@ -135,11 +130,13 @@ export const UserDropdown = () => {
               <DropdownMenuSeparator className="my-1 bg-border/60" />
 
               <DropdownMenuItem
-                onClick={() => navigate('/settings/billing')}
+               
                 className="flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer font-medium transition-colors hover:bg-teal-500/20! focus:bg-teal-500/20! data-[highlighted]:bg-teal-500/20! text-teal-600! hover:text-teal-500! focus:text-teal-500! data-[highlighted]:text-teal-500! dark:text-teal-300! dark:hover:text-teal-200! dark:focus:text-teal-200! dark:data-[highlighted]:text-teal-200!"
               >
-                <Zap className="w-4 h-4 fill-current text-current shrink-0" />
-                <span>Activate Pro Plan</span>
+                <Link to="/settings/billing">
+                  <Zap className="w-4 h-4 fill-current text-current shrink-0" />
+                  <span>Activate Pro Plan</span>
+                </Link>
               </DropdownMenuItem>
             </>
           )}
