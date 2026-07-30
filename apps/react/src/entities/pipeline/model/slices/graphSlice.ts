@@ -1,12 +1,12 @@
 import type { StateCreator } from 'zustand';
 import { applyNodeChanges, applyEdgeChanges, addEdge } from '@xyflow/react';
-import type { PipelineStore, GraphState, GraphActions, PipelineNode, PipelineEdge } from '@/entities/pipeline/model/types';
+import type { TPipelineStore, TGraphState, TGraphActions, TPipelineNode, TPipelineEdge } from '@/entities/pipeline/model/types';
 
 export const createGraphSlice: StateCreator<
-  PipelineStore,
+  TPipelineStore,
   [],
   [],
-  GraphState & GraphActions & { past: any[]; future: any[] }
+  TGraphState & TGraphActions & { past: any[]; future: any[] }
 > = (set, get) => ({
   nodes: [],
   edges: [],
@@ -108,7 +108,7 @@ export const createGraphSlice: StateCreator<
     }
 
     set({
-      nodes: applyNodeChanges(changes, nodes) as PipelineNode[],
+      nodes: applyNodeChanges(changes, nodes) as TPipelineNode[],
     });
   },
 
@@ -125,7 +125,7 @@ export const createGraphSlice: StateCreator<
     }));
   },
 
-  copyNodes: (selectedNodes: PipelineNode[], allEdges: PipelineEdge[]) => {
+  copyNodes: (selectedNodes: TPipelineNode[], allEdges: TPipelineEdge[]) => {
     const selectedNodeIds = new Set(selectedNodes.map((n) => n.id));
     const edgesToCopy = allEdges.filter(
       (edge) => selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target)

@@ -1,11 +1,11 @@
 import type { StateCreator } from 'zustand';
-import type { PipelineStore, ExecutionState, ExecutionActions } from '@/entities/pipeline/model/types';
+import type { TPipelineStore, TExecutionState, TExecutionActions } from '@/entities/pipeline/model/types';
 
 export const createExecutionSlice: StateCreator<
-  PipelineStore,
+  TPipelineStore,
   [],
   [],
-  ExecutionState & ExecutionActions
+  TExecutionState & TExecutionActions
 > = (set, get) => ({
   executionStatus: 'idle',
   activeNodeId: null,

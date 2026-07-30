@@ -1,4 +1,3 @@
-// dtos/two-factor-code.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Length } from 'class-validator';
 

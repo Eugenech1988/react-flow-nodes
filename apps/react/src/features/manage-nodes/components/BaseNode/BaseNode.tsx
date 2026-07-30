@@ -1,7 +1,7 @@
 import { useState, useEffect, type CSSProperties } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import { useStore } from '@/entities';
-import { extractVariables } from '@/features/manage-nodes/lib';
+import { extractVariables } from '@/shared/lib';
 import { type BaseNodeProps, type NodeConfigFactory } from './BaseNode.types';
 import {
   buildInitialValues,

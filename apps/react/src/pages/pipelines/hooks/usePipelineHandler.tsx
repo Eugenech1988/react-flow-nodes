@@ -45,8 +45,8 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
   const deletePipeline = useMutation({
     mutationFn: (pipelineId: string) => trpcClient.pipelines.remove.mutate({ id: pipelineId }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
       queryClient.invalidateQueries({ queryKey: trpc.pipelines.list.queryKey() });
+      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
     },
   });
 
