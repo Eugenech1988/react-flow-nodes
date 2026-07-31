@@ -1,5 +1,5 @@
-import { FloatingInput, LocalAlert } from '@/shared/ui';
-import { BackButton, SubmitButton } from '@/shared/ui/buttons';
+import { ArrowLeft, Save } from 'lucide-react';
+import { FloatingInput, LocalAlert, AppButton } from '@/shared/ui';
 import { usePasswordSection } from '../hooks';
 
 export const PasswordSection = () => {
@@ -86,13 +86,22 @@ export const PasswordSection = () => {
         )}
 
         <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
-          <BackButton to="/" text="Back to app" />
+          <AppButton
+            variant="ghost"
+            isLink
+            linkTo="/"
+            icon={ArrowLeft}
+            text="Back to app"
+          />
 
-          <SubmitButton
+          <AppButton
+            type="submit"
+            variant="primary"
             isPending={isPending}
             isDisabled={isPristine}
             text={hasPassword ? 'Change Password' : 'Set Password'}
             pendingText={hasPassword ? 'Saving...' : 'Setting Password...'}
+            icon={Save}
           />
         </div>
       </form>

@@ -7,7 +7,7 @@ import {
   type LoginInputData,
   type RegisterFormInputData,
 } from '@pipeline/contracts';
-import { SubmitButton } from '@/shared/ui';
+import { AppButton } from '@/shared/ui';
 import { SocialLoginButtons } from './SocialLoginButtons';
 import { LoginFields } from './LoginFields';
 import { RegisterFields } from './RegisterFields';
@@ -66,7 +66,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         onGithubClick={onSocialLogin('github')}
       />
 
-      <div className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400 before:h-px before:flex-1 before:bg-slate-300 dark:before:bg-slate-700 after:h-px after:flex-1 after:bg-slate-300 dark:after:bg-slate-700">
+      <div className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-slate-200 dark:text-slate-400 before:h-px before:flex-1 before:bg-slate-200 dark:before:bg-slate-700 after:h-px after:flex-1 after:bg-slate-300 dark:after:bg-slate-700">
         <span className="px-3">or</span>
       </div>
 
@@ -105,7 +105,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 <button
                   type="button"
                   onClick={onForgotPassword}
-                  className="text-xs text-teal-600 dark:text-teal-400 font-medium transition-colors duration-200 hover:underline focus:outline-none ml-auto"
+                  className="text-xs cursor-pointer text-teal-600 dark:text-teal-400 font-medium transition-colors duration-200 hover:underline focus:outline-none ml-auto"
                 >
                   Forgot password?
                 </button>
@@ -119,12 +119,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           )}
         </div>
 
-        <SubmitButton
+        <AppButton
+          type="submit"
+          variant="primary"
           isPending={isSubmitting}
           text={isLogin ? 'Sign In' : 'Register'}
           pendingText="Processing..."
           icon={null}
-          className="w-full text-base h-11 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
+          className="w-full text-base transition-all h-11.5 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
         />
       </form>
     </>

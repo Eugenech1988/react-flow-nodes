@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FloatingInput, LocalAlert, SubmitButton, CancelButton } from '@/shared/ui';
+import { FloatingInput, LocalAlert, AppButton } from '@/shared/ui';
 import {
   DEFAULT_TEXT_CLASSES,
   DEFAULT_LABEL_CLASSES,
@@ -52,7 +52,8 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
           hasError={false}
           alertMessage="Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder."
         />
-        <CancelButton
+        <AppButton
+          variant="secondary"
           onClick={onBack}
           text="Return to login form"
           isDisabled={isLoading}
@@ -73,7 +74,7 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
     >
       {error && <LocalAlert hasError hasSuccess={false} alertMessage={error} />}
 
-      <div className="space-y-1">
+      <div className="space-y-5">
         {isRequest ? (
           <FloatingInput
             {...requestForm.register('email')}
@@ -116,12 +117,17 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <CancelButton
+        <AppButton
+          type="button"
+          variant="secondary"
           onClick={onBack}
           isDisabled={isLoading}
+          text="Cancel"
           className="w-full text-sm"
         />
-        <SubmitButton
+        <AppButton
+          type="submit"
+          variant="primary"
           isPending={isLoading}
           isDisabled={isLoading}
           text={isRequest ? 'Send Link' : 'Update Password'}

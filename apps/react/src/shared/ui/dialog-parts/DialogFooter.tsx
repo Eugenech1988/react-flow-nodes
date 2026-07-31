@@ -1,4 +1,4 @@
-import { CancelButton, SubmitButton, DangerButton } from '@/shared/ui/buttons';
+import { AppButton, type ButtonVariant } from '@/shared/ui';
 import type { LucideIcon } from 'lucide-react';
 
 interface DialogFooterProps {
@@ -8,7 +8,7 @@ interface DialogFooterProps {
   submitText?: string;
   pendingText?: string;
   cancelText?: string;
-  variant?: 'submit' | 'danger';
+  variant?: 'submit' | 'danger' | ButtonVariant;
   icon?: LucideIcon | null;
   withBorder?: boolean;
   isReversedBtns?: boolean;
@@ -35,19 +35,13 @@ export const DialogFooter = ({
   const renderActionBtn = () => {
     if (!showSubmit) return null;
 
-    if (variant === 'danger') {
-      return (
-        <DangerButton
-          onClick={onSubmit || (() => {})}
-          isPending={isPending}
-          text={submitText}
-          icon={icon}
-        />
-      );
-    }
+    const buttonVariant: ButtonVariant =
+      variant === 'submit' ? 'primary' : variant === 'danger' ? 'danger' : (variant as ButtonVariant);
 
     return (
-      <SubmitButton
+      <AppButton
+        type="submit"
+        variant={buttonVariant}
         onClick={onSubmit}
         isPending={isPending}
         isDisabled={isDisabled}
@@ -59,10 +53,16 @@ export const DialogFooter = ({
   };
 
   const renderCancelBtn = () => {
-    if (!showCancel) return null; // Не рендерим, если false
+    if (!showCancel) return null;
 
     return (
-      <CancelButton onClick={onCancel} isDisabled={isPending} text={cancelText} />
+      <AppButton
+        type="button"
+        variant="secondary"
+        onClick={onCancel}
+        isDisabled={isPending}
+        text={cancelText}
+      />
     );
   };
 

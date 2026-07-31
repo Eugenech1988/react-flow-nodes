@@ -1,12 +1,10 @@
-import { useNavigate } from 'react-router-dom';
 import { Zap, CheckCircle2, ShieldCheck, XCircle, CreditCard } from 'lucide-react';
-import { SubmitButton, CancelButton, DangerButton } from '@/shared/ui/buttons';
+import { AppButton } from '@/shared/ui';
 import { PLAN_FEATURES } from '@/pages/settings/model';
 import { useBilling } from '../hooks/useBilling';
 import { useUser } from '@/shared/hooks';
 
 export const SubscriptionCard = () => {
-  const navigate = useNavigate();
   const { isProActive } = useUser();
   const { isProcessing, subscription, cancelSubscription, activateSubscription } = useBilling();
 
@@ -78,34 +76,40 @@ export const SubscriptionCard = () => {
         <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
           {isProActive ? (
             <>
-              <button
-                type="button"
-                onClick={() => navigate('/plans')}
-                className="hover:text-foreground transition-colors underline underline-offset-4 cursor-pointer"
-              >
-                Change plan
-              </button>
-              <DangerButton
+              <AppButton
+                variant="ghost"
+                size="sm"
+                isLink
+                linkTo="/plans"
+                text="Change plan"
+                className="underline underline-offset-4"
+              />
+              <AppButton
+                variant="danger"
                 onClick={cancelSubscription}
+                size="sm"
                 isPending={isProcessing}
                 text="Cancel subscription"
                 icon={XCircle}
-                size="xs"
               />
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <SubmitButton
+              <AppButton
+                variant="primary"
+                size="sm"
                 isPending={isProcessing}
-                isDisabled={false}
                 text="Activate Pro Plan"
                 pendingText="Redirecting..."
                 icon={CreditCard}
                 onClick={activateSubscription}
               />
 
-              <CancelButton
-                onClick={() => navigate('/plans')}
+              <AppButton
+                variant="secondary"
+                size="sm"
+                isLink
+                linkTo="/plans"
                 text="Explore Plans"
               />
             </div>

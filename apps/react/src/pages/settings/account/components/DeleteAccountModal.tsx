@@ -10,11 +10,11 @@ interface DeleteAccountDialogProps {
 }
 
 export const DeleteAccountModal = ({
-                                      isOpen,
-                                      onClose,
-                                      onConfirm,
-                                      isDeletePending = false,
-                                    }: DeleteAccountDialogProps) => {
+                                     isOpen,
+                                     onClose,
+                                     onConfirm,
+                                     isDeletePending = false,
+                                   }: DeleteAccountDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent

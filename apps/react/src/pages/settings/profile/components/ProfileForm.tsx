@@ -1,6 +1,5 @@
-import { Save } from 'lucide-react';
-import { FloatingInput, LocalAlert } from '@/shared/ui';
-import { SubmitButton, BackButton } from '@/shared/ui/buttons';
+import { ArrowLeft, Save } from 'lucide-react';
+import { FloatingInput, LocalAlert, AppButton } from '@/shared/ui';
 import { useUser } from '@/shared/hooks';
 import { useProfileForm } from '../hooks';
 
@@ -78,9 +77,17 @@ export const ProfileForm = () => {
         </div>
 
         <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
-          <BackButton to="/" text="Back to app"/>
+          <AppButton
+            variant="ghost"
+            isLink
+            linkTo="/"
+            icon={ArrowLeft}
+            text="Back to app"
+          />
 
-          <SubmitButton
+          <AppButton
+            type="submit"
+            variant="primary"
             isPending={isPending}
             isDisabled={isPristine}
             text="Save Changes"

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Receipt, Download, Loader2 } from 'lucide-react';
+import { Receipt, Download } from 'lucide-react';
 import { api } from '@/shared/api';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@pipeline/ui';
 import { useBilling } from '../hooks';
-import { TableSkeleton } from '@/shared/ui';
+import { TableSkeleton, AppButton } from '@/shared/ui';
 
 export const InvoiceHistory = () => {
   const { transactions, isTransactionLoading } = useBilling();
@@ -101,18 +101,15 @@ export const InvoiceHistory = () => {
                       </TableCell>
                       <TableCell className="text-right py-3 pr-4">
                         {isPaid ? (
-                          <button
-                            disabled={isDownloading}
+                          <AppButton
+                            variant="ghost"
+                            size="xs"
+                            icon={Download}
+                            text="PDF"
+                            isPending={isDownloading}
                             onClick={() => handleDownloadInvoice(tx.id)}
-                            className="inline-flex items-center gap-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 hover:underline font-medium text-xs transition-colors cursor-pointer bg-transparent border-none disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            {isDownloading ? (
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                            ) : (
-                              <Download className="w-3 h-3" />
-                            )}
-                            <span>PDF</span>
-                          </button>
+                            className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 p-0 h-auto min-h-0 border-none"
+                          />
                         ) : (
                           <span className="text-muted-foreground/50 text-xs">—</span>
                         )}

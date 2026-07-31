@@ -1,10 +1,10 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { useReactFlow } from '@xyflow/react';
 import { toPng } from 'html-to-image';
 
 import { useStore } from '@/entities';
-import type { PipelineNode, PipelineEdge } from '@/entities';
+import type { TPipelineNode, TPipelineEdge } from '@/entities';
 import { usePipelineHandler } from '@/pages/pipelines/hooks';
 import { useUser } from '@/shared/hooks';
 
@@ -23,9 +23,9 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
   const lastRunStatus = useStore((state) => state.lastRunStatus);
   const setSaveAction = useStore((state) => state.setSaveAction);
 
-  const { fitView } = useReactFlow<PipelineNode, PipelineEdge>();
+  const { fitView } = useReactFlow<TPipelineNode, TPipelineEdge>();
 
-  const captureScreenshot = useCallback(async (): Promise<string | undefined> => {
+  const captureScreenshot = async (): Promise<string | undefined> => {
     const viewportElement = wrapperRef.current?.querySelector<HTMLElement>('.react-flow__viewport');
     if (!viewportElement) return undefined;
 
@@ -34,8 +34,8 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
         backgroundColor: resolvedTheme === 'dark' ? '#030712' : '#f1f5f9',
         quality: 0.8,
         fontEmbedCSS: '',
-        filter: (node) => {
-          const classNames = node?.className;
+        filter: (node: Node) => {
+          const classNames = (node as HTMLElement)?.className;
           return !(typeof classNames === 'string' && classNames.includes('react-flow__controls'));
         },
       });
@@ -43,9 +43,9 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
       console.error('Failed to capture canvas screenshot:', error);
       return undefined;
     }
-  }, [wrapperRef, resolvedTheme]);
+  };
 
-  const handleSavePipeline = useCallback(async () => {
+  const handleSavePipeline = async () => {
     const id = user?.currentPipelineId || user?.currentPipeline?.id;
     if (!id) return;
 
@@ -66,15 +66,15 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
         edges,
       },
       screenshotBase64,
-      ...(lastRunAt && { lastRunAt: new Date(lastRunAt).toISOString() as unknown as Date }),
+      ...(lastRunAt && { lastRunAt: new Date(lastRunAt).toISOString() }),
       ...(lastRunStatus && { lastRunStatus }),
     });
-  }, [user, fitView, captureScreenshot, nodes, edges, lastRunAt, lastRunStatus, updatePipeline]);
+  };
 
   useEffect(() => {
     setSaveAction(handleSavePipeline);
     return () => setSaveAction(null);
-  }, [handleSavePipeline, setSaveAction]);
+  }, [setSaveAction, handleSavePipeline]);
 
   return {
     handleSavePipeline,

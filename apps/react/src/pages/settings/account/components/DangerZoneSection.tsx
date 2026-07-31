@@ -1,4 +1,4 @@
-import { DangerButton } from '@/shared/ui/buttons';
+import { AppButton } from '@/shared/ui';
 import { LocalAlert } from '@/shared/ui';
 import { DeleteAccountModal } from './DeleteAccountModal';
 import { useDangerZoneSection } from '../hooks';
@@ -8,6 +8,7 @@ export const DangerZoneSection = () => {
     isOpen,
     isPending,
     alert,
+    open,
     close,
     confirm
   } = useDangerZoneSection();
@@ -36,11 +37,11 @@ export const DangerZoneSection = () => {
           </p>
         </div>
 
-        <DangerButton
+        <AppButton
+          variant="danger"
           onClick={open}
           isPending={isPending}
           text="Delete Account"
-          size="xs"
         />
       </div>
 

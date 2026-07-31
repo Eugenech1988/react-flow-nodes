@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ShieldCheck, Loader2, Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent, Input } from '@pipeline/ui';
-import { DialogHeader, DialogBody, DialogFooter, SubmitButton } from '@/shared/ui';
+import { DialogHeader, DialogBody, DialogFooter, AppButton } from '@/shared/ui';
 import {
   twoFactorTotpOnlySchema,
   twoFactorCodeOrBackupSchema,
@@ -115,21 +115,22 @@ export const TwoFactorModal = ({
             </div>
 
             <div className="flex gap-2 pt-2">
-              <button
+              <AppButton
                 type="button"
+                variant="secondary"
                 onClick={handleCopyCodes}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-border bg-background hover:bg-muted/50 transition-colors cursor-pointer"
-              >
-                {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                {copied ? 'Copied to clipboard' : 'Copy codes'}
-              </button>
+                className="flex-1 text-sm"
+                text={copied ? 'Copied to clipboard' : 'Copy codes'}
+                icon={copied ? Check : Copy}
+              />
 
-              <SubmitButton
-                isPending={false}
+              <AppButton
+                type="button"
+                variant="primary"
+                onClick={handleClose}
+                className="flex-1 text-sm"
                 text="Done"
                 icon={null}
-                onClick={handleClose}
-                className="flex-1 py-2 text-sm rounded-lg h-auto"
               />
             </div>
           </div>
@@ -236,7 +237,7 @@ export const TwoFactorModal = ({
               submitText={isEnable ? 'Enable' : 'Disable'}
               pendingText="Verifying..."
               cancelText="Cancel"
-              variant={isEnable ? 'submit' : 'danger'}
+              variant={isEnable ? 'primary' : 'danger'}
             />
           </form>
         )}

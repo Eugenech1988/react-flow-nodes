@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
 import { Loader2, Layers, Sparkles } from 'lucide-react';
+import { AppButton } from '@/shared/ui';
 import { useBilling } from './hooks/useBilling';
 import { SubscriptionCard, UsageStats, PaymentMethod, InvoiceHistory } from './components';
 
@@ -11,7 +11,6 @@ export const BillingTab = () => {
     dismissSuccess,
     dismissError,
   } = useBilling();
-  const navigate = useNavigate();
 
   if (isSubscriptionLoading) {
     return (
@@ -32,39 +31,40 @@ export const BillingTab = () => {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => navigate('/plans')}
-          className="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl border border-border bg-card hover:bg-muted text-foreground text-xs font-medium transition-all cursor-pointer shadow-xs"
-        >
-          <Layers className="w-4 h-4 text-teal-500" />
-          Compare All Plans
-        </button>
+        <AppButton
+          variant="secondary"
+          size="sm"
+          isLink
+          linkTo="/plans"
+          icon={Layers}
+          iconClassName="text-teal-400"
+          text="Compare All Plans"
+        />
       </div>
 
       {successMessage && (
         <div className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-600 dark:text-teal-400 text-sm flex items-center justify-between">
           <span>{successMessage}</span>
-          <button
-            type="button"
+          <AppButton
+            variant="ghost"
+            size="xs"
             onClick={dismissSuccess}
-            className="text-xs font-semibold hover:underline cursor-pointer"
-          >
-            Dismiss
-          </button>
+            text="Dismiss"
+            className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-semibold underline p-0 h-auto min-h-0 border-none"
+          />
         </div>
       )}
 
       {errorMessage && (
         <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-sm flex items-center justify-between">
           <span>{errorMessage}</span>
-          <button
-            type="button"
+          <AppButton
+            variant="ghost"
+            size="xs"
             onClick={dismissError}
-            className="text-xs font-semibold hover:underline cursor-pointer"
-          >
-            Dismiss
-          </button>
+            text="Dismiss"
+            className="text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 font-semibold underline p-0 h-auto min-h-0 border-none"
+          />
         </div>
       )}
 
@@ -91,13 +91,15 @@ export const BillingTab = () => {
           For dedicated infrastructure workloads, tailored execution timeout scales, and customized
           deployment topology models.
         </p>
-        <button
-          type="button"
-          onClick={() => navigate('/plans')}
-          className="text-xs font-medium text-teal-600 dark:text-teal-400 hover:underline cursor-pointer inline-flex items-center gap-1"
-        >
-          View Enterprise Plan details
-        </button>
+
+        <AppButton
+          variant="ghost"
+          size="xs"
+          isLink
+          linkTo="/plans"
+          text="View Enterprise Plan details"
+          className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 underline p-0 h-auto min-h-0 border-none justify-start"
+        />
       </div>
     </div>
   );

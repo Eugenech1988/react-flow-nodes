@@ -1,6 +1,7 @@
 import { CreditCard, ExternalLink } from 'lucide-react';
 import { useBilling } from '../hooks';
 import { useUser } from '@/shared/hooks';
+import { AppButton } from '@/shared/ui';
 
 export const PaymentMethod = () => {
   const { isProActive } = useUser();
@@ -22,13 +23,15 @@ export const PaymentMethod = () => {
               <p className="text-[11px] text-muted-foreground">Expires 12/28</p>
             </div>
           </div>
-          <button
-            type="button"
+
+          <AppButton
+            variant="ghost"
+            size="xs"
+            icon={ExternalLink}
+            text="Update card details"
             onClick={cancelSubscription}
-            className="text-xs text-teal-600 dark:text-teal-400 hover:underline flex items-center gap-1 font-medium cursor-pointer"
-          >
-            Update card details <ExternalLink className="w-3 h-3" />
-          </button>
+            className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 p-0 h-auto min-h-0 border-none flex-row-reverse"
+          />
         </div>
       ) : (
         <p className="text-xs text-muted-foreground leading-relaxed">
