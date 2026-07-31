@@ -68,3 +68,7 @@ export interface TUser {
 
 export type TRoundedSize = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
+export type AlertState = {
+  type: 'success' | 'error';
+  message: string;
+} | null
