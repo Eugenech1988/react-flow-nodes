@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUser } from '@/shared/hooks';
 import { Workflow, Image as ImageIcon, Trash2, Upload } from 'lucide-react';
@@ -11,14 +11,16 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  AppButton,
 } from '@/shared/ui';
 import { usePipelineHandler } from '@/pages/pipelines/hooks';
 import {
   createPipelineInputSchema,
   updatePipelineInputSchema,
+  type TCreatePipelineInputData,
+  type TUpdatePipelineInputData,
 } from '@pipeline/contracts';
 import type { TPipeline } from '@/shared/lib';
-import { z } from 'zod';
 
 interface TPipelineDialogProps {
   isOpen: boolean;
@@ -29,9 +31,8 @@ interface TPipelineDialogProps {
 
 type TPipelineStatusOption = 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'ARCHIVED';
 
-type TCreateFormData = z.infer<typeof createPipelineInputSchema>;
-type TUpdateFormData = z.infer<typeof updatePipelineInputSchema>;
-type TFormData = TCreateFormData & TUpdateFormData & {
+type TFormData = TCreatePipelineInputData &
+  Partial<TUpdatePipelineInputData> & {
   status?: TPipelineStatusOption;
 };
 
@@ -42,12 +43,12 @@ const STATUS_OPTIONS: { value: TPipelineStatusOption; label: string }[] = [
   { value: 'ARCHIVED', label: 'Archived' },
 ];
 
-export const PipelineDialog = ({
-                                 isOpen,
-                                 onClose,
-                                 mode = 'create',
-                                 initialData,
-                               }: TPipelineDialogProps) => {
+export const PipelineModal = ({
+                                isOpen,
+                                onClose,
+                                mode = 'create',
+                                initialData,
+                              }: TPipelineDialogProps) => {
   const { user } = useUser();
   const isCreate = mode === 'create';
 
@@ -60,6 +61,8 @@ export const PipelineDialog = ({
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
 
+  const activeSchema = isCreate ? createPipelineInputSchema : updatePipelineInputSchema;
+
   const {
     register,
     handleSubmit,
@@ -67,9 +70,7 @@ export const PipelineDialog = ({
     control,
     formState: { errors },
   } = useForm<TFormData>({
-    resolver: zodResolver(
-      isCreate ? createPipelineInputSchema : updatePipelineInputSchema
-    ) as any,
+    resolver: zodResolver(activeSchema) as unknown as Resolver<TFormData>,
     defaultValues: {
       name: '',
       description: '',
@@ -137,20 +138,19 @@ export const PipelineDialog = ({
     if (isCreate) {
       if (!user?.id) return;
       createPipeline.mutate(
-        { userId: user.id, data, file: file ?? undefined },
+        { userId: user.id, data: data as TCreatePipelineInputData, file: file ?? undefined },
         { onSuccess: handleClose }
       );
     } else if (initialData?.id) {
-      const updatePayload = {
-        id: initialData.id,
-        name: data.name,
-        description: data.description,
-        status: data.status,
-      };
-
-      updatePipeline.mutate(updatePayload as any, {
-        onSuccess: handleClose,
-      });
+      updatePipeline.mutate(
+        {
+          id: initialData.id,
+          name: data.name,
+          description: data.description,
+          status: data.status,
+        },
+        { onSuccess: handleClose }
+      );
     }
   };
 
@@ -165,9 +165,7 @@ export const PipelineDialog = ({
         <DialogHeader
           title={isCreate ? 'Create Pipeline' : 'Update Pipeline'}
           description={
-            isCreate
-              ? 'Configure your new automation workflow'
-              : 'Edit your pipeline details'
+            isCreate ? 'Configure your new automation workflow' : 'Edit your pipeline details'
           }
           icon={<Workflow className="w-6 h-6 text-teal-600 dark:text-teal-400" />}
           onClose={handleClose}
@@ -203,10 +201,10 @@ export const PipelineDialog = ({
                     label="Status"
                     rounded="lg"
                     value={field.value || 'DRAFT'}
-                    onChange={(val: any) => {
+                    onChange={(val) => {
                       const value =
                         typeof val === 'object' && val !== null
-                          ? val.target?.value ?? val.value
+                          ? (val as React.ChangeEvent<HTMLSelectElement>).target?.value ?? val
                           : val;
                       field.onChange(value);
                     }}
@@ -238,9 +236,7 @@ export const PipelineDialog = ({
                         <ImageIcon className="w-5 h-5 text-teal-600 dark:text-teal-400" />
                       </div>
                       <div>
-                        <p className="text-xs font-medium text-foreground">
-                          Select Screenshot
-                        </p>
+                        <p className="text-xs font-medium text-foreground">Select Screenshot</p>
                         <p className="text-[10px] text-muted-foreground mt-0.5">
                           PNG, JPG or WEBP up to 5MB
                         </p>
@@ -254,25 +250,25 @@ export const PipelineDialog = ({
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-[2px]">
-                        <button
-                          type="button"
+                        <AppButton
+                          variant="ghost"
+                          size="xs"
+                          text="Change"
+                          icon={Upload}
                           onClick={(e) => {
-                            e.stopPropagation();
+                            e?.stopPropagation();
                             fileInputRef.current?.click();
                           }}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/25 hover:bg-white/35 text-white text-xs font-medium transition-colors backdrop-blur-md"
-                        >
-                          <Upload className="w-3.5 h-3.5" />
-                          <span>Change</span>
-                        </button>
-                        <button
-                          type="button"
+                          className="bg-white/25 hover:bg-white/35 text-white border-none backdrop-blur-md"
+                        />
+                        <AppButton
+                          variant="danger"
+                          size="xs"
+                          text="Delete"
+                          icon={Trash2}
                           onClick={handleRemoveFile}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/85 hover:bg-red-500 text-white text-xs font-medium transition-colors backdrop-blur-md"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          <span>Delete</span>
-                        </button>
+                          className="backdrop-blur-md"
+                        />
                       </div>
                     </>
                   )}

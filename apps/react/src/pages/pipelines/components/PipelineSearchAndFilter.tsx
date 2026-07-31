@@ -1,6 +1,6 @@
 import { Search, ArrowUpDown } from 'lucide-react';
 import { TAB_OPTIONS, SORT_OPTIONS, type TTabType, type TSortOption } from '@/pages/pipelines/model';
-import { FloatingInput, Tabs } from '@/shared/ui';
+import { FloatingInput, Tabs, AppButton } from '@/shared/ui';
 import { usePipelines } from '@/shared/hooks';
 
 interface PipelineSearchAndFilterProps {
@@ -28,19 +28,15 @@ export const PipelineSearchAndFilter = ({
     onSortChange(sortBy, sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
-  const formattedTabs = TAB_OPTIONS.map((tab) => ({
-    id: tab.id,
-    label: tab.label,
-  }));
-
   if (!pipelines || pipelines.length === 0) {
     return null;
   }
+
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
       <div className="relative w-full sm:w-80 group">
         <FloatingInput
-          rounded='xl'
+          rounded="xl"
           label="Search pipelines"
           value={searchQuery}
           onChange={onSearchChange}
@@ -50,8 +46,8 @@ export const PipelineSearchAndFilter = ({
 
       <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
         <Tabs
-          tabs={formattedTabs}
-          layoutId='pipelines-search-tabs'
+          tabs={TAB_OPTIONS}
+          layoutId="pipelines-search-tabs"
           currentTab={statusFilter}
           onTabChange={(id) => onStatusFilterChange(id as TTabType)}
           capitalizeLabels
@@ -69,15 +65,14 @@ export const PipelineSearchAndFilter = ({
               </option>
             ))}
           </select>
-          <button
-            type="button"
+
+          <AppButton
+            variant="ghost"
+            size="xs"
+            icon={ArrowUpDown}
             onClick={toggleSortOrder}
-            className="p-1.5 rounded-lg hover:bg-muted/60 transition-colors text-muted-foreground hover:text-foreground cursor-pointer"
-            aria-label="Toggle sort order"
-          >
-            <ArrowUpDown className="w-4 h-4" />
-            <span className="sr-only">{sortOrder === 'asc' ? 'Ascending' : 'Descending'}</span>
-          </button>
+            className="p-1.5 h-auto min-h-0 rounded-lg"
+          />
         </div>
       </div>
     </div>

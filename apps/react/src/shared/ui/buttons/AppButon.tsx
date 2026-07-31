@@ -12,12 +12,12 @@ interface AppButtonProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
   icon?: ElementType | null;
-  iconClassName?: string; // <-- Новый проп для кастомизации иконки (цвет, стили)
+  iconClassName?: string;
   isPending?: boolean;
   pendingText?: string;
   isDisabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   isLink?: boolean;
   linkTo?: string;

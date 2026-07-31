@@ -10,13 +10,13 @@ import {
   PauseCircle,
   Archive,
   ImageOff,
-  Loader2
+  Loader2,
 } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '@pipeline/ui';
 import type { TPipeline } from '@/shared/lib';
 import { usePipelineHandler } from '@/pages/pipelines/hooks';
@@ -31,10 +31,9 @@ interface TPipelineCardProps {
 export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
   const openUpdateModal = usePipelineDialogStore((state) => state.openUpdateModal);
   const navigate = useNavigate();
+
   const { deletePipeline, setCurrentPipeline } = usePipelineHandler({
-    onSetCurrentSuccess: () => {
-      navigate('/');
-    }
+    onSetCurrentSuccess: () => navigate('/'),
   });
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -59,7 +58,8 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: deletePipeline.isPending ? 0.5 : 1 }}
       transition={{ duration: 0.15, ease: 'easeOut' }}
-      className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between relative pointer-events-auto"
+      className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between relative pointer-events-auto cursor-pointer"
+      onClick={handleCardClick}
     >
       {deletePipeline.isPending && (
         <div className="absolute inset-0 bg-background/50 backdrop-blur-xs z-10 flex items-center justify-center">
@@ -67,7 +67,7 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
         </div>
       )}
 
-      <div className="space-y-3 p-5 cursor-pointer" onClick={handleCardClick}>
+      <div className="space-y-3 p-5">
         <div className="space-y-1.5">
           <div className="flex items-start justify-between gap-2">
             <span
@@ -79,8 +79,7 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
 
             <div onClick={(e) => e.stopPropagation()}>
               <DropdownMenu>
-                <DropdownMenuTrigger
-                  className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors outline-none cursor-pointer shrink-0">
+                <DropdownMenuTrigger className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors outline-none cursor-pointer shrink-0">
                   <MoreVertical className="w-4 h-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -120,12 +119,10 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
                 alt={pipeline.name}
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
-              <div
-                className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             </>
           ) : (
-            <div
-              className="h-full w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/60 bg-muted/20 select-none">
+            <div className="h-full w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/60 bg-muted/20 select-none">
               <ImageOff className="w-12 h-12 stroke-[1.5]" />
               <span className="text-base font-medium tracking-wide">No screenshot</span>
             </div>
@@ -136,29 +133,25 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
       <div className="px-5 py-3.5 border-t border-border/50 bg-muted/20 flex items-center justify-between text-xs">
         <div className="flex items-center gap-1.5">
           {status === 'ACTIVE' && (
-            <span
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
               <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
               Active
             </span>
           )}
           {status === 'PAUSED' && (
-            <span
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
               <PauseCircle className="w-3 h-3" />
               Paused
             </span>
           )}
           {status === 'ARCHIVED' && (
-            <span
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20">
               <Archive className="w-3 h-3" />
               Archived
             </span>
           )}
           {(status === 'DRAFT' || !status) && (
-            <span
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-muted-foreground border border-border/50">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-muted-foreground border border-border/50">
               Draft
             </span>
           )}

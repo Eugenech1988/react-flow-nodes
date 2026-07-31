@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
 import { Sparkles, Plus } from 'lucide-react';
-import { SubmitButton } from '@/shared/ui';
+import { AppButton } from '@/shared/ui';
 import { usePipelineDialogStore } from '@/pages/pipelines/model';
 
 interface EmptyStateProps {
   hasSearchQuery: boolean;
+  isTotalEmpty: boolean;
 }
 
-export const EmptyState = ({ hasSearchQuery }: EmptyStateProps) => {
+export const EmptyState = ({ hasSearchQuery, isTotalEmpty }: EmptyStateProps) => {
   const openCreateModal = usePipelineDialogStore((state) => state.openCreateModal);
 
   return (
@@ -29,13 +30,13 @@ export const EmptyState = ({ hasSearchQuery }: EmptyStateProps) => {
             : 'Get started by creating your first automation pipeline.'}
         </p>
       </div>
-      {!hasSearchQuery && (
-        <SubmitButton
-          isPending={false}
-          onClick={openCreateModal}
+      {isTotalEmpty && (
+        <AppButton
+          variant="primary"
+          size="sm"
           text="Create Pipeline"
           icon={Plus}
-          className="text-sm font-medium text-white bg-teal-600 hover:bg-teal-500 rounded-lg cursor-pointer"
+          onClick={openCreateModal}
         />
       )}
     </motion.div>

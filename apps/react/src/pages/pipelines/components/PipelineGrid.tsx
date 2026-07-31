@@ -6,11 +6,22 @@ import type { TPipeline } from '@/shared/lib';
 interface PipelineGridProps {
   pipelines: TPipeline[];
   searchQuery: string;
+  /** Общее количество пайплайнов до примененных фильтров и поиска */
+  totalPipelinesCount: number;
 }
 
-export const PipelineGrid = ({ pipelines, searchQuery }: PipelineGridProps) => {
+export const PipelineGrid = ({
+                               pipelines,
+                               searchQuery,
+                               totalPipelinesCount
+                             }: PipelineGridProps) => {
   if (pipelines.length === 0) {
-    return <EmptyState hasSearchQuery={searchQuery.length > 0} />;
+    return (
+      <EmptyState
+        hasSearchQuery={searchQuery.length > 0}
+        isTotalEmpty={totalPipelinesCount === 0}
+      />
+    );
   }
 
   return (

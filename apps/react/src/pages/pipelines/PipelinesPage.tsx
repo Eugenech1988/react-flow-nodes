@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { usePipelines } from '@/shared/hooks';
 import { usePipelinesFilter } from './hooks';
 import { PAGE_VARIANTS } from '@/shared/lib';
-import { PipelineHeader, PipelineSearchAndFilter, PipelineGrid, PipelineDialog } from './components';
+import { PipelineHeader, PipelineSearchAndFilter, PipelineGrid, PipelineModal } from './components';
 import type { TPipeline } from '@/shared/lib';
 import { usePipelineDialogStore } from '@/pages/pipelines/model';
 
@@ -44,7 +44,7 @@ export const PipelinesPage = () => {
           }}
         />
         <PipelineGrid pipelines={filteredPipelines} searchQuery={searchQuery}/>
-        <PipelineDialog
+        <PipelineModal
           isOpen={isOpen}
           mode={mode}
           initialData={pipelineToEdit}

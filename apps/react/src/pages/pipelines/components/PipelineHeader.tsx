@@ -1,9 +1,10 @@
 import { Workflow, Plus } from 'lucide-react';
-import { SubmitButton } from '@/shared/ui/buttons';
+import { AppButton } from '@/shared/ui';
 import { usePipelineDialogStore } from '@/pages/pipelines/model';
 
 export const PipelineHeader = () => {
   const openCreateModal = usePipelineDialogStore((state) => state.openCreateModal);
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
       <div className="space-y-1">
@@ -16,11 +17,10 @@ export const PipelineHeader = () => {
         </p>
       </div>
 
-      <SubmitButton
-        isPending={false}
-        isDisabled={false}
+      <AppButton
+        variant="primary"
+        size="md"
         text="Create Pipeline"
-        pendingText="Creating..."
         icon={Plus}
         onClick={openCreateModal}
       />
