@@ -69,11 +69,23 @@ export const useProfileForm = () => {
     });
   };
 
-  const watchedFirstName = form.watch('firstName') ?? '';
-  const watchedLastName = form.watch('lastName') ?? '';
+  console.log(user);
+
+  const watchedFirstName = form.watch('firstName')?.trim() ?? '';
+  const watchedLastName = form.watch('lastName')?.trim() ?? '';
   const watchedJobTitle = form.watch('jobTitle') ?? '';
 
-  const initials = `${watchedFirstName[0] || ''}${watchedLastName[0] || ''}`.toUpperCase();
+  const nickname = user?.profile?.nickName;
+
+  let initials = `${watchedFirstName[0] || ''}${watchedLastName[0] || ''}`.toUpperCase();
+
+  if (!initials && nickname) {
+    initials = nickname.slice(0, 2).toUpperCase();
+  }
+
+  if (!initials) {
+    initials = 'U';
+  }
 
   return {
     form,
@@ -83,6 +95,7 @@ export const useProfileForm = () => {
     handleAvatarClick,
     onSubmit: form.handleSubmit(onSubmit),
     initials,
+    nickname,
     firstName: watchedFirstName,
     lastName: watchedLastName,
     jobTitle: watchedJobTitle,
