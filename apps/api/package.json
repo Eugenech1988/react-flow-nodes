@@ -24,6 +24,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.29",
     "@nestjs-modules/mailer": "^2.3.7",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
@@ -38,12 +39,14 @@
     "@prisma/client": "^7.8.0",
     "@trpc/server": "^11.18.0",
     "@types/qrcode": "^1.5.6",
+    "ai": "^7.0.44",
     "argon2": "^0.44.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "handlebars": "^4.7.9",
+    "inngest": "^4.14.0",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.2.0",
     "nodemailer": "^9.0.3",
