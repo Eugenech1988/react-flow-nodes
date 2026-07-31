@@ -13,13 +13,13 @@ export const ProfileForm = () => {
     isPending,
     alert
   } = useProfileForm();
-  const {register, formState: {errors}} = form;
 
-  const rootError = errors.root?.message || errors['' as keyof typeof errors]?.message;
+  const { register, formState: { errors } } = form;
 
+  const rootError = errors.root?.message;
   const hasError = alert?.type === 'error' || !!rootError;
   const hasSuccess = alert?.type === 'success';
-  const alertMessage = alert?.message || (rootError as string);
+  const alertMessage = alert?.message || rootError || '';
 
   return (
     <div className="border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
