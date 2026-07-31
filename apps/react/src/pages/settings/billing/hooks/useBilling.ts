@@ -4,11 +4,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSubscription, useTransactions } from '@/shared/hooks';
 import { useTRPC } from '@/shared/api';
 
-const parseErrorMessage = (error: any, fallback: string) => {
-  const msg = error?.response?.data?.message;
-  return (Array.isArray(msg) ? msg.join(', ') : msg) || error?.message || fallback;
-};
-
 export const useBilling = () => {
   const queryClient = useQueryClient();
   const trpc = useTRPC();
@@ -17,7 +12,7 @@ export const useBilling = () => {
   const { subscription, isLoading: isSubscriptionLoading } = useSubscription();
   const { transactions, isLoading: isTransactionLoading } = useTransactions();
 
-  const [bannerMessage, setBannerMessage] = useState<{ error: string | null; success: string | null }>(() => {
+  const [banner, setBanner] = useState<{ error: string | null; success: string | null }>(() => {
     if (searchParams.get('success') === 'true') {
       return { error: null, success: 'Payment successful! Your Pro plan is now active.' };
     }
@@ -28,66 +23,57 @@ export const useBilling = () => {
   });
 
   useEffect(() => {
-    if (searchParams.get('success') === 'true') {
-      queryClient.invalidateQueries({ queryKey: trpc.billing.subscription.queryKey() });
-      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
-    }
-  }, [searchParams, queryClient]);
-
-  const clearQueryParams = () => {
     if (searchParams.has('success') || searchParams.has('canceled')) {
-      searchParams.delete('success');
-      searchParams.delete('canceled');
-      setSearchParams(searchParams, { replace: true });
+      if (searchParams.get('success') === 'true') {
+        queryClient.invalidateQueries(trpc.billing.subscription.queryFilter());
+        queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+      }
+
+      const newParams = new URLSearchParams(searchParams);
+      newParams.delete('success');
+      newParams.delete('canceled');
+      setSearchParams(newParams, { replace: true });
     }
-  };
+  }, [searchParams, setSearchParams, queryClient, trpc]);
 
   const checkoutMutation = useMutation(
     trpc.billing.checkout.mutationOptions({
-      onMutate: () => {
-      clearQueryParams();
-      setBannerMessage({ error: null, success: null });
-      },
+      onMutate: () => setBanner({ error: null, success: null }),
       onSuccess: (data) => {
-        if (data.url) window.location.href = data.url;
-        else setBannerMessage({ error: 'Failed to retrieve payment link from server.', success: null });
+        if (data?.url) {
+          window.location.href = data.url;
+        } else {
+          setBanner({ error: 'Failed to retrieve payment link.', success: null });
+        }
       },
-    }),
+      onError: (error) => {
+        setBanner({ error: error.message || 'Failed to initialize payment.', success: null });
+      },
+    })
   );
 
   const cancelMutation = useMutation(
     trpc.billing.cancel.mutationOptions({
-      onMutate: () => {
-      clearQueryParams();
-      setBannerMessage({ error: null, success: null });
+      onMutate: () => setBanner({ error: null, success: null }),
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.billing.subscription.queryFilter());
+        await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+        setBanner({ error: null, success: 'Subscription successfully canceled.' });
       },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: trpc.billing.subscription.queryKey() });
-        queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
+      onError: (error) => {
+        setBanner({ error: error.message || 'Failed to cancel subscription.', success: null });
       },
-    }),
+    })
   );
 
-  const errorMessage =
-    (checkoutMutation.error && parseErrorMessage(checkoutMutation.error, 'Failed to initialize payment.')) ||
-    (cancelMutation.error && parseErrorMessage(cancelMutation.error, 'Failed to cancel subscription.')) ||
-    bannerMessage.error;
-
-  const successMessage = cancelMutation.isSuccess
-    ? 'Subscription successfully canceled.'
-    : bannerMessage.success;
-
-  const isProcessing = checkoutMutation.isPending || cancelMutation.isPending;
-
   const dismissError = () => {
-    setBannerMessage((prev) => ({ ...prev, error: null }));
+    setBanner((prev) => ({ ...prev, error: null }));
     checkoutMutation.reset();
     cancelMutation.reset();
   };
 
   const dismissSuccess = () => {
-    setBannerMessage((prev) => ({ ...prev, success: null }));
-    cancelMutation.reset();
+    setBanner((prev) => ({ ...prev, success: null }));
   };
 
   return {
@@ -95,9 +81,9 @@ export const useBilling = () => {
     isSubscriptionLoading,
     transactions,
     isTransactionLoading,
-    isProcessing,
-    errorMessage,
-    successMessage,
+    isProcessing: checkoutMutation.isPending || cancelMutation.isPending,
+    errorMessage: banner.error,
+    successMessage: banner.success,
     activateSubscription: () => checkoutMutation.mutate('PRO'),
     cancelSubscription: () => cancelMutation.mutate(),
     dismissSuccess,

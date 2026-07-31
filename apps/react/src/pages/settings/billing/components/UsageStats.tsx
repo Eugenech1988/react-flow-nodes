@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useUser } from '@/shared/hooks';
 import { PLAN_USAGE_STATS } from '@/pages/settings/model';
-import { UsageChartModal } from './UsageChartModal';
+import { UsageChartModal, type UsageStatItem } from './UsageChartModal';
 
 export const UsageStats = () => {
   const { isProActive } = useUser();
-  const [selectedStat, setSelectedStat] = useState<any | null>(null);
+  const [selectedStat, setSelectedStat] = useState<UsageStatItem | null>(null);
 
   return (
     <>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Receipt, Download, Loader2 } from 'lucide-react';
 import { api } from '@/shared/api';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@pipeline/ui';
-import { useBilling } from '@/pages/settings/billing/hooks';
+import { useBilling } from '../hooks';
 import { TableSkeleton } from '@/shared/ui';
 
 export const InvoiceHistory = () => {
@@ -12,11 +12,10 @@ export const InvoiceHistory = () => {
   const handleDownloadInvoice = async (transactionId: string) => {
     try {
       setDownloadingId(transactionId);
-
       const baseUrl = import.meta.env.VITE_API_URL || '';
-      const apiUrl = `${baseUrl}/billing/transactions/${transactionId}/invoice`;
-
-      const blob = await api.getBlob(apiUrl, {credentials: 'include'});
+      const blob = await api.getBlob(`${baseUrl}/billing/transactions/${transactionId}/invoice`, {
+        credentials: 'include',
+      });
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -27,7 +26,7 @@ export const InvoiceHistory = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error downloading invoice:', error);
+      console.error('Failed to download invoice:', error);
     } finally {
       setDownloadingId(null);
     }
@@ -60,11 +59,8 @@ export const InvoiceHistory = () => {
             <TableBody>
               {transactions && transactions.length > 0 ? (
                 transactions.map((tx) => {
-                  const statusStr = String(tx.status);
-                  const isPaid = statusStr === 'SUCCESS' || statusStr === 'PAID';
-                  const isPending = statusStr === 'PENDING';
-
-                  const statusText = isPaid ? 'Paid' : tx.status;
+                  const isPaid = tx.status === 'SUCCESS' || tx.status === 'PAID';
+                  const isPending = tx.status === 'PENDING';
                   const rawId = tx.invoiceId || tx.id;
                   const displayId =
                     rawId.length > 14 ? `${rawId.slice(0, 8)}...${rawId.slice(-4)}` : rawId;
@@ -100,7 +96,7 @@ export const InvoiceHistory = () => {
                                 : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
                           }`}
                         >
-                          {statusText}
+                          {isPaid ? 'Paid' : tx.status}
                         </span>
                       </TableCell>
                       <TableCell className="text-right py-3 pr-4">

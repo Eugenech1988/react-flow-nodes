@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   AreaChart,
   Area,
@@ -9,7 +9,6 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { motion } from 'framer-motion';
-
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
 
@@ -25,12 +24,17 @@ const MOCK_CHART_DATA = [
 
 type TimeRange = '7d' | '30d' | '90d';
 
+export interface UsageStatItem {
+  label: string;
+  value: string;
+  percentage: number;
+  barColor: string;
+  sub: string;
+  icon?: ReactNode;
+}
+
 interface UsageChartModalProps {
-  stat: {
-    label: string;
-    value: string;
-    icon?: React.ReactNode;
-  } | null;
+  stat: UsageStatItem | null;
   onClose: () => void;
 }
 

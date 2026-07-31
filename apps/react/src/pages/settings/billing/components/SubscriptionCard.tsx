@@ -1,25 +1,15 @@
+import { useNavigate } from 'react-router-dom';
 import { Zap, CheckCircle2, ShieldCheck, XCircle, CreditCard } from 'lucide-react';
 import { SubmitButton, CancelButton, DangerButton } from '@/shared/ui/buttons';
 import { PLAN_FEATURES } from '@/pages/settings/model';
-import { useBilling } from '@/pages/settings/billing/hooks';
-import { useNavigate } from 'react-router-dom';
+import { useBilling } from '../hooks/useBilling';
 import { useUser } from '@/shared/hooks';
 
 export const SubscriptionCard = () => {
-   const {
-     isProcessing,
-     subscription,
-     cancelSubscription,
-     activateSubscription
-   } = useBilling();
-   const { isProActive } = useUser();
-    const navigate = useNavigate();
-    const onExplorePlans = () => {
-      navigate('/plans')
-    }
-    const onComparePlans = () => {
-      navigate('/plans')
-    }
+  const navigate = useNavigate();
+  const { isProActive } = useUser();
+  const { isProcessing, subscription, cancelSubscription, activateSubscription } = useBilling();
+
   return (
     <div
       className={`relative border bg-card rounded-xl p-6 shadow-xs overflow-hidden backdrop-blur-xs transition-all ${
@@ -28,7 +18,7 @@ export const SubscriptionCard = () => {
     >
       <div
         className={`absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl pointer-events-none ${
-          isProActive ? 'bg-teal-500/10' : 'bg-linear-to-br from-teal-500/5 to-teal-600/5'
+          isProActive ? 'bg-teal-500/10' : 'bg-gradient-to-br from-teal-500/5 to-teal-600/5'
         }`}
       />
 
@@ -90,14 +80,14 @@ export const SubscriptionCard = () => {
             <>
               <button
                 type="button"
-                onClick={onComparePlans}
+                onClick={() => navigate('/plans')}
                 className="hover:text-foreground transition-colors underline underline-offset-4 cursor-pointer"
               >
                 Change plan
               </button>
               <DangerButton
                 onClick={cancelSubscription}
-                isPending={false}
+                isPending={isProcessing}
                 text="Cancel subscription"
                 icon={XCircle}
                 size="xs"
@@ -115,7 +105,7 @@ export const SubscriptionCard = () => {
               />
 
               <CancelButton
-                onClick={onExplorePlans}
+                onClick={() => navigate('/plans')}
                 text="Explore Plans"
               />
             </div>

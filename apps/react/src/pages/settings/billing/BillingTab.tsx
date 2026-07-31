@@ -1,7 +1,7 @@
+import { useNavigate } from 'react-router-dom';
 import { Loader2, Layers, Sparkles } from 'lucide-react';
 import { useBilling } from './hooks/useBilling';
-import { SubscriptionCard, UsageStats, PaymentMethod, InvoiceHistory} from './components';
-import { useNavigate } from 'react-router-dom';
+import { SubscriptionCard, UsageStats, PaymentMethod, InvoiceHistory } from './components';
 
 export const BillingTab = () => {
   const {
@@ -68,7 +68,7 @@ export const BillingTab = () => {
         </div>
       )}
 
-      <SubscriptionCard/>
+      <SubscriptionCard />
 
       <div className="space-y-4">
         <h3 className="text-xs font-bold tracking-wider uppercase text-foreground/80">
@@ -78,8 +78,8 @@ export const BillingTab = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <PaymentMethod/>
-        <InvoiceHistory/>
+        <PaymentMethod />
+        <InvoiceHistory />
       </div>
 
       <div className="border border-border bg-card/60 rounded-xl p-5 space-y-3 shadow-xs">
@@ -96,7 +96,7 @@ export const BillingTab = () => {
           onClick={() => navigate('/plans')}
           className="text-xs font-medium text-teal-600 dark:text-teal-400 hover:underline cursor-pointer inline-flex items-center gap-1"
         >
-          View Enterprise Plan details →
+          View Enterprise Plan details
         </button>
       </div>
     </div>

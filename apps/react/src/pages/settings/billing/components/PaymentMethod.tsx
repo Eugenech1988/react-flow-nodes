@@ -1,10 +1,11 @@
 import { CreditCard, ExternalLink } from 'lucide-react';
-import { useBilling } from '@/pages/settings/billing/hooks';
+import { useBilling } from '../hooks';
 import { useUser } from '@/shared/hooks';
 
 export const PaymentMethod = () => {
   const { isProActive } = useUser();
   const { cancelSubscription } = useBilling();
+
   return (
     <div className="border border-border bg-card rounded-xl p-5 space-y-4 shadow-xs">
       <h3 className="text-xs font-bold tracking-wider uppercase text-foreground/80 flex items-center gap-2">
