@@ -15,12 +15,14 @@ import {
   requestResetInputSchema
 } from '@pipeline/contracts';
 import { AuthService } from '@/auth/auth.service';
+import { AiService } from '@/ai/ai.service';
 import { BillingService } from '@/billing/billing.service';
 import { PipelinesService } from '@/pipelines/pipelines.service';
 import { ProfileService } from '@/profile/profile.service';
 import { UsersService } from '@/users/users.service';
 import { protectedProcedure, publicProcedure, router } from '@/trpc/init';
 import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
+import { z } from 'zod';
 
 interface RouterServices {
   authService: AuthService;
@@ -28,6 +30,7 @@ interface RouterServices {
   pipelinesService: PipelinesService;
   profileService: ProfileService;
   usersService: UsersService;
+  aiService: AiService;
 }
 
 function setTokenCookies(res: { cookie: Function }, accessToken: string, refreshToken: string) {
@@ -102,6 +105,18 @@ export function createAppRouter(services: RouterServices) {
       }),
   });
 
+  const aiRouter = router({
+    test: protectedProcedure
+      .input(
+        z.object({
+          message: z.string(),
+        }),
+      )
+      .mutation(({ input }) => {
+        return services.aiService.test(input.message);
+      }),
+  });
+
   const usersRouter = router({
     updatePassword: protectedProcedure.input(updatePasswordInputSchema).mutation(async ({ctx, input}) => {
       await services.usersService.updatePassword(ctx.user.id, input);
@@ -154,6 +169,7 @@ export function createAppRouter(services: RouterServices) {
     billing: billingRouter,
     pipelines: pipelinesRouter,
     profile: profileRouter,
+    ai: aiRouter,
     health: publicProcedure.query(() => ({status: 'ok'}))
   });
 }

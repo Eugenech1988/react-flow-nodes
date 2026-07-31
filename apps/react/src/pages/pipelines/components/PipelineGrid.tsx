@@ -6,7 +6,6 @@ import type { TPipeline } from '@/shared/lib';
 interface PipelineGridProps {
   pipelines: TPipeline[];
   searchQuery: string;
-  /** Общее количество пайплайнов до примененных фильтров и поиска */
   totalPipelinesCount: number;
 }
 

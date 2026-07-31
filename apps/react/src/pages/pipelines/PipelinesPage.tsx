@@ -43,7 +43,7 @@ export const PipelinesPage = () => {
             setSortOrder(order);
           }}
         />
-        <PipelineGrid pipelines={filteredPipelines} searchQuery={searchQuery}/>
+        <PipelineGrid totalPipelinesCount={pipelines.length} pipelines={filteredPipelines} searchQuery={searchQuery}/>
         <PipelineModal
           isOpen={isOpen}
           mode={mode}

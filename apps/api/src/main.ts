@@ -14,6 +14,7 @@ import { UsersService } from '@/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { createAppRouter } from '@/trpc/app-router';
 import { createContext } from '@/trpc/context';
+import { AiService } from '@/ai/ai.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
@@ -42,6 +43,7 @@ async function bootstrap() {
 
   const router = createAppRouter({
     authService,
+    aiService: app.get(AiService),
     billingService: app.get(BillingService),
     pipelinesService: app.get(PipelinesService),
     profileService: app.get(ProfileService),
