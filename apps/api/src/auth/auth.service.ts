@@ -11,6 +11,7 @@ import { TUserSafe, IJwtPayload, IOauthUser } from '@/auth/types/auth.types';
 import { generateSecret, verify as verifyOtp, generateURI } from 'otplib';
 import * as qrcode from 'qrcode';
 import { verify as verifyArgon, hash } from 'argon2';
+import { PrismaService } from '@/prisma/prisma.service';
 
 interface IResetPasswordPayload {
   userId: string;
@@ -24,6 +25,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailService: MailService,
+    private readonly prisma: PrismaService,
   ) {}
 
   private generateRecoveryCodes(): string[] {
@@ -107,7 +109,7 @@ export class AuthService {
     return this.sanitizeUser(user);
   }
 
-  async generateTokens(userId: string) {
+  async generateTokens(userId: string, userAgent?: string, ip?: string) {
     const payload: IJwtPayload = { userId };
 
     const accessToken = this.jwtService.sign(payload, {
@@ -120,10 +122,24 @@ export class AuthService {
       expiresIn: this.configService.getOrThrow<JwtSignOptions['expiresIn']>('JWT_REFRESH_EXPIRES'),
     });
 
+    const hashedToken = await hash(refreshToken);
+
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    await this.prisma.refreshToken.create({
+      data: {
+        token: hashedToken,
+        userId,
+        userAgent,
+        ip,
+        expiresAt,
+      },
+    });
+
     return { accessToken, refreshToken };
   }
 
-  async refreshTokens(refreshToken: string) {
+  async refreshTokens(refreshToken: string, userAgent?: string, ip?: string) {
     let payload: IJwtPayload;
 
     try {
@@ -134,12 +150,54 @@ export class AuthService {
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
 
-    const user = await this.usersService.findOneById(payload.userId);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
+    const userTokens = await this.prisma.refreshToken.findMany({
+      where: {
+        userId: payload.userId,
+        expiresAt: { gt: new Date() }
+      },
+    });
+
+    let matchingTokenId: string | null = null;
+    for (const t of userTokens) {
+      if (await verifyArgon(t.token, refreshToken)) {
+        matchingTokenId = t.id;
+        break;
+      }
     }
 
-    return this.generateTokens(user.id);
+    if (!matchingTokenId) {
+      throw new UnauthorizedException('Token revoked or invalid');
+    }
+
+    await this.prisma.refreshToken.delete({ where: { id: matchingTokenId } });
+
+    return this.generateTokens(payload.userId, userAgent, ip);
+  }
+
+  async logout(refreshToken: string): Promise<void> {
+    let payload: IJwtPayload;
+
+    try {
+      payload = this.jwtService.verify<IJwtPayload>(refreshToken, {
+        secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
+      });
+    } catch {
+      return;
+    }
+
+    const userTokens = await this.prisma.refreshToken.findMany({
+      where: { userId: payload.userId },
+    });
+
+    for (const tokenRecord of userTokens) {
+      const isMatch = await verifyArgon(tokenRecord.token, refreshToken);
+      if (isMatch) {
+        await this.prisma.refreshToken.delete({
+          where: { id: tokenRecord.id },
+        });
+        break;
+      }
+    }
   }
 
   async recovery(dto: RecoveryDto): Promise<string | null> {

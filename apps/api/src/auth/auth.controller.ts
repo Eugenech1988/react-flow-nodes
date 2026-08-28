@@ -213,12 +213,21 @@ export class AuthController {
   @Post('logout')
   @ApiOperation({ summary: 'Logout user and clear auth cookies' })
   @ApiResponse({ status: 200, description: 'Cookies cleared successfully.' })
-  async logout(@Res({ passthrough: true }) res: Response) {
+  async logout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const refreshToken = req.cookies?.['refreshToken'];
+
+    if (refreshToken) {
+      await this.authService.logout(refreshToken);
+    }
+
     const isProd = process.env.NODE_ENV === 'production';
     const cookieOptions = {
       httpOnly: true,
       secure: isProd,
-      sameSite: 'lax' as const
+      sameSite: 'lax' as const,
     };
 
     res.clearCookie('accessToken', cookieOptions);
