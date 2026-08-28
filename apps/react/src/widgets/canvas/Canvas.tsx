@@ -14,9 +14,16 @@ import '@xyflow/react/dist/style.css';
 import { useStore } from '@/entities';
 import type { TPipelineNode, TPipelineEdge } from '@/entities';
 
-import { HistoryControls, ImportExportToolbar, AutoLayoutButton, ClearCanvasButton, ExecutionLogConsole } from './components';
+import {
+  HistoryControls,
+  ImportExportToolbar,
+  AutoLayoutButton,
+  ClearCanvasButton,
+  ExecutionLogConsole
+} from './components';
 import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES, NODE_COLORS, NODE_TYPE_TO_CATEGORY } from './config';
 import { useDragAndDrop, useKeyboardShortcuts, useSavePipeline } from './hooks';
+import { SidebarToggle } from '@/widgets/canvas/components/SidebarToggle.tsx';
 
 export const Canvas = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -38,14 +45,14 @@ export const Canvas = () => {
   const undo = useStore((state) => state.undo);
   const redo = useStore((state) => state.redo);
 
-  const { getNodes, getEdges } = useReactFlow<TPipelineNode, TPipelineEdge>();
+  const {getNodes, getEdges} = useReactFlow<TPipelineNode, TPipelineEdge>();
 
-  useSavePipeline({ wrapperRef });
+  useSavePipeline({wrapperRef});
 
-  const { onDrop, onDragOver } = useDragAndDrop({
+  const {onDrop, onDragOver} = useDragAndDrop({
     rfInstance,
     addNode,
-    getNodeID,
+    getNodeID
   });
 
   useKeyboardShortcuts({
@@ -54,10 +61,10 @@ export const Canvas = () => {
     getNodes,
     getEdges,
     undo,
-    redo,
+    redo
   });
 
-  const { resolvedTheme } = useTheme();
+  const {resolvedTheme} = useTheme();
 
   const gridColor = resolvedTheme === 'dark' ? '#374151' : '#cbd5e1';
 
@@ -71,10 +78,12 @@ export const Canvas = () => {
       ref={wrapperRef}
       className="w-full h-full relative bg-[#f1f5f9] dark:bg-[#030712] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:[--react-flow__background-color:#374151]"
     >
-      <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
-      <AutoLayoutButton />
-      <ClearCanvasButton />
-      <ExecutionLogConsole />
+      <ImportExportToolbar onExport={exportJSON} onImport={importJSON}/>
+      <SidebarToggle/>
+      <HistoryControls/>
+      <AutoLayoutButton/>
+      <ClearCanvasButton/>
+      <ExecutionLogConsole/>
       <ReactFlow<TPipelineNode, TPipelineEdge>
         nodes={nodes}
         edges={edges}
@@ -91,10 +100,9 @@ export const Canvas = () => {
         fitView
         fitViewOptions={FIT_VIEW_OPTIONS}
       >
-        <Background color={gridColor} gap={GRID_SIZE} />
-        <Controls />
-        <MiniMap pannable zoomable nodeColor={getMiniMapNodeColor} />
-        <HistoryControls />
+        <Background color={gridColor} gap={GRID_SIZE}/>
+        <Controls/>
+        <MiniMap pannable zoomable nodeColor={getMiniMapNodeColor}/>
       </ReactFlow>
     </div>
   );

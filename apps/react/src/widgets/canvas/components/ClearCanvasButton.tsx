@@ -20,7 +20,7 @@ export const ClearCanvasButton = () => {
       <button
         onClick={() => setIsOpen(true)}
         aria-label="Clear Canvas"
-        className="absolute left-34 top-4 z-40 w-8.5 h-8.5 flex items-center justify-center cursor-pointer transition-all duration-200 bg-[var(--card)] border border-[var(--border)] text-[var(--node-math)] rounded-[var(--radius)] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] hover:bg-[var(--node-math)] hover:text-white"
+        className="absolute left-43 top-4 z-40 w-8.5 h-8.5 flex items-center justify-center cursor-pointer transition-all duration-200 bg-[var(--card)] border border-[var(--border)] text-[var(--node-math)] rounded-[var(--radius)] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] hover:bg-[var(--node-math)] hover:text-white"
       >
         <Trash2 size={18} />
       </button>

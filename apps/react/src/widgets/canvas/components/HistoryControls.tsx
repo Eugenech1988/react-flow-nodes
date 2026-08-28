@@ -8,7 +8,7 @@ export const HistoryControls = () => {
   const canRedo = useStore((state) => state.future.length > 0);
 
   return (
-    <div className="absolute top-4 left-4 z-10 flex bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] shadow-md overflow-hidden">
+    <div className="absolute top-4 left-14 z-10 flex bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] shadow-md overflow-hidden">
       <button
         onClick={() => undo()}
         disabled={!canUndo}
