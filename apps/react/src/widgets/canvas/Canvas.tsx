@@ -12,7 +12,7 @@ import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import { useStore } from '@/entities';
-import type { PipelineNode, PipelineEdge } from '@/entities';
+import type { TPipelineNode, TPipelineEdge } from '@/entities';
 
 import { HistoryControls, ImportExportToolbar, AutoLayoutButton, ClearCanvasButton, ExecutionLogConsole } from './components';
 import { GRID_SIZE, PRO_OPTIONS, FIT_VIEW_OPTIONS, NODE_TYPES, NODE_COLORS, NODE_TYPE_TO_CATEGORY } from './config';
@@ -20,7 +20,7 @@ import { useDragAndDrop, useKeyboardShortcuts, useSavePipeline } from './hooks';
 
 export const Canvas = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [rfInstance, setRfInstance] = useState<ReactFlowInstance<PipelineNode, PipelineEdge> | null>(null);
+  const [rfInstance, setRfInstance] = useState<ReactFlowInstance<TPipelineNode, TPipelineEdge> | null>(null);
 
   const nodes = useStore((state) => state.nodes);
   const edges = useStore((state) => state.edges);
@@ -38,7 +38,7 @@ export const Canvas = () => {
   const undo = useStore((state) => state.undo);
   const redo = useStore((state) => state.redo);
 
-  const { getNodes, getEdges } = useReactFlow<PipelineNode, PipelineEdge>();
+  const { getNodes, getEdges } = useReactFlow<TPipelineNode, TPipelineEdge>();
 
   useSavePipeline({ wrapperRef });
 
@@ -61,7 +61,7 @@ export const Canvas = () => {
 
   const gridColor = resolvedTheme === 'dark' ? '#374151' : '#cbd5e1';
 
-  const getMiniMapNodeColor = (node: PipelineNode) => {
+  const getMiniMapNodeColor = (node: TPipelineNode) => {
     const category = node.data?.category || NODE_TYPE_TO_CATEGORY[node.type || ''] || 'default';
     return NODE_COLORS[category] || '#94a3b8';
   };
@@ -75,7 +75,7 @@ export const Canvas = () => {
       <AutoLayoutButton />
       <ClearCanvasButton />
       <ExecutionLogConsole />
-      <ReactFlow<PipelineNode, PipelineEdge>
+      <ReactFlow<TPipelineNode, TPipelineEdge>
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

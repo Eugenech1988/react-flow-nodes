@@ -54,7 +54,7 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
 
     const screenshotBase64 = await captureScreenshot();
 
-    const formattedNodes = nodes.map((node) => ({
+    const formattedNodes = nodes.map((node: TPipelineNode) => ({
       ...node,
       type: node.type ?? 'default',
     }));
