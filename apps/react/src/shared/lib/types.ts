@@ -47,6 +47,7 @@ export type TPipeline = {
   status: 'ACTIVE' | 'PAUSED' | 'DRAFT' | 'ARCHIVED';
   createdAt: string;
   updatedAt: string;
+  graphData: JSON;
   userId: string;
   lastRunAt?: string | null;
   lastRunStatus?: 'SUCCESS' | 'FAILED' | 'RUNNING' | null;

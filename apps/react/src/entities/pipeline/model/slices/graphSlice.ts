@@ -94,9 +94,32 @@ export const createGraphSlice: StateCreator<
     set({ nodes });
   },
 
+  setEdges: (edges) => {
+    set({ edges });
+  },
+
   setGraph: (nodes, edges) => {
     get().takeSnapshot();
     set({ nodes, edges });
+  },
+
+  initGraph: (nodes, edges) => {
+    set({
+      nodes,
+      edges,
+      past: [],
+      future: [],
+    });
+  },
+
+  resetGraph: () => {
+    set({
+      nodes: [],
+      edges: [],
+      past: [],
+      future: [],
+      clipboard: null,
+    });
   },
 
   onNodesChange: (changes) => {

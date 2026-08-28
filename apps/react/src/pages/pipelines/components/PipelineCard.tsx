@@ -33,6 +33,7 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
   const navigate = useNavigate();
 
   const { deletePipeline, setCurrentPipeline } = usePipelineHandler({
+    
     onSetCurrentSuccess: () => navigate('/'),
   });
 

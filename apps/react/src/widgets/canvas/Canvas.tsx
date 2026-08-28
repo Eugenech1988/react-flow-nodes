@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
 import {
   ReactFlow,
@@ -10,7 +10,7 @@ import {
 } from '@xyflow/react';
 import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-
+import { useUser } from '@/shared/hooks';
 import { useStore } from '@/entities';
 import type { TPipelineNode, TPipelineEdge } from '@/entities';
 
@@ -28,6 +28,30 @@ import { SidebarToggle } from '@/widgets/canvas/components/SidebarToggle.tsx';
 export const Canvas = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<TPipelineNode, TPipelineEdge> | null>(null);
+
+  const initGraph = useStore((state) => state.initGraph);
+  const resetGraph = useStore((state) => state.resetGraph);
+
+  const { user } = useUser();
+
+  const currentPipeline = user?.currentPipeline;
+
+  useEffect(() => {
+    if (currentPipeline) {
+      const pipelineRecord = currentPipeline as Record<string, unknown>;
+
+      const graph = pipelineRecord.graphData as {
+        nodes?: TPipelineNode[];
+        edges?: TPipelineEdge[];
+      } | null | undefined;
+
+      initGraph(graph?.nodes || [], graph?.edges || []);
+    }
+
+    return () => {
+      resetGraph();
+    };
+  }, [currentPipeline?.id, initGraph, resetGraph]);
 
   const nodes = useStore((state) => state.nodes);
   const edges = useStore((state) => state.edges);
@@ -84,7 +108,7 @@ export const Canvas = () => {
       <AutoLayoutButton/>
       <ClearCanvasButton/>
       <ExecutionLogConsole/>
-      <ReactFlow<TPipelineNode, TPipelineEdge>
+      <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

@@ -51,9 +51,21 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
   });
 
   const setCurrentPipeline = useMutation({
-    mutationFn: (pipeline: TPipeline) => trpcClient.users.setCurrentPipeline.mutate(pipeline),
-    onSuccess: () => {
+    mutationFn: (pipeline: TPipeline) =>
+      trpcClient.users.setCurrentPipeline.mutate(pipeline),
+
+    onSuccess: (updatedUser, pipeline) => {
+      queryClient.setQueryData(trpc.auth.me.queryKey(), (oldUser: any) => {
+        if (!oldUser) return oldUser;
+        return {
+          ...oldUser,
+          currentPipelineId: pipeline.id,
+          currentPipeline: updatedUser.currentPipeline || pipeline,
+        };
+      });
+
       queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
+
       options?.onSetCurrentSuccess?.();
     },
   });
