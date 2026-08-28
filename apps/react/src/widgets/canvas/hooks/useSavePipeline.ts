@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useTheme } from 'next-themes';
 import { useReactFlow } from '@xyflow/react';
 import { toPng } from 'html-to-image';
@@ -12,11 +12,27 @@ interface UseSavePipelineProps {
   wrapperRef: React.RefObject<HTMLDivElement | null>;
 }
 
+type TPipelineNodeDTO = {
+  id: string;
+  type: string;
+  position: { x: number; y: number };
+  data: Record<string, unknown>;
+  [key: string]: unknown;
+};
+
+type TPipelineEdgeDTO = {
+  id: string;
+  source: string;
+  target: string;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
+  [key: string]: unknown;
+};
+
 export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
   const { user } = useUser();
-  const { updatePipeline } = usePipelineHandler();
   const { resolvedTheme } = useTheme();
-
+  const { updatePipeline } = usePipelineHandler();
   const nodes = useStore((state) => state.nodes);
   const edges = useStore((state) => state.edges);
   const lastRunAt = useStore((state) => state.lastRunAt);
@@ -25,7 +41,7 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
 
   const { fitView } = useReactFlow<TPipelineNode, TPipelineEdge>();
 
-  const captureScreenshot = async (): Promise<string | undefined> => {
+  const captureScreenshot = useCallback(async (): Promise<string | undefined> => {
     const viewportElement = wrapperRef.current?.querySelector<HTMLElement>('.react-flow__viewport');
     if (!viewportElement) return undefined;
 
@@ -43,9 +59,9 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
       console.error('Failed to capture canvas screenshot:', error);
       return undefined;
     }
-  };
+  }, [wrapperRef, resolvedTheme]);
 
-  const handleSavePipeline = async () => {
+  const handleSavePipeline = useCallback(async () => {
     const id = user?.currentPipelineId || user?.currentPipeline?.id;
     if (!id) return;
 
@@ -62,14 +78,23 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
     updatePipeline.mutate({
       id,
       graphData: {
-        nodes: formattedNodes,
-        edges,
+        nodes: formattedNodes as unknown as TPipelineNodeDTO[],
+        edges: edges as unknown as TPipelineEdgeDTO[],
       },
       screenshotBase64,
-      ...(lastRunAt && { lastRunAt: new Date(lastRunAt).toISOString() }),
+      ...(lastRunAt && { lastRunAt: new Date(lastRunAt) }),
       ...(lastRunStatus && { lastRunStatus }),
     });
-  };
+  }, [
+    user,
+    fitView,
+    captureScreenshot,
+    nodes,
+    edges,
+    lastRunAt,
+    lastRunStatus,
+    updatePipeline,
+  ]);
 
   useEffect(() => {
     setSaveAction(handleSavePipeline);
