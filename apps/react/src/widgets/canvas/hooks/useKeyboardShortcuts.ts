@@ -11,6 +11,30 @@ interface UseKeyboardShortcutsParams {
   redo: () => void;
 }
 
+export const isInputElement = (element: Element | null): boolean => {
+  if (!element) return false;
+  const tagName = element.tagName;
+  if (tagName === 'INPUT') {
+    const inputType = (element as HTMLInputElement).type;
+    const nonTextInputs = ['checkbox', 'radio', 'button', 'submit', 'reset', 'file', 'image', 'range', 'color'];
+    return !nonTextInputs.includes(inputType);
+  }
+  if (tagName === 'TEXTAREA' || tagName === 'SELECT') {
+    return true;
+  }
+  const htmlEl = element as HTMLElement;
+  const contentEditableAttr = element.getAttribute ? element.getAttribute('contenteditable') : null;
+  if (
+    htmlEl.isContentEditable ||
+    htmlEl.contentEditable === 'true' ||
+    (contentEditableAttr !== null && contentEditableAttr !== 'false')
+  ) {
+    return true;
+  }
+  return !!(element.closest && element.closest('[contenteditable="true"], [contenteditable=""]'));
+
+};
+
 export const useKeyboardShortcuts = ({
                                        copyNodes,
                                        pasteNodes,
@@ -21,13 +45,20 @@ export const useKeyboardShortcuts = ({
                                      }: UseKeyboardShortcutsParams) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as Element | null;
+      const activeElement = document.activeElement;
+
+      if (isInputElement(target) || isInputElement(activeElement)) {
+        return;
+      }
+
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       const modifier = isMac ? event.metaKey : event.ctrlKey;
 
       if (modifier && event.key.toLowerCase() === 'c') {
-        event.preventDefault();
         const selected = getNodes().filter((n) => n.selected);
         if (selected.length > 0) {
+          event.preventDefault();
           copyNodes(selected, getEdges());
           toast.success('Nodes copied', {
             duration: 2000,
