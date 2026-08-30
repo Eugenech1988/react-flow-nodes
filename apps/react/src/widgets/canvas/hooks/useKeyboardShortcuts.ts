@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import type { PipelineNode, PipelineEdge } from '@/entities';
+import type { TPipelineNode, TPipelineEdge } from '@/entities';
 import { toast } from 'sonner';
 
 interface UseKeyboardShortcutsParams {
-  copyNodes: (nodes: PipelineNode[], edges: PipelineEdge[]) => void;
+  copyNodes: (nodes: TPipelineNode[], edges: TPipelineEdge[]) => void;
   pasteNodes: () => void;
-  getNodes: () => PipelineNode[];
-  getEdges: () => PipelineEdge[];
+  getNodes: () => TPipelineNode[];
+  getEdges: () => TPipelineEdge[];
   undo: () => void;
   redo: () => void;
 }
