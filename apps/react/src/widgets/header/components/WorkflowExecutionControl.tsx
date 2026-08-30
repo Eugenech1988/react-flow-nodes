@@ -4,7 +4,7 @@ import { useReactFlow } from '@xyflow/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from '@/entities';
 import { Button } from '@pipeline/ui';
-import type { ExecutionStatus } from '@/entities';
+import type { TExecutionStatus } from '@/entities';
 
 export const WorkflowExecutionControl = () => {
   const { setNodes, setEdges } = useReactFlow();
@@ -37,34 +37,38 @@ export const WorkflowExecutionControl = () => {
     runWorkflow();
   };
 
-  const getRunButtonConfig = (status: ExecutionStatus) => {
+  const getRunButtonConfig = (status: TExecutionStatus) => {
     switch (status) {
       case 'running':
         return {
           text: 'Stop',
-          icon: <Square className="w-3.5 h-3.5 fill-current animate-pulse" />,
-          className: 'bg-[var(--node-math)] text-white hover:opacity-90 active:scale-95 shadow-sm',
+          icon: <Square className="h-3.5 w-3.5 animate-pulse fill-current" />,
+          className:
+            'border border-destructive/40 bg-destructive/10 text-destructive hover:bg-destructive/15 active:scale-95',
           onClick: stopWorkflow,
         };
       case 'success':
         return {
-          text: 'Success',
-          icon: <CheckCircle2 className="w-3.5 h-3.5 text-[var(--node-output)]" />,
-          className: 'bg-[var(--node-output)]/10 border border-[var(--node-output)]/30 text-[var(--node-output)] hover:bg-[var(--node-output)]/20 shadow-xs',
+          text: 'Restart',
+          icon: <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />,
+          className:
+            'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400 active:scale-95',
           onClick: handleStartFlow,
         };
       case 'failed':
         return {
-          text: 'Failed',
-          icon: <AlertCircle className="w-3.5 h-3.5 text-[var(--node-math)]" />,
-          className: 'bg-[var(--node-math)]/10 border border-[var(--node-math)]/30 text-[var(--node-math)] hover:bg-[var(--node-math)]/20 shadow-xs',
+          text: 'Retry',
+          icon: <AlertCircle className="text-destructive h-3.5 w-3.5" />,
+          className:
+            'border border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/15 active:scale-95',
           onClick: handleStartFlow,
         };
       default:
         return {
-          text: 'Run',
-          icon: <Play className="w-3.5 h-3.5 fill-current" />,
-          className: 'bg-[var(--foreground)] text-[var(--background)] hover:opacity-90 active:scale-95 shadow-sm',
+          text: 'Start',
+          icon: <Play className="h-3.5 w-3.5 fill-current" />,
+          className:
+            'border border-primary bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 shadow-sm',
           onClick: handleStartFlow,
         };
     }
@@ -77,7 +81,8 @@ export const WorkflowExecutionControl = () => {
       variant="default"
       size="sm"
       onClick={config.onClick}
-      className={`flex items-center gap-1.5 px-3 h-8 text-xs font-semibold rounded-md cursor-pointer transition-all ${config.className}`}
+      aria-label={`${config.text} workflow`}
+      className={`flex h-8 cursor-pointer items-center gap-1.5 rounded-md px-3 text-xs font-semibold transition-all ${config.className}`}
     >
       {config.icon}
       {config.text}

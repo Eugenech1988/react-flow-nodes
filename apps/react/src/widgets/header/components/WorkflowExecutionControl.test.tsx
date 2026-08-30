@@ -33,7 +33,6 @@ vi.mock('@xyflow/react', async (importOriginal) => {
   };
 });
 
-
 const renderWithProvider = (ui: React.ReactElement) => {
   return render(<ReactFlowProvider>{ui}</ReactFlowProvider>);
 };
@@ -44,9 +43,9 @@ describe('WorkflowExecutionControl', () => {
     mockStore.executionStatus = 'idle';
   });
 
-  it('renders "Run" button when status is idle', () => {
+  it('renders "Start" button when status is idle', () => {
     renderWithProvider(<WorkflowExecutionControl />);
-    const btn = screen.getByRole('button', { name: /run/i });
+    const btn = screen.getByRole('button', { name: /start workflow/i });
     expect(btn).toBeInTheDocument();
 
     fireEvent.click(btn);
@@ -64,15 +63,21 @@ describe('WorkflowExecutionControl', () => {
     expect(mockStore.stopWorkflow).toHaveBeenCalledTimes(1);
   });
 
-  it('renders "Success" state correctly', () => {
+  it('allows restarting after success', () => {
     mockStore.executionStatus = 'success';
     renderWithProvider(<WorkflowExecutionControl />);
-    expect(screen.getByText(/success/i)).toBeInTheDocument();
+    const btn = screen.getByRole('button', { name: /restart workflow/i });
+    expect(btn).toBeInTheDocument();
+    fireEvent.click(btn);
+    expect(mockStore.runWorkflow).toHaveBeenCalledTimes(1);
   });
 
-  it('renders "Failed" state correctly', () => {
+  it('allows retrying after failure', () => {
     mockStore.executionStatus = 'failed';
     renderWithProvider(<WorkflowExecutionControl />);
-    expect(screen.getByText(/failed/i)).toBeInTheDocument();
+    const btn = screen.getByRole('button', { name: /retry workflow/i });
+    expect(btn).toBeInTheDocument();
+    fireEvent.click(btn);
+    expect(mockStore.runWorkflow).toHaveBeenCalledTimes(1);
   });
 });
