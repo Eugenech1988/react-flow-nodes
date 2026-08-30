@@ -45,19 +45,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
     return (
       <div className="w-full">
         <div className={cn('relative w-full h-11 group flex items-center', roundedClass)}>
-          {hasIcon && (
-            <div
-              className={cn(
-                'absolute left-3.5 top-1/2 -translate-y-1/2 z-20 pointer-events-none transition-colors duration-200',
-                'text-zinc-400 dark:text-zinc-500 group-hover:text-teal-500 dark:group-hover:text-teal-500 peer-focus:text-teal-500 peer-not-placeholder-shown:text-teal-500',
-                'peer-disabled:text-muted-foreground/40 peer-disabled:group-hover:text-muted-foreground/40',
-                error && 'text-red-500!'
-              )}
-            >
-              {icon}
-            </div>
-          )}
-
+          {/* Input перенесен вверх, чтобы стать peer для иконки */}
           <Input
             {...props}
             ref={ref}
@@ -74,6 +62,23 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             )}
           />
 
+          {/* Иконка (идет после Input): реагирует на peer-focus и peer-[:not(:placeholder-shown)] */}
+          {hasIcon && (
+            <div
+              className={cn(
+                'absolute left-3.5 top-1/2 -translate-y-1/2 z-20 pointer-events-none transition-colors duration-200',
+                'text-zinc-400 dark:text-zinc-500',
+                'group-hover:text-teal-500 dark:group-hover:text-teal-500',
+                'peer-focus:text-teal-500 dark:peer-focus:text-teal-500',
+                'peer-[:not(:placeholder-shown)]:text-teal-500 dark:peer-[:not(:placeholder-shown)]:text-teal-500',
+                'peer-disabled:text-muted-foreground/40 peer-disabled:group-hover:text-muted-foreground/40',
+                error && 'text-red-500!'
+              )}
+            >
+              {icon}
+            </div>
+          )}
+
           <label
             className={cn(
               'absolute top-1/2 -translate-y-1/2 pointer-events-none text-sm font-sans transition-all duration-200 ease-in-out z-20 block select-none max-w-[calc(100%-24px)] truncate text-ellipsis origin-left',
@@ -82,7 +87,6 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
               'group-hover:text-teal-500 dark:group-hover:text-teal-500',
               'peer-focus:text-teal-500 peer-focus-visible:text-teal-500 peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:text-[10px]',
               'peer-not-placeholder-shown:text-teal-500 peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:-translate-y-1/2 peer-not-placeholder-shown:text-[10px]',
-              // Disabled стили для label: принудительно делаем серым и убираем hover-эффекты
               'peer-disabled:text-muted-foreground/60! peer-disabled:group-hover:text-muted-foreground/60! peer-disabled:top-0! peer-disabled:-translate-y-1/2! peer-disabled:text-[10px]!',
               error
                 ? 'text-red-500!'
@@ -101,7 +105,6 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
               'peer-focus:[&_legend]:max-w-full peer-focus:[&_legend]:px-1 peer-focus:[&_legend]:visible',
               'peer-not-placeholder-shown:[&_legend]:max-w-full peer-not-placeholder-shown:[&_legend]:px-1 peer-not-placeholder-shown:[&_legend]:visible',
               'autofill:[&_legend]:max-w-full autofill:[&_legend]:px-1 autofill:[&_legend]:visible',
-              // Disabled стили для fieldset и legend:
               'peer-disabled:bg-muted/30 peer-disabled:border-border/60 peer-disabled:[&_legend]:max-w-full peer-disabled:[&_legend]:px-1 peer-disabled:[&_legend]:visible',
               error
                 ? 'border-red-500! shadow-[0_0_15px_rgba(239,68,68,0.02)]'

@@ -1,5 +1,5 @@
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import { useSidebarStore } from '@/widgets/sidebar/model';
+import { useSidebarStore } from '@/widgets/Sidebar/model';
 
 export const SidebarToggle = () => {
   const toggle = useSidebarStore(state => state.toggle);
