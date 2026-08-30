@@ -1,0 +1,20 @@
+model DatabaseNode {
+  id          String   @id @default(cuid())
+  pipelineId  String?  @map("pipeline_id")
+  nodeId      String   @map("node_id")
+  query       String?
+  params      Json?
+  data        Json?
+  status      String?  @default("SUCCESS")
+  userId      String?  @map("user_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  pipeline Pipeline? @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  user     User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([pipelineId])
+  @@index([nodeId])
+  @@index([userId])
+  @@map("database_nodes")
+}

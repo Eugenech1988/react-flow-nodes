@@ -19,6 +19,7 @@ model User {
   pipelines         Pipeline[]
   transactions      Transaction[]
   refreshToken      RefreshToken[]
+  databaseNodes     DatabaseNode[]
   currentPipelineId String?        @map("current_pipeline_id")
   currentPipeline   Pipeline?      @relation("UserCurrentPipeline", fields: [currentPipelineId], references: [id], onDelete: SetNull)
 

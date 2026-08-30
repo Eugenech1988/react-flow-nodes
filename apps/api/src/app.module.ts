@@ -8,6 +8,7 @@ import { BillingModule } from '@/billing/billing.module';
 import { PipelinesModule } from '@/pipelines/pipelines.module';
 import { InngestModule } from '@/inngest/inngest.module';
 import { AiModule } from './ai/ai.module';
+import { DatabaseNodesModule } from '@/database-nodes/database-nodes.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AiModule } from './ai/ai.module';
     PipelinesModule,
     InngestModule,
     AiModule,
+    DatabaseNodesModule,
   ],
 })
 export class AppModule {}

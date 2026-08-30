@@ -16,6 +16,7 @@ model Pipeline {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   selectedByUsers User[] @relation("UserCurrentPipeline")
+  databaseNodes   DatabaseNode[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

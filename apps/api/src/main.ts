@@ -15,6 +15,7 @@ import { JwtService } from '@nestjs/jwt';
 import { createAppRouter } from '@/trpc/app-router';
 import { createContext } from '@/trpc/context';
 import { AiService } from '@/ai/ai.service';
+import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
@@ -48,6 +49,7 @@ async function bootstrap() {
     pipelinesService: app.get(PipelinesService),
     profileService: app.get(ProfileService),
     usersService,
+    databaseNodesService: app.get(DatabaseNodesService),
   });
 
   app.getHttpAdapter().getInstance().use(

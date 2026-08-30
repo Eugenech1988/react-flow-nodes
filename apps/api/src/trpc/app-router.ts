@@ -12,7 +12,8 @@ import {
   removePipelineInputSchema,
   planSchema,
   passwordResetInputSchema,
-  requestResetInputSchema
+  requestResetInputSchema,
+  createDatabaseNodeInputSchema,
 } from '@pipeline/contracts';
 import { AuthService } from '@/auth/auth.service';
 import { AiService } from '@/ai/ai.service';
@@ -20,6 +21,7 @@ import { BillingService } from '@/billing/billing.service';
 import { PipelinesService } from '@/pipelines/pipelines.service';
 import { ProfileService } from '@/profile/profile.service';
 import { UsersService } from '@/users/users.service';
+import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
 import { protectedProcedure, publicProcedure, router } from '@/trpc/init';
 import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 import { z } from 'zod';
@@ -31,6 +33,7 @@ interface RouterServices {
   profileService: ProfileService;
   usersService: UsersService;
   aiService: AiService;
+  databaseNodesService: DatabaseNodesService;
 }
 
 function setTokenCookies(res: { cookie: Function }, accessToken: string, refreshToken: string) {
@@ -163,6 +166,25 @@ export function createAppRouter(services: RouterServices) {
       })
   });
 
+  const databaseNodesRouter = router({
+    createRecord: publicProcedure
+      .input(createDatabaseNodeInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const userId = ctx.user?.id || null;
+        return services.databaseNodesService.createRecord(userId, input);
+      }),
+    getByNodeId: publicProcedure
+      .input(z.object({ nodeId: z.string() }))
+      .query(({ input }) => {
+        return services.databaseNodesService.findByNodeId(input.nodeId);
+      }),
+    getByPipelineId: publicProcedure
+      .input(z.object({ pipelineId: z.string() }))
+      .query(({ input }) => {
+        return services.databaseNodesService.findByPipelineId(input.pipelineId);
+      }),
+  });
+
   return router({
     auth: authRouter,
     users: usersRouter,
@@ -170,6 +192,7 @@ export function createAppRouter(services: RouterServices) {
     pipelines: pipelinesRouter,
     profile: profileRouter,
     ai: aiRouter,
+    databaseNodes: databaseNodesRouter,
     health: publicProcedure.query(() => ({status: 'ok'}))
   });
 }

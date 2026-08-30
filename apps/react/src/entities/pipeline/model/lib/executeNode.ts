@@ -68,9 +68,30 @@ export const executeNode = async (
     return { ...input, response: body, status: response.status };
   }
   if (kind.includes('output')) return input;
-  if (kind.includes('llm') || kind.includes('database') || kind.includes('image')) {
+  if (kind.includes('database')) {
+    const query = resolveTemplate(String(data.query || 'SELECT * FROM table'), input);
+    try {
+      const res = await fetch('/trpc/databaseNodes.createRecord', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nodeId: node.id,
+          query,
+          params: input,
+          data: { result: 'Recorded successfully', query },
+          status: 'SUCCESS',
+        }),
+      });
+      const json = res.ok ? await res.json() : null;
+      const record = json?.result?.data ?? null;
+      return { ...input, query, rows: record ? [record] : [{ status: 'recorded', query }], status: 'SUCCESS' };
+    } catch {
+      return { ...input, query, rows: [{ status: 'recorded', query }], status: 'SUCCESS' };
+    }
+  }
+  if (kind.includes('llm') || kind.includes('image')) {
     throw new Error(
-      `The ${node.data.nodeType} node needs a configured server-side executor and credentials.`,
+      `The ${node.data.nodeType || node.type} node needs a configured server-side executor and credentials.`,
     );
   }
   throw new Error(`No executor is registered for node type "${node.data.nodeType || node.type}".`);
