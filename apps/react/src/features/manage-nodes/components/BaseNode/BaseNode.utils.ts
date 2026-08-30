@@ -19,10 +19,15 @@ export const withAutoPositions = (handles: THandleConfig[]): THandleConfig[] => 
   return [...withEvenSpacing(bySide.left), ...withEvenSpacing(bySide.right)];
 };
 
-export const buildInitialValues = (fields: TFieldConfig[], data: TNodeData, id: string): TNodeFieldValues => {
+export const buildInitialValues = (
+  fields: TFieldConfig[],
+  data: TNodeData,
+  id: string,
+): TNodeFieldValues => {
   const initialValues: TNodeFieldValues = {};
   fields.forEach((field) => {
-    const fallbackValue = typeof field.defaultValue === 'function' ? field.defaultValue(id) : field.defaultValue;
+    const fallbackValue =
+      typeof field.defaultValue === 'function' ? field.defaultValue(id) : field.defaultValue;
     initialValues[field.key] = data[field.key] ?? fallbackValue ?? '';
   });
   return initialValues;
@@ -35,4 +40,4 @@ export const toVariableHandle = (variable: string): THandleConfig => ({
 });
 
 export const inputFieldClassName =
-  'bg-background/50 border-slate-200 dark:border-zinc-800 transition-colors hover:border-slate-300 dark:hover:border-zinc-700';
+  'bg-muted/25 border-border/80 rounded-md text-xs transition-colors hover:border-[var(--node-accent)]/60 focus-visible:ring-1 focus-visible:ring-[var(--node-accent)]';

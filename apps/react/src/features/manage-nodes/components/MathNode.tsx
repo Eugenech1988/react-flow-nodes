@@ -6,6 +6,8 @@ export const MathNode = createNode({
   category: 'math',
   icon: '∑',
   fields: [
+    { key: 'leftOperand', label: 'Left operand', type: 'number', defaultValue: 0 },
+    { key: 'rightOperand', label: 'Right operand', type: 'number', defaultValue: 0 },
     {
       key: 'operation',
       label: 'Operation',

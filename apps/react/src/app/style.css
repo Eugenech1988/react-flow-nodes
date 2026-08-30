@@ -13,28 +13,95 @@ div.react-flow .react-flow__background-pattern circle {
 
 div.react-flow .base-node {
   --node-accent: var(--node-default);
-  background-color: var(--card);
   color: var(--card-foreground);
-  border-color: var(--border);
 }
 
-div.react-flow .base-node[data-category="input"] { --node-accent: var(--node-input); }
-div.react-flow .base-node[data-category="output"] { --node-accent: var(--node-output); }
-div.react-flow .base-node[data-category="text"] { --node-accent: var(--node-text); }
-div.react-flow .base-node[data-category="llm"] { --node-accent: var(--node-llm); }
-div.react-flow .base-node[data-category="math"] { --node-accent: var(--node-math); }
-div.react-flow .base-node[data-category="logic"] { --node-accent: var(--node-logic); }
-div.react-flow .base-node[data-category="condition"] { --node-accent: var(--node-logic); }
-div.react-flow .base-node[data-category="api"] { --node-accent: var(--node-api); }
-div.react-flow .base-node[data-category="data"] { --node-accent: var(--node-data); }
-div.react-flow .base-node[data-category="database"] { --node-accent: var(--node-database); }
-div.react-flow .base-node[data-category="media"] { --node-accent: var(--node-media); }
+div.react-flow .base-node .node-card {
+  position: relative;
+  min-height: 112px;
+  overflow: visible;
+  border: 2px solid color-mix(in srgb, var(--foreground) 65%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--card) 88%, #1f2024);
+  box-shadow: 0 6px 16px -12px rgba(0, 0, 0, 0.85);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+div.react-flow .base-node:hover .node-card {
+  border-color: var(--node-accent);
+}
+
+div.react-flow .react-flow__node.selected .base-node .node-card {
+  border-color: var(--node-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--node-accent) 28%, transparent);
+}
+
+div.react-flow .base-node .node-details {
+  background: var(--card);
+}
+
+div.react-flow .base-node .node-details--collapsed {
+  display: none;
+}
+
+div.react-flow .base-node[data-category='llm'] .node-card {
+  min-width: 250px;
+}
+
+div.react-flow .base-node[data-category='llm'] .node-header {
+  min-height: 112px;
+  justify-content: flex-start;
+  padding: 0 28px;
+}
+
+div.react-flow .base-node[data-category='input'] {
+  --node-accent: var(--node-input);
+}
+div.react-flow .base-node[data-category='output'] {
+  --node-accent: var(--node-output);
+}
+div.react-flow .base-node[data-category='text'] {
+  --node-accent: var(--node-text);
+}
+div.react-flow .base-node[data-category='llm'] {
+  --node-accent: var(--node-llm);
+}
+div.react-flow .base-node[data-category='math'] {
+  --node-accent: var(--node-math);
+}
+div.react-flow .base-node[data-category='logic'] {
+  --node-accent: var(--node-logic);
+}
+div.react-flow .base-node[data-category='condition'] {
+  --node-accent: var(--node-logic);
+}
+div.react-flow .base-node[data-category='api'] {
+  --node-accent: var(--node-api);
+}
+div.react-flow .base-node[data-category='data'] {
+  --node-accent: var(--node-data);
+}
+div.react-flow .base-node[data-category='database'] {
+  --node-accent: var(--node-database);
+}
+div.react-flow .base-node[data-category='media'] {
+  --node-accent: var(--node-media);
+}
+
+div.react-flow .base-node[data-category='input'] .node-icon,
+div.react-flow .base-node[data-category='output'] .node-icon {
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--node-accent) 18%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--node-accent) 12%, transparent);
+}
 
 div.react-flow .base-node .react-flow__handle {
   background: var(--node-accent);
 }
 
-[draggable="true"] {
+[draggable='true'] {
   -webkit-user-drag: element;
 }
 
@@ -46,16 +113,11 @@ div.react-flow .react-flow__node.selected {
 }
 
 div.react-flow .react-flow__node.selected .base-node {
-  border-color: #c1c9d6;
-
-  box-shadow: 0 0 0 1px rgba(71, 85, 105, 0.1),
-  0 20px 25px -5px rgba(0, 0, 0, 0.15),
-  0 10px 10px -5px rgba(0, 0, 0, 0.04);
-
+  box-shadow: none;
 }
 
 .dark div.react-flow .react-flow__node.selected .base-node {
-  border-color: #94a3b8 !important;
+  border-color: transparent !important;
 }
 
 div.react-flow .react-flow__node.drag {
@@ -109,11 +171,14 @@ div.react-flow .react-flow__controls-button:hover {
 }
 
 div.react-flow .react-flow__handle {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: var(--accent, var(--primary));
   border: 2px solid var(--card);
-  box-shadow: 0 0 0 1px var(--border);
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--node-accent) 55%, var(--border));
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
 }

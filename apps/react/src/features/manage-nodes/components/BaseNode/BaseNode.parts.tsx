@@ -1,18 +1,17 @@
 import { type ChangeEvent, type ReactNode } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import { AutosizeTextarea } from '@/shared/ui';
-import {
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@pipeline/ui';
+import { Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@pipeline/ui';
 import type { TFieldConfig, THandleConfig, TNodeFieldValues } from '@/entities';
 import { inputFieldClassName } from './BaseNode.utils';
 
-export const NodeHandles = ({ handles, type }: { handles: THandleConfig[]; type: 'target' | 'source' }) => (
+export const NodeHandles = ({
+  handles,
+  type,
+}: {
+  handles: THandleConfig[];
+  type: 'target' | 'source';
+}) => (
   <>
     {handles.map((handle) => (
       <Handle
@@ -21,33 +20,20 @@ export const NodeHandles = ({ handles, type }: { handles: THandleConfig[]; type:
         position={handle.position || (type === 'target' ? Position.Left : Position.Right)}
         id={handle.id}
         style={handle.style}
-        className="w-2.5 h-2.5 border-2 border-card rounded-full bg-(--node-accent)"
+        className="border-card h-3 w-3 rounded-full border-2 bg-(--node-accent) shadow-[0_0_0_1px_color-mix(in_srgb,var(--node-accent),transparent_45%)]"
       />
     ))}
   </>
 );
 
-export const NodeHeader = ({
-                             title,
-                             icon,
-                             onDelete,
-                           }: {
-  title?: string;
-  icon?: ReactNode;
-  onDelete: () => void;
-}) => (
-  <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-border/60 bg-muted/10 rounded-t-2xl select-none">
-    <div className="flex items-center gap-3">
-      {icon && (
-        <span className="flex items-center justify-center w-6 h-6 rounded-full text-white text-xs font-semibold shadow-xs shrink-0 bg-(--node-accent)">
-          {icon}
-        </span>
-      )}
-      <span className="text-sm font-semibold tracking-wide text-card-foreground">{title}</span>
-    </div>
+export const NodeHeader = ({ icon, onDelete }: { icon?: ReactNode; onDelete: () => void }) => (
+  <div className="node-header group flex min-h-28 items-center justify-center select-none">
+    {icon && (
+      <span className="node-icon flex h-11 w-11 items-center justify-center text-3xl">{icon}</span>
+    )}
     <button
       onClick={onDelete}
-      className="nodrag nopan flex items-center justify-center w-5 h-5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer text-xs font-bold"
+      className="nodrag nopan text-muted-foreground hover:text-destructive hover:bg-destructive/10 absolute top-1 right-1 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-xs font-bold opacity-0 transition-all group-hover:opacity-100 focus:opacity-100"
       title="Delete node"
     >
       ✕
@@ -55,27 +41,29 @@ export const NodeHeader = ({
   </div>
 );
 
+export const NodeMeta = ({ title, subtitle }: { title?: string; subtitle?: string }) => (
+  <div className="node-meta mt-2 text-center select-none">
+    <div className="text-card-foreground text-sm leading-tight font-medium">{title}</div>
+    {subtitle && <div className="text-muted-foreground mt-1 text-xs leading-tight">{subtitle}</div>}
+  </div>
+);
+
 export const NodeField = ({
-                            field,
-                            value,
-                            onChange,
-                          }: {
+  field,
+  value,
+  onChange,
+}: {
   field: TFieldConfig;
   value: TNodeFieldValues[string];
   onChange: (value: string) => void;
 }) => (
   <label className="flex flex-col gap-1.5">
-    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground select-none">
-      {field.label}
-    </span>
+    <span className="text-muted-foreground text-[11px] font-medium select-none">{field.label}</span>
 
     {field.type === 'select' ? (
       <div className="nodrag nopan pointer-events-auto">
-        <Select
-          value={String(value)}
-          onValueChange={(val) => onChange(val ?? '')}
-        >
-          <SelectTrigger className="w-full h-9 bg-background/50 border-slate-200 dark:border-zinc-800 transition-colors hover:border-slate-300 dark:hover:border-zinc-700 rounded-md px-3 text-left font-normal text-xs">
+        <Select value={String(value)} onValueChange={(val) => onChange(val ?? '')}>
+          <SelectTrigger className="bg-muted/25 border-border/80 h-8 w-full rounded-md px-2.5 text-left text-xs font-normal transition-colors hover:border-[var(--node-accent)]/60">
             <SelectValue placeholder="Select option" />
           </SelectTrigger>
           <SelectContent className="nodrag nopan">
@@ -83,7 +71,7 @@ export const NodeField = ({
               <SelectItem
                 key={option.value}
                 value={String(option.value)}
-                className="text-xs cursor-pointer"
+                className="cursor-pointer text-xs"
               >
                 {option.label}
               </SelectItem>
@@ -116,7 +104,7 @@ export const VariableTags = ({ variables }: { variables: string[] }) => {
       {variables.map((variable) => (
         <span
           key={variable}
-          className="font-mono text-[10px] px-2 py-0.5 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-600"
+          className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-2 py-0.5 font-mono text-[10px] text-yellow-600"
         >
           {variable}
         </span>

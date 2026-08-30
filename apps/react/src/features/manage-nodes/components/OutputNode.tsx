@@ -3,8 +3,9 @@ import { createNode } from './BaseNode';
 
 export const OutputNode = createNode({
   title: 'Output',
+  subtitle: 'Return workflow data',
   category: 'output',
-  icon: '⇥',
+  icon: '↳',
   fields: [
     { key: 'outputName', label: 'Field Name', defaultValue: (id) => `output_${id}` },
     {

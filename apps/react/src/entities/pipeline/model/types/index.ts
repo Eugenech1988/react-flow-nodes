@@ -100,6 +100,7 @@ export type TGraphActions = {
 
 export type TExecutionActions = {
   runWorkflow: () => Promise<void>;
+  runNode: (nodeId: string) => Promise<void>;
   stopWorkflow: () => void;
   clearLogs: () => void;
   addLog: (message: string, type?: TExecutionLog['type'], nodeId?: string) => void;
@@ -150,6 +151,7 @@ export type TNodeRenderArgs = {
 
 export type TNodeConfig = {
   title?: string;
+  subtitle?: string;
   category?: string;
   icon?: ReactNode;
   fields?: TFieldConfig[];

@@ -1,20 +1,17 @@
+import { Link } from 'react-router-dom';
 import { useSidebarStore } from './model';
-import {
-  Folder,
-  KeyRound,
-  History,
-  Star,
-  CreditCard,
-  LogOut
-} from 'lucide-react';
+import { Folder, KeyRound, History, Star, CreditCard, LogOut } from 'lucide-react';
+import { useUser } from '@/shared/hooks';
 
 export const Sidebar = () => {
   const isOpen = useSidebarStore((state) => state.isOpen);
+  const { user } = useUser();
+  console.log(user);
 
   const mainNavItems = [
     { label: 'Workflows', icon: Folder, href: '/workflows' },
     { label: 'Credentials', icon: KeyRound, href: '/credentials' },
-    { label: 'Executions', icon: History, href: '/executions', active: true },
+    { label: 'Executions', icon: History, href: '/executions' },
   ];
 
   const bottomNavItems = [
@@ -23,48 +20,52 @@ export const Sidebar = () => {
     { label: 'Sign out', icon: LogOut, action: () => {} },
   ];
 
+  const itemClassName = (isActive?: boolean) =>
+    `w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+      isActive
+        ? 'bg-muted text-foreground font-semibold'
+        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+    }`;
+
+  const renderNavItem = (item: {
+    label: string;
+    icon: any;
+    href?: string;
+    action?: () => void;
+    active?: boolean;
+  }) => {
+    const Icon = item.icon;
+    const content = (
+      <>
+        <Icon className="h-4 w-4 shrink-0" />
+        <span>{item.label}</span>
+      </>
+    );
+
+    if (item.href) {
+      return (
+        <Link key={item.label} to={item.href} className={itemClassName(item.active)}>
+          {content}
+        </Link>
+      );
+    }
+
+    return (
+      <button key={item.label} onClick={item.action} className={itemClassName(item.active)}>
+        {content}
+      </button>
+    );
+  };
+
   return (
     <aside
-      className={`relative h-full border-r border-border bg-background transition-all duration-300 ease-in-out flex flex-col justify-between select-none overflow-hidden ${
+      className={`border-border bg-background relative flex h-full flex-col justify-between overflow-hidden border-r transition-all duration-300 ease-in-out select-none ${
         isOpen ? 'w-64' : 'w-0 border-r-0'
       }`}
     >
-      {/* Верхняя панель навигации */}
-      <div className="p-3 space-y-1">
-        {mainNavItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.label}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                item.active
-                  ? 'bg-muted text-foreground font-semibold'
-                  : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-              }`}
-            >
-              <Icon className="w-4 h-4 shrink-0" />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
+      <div className="space-y-1 p-3">{mainNavItems.map(renderNavItem)}</div>
 
-      {/* Нижняя панель профиля и биллинга */}
-      <div className="p-3 space-y-1">
-        {bottomNavItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.label}
-              onClick={item.action}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors cursor-pointer"
-            >
-              <Icon className="w-4 h-4 shrink-0" />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
+      <div className="space-y-1 p-3">{bottomNavItems.map(renderNavItem)}</div>
     </aside>
   );
 };

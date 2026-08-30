@@ -1,5 +1,10 @@
 import type { StateCreator } from 'zustand';
-import type { TPipelineStore, TExecutionState, TExecutionActions } from '@/entities/pipeline/model/types';
+import type {
+  TPipelineStore,
+  TExecutionState,
+  TExecutionActions,
+} from '@/entities/pipeline/model/types';
+import { executeNode, type TNodeExecutionResult } from '@/entities/pipeline/model/lib';
 
 export const createExecutionSlice: StateCreator<
   TPipelineStore,
@@ -48,7 +53,10 @@ export const createExecutionSlice: StateCreator<
 
     if (startNodes.length === 0) {
       set({ executionStatus: 'failed' });
-      addLog('Execution aborted: No valid start node (Input) found. Text nodes cannot trigger the workflow alone.', 'error');
+      addLog(
+        'Execution aborted: No valid start node (Input) found. Text nodes cannot trigger the workflow alone.',
+        'error',
+      );
       return;
     }
 
@@ -70,10 +78,10 @@ export const createExecutionSlice: StateCreator<
       if (degree === 0) validationQueue.push(id);
     });
 
-    let visitedCount = 0;
+    const topologicalOrder: string[] = [];
     while (validationQueue.length > 0) {
       const curr = validationQueue.shift()!;
-      visitedCount++;
+      topologicalOrder.push(curr);
       const neighbors = validationMap.get(curr) || [];
       neighbors.forEach((next) => {
         inDegree.set(next, inDegree.get(next)! - 1);
@@ -83,7 +91,7 @@ export const createExecutionSlice: StateCreator<
       });
     }
 
-    if (visitedCount < nodes.length) {
+    if (topologicalOrder.length < nodes.length) {
       set({ executionStatus: 'failed' });
       addLog('Execution aborted: Infinite loop detected in the workflow configuration.', 'error');
       return;
@@ -98,56 +106,60 @@ export const createExecutionSlice: StateCreator<
     });
     addLog('Workflow execution started.', 'info');
 
-    const queue: string[] = startNodes.map((n) => n.id);
-    const visited = new Set<string>();
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
-    const adjacencyMap = new Map<string, string[]>();
-    nodes.forEach((n) => adjacencyMap.set(n.id, []));
+    const outgoingEdges = new Map<string, typeof edges>();
+    const nodeInputs = new Map<string, TNodeExecutionResult>();
+    nodes.forEach((n) => outgoingEdges.set(n.id, []));
     edges.forEach((e) => {
-      if (adjacencyMap.has(e.source) && nodeMap.has(e.target)) {
-        adjacencyMap.get(e.source)!.push(e.target);
+      if (nodeMap.has(e.source) && nodeMap.has(e.target)) {
+        outgoingEdges.get(e.source)!.push(e);
       }
     });
 
-    while (queue.length > 0) {
+    for (const currentNodeId of topologicalOrder) {
       if (get().executionStatus !== 'running') {
         break;
       }
-      const currentNodeId = queue.shift()!;
-      if (visited.has(currentNodeId)) continue;
-      visited.add(currentNodeId);
       const node = nodeMap.get(currentNodeId);
       if (!node) continue;
+
+      const isStartNode = startNodes.some((startNode) => startNode.id === node.id);
+      const input = nodeInputs.get(node.id);
+      if (!isStartNode && !input) continue;
 
       set({ activeNodeId: node.id });
       const currentTypeName = node.data?.nodeType || node.type || 'unknown';
       addLog(`Node "${node.id}" [${currentTypeName}] execution triggered`, 'info', node.id);
 
       try {
-        await new Promise((resolve, reject) => {
-          setTimeout(() => {
-            const filterEffect = node.data?.filterEffect || node.data?.status;
-            if (filterEffect === 'error' || node.data?.status === 'error') {
-              reject(new Error('Internal processing failure inside the node configuration'));
-            } else {
-              resolve(true);
-            }
-          }, 1200);
-        });
+        const output = await executeNode(node, input);
 
         set((state) => ({
           successNodeIds: [...state.successNodeIds, node.id],
         }));
         addLog(`Node "${node.id}" successfully finished`, 'success', node.id);
 
-        const nextTargetIds = adjacencyMap.get(currentNodeId) || [];
-        nextTargetIds.forEach((targetId) => {
-          if (!visited.has(targetId)) {
-            queue.push(targetId);
-          }
+        const isCondition = String(node.data.nodeType || node.type || '')
+          .toLowerCase()
+          .includes('condition');
+        const conditionHandle = output.matched ? 'true' : 'false';
+        (outgoingEdges.get(currentNodeId) || []).forEach((edge) => {
+          if (isCondition && edge.sourceHandle && edge.sourceHandle !== conditionHandle) return;
+          nodeInputs.set(edge.target, { ...nodeInputs.get(edge.target), ...output });
         });
-
       } catch (error: any) {
+        if (node.data?.continueOnError === 'true') {
+          addLog(
+            `Node "${node.id}" failed, but the workflow will continue by node option.`,
+            'error',
+            node.id,
+          );
+          (outgoingEdges.get(currentNodeId) || []).forEach((edge) => {
+            nodeInputs.set(edge.target, { ...nodeInputs.get(edge.target), ...input });
+          });
+          continue;
+        }
+
         set({
           executionStatus: 'failed',
           failedNodeId: node.id,
@@ -161,6 +173,49 @@ export const createExecutionSlice: StateCreator<
     if (get().executionStatus === 'running') {
       set({ executionStatus: 'success', activeNodeId: null });
       addLog('Workflow executed completely!', 'success');
+    }
+  },
+
+  runNode: async (nodeId) => {
+    const { nodes, addLog } = get();
+    const node = nodes.find((item) => item.id === nodeId);
+
+    if (!node) {
+      addLog('Node execution aborted: node was not found.', 'error', nodeId);
+      return;
+    }
+
+    if (get().executionStatus === 'running') {
+      addLog(
+        'Wait for the current execution to finish before running another node.',
+        'info',
+        nodeId,
+      );
+      return;
+    }
+
+    set({
+      executionStatus: 'running',
+      activeNodeId: nodeId,
+      successNodeIds: [],
+      failedNodeId: null,
+    });
+
+    const nodeType = String(node.data?.nodeType || node.type || 'unknown');
+    addLog(`Node "${node.id}" [${nodeType}] execution started.`, 'info', node.id);
+
+    try {
+      const output = await executeNode(node);
+      set({ executionStatus: 'success', activeNodeId: null, successNodeIds: [node.id] });
+      addLog(
+        `Node "${node.id}" successfully finished: ${JSON.stringify(output).slice(0, 120)}`,
+        'success',
+        node.id,
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown node execution error.';
+      set({ executionStatus: 'failed', activeNodeId: null, failedNodeId: node.id });
+      addLog(`Node "${node.id}" failed: ${message}`, 'error', node.id);
     }
   },
 

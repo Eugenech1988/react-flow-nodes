@@ -8,6 +8,8 @@ export const ConditionalNode = createNode({
   category: 'logic',
   icon: '⑂',
   fields: [
+    { key: 'value', label: 'Value', defaultValue: '' },
+    { key: 'compareWith', label: 'Compare with', defaultValue: '' },
     {
       key: 'operator',
       label: 'Operator',
