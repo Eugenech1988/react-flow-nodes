@@ -3,8 +3,8 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "exactOptionalPropertyTypes": false,
     "declaration": true,
-    "emitDeclarationOnly": true,
     "outDir": "dist"
   },
   "include": ["src"]

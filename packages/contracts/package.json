@@ -3,10 +3,37 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./auth": {
+      "types": "./dist/auth.d.ts",
+      "default": "./dist/auth.js"
+    },
+    "./billing": {
+      "types": "./dist/billing.d.ts",
+      "default": "./dist/billing.js"
+    },
+    "./database-nodes": {
+      "types": "./dist/database-nodes.d.ts",
+      "default": "./dist/database-nodes.js"
+    },
+    "./pipelines": {
+      "types": "./dist/pipelines.d.ts",
+      "default": "./dist/pipelines.js"
+    },
+    "./profile": {
+      "types": "./dist/profile.d.ts",
+      "default": "./dist/profile.js"
+    }
   },
   "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch --preserveWatchOutput",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {

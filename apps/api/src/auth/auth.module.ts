@@ -17,7 +17,6 @@ import { MailModule } from '@/mail/mail.module';
   imports: [
     UsersModule,
     MailModule,
-    MailModule,
     PassportModule.register({defaultStrategy: 'google'}),
     JwtModule.registerAsync({
       inject: [ConfigService],
