@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DatabaseNodesService } from './database-nodes.service';
+import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
 import { PrismaService } from '@/prisma/prisma.service';
 
 describe('DatabaseNodesService', () => {

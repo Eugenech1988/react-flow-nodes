@@ -1,9 +1,24 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "..",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": [
+      "ts-jest",
+      {
+        "tsconfig": "<rootDir>/tsconfig.json",
+        "isolatedModules": true
+      }
+    ]
+  },
+  "transformIgnorePatterns": [
+    "node_modules/(?!(@pipeline|@scure|otplib)/)"
+  ],
+  "moduleNameMapper": {
+    "^@pipeline/contracts$": "<rootDir>/../../packages/contracts/src/index.ts",
+    "^@pipeline/contracts/(.*)$": "<rootDir>/../../packages/contracts/src/$1",
+    "^(\\.\\.?/.*)\\.js$": "$1",
+    "^@/(.*)$": "<rootDir>/src/$1"
   }
 }
