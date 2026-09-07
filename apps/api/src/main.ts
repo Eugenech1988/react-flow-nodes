@@ -16,6 +16,7 @@ import { createAppRouter } from '@/trpc/app-router';
 import { createContext } from '@/trpc/context';
 import { AiService } from '@/ai/ai.service';
 import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
+import { doubleCsrf } from 'csrf-csrf';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
@@ -24,7 +25,7 @@ async function bootstrap() {
     origin: process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type, Accept, Authorization',
+    allowedHeaders: 'Content-Type, Accept, Authorization, x-csrf-token',
   });
 
   app.useStaticAssets(join(process.cwd(), 'uploads'), {
@@ -37,6 +38,33 @@ async function bootstrap() {
   app.useBodyParser('urlencoded', { extended: true, limit: '10mb' });
 
   app.use(cookieParser());
+
+  const csrf = doubleCsrf({
+    getSecret: () => process.env.CSRF_SECRET || 'default-secret-change-me',
+    getSessionIdentifier: (req) => req.cookies?.['session'] || req.ip,
+    cookieName: 'x-csrf-token',
+    cookieOptions: {
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: false,
+      path: '/',
+    },
+    size: 64,
+    ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
+  });
+
+  const generateCsrfToken = csrf.generateCsrfToken;
+  const doubleCsrfProtection = csrf.doubleCsrfProtection;
+
+  app.use((req, res, next) => {
+    if (
+      req.path.startsWith('/api/docs') ||
+      req.path.startsWith('/csrf-token')
+    ) {
+      return next();
+    }
+    return doubleCsrfProtection(req, res, next);
+  });
 
   const usersService = app.get(UsersService);
   const authService = app.get(AuthService);
@@ -60,6 +88,12 @@ async function bootstrap() {
         createContext({ req, res }, { jwtService, usersService, authService }),
     }),
   );
+
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.get('/csrf-token', (req, res) => {
+    const token = generateCsrfToken(req, res);
+    res.json({ csrfToken: token });
+  });
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Pipeline Studio API')

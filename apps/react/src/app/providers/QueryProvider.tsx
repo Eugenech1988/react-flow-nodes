@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TRPCProvider, trpcClient } from '@/shared/api';
@@ -20,6 +20,19 @@ export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
         },
       })
   );
+
+  useEffect(() => {
+    const initializeCsrf = async () => {
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL ?? 'http://localhost:3000'}/csrf-token`, {
+          credentials: 'include',
+        });
+      } catch (error) {
+        console.error('Csrf token not initialized:', error);
+      }
+    };
+    initializeCsrf();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
