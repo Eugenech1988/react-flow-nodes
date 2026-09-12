@@ -41,10 +41,9 @@ export const TwoFactorSection = () => {
           aria-labelledby="2fa-label"
           aria-describedby="2fa-description"
           style={{
-          backgroundColor: user2fa  ? 'var(--color-teal-600, #0d9488)' : undefined,
+            backgroundColor: user2fa ? 'var(--color-teal-600, #0d9488)' : undefined,
           }}
           className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent cursor-pointer"
-
         />
       </label>
 
@@ -55,7 +54,7 @@ export const TwoFactorSection = () => {
         mode={modal2fa.mode}
         qrCodeImage={modal2fa.qrCodeImage}
         modalError={modal2fa.error}
-        isPending={is2faPending || modal2fa.isGenerating}
+        isPending={is2faPending}
       />
     </div>
   );

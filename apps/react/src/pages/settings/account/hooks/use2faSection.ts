@@ -30,7 +30,6 @@ export const use2faSection = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(trpc.auth.me.queryFilter());
         setAlert({ type: 'success', message: 'Two-factor authentication enabled.' });
-        setIsOpen(false);
       },
       onError: (error) => {
         setModalError(error.message || 'Invalid code. Failed to enable 2FA.');
@@ -69,9 +68,7 @@ export const use2faSection = () => {
         if (res?.qrCodeImage) {
           setQrCodeImage(res.qrCodeImage);
         }
-      } catch {
-        // Ошибка обрабатывается в onError мутации generate2faMutation
-      }
+      } catch {}
     } else {
       setMode('disable');
       setQrCodeImage(null);

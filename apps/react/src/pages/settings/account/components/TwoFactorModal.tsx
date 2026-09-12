@@ -13,7 +13,7 @@ import {
 interface TwoFactorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (code: string) => Promise<string[] | void> | void;
+  onConfirm: (code: string) => Promise<string[] | void>;
   mode: 'enable' | 'disable';
   qrCodeImage?: string | null;
   modalError?: string | null;
@@ -65,13 +65,14 @@ export const TwoFactorModal = ({
   const handleFormSubmit = async (data: TFormSchema) => {
     try {
       const result = await onConfirm(data.code);
-      if (Array.isArray(result) && result.length > 0) {
+      if (isEnable && Array.isArray(result) && result.length > 0) {
         setRecoveryCodes(result);
-      } else if (!isEnable) {
+        return;
+      }
+      if (!isEnable) {
         handleClose();
       }
-    } catch {
-    }
+    } catch {}
   };
 
   const handleCopyCodes = () => {
@@ -84,7 +85,7 @@ export const TwoFactorModal = ({
   const hasCodeError = !!errors.code;
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={recoveryCodes ? undefined : handleClose}>
       <DialogContent
         showCloseButton={false}
         className="sm:max-w-md border-border bg-card p-0 gap-0 overflow-hidden rounded-xl shadow-lg backdrop-blur-md"
