@@ -10,6 +10,16 @@ import { Prisma } from '@prisma/client';
 export class PipelinesService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private async deleteFile(relativePath: string | null) {
+    if (!relativePath) return;
+    try {
+      const fullPath = path.join(process.cwd(), relativePath);
+      await fs.unlink(fullPath);
+    } catch (err) {
+      console.warn(`Failed to delete old file at ${relativePath}:`, err);
+    }
+  }
+
   async create(
     userId: string,
     dto: CreatePipelineDto,
@@ -63,56 +73,49 @@ export class PipelinesService {
       throw new ForbiddenException('You do not have permission to update this pipeline');
     }
 
-    let screenshotUrl = existingPipeline.screenshotUrl;
+    const { screenshotBase64, graphData, ...restDto } = dto;
+    let newScreenshotUrl: string | undefined;
 
-    if (dto.screenshotBase64) {
-      if (existingPipeline.screenshotUrl) {
-        try {
-          const oldFilePath = path.join(process.cwd(), existingPipeline.screenshotUrl);
-          await fs.unlink(oldFilePath);
-        } catch (err) {
-          console.warn(`Failed to delete old file:`, err);
-        }
-      }
-
-      const base64Data = dto.screenshotBase64.replace(/^data:image\/\w+;base64,/, '');
+    // 1. Сохраняем новый файл перед записью в БД
+    if (screenshotBase64) {
+      const base64Data = screenshotBase64.replace(/^data:image\/\w+;base64,/, '');
       const buffer = Buffer.from(base64Data, 'base64');
       const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}.png`;
-      const relativePath = `/uploads/screenshots/${fileName}`;
       const fullPath = path.join(process.cwd(), 'uploads/screenshots', fileName);
 
       await fs.mkdir(path.dirname(fullPath), { recursive: true });
       await fs.writeFile(fullPath, buffer);
 
-      screenshotUrl = relativePath;
+      newScreenshotUrl = `/uploads/screenshots/${fileName}`;
     } else if (file) {
-      screenshotUrl = `/uploads/screenshots/${file.filename}`;
-      if (existingPipeline.screenshotUrl) {
-        try {
-          const oldFilePath = path.join(process.cwd(), existingPipeline.screenshotUrl);
-          await fs.unlink(oldFilePath);
-        } catch (err) {
-          console.warn(`Failed to delete old file:`, err);
-        }
-      }
+      newScreenshotUrl = `/uploads/screenshots/${file.filename}`;
     }
 
     try {
-      return await this.prisma.pipeline.update({
+      // 2. Обновляем данные в базе
+      const updatedPipeline = await this.prisma.pipeline.update({
         where: { id },
         data: {
-          ...(dto.name !== undefined && { name: dto.name }),
-          ...(dto.description !== undefined && { description: dto.description }),
-          ...(dto.status !== undefined && { status: dto.status }),
-          ...(dto.lastRunAt !== undefined && { lastRunAt: dto.lastRunAt }),
-          ...(dto.lastRunStatus !== undefined && { lastRunStatus: dto.lastRunStatus }),
-          ...(dto.graphData !== undefined && {
-            graphData: dto.graphData as unknown as Prisma.InputJsonValue,
+          ...restDto,
+          ...(graphData !== undefined && {
+            graphData: graphData as unknown as Prisma.InputJsonValue,
           }),
-          screenshotUrl,
+          ...(newScreenshotUrl && { screenshotUrl: newScreenshotUrl }),
         },
       });
+
+      // 3. Старый файл удаляем ТОЛЬКО после успешного обновления БД
+      if (newScreenshotUrl && existingPipeline.screenshotUrl) {
+        await this.deleteFile(existingPipeline.screenshotUrl);
+      }
+
+      return updatedPipeline;
     } catch (error: any) {
+      // В случае ошибки БД откатываем загруженный новый файл
+      if (newScreenshotUrl) {
+        await this.deleteFile(newScreenshotUrl);
+      }
+
       if (error.code === 'P2002') {
         throw new BadRequestException('Pipeline with this name already exists');
       }
@@ -135,12 +138,7 @@ export class PipelinesService {
     }
 
     if (pipeline.screenshotUrl) {
-      try {
-        const filePath = path.join(process.cwd(), pipeline.screenshotUrl);
-        await fs.unlink(filePath);
-      } catch (err) {
-        console.warn(`Failed to delete file at ${pipeline.screenshotUrl}:`, err);
-      }
+      await this.deleteFile(pipeline.screenshotUrl);
     }
 
     try {

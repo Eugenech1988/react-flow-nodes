@@ -151,9 +151,9 @@ export function createAppRouter(services: RouterServices) {
     ),
     update: protectedProcedure
       .input(updatePipelineInputSchema)
-      .mutation(({ input }) => {
+      .mutation(async ({ ctx, input }) => {
         const { id, ...dto } = input;
-        return services.pipelinesService.update(id, dto as UpdatePipelineDto & { screenshotBase64?: string });
+        return services.pipelinesService.update(id, ctx.user.id, dto as UpdatePipelineDto);
       }),
   });
 
