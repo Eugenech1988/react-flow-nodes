@@ -1,12 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useSidebarStore } from './model';
 import { Folder, KeyRound, History, Star, CreditCard, LogOut } from 'lucide-react';
-import { useUser } from '@/shared/hooks';
 
 export const Sidebar = () => {
   const isOpen = useSidebarStore((state) => state.isOpen);
-  const { user } = useUser();
-  console.log(user);
 
   const mainNavItems = [
     { label: 'Workflows', icon: Folder, href: '/workflows' },

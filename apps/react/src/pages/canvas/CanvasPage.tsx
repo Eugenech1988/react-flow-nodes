@@ -1,5 +1,5 @@
 import { Canvas } from '@/widgets/canvas';
-import { Sidebar } from '@/widgets/Sidebar';
+import { Sidebar } from '@/widgets/sidebar';
 import { usePipelines } from '@/shared/hooks';
 import { GlobalLoader } from '@/shared/ui';
 import { Navigate } from 'react-router-dom';
