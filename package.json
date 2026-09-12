@@ -17,7 +17,7 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,astro,md,json,cjs,mjs}\"",
-    "format:check": "prettier --read \"**/*.{ts,tsx,astro,md,json,cjs,mjs}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,astro,md,json,cjs,mjs}\"",
     "clean": "rimraf .turbo node_modules \"apps/**/{node_modules,dist,.next,out,.astro}\" \"packages/**/{node_modules,dist}\" node_modules",
     "check-types": "turbo run check-types"
   },

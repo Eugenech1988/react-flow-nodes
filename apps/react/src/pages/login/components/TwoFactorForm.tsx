@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@pipeline/ui';
-import { CancelButton, LocalAlert, SubmitButton } from '@/shared/ui';
+import { AppButton, LocalAlert } from '@/shared/ui';
 import { twoFactorLoginInputSchema, type TTwoFactorLoginInputData } from '@pipeline/contracts';
 import { useAuthStore } from '@/pages/login/model';
 import { Link } from 'react-router-dom';
@@ -76,17 +76,22 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <CancelButton
+        <AppButton
+          text="Cancel"
+          variant="secondary"
+          size="md"
           onClick={onBack}
           isDisabled={isLoading}
           className="w-full text-sm"
         />
-        <SubmitButton
-          isPending={isLoading}
-          isDisabled={isLoading}
+        <AppButton
+          type="submit"
           text="Verify"
           pendingText="Verifying..."
-          icon={null}
+          variant="primary"
+          size="md"
+          isPending={isLoading}
+          isDisabled={isLoading}
           className="w-full text-sm"
         />
       </div>

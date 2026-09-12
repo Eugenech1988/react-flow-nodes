@@ -2,16 +2,7 @@ import React from 'react';
 import { Textarea } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
 import type { TRoundedSize } from '@/shared/lib';
-
-const roundedMap: Record<TRoundedSize, string> = {
-  none: 'rounded-none',
-  sm: 'rounded-sm',
-  md: 'rounded-md',
-  lg: 'rounded-lg',
-  xl: 'rounded-xl',
-  '2xl': 'rounded-2xl',
-  full: 'rounded-full',
-};
+import { ROUNDED_MAP } from '@/shared/lib';
 
 interface FloatingTextareaProps extends React.ComponentProps<typeof Textarea> {
   label: string;
@@ -41,7 +32,7 @@ export const FloatingTextarea = React.forwardRef<
     ref
   ) => {
     const hasValue = Boolean(props.value && String(props.value).trim() !== '');
-    const roundedClass = roundedMap[rounded] || roundedMap.xl;
+    const roundedClass = ROUNDED_MAP[rounded] || ROUNDED_MAP.xl;
 
     return (
       <div className="w-full">

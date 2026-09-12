@@ -1,4 +1,5 @@
 import type { Variants } from 'framer-motion';
+import type { TRoundedSize } from '@/shared/lib/types.ts';
 
 export const PAGE_VARIANTS: Variants = {
   initial: { opacity: 0, y: 12 },
@@ -18,4 +19,14 @@ export const SETTINGS_CONTENT_VARIANTS: Variants = {
     opacity: 1,
     y: 0,
   },
+};
+
+export const ROUNDED_MAP: Record<TRoundedSize, string> = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  '2xl': 'rounded-2xl',
+  full: 'rounded-full',
 };

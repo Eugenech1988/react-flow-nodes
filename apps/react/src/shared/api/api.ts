@@ -1,14 +1,14 @@
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 let isRefreshing = false;
-let refreshSubscribers: (() => void)[] = [];
+let refreshSubscribers: ((error?: Error) => void)[] = [];
 
-const subscribeTokenRefresh = (cb: () => void) => {
+const subscribeTokenRefresh = (cb: (error?: Error) => void) => {
   refreshSubscribers.push(cb);
 };
 
-const onRefreshed = () => {
-  refreshSubscribers.forEach((cb) => cb());
+const onRefreshed = (error?: Error) => {
+  refreshSubscribers.forEach((cb) => cb(error));
   refreshSubscribers = [];
 };
 
@@ -34,14 +34,18 @@ const request = async <T>(
   if (response.status === 401) {
     if (endpoint === '/auth/refresh') {
       isRefreshing = false;
-      refreshSubscribers = [];
+      onRefreshed(new Error('Unauthorized'));
       throw new Error('Unauthorized');
     }
 
     if (isRefreshing) {
-      return new Promise<T>((resolve) => {
-        subscribeTokenRefresh(() => {
-          resolve(request<T>(endpoint, options, responseType));
+      return new Promise<T>((resolve, reject) => {
+        subscribeTokenRefresh((error) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(request<T>(endpoint, options, responseType));
+          }
         });
       });
     }
@@ -53,10 +57,11 @@ const request = async <T>(
       isRefreshing = false;
       onRefreshed();
       return await request<T>(endpoint, options, responseType);
-    } catch {
+    } catch (err) {
       isRefreshing = false;
-      refreshSubscribers = [];
-      throw new Error('Unauthorized');
+      const authError = err instanceof Error ? err : new Error('Unauthorized');
+      onRefreshed(authError);
+      throw authError;
     }
   }
 

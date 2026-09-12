@@ -9,21 +9,12 @@ import {
 } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
 import type { TRoundedSize } from '@/shared/lib';
-
-const roundedMap: Record<TRoundedSize, string> = {
-  none: 'rounded-none',
-  sm: 'rounded-sm',
-  md: 'rounded-md',
-  lg: 'rounded-lg',
-  xl: 'rounded-xl',
-  '2xl': 'rounded-2xl',
-  full: 'rounded-full',
-};
+import { ROUNDED_MAP } from '@/shared/lib';
 
 export type TFloatingSelectOption = {
   value: string;
   label: string;
-}
+};
 
 export interface FloatingSelectProps {
   label: string;
@@ -60,14 +51,20 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
 
   const hasValue = Boolean(value && value.trim() !== '');
   const selectedOption = options.find((opt) => opt.value === value);
-  const roundedClass = roundedMap[rounded] || roundedMap.xl;
+  const roundedClass = ROUNDED_MAP[rounded] || ROUNDED_MAP.xl;
+
+  const handleValueChange = (val: string | null) => {
+    if (val !== null) {
+      onChange?.(val);
+    }
+  };
 
   return (
     <div className="w-full">
       <div className={cn('relative w-full h-11 group flex items-center', roundedClass)}>
         <Select
           value={value || undefined}
-          onValueChange={onChange}
+          onValueChange={handleValueChange}
           onOpenChange={setIsOpen}
           disabled={disabled}
         >

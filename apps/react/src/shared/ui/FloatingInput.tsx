@@ -2,16 +2,7 @@ import React from 'react';
 import { Input } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
 import type { TRoundedSize } from '@/shared/lib';
-
-const roundedMap: Record<TRoundedSize, string> = {
-  none: 'rounded-none',
-  sm: 'rounded-sm',
-  md: 'rounded-md',
-  lg: 'rounded-lg',
-  xl: 'rounded-xl',
-  '2xl': 'rounded-2xl',
-  full: 'rounded-full',
-};
+import { ROUNDED_MAP } from '@/shared/lib';
 
 interface FloatingInputProps extends React.ComponentProps<typeof Input> {
   label: string;
@@ -40,7 +31,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
     ref
   ) => {
     const hasIcon = Boolean(icon);
-    const roundedClass = roundedMap[rounded] || roundedMap.xl;
+    const roundedClass = ROUNDED_MAP[rounded] || ROUNDED_MAP.xl;
 
     return (
       <div className="w-full">
