@@ -47,6 +47,7 @@ export class PipelinesService {
 
   async update(
     id: string,
+    userId: string,
     dto: UpdatePipelineDto & { screenshotBase64?: string },
     file?: Express.Multer.File,
   ) {
@@ -56,6 +57,10 @@ export class PipelinesService {
 
     if (!existingPipeline) {
       throw new NotFoundException('Pipeline not found');
+    }
+
+    if (existingPipeline.userId !== userId) {
+      throw new ForbiddenException('You do not have permission to update this pipeline');
     }
 
     let screenshotUrl = existingPipeline.screenshotUrl;

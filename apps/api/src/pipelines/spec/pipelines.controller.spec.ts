@@ -37,7 +37,7 @@ describe('PipelinesController', () => {
   });
 
   describe('create', () => {
-    it('should call pipelinesService.create', async () => {
+    it('should call pipelinesService.create with userId from JWT', async () => {
       const dto = { name: 'Pipeline 1' };
       const mockFile = { filename: 'screen.png' } as Express.Multer.File;
       service.create.mockResolvedValue({ id: 'p1', ...dto } as any);
@@ -50,7 +50,7 @@ describe('PipelinesController', () => {
   });
 
   describe('findAllByUserId', () => {
-    it('should call pipelinesService.findAllByUserId', async () => {
+    it('should call pipelinesService.findAllByUserId with userId from JWT', async () => {
       const mockPipelines = [{ id: 'p1' }, { id: 'p2' }];
       service.findAllByUserId.mockResolvedValue(mockPipelines as any);
 
@@ -62,19 +62,19 @@ describe('PipelinesController', () => {
   });
 
   describe('update', () => {
-    it('should call pipelinesService.update', async () => {
+    it('should call pipelinesService.update with id, userId, dto and file', async () => {
       const dto = { name: 'Updated Name' };
       service.update.mockResolvedValue({ id: 'p1', ...dto } as any);
 
-      const result = await controller.update('p1', dto);
+      const result = await controller.update('p1', 'user_1', dto, undefined);
 
-      expect(service.update).toHaveBeenCalledWith('p1', dto, undefined);
+      expect(service.update).toHaveBeenCalledWith('p1', 'user_1', dto, undefined);
       expect(result).toEqual({ id: 'p1', ...dto });
     });
   });
 
   describe('remove', () => {
-    it('should call pipelinesService.remove', async () => {
+    it('should call pipelinesService.remove with id and userId', async () => {
       service.remove.mockResolvedValue({ id: 'p1' } as any);
 
       const result = await controller.remove('p1', 'user_1');

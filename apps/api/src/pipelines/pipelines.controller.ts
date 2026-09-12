@@ -1,16 +1,22 @@
-import { Controller, Get, Post, Body, Param, UseInterceptors, UploadedFile, Delete, Patch } from '@nestjs/common';
+import {
+  Controller, Get, Post, Body, Param, UseInterceptors,
+  UploadedFile, Delete, Patch, UseGuards
+} from '@nestjs/common';
 import { PipelinesService } from '@/pipelines/pipelines.service';
 import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
+import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'node:path';
-import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
 
 @Controller('pipelines')
+@UseGuards(JwtAuthGuard)
 export class PipelinesController {
   constructor(private readonly pipelinesService: PipelinesService) {}
 
-  @Post('user/:userId')
+  @Post()
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -24,15 +30,15 @@ export class PipelinesController {
     }),
   )
   async create(
-    @Param('userId') userId: string,
+    @CurrentUser('id') userId: string,
     @Body() dto: CreatePipelineDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     return this.pipelinesService.create(userId, dto, file);
   }
 
-  @Get('user/:userId')
-  async findAllByUserId(@Param('userId') userId: string) {
+  @Get()
+  async findAllByUserId(@CurrentUser('id') userId: string) {
     return this.pipelinesService.findAllByUserId(userId);
   }
 
@@ -51,15 +57,17 @@ export class PipelinesController {
   )
   async update(
     @Param('id') id: string,
+    @CurrentUser('id') userId: string,
     @Body() dto: UpdatePipelineDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.pipelinesService.update(id, dto, file);
+    return this.pipelinesService.update(id, userId, dto, file);
   }
-  @Delete(':id/user/:userId')
+
+  @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Param('userId') userId: string,
+    @CurrentUser('id') userId: string,
   ) {
     return this.pipelinesService.remove(id, userId);
   }
