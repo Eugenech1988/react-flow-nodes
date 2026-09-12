@@ -40,7 +40,11 @@ export const TwoFactorSection = () => {
           disabled={is2faPending || modal2fa.isGenerating}
           aria-labelledby="2fa-label"
           aria-describedby="2fa-description"
-          className="data-[state=checked]:bg-teal-600"
+          style={{
+          backgroundColor: user2fa  ? 'var(--color-teal-600, #0d9488)' : undefined,
+          }}
+          className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent cursor-pointer"
+
         />
       </label>
 
