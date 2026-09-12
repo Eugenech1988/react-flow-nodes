@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
+import { useShallow } from 'zustand/react/shallow';
 import {
   ReactFlow,
   Background,
@@ -40,22 +41,53 @@ export const Canvas = () => {
     TPipelineEdge
   > | null>(null);
 
-  const initGraph = useStore((state) => state.initGraph);
-  const resetGraph = useStore((state) => state.resetGraph);
+  const {
+    nodes,
+    edges,
+    initGraph,
+    resetGraph,
+    addNode,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    exportJSON,
+    importJSON,
+    copyNodes,
+    pasteNodes,
+    getNodeID,
+    undo,
+    redo,
+  } = useStore(
+    useShallow((state) => ({
+      nodes: state.nodes,
+      edges: state.edges,
+      initGraph: state.initGraph,
+      resetGraph: state.resetGraph,
+      addNode: state.addNode,
+      onNodesChange: state.onNodesChange,
+      onEdgesChange: state.onEdgesChange,
+      onConnect: state.onConnect,
+      exportJSON: state.exportJSON,
+      importJSON: state.importJSON,
+      copyNodes: state.copyNodes,
+      pasteNodes: state.pasteNodes,
+      getNodeID: state.getNodeID,
+      undo: state.undo,
+      redo: state.redo,
+    }))
+  );
 
   const { user } = useUser();
-
   const currentPipeline = user?.currentPipeline;
 
   useEffect(() => {
     if (currentPipeline) {
-      const pipelineRecord = currentPipeline as Record<string, unknown>;
-
+      const pipelineRecord = currentPipeline as unknown as Record<string, unknown>;
       const graph = pipelineRecord.graphData as
         | {
-            nodes?: TPipelineNode[];
-            edges?: TPipelineEdge[];
-          }
+        nodes?: TPipelineNode[];
+        edges?: TPipelineEdge[];
+      }
         | null
         | undefined;
 
@@ -66,22 +98,6 @@ export const Canvas = () => {
       resetGraph();
     };
   }, [currentPipeline?.id, initGraph, resetGraph]);
-
-  const nodes = useStore((state) => state.nodes);
-  const edges = useStore((state) => state.edges);
-
-  const addNode = useStore((state) => state.addNode);
-  const onNodesChange = useStore((state) => state.onNodesChange);
-  const onEdgesChange = useStore((state) => state.onEdgesChange);
-  const onConnect = useStore((state) => state.onConnect);
-  const exportJSON = useStore((state) => state.exportJSON);
-  const importJSON = useStore((state) => state.importJSON);
-  const copyNodes = useStore((state) => state.copyNodes);
-  const pasteNodes = useStore((state) => state.pasteNodes);
-  const getNodeID = useStore((state) => state.getNodeID);
-
-  const undo = useStore((state) => state.undo);
-  const redo = useStore((state) => state.redo);
 
   const { getNodes, getEdges } = useReactFlow<TPipelineNode, TPipelineEdge>();
 

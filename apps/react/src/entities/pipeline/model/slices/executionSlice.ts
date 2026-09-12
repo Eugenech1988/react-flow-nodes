@@ -116,6 +116,8 @@ export const createExecutionSlice: StateCreator<
       }
     });
 
+    const executedNodeIds = new Set<string>();
+
     for (const currentNodeId of topologicalOrder) {
       if (get().executionStatus !== 'running') {
         break;
@@ -134,12 +136,13 @@ export const createExecutionSlice: StateCreator<
       try {
         const output = await executeNode(node, input);
 
+        executedNodeIds.add(node.id);
         set((state) => ({
           successNodeIds: [...state.successNodeIds, node.id],
         }));
         addLog(`Node "${node.id}" successfully finished`, 'success', node.id);
 
-        const isCondition = String(node.data.nodeType || node.type || '')
+        const isCondition = String(node.data?.nodeType || node.type || '')
           .toLowerCase()
           .includes('condition');
         const conditionHandle = output.matched ? 'true' : 'false';
@@ -149,6 +152,7 @@ export const createExecutionSlice: StateCreator<
         });
       } catch (error: any) {
         if (node.data?.continueOnError === 'true') {
+          executedNodeIds.add(node.id);
           addLog(
             `Node "${node.id}" failed, but the workflow will continue by node option.`,
             'error',
@@ -171,8 +175,18 @@ export const createExecutionSlice: StateCreator<
     }
 
     if (get().executionStatus === 'running') {
-      set({ executionStatus: 'success', activeNodeId: null });
-      addLog('Workflow executed completely!', 'success');
+      const hasUnreachableNodes = nodes.length > executedNodeIds.size;
+
+      if (hasUnreachableNodes) {
+        set({ executionStatus: 'failed', activeNodeId: null });
+        addLog(
+          'Workflow failed: some nodes were unreachable or skipped due to condition branches.',
+          'error',
+        );
+      } else {
+        set({ executionStatus: 'success', activeNodeId: null });
+        addLog('Workflow executed completely!', 'success');
+      }
     }
   },
 
