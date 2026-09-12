@@ -63,7 +63,14 @@ describe('AuthService', () => {
         create: jest.fn(),
         findMany: jest.fn(),
         delete: jest.fn(),
+        deleteMany: jest.fn(),
       },
+      $transaction: jest.fn().mockImplementation((cb) => {
+        if (typeof cb === 'function') {
+          return cb(mockPrisma);
+        }
+        return Promise.all(cb);
+      }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -215,14 +222,18 @@ describe('AuthService', () => {
       ).rejects.toThrow('Invalid or expired recovery token');
     });
 
-    it('should update user password if token is valid', async () => {
+    it('should update user password and delete all refresh tokens in transaction', async () => {
       jwtService.verify.mockReturnValue({ userId: 'user_1', purpose: 'password_recovery' });
 
       await service.resetPassword({ token: 'valid_token', password: 'new_pass' });
 
       expect(argon2.hash).toHaveBeenCalledWith('new_pass');
+      expect(prisma.$transaction).toHaveBeenCalled();
       expect(usersService.update).toHaveBeenCalledWith('user_1', {
         password: 'hashed_value',
+      });
+      expect(prisma.refreshToken.deleteMany).toHaveBeenCalledWith({
+        where: { userId: 'user_1' },
       });
     });
   });

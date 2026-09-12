@@ -288,8 +288,14 @@ export class AuthService {
 
     const hashedPassword = await hash(dto.password);
 
-    await this.usersService.update(payload.userId, {
-      password: hashedPassword,
+    await this.prisma.$transaction(async (tx) => {
+      await this.usersService.update(payload.userId, {
+        password: hashedPassword,
+      });
+
+      await tx.refreshToken.deleteMany({
+        where: { userId: payload.userId },
+      });
     });
   }
 

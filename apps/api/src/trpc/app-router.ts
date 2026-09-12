@@ -88,7 +88,13 @@ export function createAppRouter(services: RouterServices) {
       setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
       return toSafeUser(user);
     }),
-    logout: publicProcedure.mutation(({ ctx }) => {
+    logout: publicProcedure.mutation(async ({ ctx }) => {
+      const refreshToken = ctx.req.cookies?.['refreshToken'];
+
+      if (refreshToken) {
+        await services.authService.logout(refreshToken);
+      }
+
       const secure = process.env.NODE_ENV === 'production';
       const options = { httpOnly: true, secure, sameSite: 'lax' as const };
       ctx.res.clearCookie('accessToken', options);
