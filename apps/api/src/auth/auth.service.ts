@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { randomBytes } from 'node:crypto';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from '@/users/users.service';
+import { UsersService, UserWithRelations } from '@/users/users.service';
 import { MailService } from '@/mail/mail.service';
 import { RegisterDto } from '@/auth/dtos/register.dto';
 import { RecoveryDto } from '@/auth/dtos/recovery.dto';
@@ -109,6 +109,55 @@ export class AuthService {
     return this.sanitizeUser(user);
   }
 
+  async validateRefreshToken(refreshToken: string): Promise<UserWithRelations | null> {
+    let payload: IJwtPayload;
+
+    try {
+      payload = this.jwtService.verify<IJwtPayload>(refreshToken, {
+        secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
+      });
+    } catch {
+      return null;
+    }
+
+    const userTokens = await this.prisma.refreshToken.findMany({
+      where: {
+        userId: payload.userId,
+        expiresAt: { gt: new Date() },
+      },
+    });
+
+    let isValid = false;
+    for (const t of userTokens) {
+      if (await verifyArgon(t.token, refreshToken)) {
+        isValid = true;
+        break;
+      }
+    }
+
+    if (!isValid) {
+      return null;
+    }
+
+    return this.usersService.findOneById(payload.userId);
+  }
+
+  async updateRefreshTokenHash(userId: string, refreshToken: string): Promise<void> {
+    const userTokens = await this.prisma.refreshToken.findMany({
+      where: {
+        userId,
+        expiresAt: { gt: new Date() },
+      },
+    });
+
+    for (const t of userTokens) {
+      if (await verifyArgon(t.token, refreshToken)) {
+        await this.prisma.refreshToken.delete({ where: { id: t.id } });
+        break;
+      }
+    }
+  }
+
   async generateTokens(userId: string, userAgent?: string, ip?: string) {
     const payload: IJwtPayload = { userId };
 
@@ -123,7 +172,6 @@ export class AuthService {
     });
 
     const hashedToken = await hash(refreshToken);
-
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
     await this.prisma.refreshToken.create({
@@ -153,7 +201,7 @@ export class AuthService {
     const userTokens = await this.prisma.refreshToken.findMany({
       where: {
         userId: payload.userId,
-        expiresAt: { gt: new Date() }
+        expiresAt: { gt: new Date() },
       },
     });
 

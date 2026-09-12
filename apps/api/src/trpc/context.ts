@@ -17,6 +17,14 @@ function setTokenCookies(res: Response, accessToken: string, refreshToken: strin
   res.cookie('refreshToken', refreshToken, { ...baseOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
 }
 
+function clearTokenCookies(res: Response) {
+  const secure = process.env.NODE_ENV === 'production';
+  const baseOptions = { httpOnly: true, secure, sameSite: 'lax' as const };
+
+  res.clearCookie('accessToken', baseOptions);
+  res.clearCookie('refreshToken', baseOptions);
+}
+
 export async function createContext(
   { req, res }: { req: Request; res: Response },
   services: TrpcServices,
@@ -38,17 +46,18 @@ export async function createContext(
 
   if (!user && refreshToken) {
     try {
-      const payload = await services.jwtService.verifyAsync<{ userId: string }>(refreshToken, {
-        secret: process.env.JWT_REFRESH_SECRET,
-      });
-      const dbUser = await services.usersService.findOneById(payload.userId);
-      if (dbUser) {
-        user = dbUser;
+      const validatedUser = await services.authService.validateRefreshToken(refreshToken);
+      if (validatedUser) {
+        user = validatedUser;
         const tokens = await services.authService.generateTokens(user.id);
+        await services.authService.updateRefreshTokenHash(user.id, tokens.refreshToken);
         setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+      } else {
+        clearTokenCookies(res);
       }
     } catch {
       user = null;
+      clearTokenCookies(res);
     }
   }
 

@@ -11,9 +11,13 @@ import {
   Body,
   UsePipes,
   ValidationPipe,
-  BadRequestException
+  BadRequestException,
 } from '@nestjs/common';
-import { UsersService } from '@/users/users.service';
+import {
+  UsersService,
+  type SafeUserWithRelations,
+  type UserWithRelations,
+} from '@/users/users.service';
 import { CreateUserDto } from '@/users/dtos/create-user.dto';
 import { UpdatePasswordDto } from '@/users/dtos/update-password.dto';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
@@ -30,12 +34,13 @@ export class UsersController {
 
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserWithRelations> {
     return this.usersService.register(createUserDto);
   }
 
   @Get()
-  async findAll() {
+  @UseGuards(JwtAuthGuard)
+  async findAll(): Promise<SafeUserWithRelations[]> {
     return this.usersService.findAll();
   }
 

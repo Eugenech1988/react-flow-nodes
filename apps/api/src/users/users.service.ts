@@ -1,24 +1,47 @@
-import { ConflictException, BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CreateUserDto } from '@/users/dtos/create-user.dto';
 import { UpdatePasswordDto } from '@/users/dtos/update-password.dto';
 import { Prisma } from '@prisma/client';
 import { hash, verify } from 'argon2';
 
+// Валидатор полной модели пользователя (включая приватные поля)
 const userWithRelationsValidator = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { profile: true, subscription: true, currentPipeline: true },
 });
 
 export type UserWithRelations = Prisma.UserGetPayload<typeof userWithRelationsValidator>;
 
+// Безопасная выборка (без password) для контроллеров и списка пользователей
+export const safeUserSelect = {
+  id: true,
+  email: true,
+  hasPassword: true,
+  provider: true,
+  providerId: true,
+  currentPipelineId: true,
+  createdAt: true,
+  updatedAt: true,
+  profile: true,
+  subscription: true,
+  currentPipeline: true,
+} satisfies Prisma.UserSelect;
+
+export type SafeUserWithRelations = Prisma.UserGetPayload<{ select: typeof safeUserSelect }>;
+
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<UserWithRelations[]> {
+  async findAll(): Promise<SafeUserWithRelations[]> {
     try {
       return await this.prisma.user.findMany({
-        include: { profile: true, subscription: true, currentPipeline: true },
+        select: safeUserSelect,
       });
     } catch (error) {
       console.error('Failed to fetch users:', error);
@@ -40,7 +63,7 @@ export class UsersService {
 
     let nickName = createUserDto.nickName;
     if (!nickName) {
-      nickName = email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 7);
+      nickName = `${email.split('@')[0]}_${Math.random().toString(36).substring(2, 7)}`;
     }
 
     const existingProfile = await this.prisma.profile.findFirst({ where: { nickName } });
@@ -153,6 +176,7 @@ export class UsersService {
       throw new BadRequestException('User not found');
     }
 
+    // Если локальный пароль был установлен ранее — требуем и проверяем текущий
     if (user.hasPassword) {
       if (!dto.currentPassword) {
         throw new BadRequestException('Current password is required');
@@ -168,6 +192,7 @@ export class UsersService {
       }
     }
 
+    // Хешируем новый пароль и выставляем flag `hasPassword: true`
     const hashedPassword = await hash(dto.newPassword);
 
     try {
@@ -196,7 +221,6 @@ export class UsersService {
     try {
       await this.prisma.$transaction(async (tx) => {
         await tx.transaction.deleteMany({ where: { userId: id } });
-
         await tx.profile.deleteMany({ where: { userId: id } });
         await tx.subscription.deleteMany({ where: { userId: id } });
 

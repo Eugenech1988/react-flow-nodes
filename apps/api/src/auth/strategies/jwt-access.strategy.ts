@@ -15,9 +15,10 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => req?.cookies?.['accessToken'] || null,
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       ignoreExpiration: false,
-      secretOrKey: configService.getOrThrow('JWT_ACCESS_SECRET'),
+      secretOrKey: configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
     });
   }
 
@@ -26,7 +27,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt') {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    const { password, ...safeUser } = user;
-    return safeUser as unknown as TUserSafe;
+    const { password, twoFactorSecret, recoveryCodes, ...safeUser } = user as Record<string, any>;
+    return safeUser as TUserSafe;
   }
 }
