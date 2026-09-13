@@ -1,0 +1,171 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { Calendar, Clock, ShieldCheck, ArrowRight } from '@lucide/astro';
+
+const benefits = [
+    {
+        title: "Live Product Walkthrough",
+        description: "See our zero-lag visual canvas and node editor in action with a custom live demonstration.",
+        icon: Calendar
+    },
+    {
+        title: "Architecture Q&A",
+        description: "Discuss your event-driven pipelines, scaling requirements, and custom edge-routing needs with our engineers.",
+        icon: Clock
+    },
+    {
+        title: "Custom Security Review",
+        description: "Explore enterprise-grade schema controls, role-based access, and isolated edge instances for your team.",
+        icon: ShieldCheck
+    }
+];
+---
+
+<Layout title="Request a Demo | Pipeline Studio">
+    <main class="relative min-h-screen bg-slate-950 text-slate-100 overflow-hidden pt-12 pb-12">
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,var(--color-teal-950/20)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-teal-950/20)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-150 h-75 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h1 class="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white via-slate-100 to-teal-400">
+                    Request a Live Demo
+                </h1>
+                <p class="mt-4 text-base text-slate-400">
+                    Experience how modern engineering teams design, validate, and scale event-driven workflows with zero infrastructure overhead.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
+                <div class="space-y-6">
+                    <div class="space-y-4">
+                        {benefits.map((item) => {
+                            const IconComponent = item.icon;
+                            return (
+                              <div class="group relative p-6 bg-slate-900/40 border border-slate-800 hover:border-teal-500/30 rounded-2xl transition-all duration-300 backdrop-blur-md flex items-start gap-4">
+                                  <div class="p-2.5 bg-teal-500/10 border border-teal-500/20 rounded-xl text-teal-400 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                                      <IconComponent class="w-5 h-5" />
+                                  </div>
+                                  <div>
+                                      <h3 class="text-base font-bold text-slate-100 mb-1 group-hover:text-teal-400 transition-colors">
+                                          {item.title}
+                                      </h3>
+                                      <p class="text-xs text-slate-400 leading-relaxed">
+                                          {item.description}
+                                      </p>
+                                  </div>
+                              </div>
+                            );
+                        })}
+                    </div>
+
+                    <div class="p-6 bg-linear-to-r from-teal-500/5 to-slate-900/40 border border-teal-500/15 rounded-xl flex items-center gap-4">
+                        <div class="w-3 h-3 rounded-full bg-teal-400 animate-pulse shrink-0" />
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            <strong class="text-slate-100 font-bold">Over 500+ teams</strong> orchestrate mission-critical webhooks and LLM pipelines daily on our edge runtime.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="relative bg-slate-900/60 border border-slate-800 hover:border-slate-700 rounded-2xl p-8 backdrop-blur-xl shadow-2xl">
+                    <div class="absolute -top-3 right-6 px-3 py-0.5 bg-teal-400 text-slate-950 text-[10px] font-mono font-bold rounded-full uppercase tracking-wider">
+                        Available slots for this week
+                    </div>
+
+                    <form class="space-y-5" action="#" method="POST">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                    First Name
+                                </label>
+                                <input
+                                  type="text"
+                                  required
+                                  placeholder="Alex"
+                                  class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 focus:border-teal-400/60 focus:ring-1 focus:ring-teal-400/60 rounded-xl text-sm text-slate-100 placeholder:text-slate-600 outline-none transition-all font-sans"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                    Last Name
+                                </label>
+                                <input
+                                  type="text"
+                                  required
+                                  placeholder="Rivera"
+                                  class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 focus:border-teal-400/60 focus:ring-1 focus:ring-teal-400/60 rounded-xl text-sm text-slate-100 placeholder:text-slate-600 outline-none transition-all font-sans"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                Work Email
+                            </label>
+                            <input
+                              type="email"
+                              required
+                              placeholder="alex@company.com"
+                              class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 focus:border-teal-400/60 focus:ring-1 focus:ring-teal-400/60 rounded-xl text-sm text-slate-100 placeholder:text-slate-600 outline-none transition-all font-sans"
+                            />
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                Company Name
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="Synapse Corp"
+                              class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 focus:border-teal-400/60 focus:ring-1 focus:ring-teal-400/60 rounded-xl text-sm text-slate-100 placeholder:text-slate-600 outline-none transition-all font-sans"
+                            />
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                Estimated Monthly Executions
+                            </label>
+                            <div class="relative">
+                                <select class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 focus:border-teal-400/60 focus:ring-1 focus:ring-teal-400/60 rounded-xl text-sm text-slate-300 outline-none transition-all font-sans appearance-none cursor-pointer pr-10">
+                                    <option value="" disabled selected class="text-slate-600">Select execution volume...</option>
+                                    <option value="startup" class="bg-slate-900 text-slate-200 py-2">Startup (Up to 100k events/mo)</option>
+                                    <option value="growth" class="bg-slate-900 text-slate-200 py-2">Growth (100k – 1M events/mo)</option>
+                                    <option value="scale" class="bg-slate-900 text-slate-200 py-2">Scale (1M – 10M events/mo)</option>
+                                    <option value="enterprise" class="bg-slate-900 text-slate-200 py-2">Enterprise (10M+ events/mo)</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                What are you looking to build?
+                            </label>
+                            <textarea
+                              rows="3"
+                              placeholder="Tell us about your workflows or data pipeline use-case..."
+                              class="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 focus:border-teal-400/60 focus:ring-1 focus:ring-teal-400/60 rounded-xl text-sm text-slate-100 placeholder:text-slate-600 outline-none transition-all font-sans resize-none"
+                            ></textarea>
+                        </div>
+
+                        <button
+                          type="submit"
+                          class="w-full flex items-center justify-center gap-2 py-3 px-6 text-sm font-bold text-slate-950 bg-teal-400 hover:bg-teal-350 rounded-xl shadow-lg shadow-teal-500/10 transition-all duration-200 cursor-pointer mt-2"
+                        >
+                            Schedule Demo
+                            <ArrowRight class="w-4 h-4 text-slate-950" />
+                        </button>
+
+                        <p class="text-[11px] text-slate-500 font-mono text-center mt-3">
+                            By clicking schedule, you agree to our <a href="#" class="text-teal-400 hover:underline">Terms</a> & <a href="#" class="text-teal-400 hover:underline">Privacy Policy</a>.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
