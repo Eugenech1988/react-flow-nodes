@@ -1,0 +1,18 @@
+html, body {
+    background-color: #020617 !important;
+    color-scheme: dark;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.25s;
+    background-color: oklch(0.129 0.042 264.695) !important;
+}
+
+::view-transition-group(root) {
+    background-color: oklch(0.129 0.042 264.695) !important;
+}
+
+::view-transition-image-pair(root) {
+    background-color: oklch(0.129 0.042 264.695) !important;
+}
