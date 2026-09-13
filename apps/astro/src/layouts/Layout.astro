@@ -3,6 +3,7 @@ import '@/styles/style.css';
 import '@pipeline/ui/globals.css';
 import { ClientRouter } from 'astro:transitions';
 import ogImage from '@/assets/og-image.png';
+import Header from '@/components/astro/Header.astro';
 
 export interface Props {
   title: string;
@@ -93,6 +94,7 @@ const robots = noindex ? 'noindex, nofollow' : 'index, follow';
 </head>
 
 <body>
+<Header/>
 <slot />
 </body>
 </html>

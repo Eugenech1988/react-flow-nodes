@@ -15,7 +15,7 @@ const navLinks: Link[] = [
 ];
 ---
 
-<header class="fixed top-4 left-1/2 z-50 w-[95%] max-w-7xl -translate-x-1/2 transition-all duration-300">
+<header transition:persist class="fixed top-4 left-1/2 z-50 w-[95%] max-w-7xl -translate-x-1/2 transition-all duration-300">
     <div class="relative w-full rounded-2xl border border-white/10 bg-white/6 px-4 py-2.5 shadow-[0_8px_32px_0_rgba(0,0,0,0.2)] backdrop-blur-md after:absolute after:inset-0 after:-z-10 after:rounded-2xl after:bg-linear-to-b after:from-white/5 after:to-transparent after:opacity-50">
         <div class="flex items-center justify-between">
 
@@ -97,13 +97,10 @@ const navLinks: Link[] = [
 </header>
 
 <style is:global>
-    /* Принудительно заставляем внутренние пути SVG наследовать цвет текста (currentColor) */
     .group svg path,
     .group svg rect,
     .group svg circle {
         stroke: currentColor !important;
-        /* Если в вашем SVG используется заливка вместо обводки, раскомментируйте строку ниже: */
-        /* fill: currentColor !important; */
     }
 </style>
 
@@ -113,19 +110,15 @@ const navLinks: Link[] = [
 
     if (btn && menu) {
         btn.addEventListener('click', () => {
-            // Переключаем высоту сетки (0fr -> 1fr)
             menu.classList.toggle('grid-rows-[0fr]');
             menu.classList.toggle('grid-rows-[1fr]');
 
-            // Переключаем прозрачность
             menu.classList.toggle('opacity-0');
             menu.classList.toggle('opacity-100');
 
-            // Переключаем верхний отступ
             menu.classList.toggle('mt-0');
             menu.classList.toggle('mt-4');
 
-            // Переключаем кликабельность ссылок
             menu.classList.toggle('pointer-events-none');
             menu.classList.toggle('pointer-events-auto');
         });

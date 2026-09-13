@@ -56,12 +56,10 @@ const tiers = [
 ---
 
 <section class="relative py-20 bg-slate-950 overflow-hidden border-t border-slate-900">
-    {/* Декоративное фоновое свечение за самым популярным тарифом */}
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
 
     <div class="max-w-5xl mx-auto px-6 relative z-10">
 
-        {/* Заголовок секции с градиентом */}
         <div class="text-center max-w-2xl mx-auto mb-16">
             <span class="text-xs font-mono font-bold text-teal-400 uppercase tracking-widest bg-teal-500/10 px-3 py-1 rounded-full">
                 Pricing Plans
@@ -74,7 +72,6 @@ const tiers = [
             </p>
         </div>
 
-        {/* Сетка тарифов */}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
             {tiers.map((tier) => (
                 <div class={`relative rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between h-full ${
@@ -83,7 +80,6 @@ const tiers = [
                         : 'bg-slate-900/40 border border-slate-800 hover:border-slate-700 backdrop-blur-md'
                 }`}>
 
-                    {/* Бейдж популярного тарифа */}
                     {tier.popular && (
                         <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-teal-400 text-slate-950 text-[10px] font-mono font-bold rounded-full uppercase tracking-wider">
                             Most Popular
@@ -91,7 +87,6 @@ const tiers = [
                     )}
 
                     <div>
-                        {/* Шапка тарифа */}
                         <div class="mb-6">
                             <h3 class="text-lg font-bold text-slate-200">{tier.name}</h3>
                             <div class="mt-4 flex items-baseline gap-1">
@@ -105,7 +100,6 @@ const tiers = [
                             </p>
                         </div>
 
-                        {/* Список фичей */}
                         <ul class="space-y-3.5 border-t border-slate-800/80 pt-6 mb-8">
                             {tier.features.map((feature) => (
                                 <li class="flex items-start gap-3">
@@ -118,7 +112,6 @@ const tiers = [
                         </ul>
                     </div>
 
-                    {/* Кнопка действия */}
                     <a
                         href={tier.href}
                         class={`w-full py-2.5 rounded-xl text-xs font-bold text-center transition-all cursor-pointer ${
@@ -133,7 +126,6 @@ const tiers = [
             ))}
         </div>
 
-        {/* Дополнительный блок FAQ / Примечание */}
         <div class="mt-16 text-center flex items-center justify-center gap-2 text-xs text-slate-500 font-mono">
             <HelpCircle class="w-4 h-4 text-teal-400" />
             <span>Have questions about high-volume usage? <a href="#contact" class="text-teal-400 hover:underline">Chat with our engineers</a></span>
