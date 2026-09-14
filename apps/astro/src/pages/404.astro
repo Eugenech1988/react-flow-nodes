@@ -3,7 +3,7 @@ import { fade } from 'astro:transitions';
 import { ArrowLeft, Compass, Unplug } from '@lucide/astro';
 import Layout from '@/layouts/Layout.astro';
 ---
-<Layout title="Not Found | Pipeline Studio">
+<Layout title="Not Found | Pipeline Studio" showHeader={false}>
     <div transition:animate={fade({duration: '0.4s'})} class="relative min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center overflow-hidden">
         <div class="absolute inset-0 bg-[linear-gradient(to_right,var(--color-teal-950/20)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-teal-950/20)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-60 pointer-events-none"></div>
 

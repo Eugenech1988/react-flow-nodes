@@ -12,6 +12,7 @@ export interface Props {
   canonicalURL?: string;
   noindex?: boolean;
   keywords?: string[];
+  showHeader?: boolean;
 }
 
 const {
@@ -20,6 +21,7 @@ const {
   image = ogImage.src,
   canonicalURL = Astro.url.href,
   noindex = false,
+  showHeader = true,
   keywords = [
     'workflow automation',
     'workflow builder',
@@ -93,8 +95,8 @@ const robots = noindex ? 'noindex, nofollow' : 'index, follow';
     <ClientRouter />
 </head>
 
-<body>
-<Header/>
+<body transition:animate="none">
+{showHeader && <Header />}
 <slot />
 </body>
 </html>

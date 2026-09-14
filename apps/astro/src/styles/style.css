@@ -16,3 +16,7 @@ html, body {
 ::view-transition-image-pair(root) {
     background-color: oklch(0.129 0.042 264.695) !important;
 }
+
+::view-transition-group(header) {
+    z-index: 100 !important;
+}
