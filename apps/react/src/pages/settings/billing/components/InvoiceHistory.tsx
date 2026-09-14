@@ -59,7 +59,7 @@ export const InvoiceHistory = () => {
             <TableBody>
               {transactions && transactions.length > 0 ? (
                 transactions.map((tx) => {
-                  const isPaid = tx.status === 'SUCCESS' || tx.status === 'PAID';
+                  const isPaid = tx.status === 'SUCCESS';
                   const isPending = tx.status === 'PENDING';
                   const rawId = tx.invoiceId || tx.id;
                   const displayId =
