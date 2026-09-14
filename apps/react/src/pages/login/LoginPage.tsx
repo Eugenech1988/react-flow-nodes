@@ -74,7 +74,7 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     e.stopPropagation();
     if (provider === 'google' || provider === 'github') {
-      const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.API_URL || 'http://localhost:3000';
+      const apiUrl = import.meta.env.VITE_API_URL;
       window.location.href = `${apiUrl}/auth/${provider}`;
     }
   };

@@ -2,7 +2,7 @@ import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import type { AppRouter } from '@pipeline/api/trpc';
 
-const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function getCsrfToken(): string {
   const match = document.cookie.match(/(?:^|;\s*)x-csrf-token=([^;]*)/);

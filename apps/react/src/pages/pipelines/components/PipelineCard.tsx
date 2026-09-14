@@ -22,7 +22,7 @@ import type { TPipeline } from '@/shared/lib';
 import { usePipelineHandler } from '@/pages/pipelines/hooks';
 import { usePipelineDialogStore } from '@/pages/pipelines/model';
 
-const BASE_URL = import.meta.env.API_URL || 'http://localhost:3000';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 interface TPipelineCardProps {
   pipeline: TPipeline;

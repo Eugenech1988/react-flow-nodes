@@ -12,7 +12,7 @@ export const InvoiceHistory = () => {
   const handleDownloadInvoice = async (transactionId: string) => {
     try {
       setDownloadingId(transactionId);
-      const baseUrl = import.meta.env.VITE_API_URL || '';
+      const baseUrl = import.meta.env.VITE_API_URL;
       const blob = await api.getBlob(`${baseUrl}/billing/transactions/${transactionId}/invoice`, {
         credentials: 'include',
       });

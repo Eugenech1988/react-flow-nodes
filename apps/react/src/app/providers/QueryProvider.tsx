@@ -24,7 +24,7 @@ export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
   useEffect(() => {
     const initializeCsrf = async () => {
       try {
-        await fetch(`${import.meta.env.VITE_API_URL ?? 'http://localhost:3000'}/csrf-token`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/csrf-token`, {
           credentials: 'include',
         });
       } catch (error) {
