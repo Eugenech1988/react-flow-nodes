@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   loginInputSchema,
   registerFormInputSchema,
-  type LoginInputData,
+  type TLoginInputData,
   type RegisterFormInputData,
 } from '@pipeline/contracts';
 import { AppButton } from '@/shared/ui';
@@ -15,7 +15,7 @@ import { RegisterFields } from './RegisterFields';
 interface AuthFormProps {
   mode: 'login' | 'register';
   currentApiError?: string | null;
-  onLogin: (data: LoginInputData) => Promise<void>;
+  onLogin: (data: TLoginInputData) => Promise<void>;
   onRegister: (data: RegisterFormInputData) => Promise<void>;
   onSocialLogin: (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => void;
   onForgotPassword: () => void;
@@ -39,7 +39,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
     register: loginRegister,
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginErrors, isSubmitting: isLoginSubmitting },
-  } = useForm<LoginInputData>({
+  } = useForm<TLoginInputData>({
     resolver: zodResolver(loginInputSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',

@@ -21,7 +21,6 @@ function handleTokenRefresh(): Promise<boolean> {
       },
     })
       .then((response) => {
-        console.log('REFRESH RESPONSE:', response.status);
         return response.ok;
       })
       .catch((error) => {
