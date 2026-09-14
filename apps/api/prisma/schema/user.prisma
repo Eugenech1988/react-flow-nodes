@@ -14,14 +14,17 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  profile           Profile?
-  subscription      Subscription?
-  pipelines         Pipeline[]
-  transactions      Transaction[]
-  refreshToken      RefreshToken[]
-  databaseNodes     DatabaseNode[]
-  currentPipelineId String?        @map("current_pipeline_id")
-  currentPipeline   Pipeline?      @relation("UserCurrentPipeline", fields: [currentPipelineId], references: [id], onDelete: SetNull)
+  profile      Profile?
+  subscription Subscription?
+
+  pipelines     Pipeline[]
+  transactions  Transaction[]
+  refreshToken  RefreshToken[]
+  databaseNodes DatabaseNode[]
+  executions    Execution[]
+
+  currentPipelineId String?   @map("current_pipeline_id")
+  currentPipeline   Pipeline? @relation("UserCurrentPipeline", fields: [currentPipelineId], references: [id], onDelete: SetNull)
 
   @@unique([provider, providerId])
   @@map("users")

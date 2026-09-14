@@ -1,0 +1,28 @@
+model Execution {
+  id String @id @default(cuid())
+
+  pipelineId String   @map("pipeline_id")
+  pipeline   Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  status ExecutionStatus @default(RUNNING)
+
+  triggeredBy TriggerType @default(MANUAL) @map("triggered_by")
+
+  startedAt  DateTime  @default(now()) @map("started_at")
+  finishedAt DateTime? @map("finished_at")
+  durationMs Int?      @map("duration_ms") // Длительность в мс
+
+  nodesExecuted Int   @default(0) @map("nodes_executed")
+  logs          Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([pipelineId])
+  @@index([userId])
+  @@index([status])
+  @@map("executions")
+}
