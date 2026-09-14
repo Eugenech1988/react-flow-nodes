@@ -4,7 +4,7 @@ import type {
   TExecutionState,
   TExecutionActions,
 } from '@/entities/pipeline/model/types';
-import { executeNode, type TNodeExecutionResult } from '@/entities/pipeline/model/lib';
+import { executeNode, type TNodeExecutionResult } from '@/features/execute-pipeline';
 
 export const createExecutionSlice: StateCreator<
   TPipelineStore,
