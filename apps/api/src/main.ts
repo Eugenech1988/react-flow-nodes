@@ -58,14 +58,14 @@ async function bootstrap() {
 
   app.use((req, res, next) => {
     const excludedPaths = [
-      '/api/docs',
       '/csrf-token',
       '/billing/webhook',
+      '/auth/refresh',
+      '/auth/login',
+      '/auth/register',
       '/api/billing/webhook',
       '/stripe/webhook',
-      '/api/stripe/webhook',
       '/inngest',
-      '/api/inngest',
     ];
 
     if (excludedPaths.some((path) => req.path.startsWith(path))) {
