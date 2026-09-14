@@ -9,6 +9,7 @@ import { PipelinesModule } from '@/pipelines/pipelines.module';
 import { InngestModule } from '@/inngest/inngest.module';
 import { AiModule } from './ai/ai.module';
 import { DatabaseNodesModule } from '@/database-nodes/database-nodes.module';
+import { ExecutionsModule } from './executions/executions.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { DatabaseNodesModule } from '@/database-nodes/database-nodes.module';
     InngestModule,
     AiModule,
     DatabaseNodesModule,
+    ExecutionsModule,
   ],
 })
 export class AppModule {}
