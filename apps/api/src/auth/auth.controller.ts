@@ -10,14 +10,14 @@ import { LocalAuthGuard } from '@/auth/guards/local-auth.guard';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { GoogleOauthGuard } from '@/auth/guards/google.guard';
 import { GithubOauthGuard } from '@/auth/guards/github.guard';
-import type { TUserSafe, IOauthUser } from '@/auth/types/auth.types';
+import type { TUserSafe, TOauthUser } from '@/auth/types/auth.types';
 
 interface IRequestWithUser extends Request {
   user: TUserSafe;
 }
 
 interface IRequestWithOauthUser extends Request {
-  user: IOauthUser;
+  user: TOauthUser;
 }
 
 @ApiTags('Auth')

@@ -74,14 +74,21 @@ export const executeNode = async (
     try {
       const record = await trpcClient.databaseNodes.createRecord.mutate({
         nodeId: node.id,
-        pipelineId: data.pipelineId ? String(data.pipelineId) : null,
+        pipelineId: data.pipelineId ? String(data.pipelineId) : (input.pipelineId ? String(input.pipelineId) : null),
         query,
         params: input,
-        data: { result: 'Recorded successfully', query },
         status: 'SUCCESS',
       });
 
-      return { ...input, query, rows: record ? [record] : [], status: 'SUCCESS' };
+      const recordData = (record?.data as unknown as Record<string, unknown>) || {};
+      const queryResult = 'result' in recordData ? recordData.result : record;
+
+      return {
+        ...input,
+        query,
+        rows: Array.isArray(queryResult) ? queryResult : (queryResult ? [queryResult] : []),
+        status: 'SUCCESS'
+      };
     } catch (error) {
       throw new Error(
         `Database node execution failed: ${error instanceof Error ? error.message : String(error)}`,

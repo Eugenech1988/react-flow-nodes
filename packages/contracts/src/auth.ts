@@ -17,6 +17,7 @@ export const registerInputSchema = loginInputSchema.extend({
   lastName: z.string().optional(),
   nickName: z.string().min(3, 'Nickname must be at least 3 characters').optional(),
 });
+
 export type TRegisterInputData = z.infer<typeof registerInputSchema>;
 
 export const registerFormInputSchema = registerInputSchema

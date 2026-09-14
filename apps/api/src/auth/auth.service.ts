@@ -7,7 +7,7 @@ import { MailService } from '@/mail/mail.service';
 import { RegisterDto } from '@/auth/dtos/register.dto';
 import { RecoveryDto } from '@/auth/dtos/recovery.dto';
 import { ResetPasswordDto } from '@/auth/dtos/reset-password.dto';
-import { TUserSafe, IJwtPayload, IOauthUser } from '@/auth/types/auth.types';
+import { TUserSafe, TJwtPayload, TOauthUser } from '@/auth/types/auth.types';
 import { generateSecret, verify as verifyOtp, generateURI } from 'otplib';
 import * as qrcode from 'qrcode';
 import { verify as verifyArgon, hash } from 'argon2';
@@ -53,7 +53,7 @@ export class AuthService {
     return null;
   }
 
-  async validateOauthUser(profile: IOauthUser): Promise<TUserSafe> {
+  async validateOauthUser(profile: TOauthUser): Promise<TUserSafe> {
     const existingUser = await this.usersService.findOneByProvider(profile.provider, profile.providerId);
 
     if (existingUser) {
@@ -110,10 +110,10 @@ export class AuthService {
   }
 
   async validateRefreshToken(refreshToken: string): Promise<UserWithRelations | null> {
-    let payload: IJwtPayload;
+    let payload: TJwtPayload;
 
     try {
-      payload = this.jwtService.verify<IJwtPayload>(refreshToken, {
+      payload = this.jwtService.verify<TJwtPayload>(refreshToken, {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
       });
     } catch {
@@ -159,7 +159,7 @@ export class AuthService {
   }
 
   async generateTokens(userId: string, userAgent?: string, ip?: string) {
-    const payload: IJwtPayload = { userId };
+    const payload: TJwtPayload = { userId };
 
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
@@ -188,10 +188,10 @@ export class AuthService {
   }
 
   async refreshTokens(refreshToken: string, userAgent?: string, ip?: string) {
-    let payload: IJwtPayload;
+    let payload: TJwtPayload;
 
     try {
-      payload = this.jwtService.verify<IJwtPayload>(refreshToken, {
+      payload = this.jwtService.verify<TJwtPayload>(refreshToken, {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
       });
     } catch {
@@ -223,10 +223,10 @@ export class AuthService {
   }
 
   async logout(refreshToken: string): Promise<void> {
-    let payload: IJwtPayload;
+    let payload: TJwtPayload;
 
     try {
-      payload = this.jwtService.verify<IJwtPayload>(refreshToken, {
+      payload = this.jwtService.verify<TJwtPayload>(refreshToken, {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
       });
     } catch {

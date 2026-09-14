@@ -8,6 +8,13 @@ export class DatabaseNodesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createRecord(userId: string | null, dto: TCreateDatabaseNodeInputData) {
+    if (!dto.query || !dto.query.trim().toUpperCase().startsWith('SELECT')) {
+      throw new Error('Only SELECT queries are allowed for security reasons.');
+    }
+
+    // Если запрос упадет, выполнение прервется здесь, и в базу ничего не запишется
+    const queryResult = await this.prisma.$queryRawUnsafe(dto.query);
+
     try {
       return await this.prisma.databaseNode.create({
         data: {
@@ -15,14 +22,16 @@ export class DatabaseNodesService {
           pipelineId: dto.pipelineId || null,
           query: dto.query || null,
           params: dto.params ? (dto.params as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
-          data: dto.data !== undefined ? (dto.data as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
-          status: dto.status || 'SUCCESS',
+          data: queryResult !== undefined && queryResult !== null
+            ? (queryResult as unknown as Prisma.InputJsonValue)
+            : ([] as unknown as Prisma.InputJsonValue),
+          status: 'SUCCESS',
           userId: userId || null,
         },
       });
     } catch (error) {
       console.error('Failed to create database node record:', error);
-      throw new InternalServerErrorException('Error creating database node record');
+      throw new InternalServerErrorException('Error saving database node record');
     }
   }
 

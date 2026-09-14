@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { UsersService } from '@/users/users.service';
-import { IJwtPayload, TUserSafe } from '@/auth/types/auth.types';
+import { TJwtPayload, TUserSafe } from '@/auth/types/auth.types';
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -22,7 +22,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  async validate(payload: IJwtPayload): Promise<TUserSafe> {
+  async validate(payload: TJwtPayload): Promise<TUserSafe> {
     const user = await this.usersService.findOneById(payload.userId);
     if (!user) {
       throw new UnauthorizedException('User not found');
