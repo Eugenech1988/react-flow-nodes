@@ -14,14 +14,29 @@ type TCreateDatabaseRecordInput = {
   status: 'SUCCESS';
 };
 
+//TODO fix DTO on BE
+
 const createDatabaseRecord = async (
   input: TCreateDatabaseRecordInput,
 ): Promise<TDatabaseRecord> => {
-  const mutate = trpcClient.databaseNodes.createRecord.mutate as (
-    input: TCreateDatabaseRecordInput,
+  const mutate = trpcClient.databaseNodes.createRecord.mutate as unknown as (
+    payload: Record<string, unknown>,
   ) => Promise<TDatabaseRecord>;
 
-  return mutate(input);
+  const now = new Date().toISOString();
+
+  return mutate({
+    id: crypto.randomUUID(),
+    nodeId: input.nodeId,
+    pipelineId: input.pipelineId,
+    query: input.query,
+    params: input.params,
+    status: input.status,
+    data: null,
+    userId: null,
+    createdAt: now,
+    updatedAt: now,
+  });
 };
 
 export const executeDatabaseNode: TNodeExecutor = async (node, input, context) => {
@@ -31,39 +46,48 @@ export const executeDatabaseNode: TNodeExecutor = async (node, input, context) =
     input,
   );
 
+  const rawPipelineId =
+    context?.pipelineId ||
+    (data.pipelineId
+      ? String(data.pipelineId)
+      : input.pipelineId
+        ? String(input.pipelineId)
+        : null);
+
+  const pipelineId = rawPipelineId ? String(rawPipelineId) : null;
+
   try {
     const record = await createDatabaseRecord({
       nodeId: node.id,
-      pipelineId:
-        context?.pipelineId ||
-        (data.pipelineId
-          ? String(data.pipelineId)
-          : input.pipelineId
-            ? String(input.pipelineId)
-            : null),
+      pipelineId,
       query,
-      params: input,
+      params: input ?? {},
       status: 'SUCCESS',
     });
 
-    const rawData = record.data;
+    const rawData = record?.data;
 
-    const recordData =
-      rawData && typeof rawData === 'object'
-        ? (rawData as Record<string, unknown>)
-        : {};
+    let rows: unknown[] = [];
 
-    const queryResult =
-      'result' in recordData ? recordData.result : rawData;
+    if (Array.isArray(rawData)) {
+      rows = rawData;
+    } else if (rawData && typeof rawData === 'object') {
+      const recordData = rawData as Record<string, unknown>;
+      if (Array.isArray(recordData.result)) {
+        rows = recordData.result;
+      } else if (recordData.result !== undefined) {
+        rows = [recordData.result];
+      } else {
+        rows = [rawData];
+      }
+    } else if (rawData !== undefined && rawData !== null) {
+      rows = [rawData];
+    }
 
     return {
       ...input,
       query,
-      rows: Array.isArray(queryResult)
-        ? queryResult
-        : queryResult
-          ? [queryResult]
-          : [],
+      rows,
       status: 'SUCCESS',
     };
   } catch (error) {
