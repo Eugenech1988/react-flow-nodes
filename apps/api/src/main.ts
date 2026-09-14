@@ -60,10 +60,6 @@ async function bootstrap() {
     const excludedPaths = [
       '/csrf-token',
       '/billing/webhook',
-      '/auth/refresh',
-      '/auth/login',
-      '/auth/register',
-      '/api/billing/webhook',
       '/stripe/webhook',
       '/inngest',
     ];
