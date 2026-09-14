@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 import { FloatingInput } from '@/shared/ui';
-import type { LoginInputData } from '@pipeline/contracts';
+import type { TLoginInputData } from '@pipeline/contracts';
 import { DEFAULT_TEXT_CLASSES, DEFAULT_LABEL_CLASSES, DEFAULT_FIELDSET_CLASSES } from '../model';
 
 interface LoginFieldsProps {
-  register: UseFormRegister<LoginInputData>;
-  errors: FieldErrors<LoginInputData>;
+  register: UseFormRegister<TLoginInputData>;
+  errors: FieldErrors<TLoginInputData>;
   error?: boolean;
 }
 

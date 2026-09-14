@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@pipeline/ui';
 import { useQueryClient } from '@tanstack/react-query';
-import type { RegisterFormInputData, LoginInputData } from '@pipeline/contracts';
+import type { RegisterFormInputData, TLoginInputData } from '@pipeline/contracts';
 import {
   AuthModeToggle,
   TwoFactorForm,
@@ -27,6 +27,8 @@ export const LoginPage: React.FC = () => {
     twoFactorError,
     recoveryError,
     isRecoverySuccess,
+    isRegistrationSuccess,
+    setRegistrationSuccess,
     login,
     register: registerAction,
     verifyTwoFactor,
@@ -55,14 +57,17 @@ export const LoginPage: React.FC = () => {
     navigate('/', { replace: true });
   };
 
-  const handleLogin = async (data: LoginInputData) => {
+  const handleLogin = async (data: TLoginInputData) => {
     await login(data.email, data.password, handleSuccessAuth);
   };
 
   const handleRegister = async (data: RegisterFormInputData) => {
-    await registerAction(data.email, data.password, () => {
-      toggleMode();
-    });
+    await registerAction(data.email, data.password, () => {});
+  };
+
+  const handleToggleMode = () => {
+    setRegistrationSuccess(false);
+    toggleMode();
   };
 
   const handleSocialLogin = (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -80,7 +85,7 @@ export const LoginPage: React.FC = () => {
 
   const handleResetPassword = async (data: TResetFormData) => {
     if (!tokenFromUrl) {
-      useAuthStore.getState().setRecoveryError('Reset token is missing or invalid.');
+      useAuthStore.getState().setRecoveryError('Password reset token is missing or invalid.');
       return;
     }
 
@@ -109,10 +114,14 @@ export const LoginPage: React.FC = () => {
     return mode === 'login' ? 'Sign In' : 'Create Account';
   };
 
+  const handleForgotPassword = () => {
+    setIsRecoveryMode(true)
+  }
+
   return (
     <div className="bg-[url('/nodes-bg-light.png')] dark:bg-[url('/nodes-bg-dark.png')] bg-cover bg-center flex min-h-screen items-center justify-center dark:bg-slate-950 px-4 py-12 sm:px-6 lg:px-8 antialiased text-zinc-300 relative overflow-hidden">
-      <div className="absolute w-96 h-96 bg-teal-400/20 rounded-full blur-3xl pointer-events-none -top-10 -left-10 animate-pulse" />
-      <div className="absolute w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none -bottom-10 -right-10" />
+      <div className="absolute w-96 h-96 bg-teal-400/25 rounded-full blur-3xl pointer-events-none -top-10 -left-10 animate-pulse" />
+      <div className="absolute w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none -bottom-10 -right-10" />
 
       <Card className="w-full p-8 max-w-lg rounded-3xl liquid-glass space-y-2 relative z-10 overflow-hidden">
         <CardHeader className="text-center p-0 space-y-2">
@@ -127,12 +136,18 @@ export const LoginPage: React.FC = () => {
             ) : is2faRequired ? (
               'Enter the 6-digit code from your authenticator app'
             ) : (
-              <AuthModeToggle mode={mode} onToggle={toggleMode} />
+              <AuthModeToggle mode={mode} onToggle={handleToggleMode} />
             )}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-5.5 p-0 pt-2">
+          {isRegistrationSuccess && mode === 'login' && !isRecoveryMode && !is2faRequired && (
+            <div className="p-3.5 text-sm text-emerald-400 bg-emerald-950/50 border border-emerald-500/30 rounded-2xl text-center shadow-sm">
+              Registered successfully! Please sign in.
+            </div>
+          )}
+
           {isRecoveryMode ? (
             <RecoveryForm
               mode={tokenFromUrl ? 'reset' : 'request'}
@@ -157,7 +172,7 @@ export const LoginPage: React.FC = () => {
               onLogin={handleLogin}
               onRegister={handleRegister}
               onSocialLogin={handleSocialLogin}
-              onForgotPassword={() => setIsRecoveryMode(true)}
+              onForgotPassword={handleForgotPassword}
             />
           )}
         </CardContent>

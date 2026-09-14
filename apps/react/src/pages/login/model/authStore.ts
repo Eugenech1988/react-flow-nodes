@@ -16,6 +16,7 @@ interface AuthState {
   twoFactorError: string | null;
   recoveryError: string | null;
   isRecoverySuccess: boolean;
+  isRegistrationSuccess: boolean;
   isLoading: boolean;
 
   setMode: (mode: FormMode) => void;
@@ -23,6 +24,7 @@ interface AuthState {
   setApiError: (error: string | null) => void;
   setTwoFactorError: (error: string | null) => void;
   setRecoveryError: (error: string | null) => void;
+  setRegistrationSuccess: (success: boolean) => void;
   resetState: () => void;
   handleLoginResponse: (data: LoginResponseData) => boolean;
   login: (email: string, password: string, onSuccess: () => Promise<void> | void) => Promise<void>;
@@ -42,6 +44,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   twoFactorError: null,
   recoveryError: null,
   isRecoverySuccess: false,
+  isRegistrationSuccess: false,
   isLoading: false,
 
   setMode: (mode) => set({ mode }),
@@ -53,6 +56,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       twoFactorError: null,
       recoveryError: null,
       isRecoverySuccess: false,
+      isRegistrationSuccess: false,
       is2faRequired: false,
       tempToken: null,
       qrCodeImage: null,
@@ -62,6 +66,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setApiError: (error) => set({ apiError: error }),
   setTwoFactorError: (error) => set({ twoFactorError: error }),
   setRecoveryError: (error) => set({ recoveryError: error }),
+  setRegistrationSuccess: (success) => set({ isRegistrationSuccess: success }),
 
   resetState: () =>
     set({
@@ -73,6 +78,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       apiError: null,
       recoveryError: null,
       isRecoverySuccess: false,
+      isRegistrationSuccess: false,
     }),
 
   handleLoginResponse: (data) => {
@@ -89,7 +95,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   login: async (email, password, onSuccess) => {
-    set({ isLoading: true, apiError: null, twoFactorError: null });
+    set({ isLoading: true, apiError: null, twoFactorError: null, isRegistrationSuccess: false });
     try {
       const response = await trpcClient.auth.login.mutate({ email, password });
       const requires2fa = get().handleLoginResponse(response);
@@ -97,7 +103,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         await onSuccess();
       }
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Something went wrong';
+      let message = 'Unable to sign in. Please verify your credentials and try again.';
+      if (error instanceof Error) {
+        if (error.message.toLowerCase().includes('invalid credentials') || error.message.toLowerCase().includes('wrong password') || error.message.toLowerCase().includes('user not found')) {
+          message = 'Invalid email address or password.';
+        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+          message = 'Network error. Please check your internet connection.';
+        } else {
+          message = error.message;
+        }
+      }
       set({ apiError: message });
     } finally {
       set({ isLoading: false });
@@ -105,13 +120,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   register: async (email, password, onSuccess) => {
-    set({ isLoading: true, apiError: null });
+    set({ isLoading: true, apiError: null, isRegistrationSuccess: false });
     try {
       await trpcClient.auth.register.mutate({ email, password });
+      set({ isRegistrationSuccess: true });
       get().setMode('login');
       await onSuccess();
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Something went wrong';
+      let message = 'Registration failed. Please try again later.';
+      if (error instanceof Error) {
+        if (error.message.toLowerCase().includes('already exists') || error.message.toLowerCase().includes('conflict')) {
+          message = 'An account with this email address already exists.';
+        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+          message = 'Network error. Please check your internet connection.';
+        } else {
+          message = error.message;
+        }
+      }
       set({ apiError: message });
     } finally {
       set({ isLoading: false });
@@ -121,7 +146,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   verifyTwoFactor: async (data, onSuccess) => {
     const { tempToken } = get();
     if (!tempToken) {
-      set({ twoFactorError: 'Missing temporary token' });
+      set({ twoFactorError: 'Verification session has expired. Please sign in again.' });
       return;
     }
     set({ isLoading: true, twoFactorError: null });
@@ -129,7 +154,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await trpcClient.auth.loginWith2fa.mutate({ tempToken, code: data.code });
       await onSuccess();
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Invalid verification code';
+      let message = 'Invalid two-factor authentication code.';
+      if (error instanceof Error) {
+        if (error.message.toLowerCase().includes('expired')) {
+          message = 'The verification code has expired. Please request a new one.';
+        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+          message = 'Network error. Please check your internet connection.';
+        } else {
+          message = error.message;
+        }
+      }
       set({ twoFactorError: message });
     } finally {
       set({ isLoading: false });
@@ -142,7 +176,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await trpcClient.auth.requestPasswordReset.mutate({ email });
       set({ isRecoverySuccess: true });
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to send recovery email';
+      let message = 'Failed to send password reset email. Please try again.';
+      if (error instanceof Error) {
+        if (error.message.toLowerCase().includes('not found') || error.message.toLowerCase().includes('does not exist')) {
+          message = 'No account found with this email address.';
+        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+          message = 'Network error. Please check your internet connection.';
+        } else {
+          message = error.message;
+        }
+      }
       set({ recoveryError: message });
     } finally {
       set({ isLoading: false });
@@ -155,7 +198,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await trpcClient.auth.resetPassword.mutate({ token, password });
       onSuccess();
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to reset password';
+      let message = 'Failed to reset password. The link may have expired.';
+      if (error instanceof Error) {
+        if (error.message.toLowerCase().includes('invalid') || error.message.toLowerCase().includes('expired')) {
+          message = 'The password reset link is invalid or has expired.';
+        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+          message = 'Network error. Please check your internet connection.';
+        } else {
+          message = error.message;
+        }
+      }
       set({ recoveryError: message });
     } finally {
       set({ isLoading: false });

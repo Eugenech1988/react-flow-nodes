@@ -10,14 +10,14 @@ export const loginInputSchema = z.object({
     .min(1, 'Password is required')
     .min(6, 'Password must be at least 6 characters'),
 });
-export type LoginInputData = z.infer<typeof loginInputSchema>;
+export type TLoginInputData = z.infer<typeof loginInputSchema>;
 
 export const registerInputSchema = loginInputSchema.extend({
   firstName: z.string().min(1, 'First name is required').optional(),
   lastName: z.string().optional(),
   nickName: z.string().min(3, 'Nickname must be at least 3 characters').optional(),
 });
-export type RegisterInputData = z.infer<typeof registerInputSchema>;
+export type TRegisterInputData = z.infer<typeof registerInputSchema>;
 
 export const registerFormInputSchema = registerInputSchema
   .extend({
