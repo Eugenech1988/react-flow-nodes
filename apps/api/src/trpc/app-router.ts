@@ -14,6 +14,8 @@ import {
   passwordResetInputSchema,
   requestResetInputSchema,
   createDatabaseNodeInputSchema,
+  createExecutionInputSchema,
+  updateExecutionInputSchema,
 } from '@pipeline/contracts';
 import { AuthService } from '@/auth/auth.service';
 import { AiService } from '@/ai/ai.service';
@@ -23,6 +25,7 @@ import { ProfileService } from '@/profile/profile.service';
 import { UsersService } from '@/users/users.service';
 import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
 import { protectedProcedure, publicProcedure, router } from '@/trpc/init';
+import { ExecutionsService } from '@/executions/executions.service';
 import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 import { z } from 'zod';
 
@@ -34,6 +37,7 @@ interface RouterServices {
   usersService: UsersService;
   aiService: AiService;
   databaseNodesService: DatabaseNodesService;
+  executionsService: ExecutionsService;
 }
 
 function setTokenCookies(res: { cookie: Function }, accessToken: string, refreshToken: string) {
@@ -190,6 +194,48 @@ export function createAppRouter(services: RouterServices) {
       }),
   });
 
+  const executionsRouter = router({
+    create: protectedProcedure
+      .input(createExecutionInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        return services.executionsService.create({
+          ...input,
+          userId: ctx.user.id,
+        });
+      }),
+    list: protectedProcedure
+      .input(
+        z
+          .object({
+            pipelineId: z.string().optional(),
+          })
+          .optional(),
+      )
+      .query(({ ctx, input }) => {
+        return services.executionsService.findAll(ctx.user.id, input?.pipelineId);
+      }),
+    getById: protectedProcedure
+      .input(z.object({ id: z.string() }))
+      .query(({ input }) => {
+        return services.executionsService.findOne(input.id);
+      }),
+    update: protectedProcedure
+      .input(
+        z.object({
+          id: z.string(),
+          data: updateExecutionInputSchema,
+        }),
+      )
+      .mutation(({ input }) => {
+        return services.executionsService.update(input.id, input.data);
+      }),
+    remove: protectedProcedure
+      .input(z.object({ id: z.string() }))
+      .mutation(({ input }) => {
+        return services.executionsService.remove(input.id);
+      }),
+  });
+
   return router({
     auth: authRouter,
     users: usersRouter,
@@ -198,6 +244,7 @@ export function createAppRouter(services: RouterServices) {
     profile: profileRouter,
     ai: aiRouter,
     databaseNodes: databaseNodesRouter,
+    executions: executionsRouter,
     health: publicProcedure.query(() => ({ status: 'ok' })),
   });
 }

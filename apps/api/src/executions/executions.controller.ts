@@ -1,34 +1,51 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { ExecutionsService } from './executions.service';
-import { CreateExecutionDto } from './dto/create-execution.dto';
-import { UpdateExecutionDto } from './dto/update-execution.dto';
+import type {
+  TCreateExecutionInputData,
+  TUpdateExecutionInputData,
+} from '@pipeline/contracts';
 
 @Controller('executions')
 export class ExecutionsController {
   constructor(private readonly executionsService: ExecutionsService) {}
 
   @Post()
-  create(@Body() createExecutionDto: CreateExecutionDto) {
+  create(@Body() createExecutionDto: TCreateExecutionInputData) {
     return this.executionsService.create(createExecutionDto);
   }
 
   @Get()
-  findAll() {
-    return this.executionsService.findAll();
+  findAll(
+    @Query('userId') userId?: string,
+    @Query('pipelineId') pipelineId?: string,
+  ) {
+    return this.executionsService.findAll(userId, pipelineId);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.executionsService.findOne(+id);
+    return this.executionsService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExecutionDto: UpdateExecutionDto) {
-    return this.executionsService.update(+id, updateExecutionDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateExecutionDto: TUpdateExecutionInputData,
+  ) {
+    return this.executionsService.update(id, updateExecutionDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.executionsService.remove(+id);
+    return this.executionsService.remove(id);
   }
 }
