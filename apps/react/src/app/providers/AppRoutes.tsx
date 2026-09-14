@@ -7,6 +7,7 @@ import { CanvasPage } from '@/pages/canvas/CanvasPage';
 import { SettingsPage, ProfileTab, AccountTab, BillingTab } from '@/pages/settings';
 import { PlansPage } from '@/pages/plans';
 import { PipelinesPage } from '@/pages/pipelines';
+import { ExecutionsPage } from '@/pages/executions';
 import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
 
 export const AppRoutes = () => {
@@ -28,6 +29,8 @@ export const AppRoutes = () => {
             <Route path="account" element={<AccountTab />} />
             <Route path="billing" element={<BillingTab />} />
           </Route>
+
+          <Route path="/executions" element={<ExecutionsPage />} />
 
           <Route path="/plans" element={<PlansPage />} />
           <Route path="/pipelines" element={<PipelinesPage />} />
