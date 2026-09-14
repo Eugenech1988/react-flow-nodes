@@ -91,8 +91,8 @@ export const Canvas = () => {
         | null
         | undefined;
 
-      initGraph(graph?.nodes || [], graph?.edges || []);
-    }
+      const pipelineId = String(pipelineRecord.id || '');
+      initGraph(graph?.nodes || [], graph?.edges || [], pipelineId);    }
 
     return () => {
       resetGraph();

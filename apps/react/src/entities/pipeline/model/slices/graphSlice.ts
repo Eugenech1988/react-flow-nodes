@@ -19,6 +19,7 @@ export const createGraphSlice: StateCreator<
   lastRunAt: null,
   lastRunStatus: null,
   saveAction: null,
+  pipelineId: null,
 
   setLastRunInfo: (status, date = new Date()) =>
     set({
@@ -98,15 +99,18 @@ export const createGraphSlice: StateCreator<
     set({ edges });
   },
 
+  setPipelineId: (pipelineId) => set({ pipelineId }),
+
   setGraph: (nodes, edges) => {
     get().takeSnapshot();
     set({ nodes, edges });
   },
 
-  initGraph: (nodes, edges) => {
+  initGraph: (nodes, edges, pipelineId = null) => {
     set({
       nodes,
       edges,
+      pipelineId,
       past: [],
       future: [],
     });

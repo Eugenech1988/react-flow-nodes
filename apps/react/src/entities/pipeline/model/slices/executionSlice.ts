@@ -34,7 +34,7 @@ export const createExecutionSlice: StateCreator<
   },
 
   runWorkflow: async () => {
-    const { nodes, edges, addLog } = get();
+    const { nodes, edges, addLog, pipelineId } = get();
     if (nodes.length === 0) {
       addLog('Execution aborted: pipeline has no nodes', 'error');
       set({ executionStatus: 'failed' });
@@ -134,7 +134,7 @@ export const createExecutionSlice: StateCreator<
       addLog(`Node "${node.id}" [${currentTypeName}] execution triggered`, 'info', node.id);
 
       try {
-        const output = await executeNode(node, input);
+        const output = await executeNode(node, input, pipelineId);
 
         executedNodeIds.add(node.id);
         set((state) => ({
@@ -191,7 +191,7 @@ export const createExecutionSlice: StateCreator<
   },
 
   runNode: async (nodeId) => {
-    const { nodes, addLog } = get();
+    const { nodes, addLog, pipelineId } = get();
     const node = nodes.find((item) => item.id === nodeId);
 
     if (!node) {
@@ -219,7 +219,7 @@ export const createExecutionSlice: StateCreator<
     addLog(`Node "${node.id}" [${nodeType}] execution started.`, 'info', node.id);
 
     try {
-      const output = await executeNode(node);
+      const output = await executeNode(node, {}, pipelineId);
       set({ executionStatus: 'success', activeNodeId: null, successNodeIds: [node.id] });
       addLog(
         `Node "${node.id}" successfully finished: ${JSON.stringify(output).slice(0, 120)}`,

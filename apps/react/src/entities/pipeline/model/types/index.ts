@@ -56,6 +56,7 @@ export type TGraphState = {
   lastRunAt: Date | string | null;
   lastRunStatus: TLastRunStatus;
   saveAction: (() => Promise<void> | void) | null;
+  pipelineId: string | null;
 };
 
 export type TExecutionState = {
@@ -76,7 +77,8 @@ export type TGraphActions = {
   deleteNode: (nodeId: string) => void;
   setNodes: (nodes: TPipelineNode[]) => void;
   setEdges: (edges: TPipelineEdge[]) => void;
-  initGraph: (nodes: TPipelineNode[], edges: TPipelineEdge[]) => void;
+  setPipelineId: (pipelineId: string | null) => void;
+  initGraph: (nodes: TPipelineNode[], edges: TPipelineEdge[], pipelineId: string | null) => void;
   resetGraph: () => void;
   setGraph: (nodes: TPipelineNode[], edges: TPipelineEdge[]) => void;
   onNodesChange: (changes: NodeChange<TPipelineNode>[]) => void;

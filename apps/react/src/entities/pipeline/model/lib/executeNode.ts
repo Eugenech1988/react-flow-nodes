@@ -18,6 +18,7 @@ const nodeKind = (node: TPipelineNode) =>
 export const executeNode = async (
   node: TPipelineNode,
   input: TNodeExecutionResult = {},
+  pipelineId?: string | null,
 ): Promise<TNodeExecutionResult> => {
   const kind = nodeKind(node);
   const data = node.data;
@@ -74,14 +75,14 @@ export const executeNode = async (
     try {
       const record = await trpcClient.databaseNodes.createRecord.mutate({
         nodeId: node.id,
-        pipelineId: data.pipelineId ? String(data.pipelineId) : (input.pipelineId ? String(input.pipelineId) : null),
+        pipelineId: pipelineId || (data.pipelineId ? String(data.pipelineId) : (input.pipelineId ? String(input.pipelineId) : null)),
         query,
         params: input,
         status: 'SUCCESS',
       });
 
-      const recordData = (record?.data as unknown as Record<string, unknown>) || {};
-      const queryResult = 'result' in recordData ? recordData.result : record;
+      const recordData = record?.data ? (record.data as unknown as Record<string, unknown>) : {};
+      const queryResult = 'result' in recordData ? recordData.result : record?.data;
 
       return {
         ...input,
