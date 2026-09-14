@@ -8,11 +8,11 @@ export type TUserSafe = Omit<PrismaUser, 'password'> & {
   profile: TProfileSafe | null;
 };
 
-export interface IJwtPayload {
+export type TJwtPayload = {
   userId: string;
 }
 
-export interface IOauthUser {
+export type TOauthUser = {
   email: string;
   firstName: string;
   lastName: string;

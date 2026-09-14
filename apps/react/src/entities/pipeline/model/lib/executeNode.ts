@@ -1,4 +1,5 @@
 import type { TPipelineNode } from '@/entities/pipeline/model/types';
+import { trpcClient } from '@/shared/api';
 
 export type TNodeExecutionResult = Record<string, unknown>;
 
@@ -71,27 +72,15 @@ export const executeNode = async (
   if (kind.includes('database')) {
     const query = resolveTemplate(String(data.query || 'SELECT * FROM table'), input);
     try {
-      const res = await fetch('/api/trpc/databaseNodes.createRecord', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'same-origin',
-        body: JSON.stringify({
-          json: {
-            nodeId: node.id,
-            query,
-            params: input,
-            data: { result: 'Recorded successfully', query },
-            status: 'SUCCESS',
-          },
-        }),
+      const record = await trpcClient.databaseNodes.createRecord.mutate({
+        nodeId: node.id,
+        pipelineId: data.pipelineId ? String(data.pipelineId) : null,
+        query,
+        params: input,
+        data: { result: 'Recorded successfully', query },
+        status: 'SUCCESS',
       });
 
-      if (!res.ok) {
-        throw new Error(`Database node request failed with status ${res.status}`);
-      }
-
-      const json = await res.json();
-      const record = json?.result?.data?.json ?? null;
       return { ...input, query, rows: record ? [record] : [], status: 'SUCCESS' };
     } catch (error) {
       throw new Error(

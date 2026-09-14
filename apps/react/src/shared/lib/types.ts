@@ -53,7 +53,7 @@ export type TPipeline = {
   lastRunStatus?: 'SUCCESS' | 'FAILED' | 'RUNNING' | null;
 }
 
-export interface TUser {
+export interface IUser {
   id: string;
   email: string;
   provider: 'google' | 'github' | 'local';

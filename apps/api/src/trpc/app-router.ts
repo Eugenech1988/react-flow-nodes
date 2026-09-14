@@ -172,18 +172,18 @@ export function createAppRouter(services: RouterServices) {
   });
 
   const databaseNodesRouter = router({
-    createRecord: publicProcedure
+    createRecord: protectedProcedure
       .input(createDatabaseNodeInputSchema)
       .mutation(async ({ ctx, input }) => {
-        const userId = ctx.user?.id || null;
+        const userId = ctx.user.id;
         return services.databaseNodesService.createRecord(userId, input);
       }),
-    getByNodeId: publicProcedure
+    getByNodeId: protectedProcedure
       .input(z.object({ nodeId: z.string() }))
       .query(({ input }) => {
         return services.databaseNodesService.findByNodeId(input.nodeId);
       }),
-    getByPipelineId: publicProcedure
+    getByPipelineId: protectedProcedure
       .input(z.object({ pipelineId: z.string() }))
       .query(({ input }) => {
         return services.databaseNodesService.findByPipelineId(input.pipelineId);
