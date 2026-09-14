@@ -7,12 +7,12 @@ interface DraggableNodeProps {
 }
 
 const categoryVar: Record<string, string> = {
-  customInput: 'var(--node-input)',
-  customOutput: 'var(--node-output)',
+  input: 'var(--node-input)',
+  output: 'var(--node-output)',
   text: 'var(--node-text)',
   llm: 'var(--node-llm)',
   math: 'var(--node-math)',
-  conditional: 'var(--node-logic)',
+  condition: 'var(--node-logic)',
   api: 'var(--node-api)',
   database: 'var(--node-data)',
   image: 'var(--node-media)',
@@ -44,8 +44,9 @@ export const DraggableNode = ({ type, label, icon }: DraggableNodeProps) => {
         ...chipStyle,
         borderRadius: '9999px',
         backgroundColor: 'var(--background)',
-        clipPath: 'inset(0% 0% 0% 0% round 9999px)'
-      }}      onDragStart={(event) => onDragStart(event, type)}
+        clipPath: 'inset(0% 0% 0% 0% round 9999px)',
+      }}
+      onDragStart={(event) => onDragStart(event, type)}
       onDragEnd={onDragEnd}
       draggable
     >

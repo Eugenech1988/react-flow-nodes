@@ -2,10 +2,16 @@ import { Position } from '@xyflow/react';
 import { createNode } from './BaseNode';
 
 export const ImageNode = createNode({
-  title: 'Image Processor',
-  category: 'media',
+  title: 'Image',
+  category: 'image',
   icon: '▧',
   fields: [
+    {
+      key: 'imageUrl',
+      label: 'Image URL',
+      type: 'text',
+      defaultValue: '',
+    },
     {
       key: 'filter',
       label: 'Filter Effect',
