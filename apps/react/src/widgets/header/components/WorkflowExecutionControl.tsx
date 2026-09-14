@@ -1,13 +1,11 @@
 import { useEffect } from 'react';
 import { Play, Square, CheckCircle2, AlertCircle } from 'lucide-react';
-import { useReactFlow } from '@xyflow/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from '@/entities';
 import { Button } from '@pipeline/ui';
 import type { TExecutionStatus } from '@/entities';
 
 export const WorkflowExecutionControl = () => {
-  const { setNodes, setEdges } = useReactFlow();
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === '/';
@@ -29,12 +27,10 @@ export const WorkflowExecutionControl = () => {
 
   const handleStartFlow = () => {
     if (!isHome) {
-      navigate('/');
+      navigate('/', { state: { autoRun: true } });
+    } else {
+      runWorkflow();
     }
-
-    setNodes((nodes) => nodes.map((n) => ({ ...n, selected: false })));
-    setEdges((edges) => edges.map((e) => ({ ...e, selected: false })));
-    runWorkflow();
   };
 
   const getRunButtonConfig = (status: TExecutionStatus) => {

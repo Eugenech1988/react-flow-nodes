@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { useShallow } from 'zustand/react/shallow';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   ReactFlow,
   Background,
@@ -41,11 +42,15 @@ export const Canvas = () => {
     TPipelineEdge
   > | null>(null);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const {
     nodes,
     edges,
     initGraph,
     resetGraph,
+    runWorkflow,
     addNode,
     onNodesChange,
     onEdgesChange,
@@ -63,6 +68,7 @@ export const Canvas = () => {
       edges: state.edges,
       initGraph: state.initGraph,
       resetGraph: state.resetGraph,
+      runWorkflow: state.runWorkflow,
       addNode: state.addNode,
       onNodesChange: state.onNodesChange,
       onEdgesChange: state.onEdgesChange,
@@ -98,6 +104,16 @@ export const Canvas = () => {
       resetGraph();
     };
   }, [currentPipeline?.id, initGraph, resetGraph]);
+
+  useEffect(() => {
+    const navState = location.state as { autoRun?: boolean } | null;
+
+    if (navState?.autoRun && nodes.length > 0) {
+      runWorkflow();
+
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, nodes.length, runWorkflow, navigate, location.pathname]);
 
   const { getNodes, getEdges } = useReactFlow<TPipelineNode, TPipelineEdge>();
 
