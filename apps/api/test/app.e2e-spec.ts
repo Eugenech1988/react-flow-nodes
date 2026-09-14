@@ -7,13 +7,20 @@ jest.mock('otplib', () => ({
 jest.mock('@otplib/plugin-base32-scure', () => ({}), { virtual: true });
 jest.mock('@scure/base', () => ({}), { virtual: true });
 
+jest.mock('@ai-sdk/google', () => ({
+  createGoogleGenerativeAI: jest.fn(() => jest.fn()),
+}));
+
+jest.mock('ai', () => ({
+  generateText: jest.fn(),
+}));
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request = require('supertest');
 import cookieParser = require('cookie-parser');
 import { AppModule } from '@/app.module';
 import { PrismaService } from '@/prisma/prisma.service';
-
 
 describe('Auth & Users (e2e)', () => {
   let app: INestApplication;
@@ -52,6 +59,7 @@ describe('Auth & Users (e2e)', () => {
     await prismaService.user.deleteMany({
       where: { email: testUser.email },
     });
+
     await app.close();
   });
 
@@ -152,6 +160,7 @@ describe('Auth & Users (e2e)', () => {
       const deletedUser = await prismaService.user.findUnique({
         where: { email: testUser.email },
       });
+
       expect(deletedUser).toBeNull();
     });
   });
