@@ -1,9 +1,7 @@
-import { Save, Sparkles } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
-import { useMutation } from '@tanstack/react-query';
-import { trpcClient } from '@/shared/api';
 import { UserDropdown } from '@/features/user-dropdown';
 import { WorkflowExecutionControl } from '@/widgets/header/components/WorkflowExecutionControl';
 import { ShareDialog } from '@/widgets/header/components/ShareDialog';
@@ -19,22 +17,10 @@ export const Header = () => {
 
   const triggerSave = useStore((state) => state.triggerSave);
 
-  const testMutation = useMutation({
-    mutationFn: (message: string) =>
-      trpcClient.ai.test.mutate({
-        message,
-      }),
-    onSuccess: (data) => console.log(data),
-  });
-
   const handleHeaderClick = () => {
     if (!isHome) {
       navigate('/');
     }
-  };
-
-  const handleAiClick = () => {
-    testMutation.mutate('hello gemini');
   };
 
   const preventNavigation = (e: React.MouseEvent) => {
@@ -72,13 +58,6 @@ export const Header = () => {
           onClick={triggerSave}
         >
           <Save className="h-4 w-4" />
-        </button>
-
-        <button
-          onClick={handleAiClick}
-          className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all"
-        >
-          <Sparkles className="h-4 w-4" />
         </button>
 
         <ThemeToggle />
