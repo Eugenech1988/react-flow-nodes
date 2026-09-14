@@ -3,7 +3,7 @@ import { Header } from '@/widgets/header';
 import { Toaster } from '@pipeline/ui';
 import { ReactFlowProvider } from '@xyflow/react';
 
-function AppLayout() {
+export const AppLayout = () => {
   return (
     <div className="flex pt-14 flex-col min-h-screen h-full bg-background text-foreground">
       <ReactFlowProvider>
@@ -16,5 +16,3 @@ function AppLayout() {
     </div>
   );
 }
-
-export default AppLayout;

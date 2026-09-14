@@ -1,7 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/app/providers/ProtectedRoute';
 import { PublicOnlyRoute } from '@/app/providers/PublicOnlyRoute';
-import AppLayout from '@/app/AppLayout';
+import { AppLayout } from '@/app/AppLayout';
+import { WorkflowLayout } from '@/app/WorkflowLayout';
 import { LoginPage } from '@/pages/login';
 import { CanvasPage } from '@/pages/canvas/CanvasPage';
 import { SettingsPage, ProfileTab, AccountTab, BillingTab } from '@/pages/settings';
@@ -21,7 +22,12 @@ export const AppRoutes = () => {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
-          <Route index element={<CanvasPage />} />
+          <Route element={<WorkflowLayout />}>
+            <Route index element={<CanvasPage />} />
+            <Route path="/executions" element={<ExecutionsPage />} />
+            {/* <Route path="/triggers" element={<TriggersPage />} /> */}
+            {/* <Route path="/cron" element={<CronPage />} /> */}
+          </Route>
 
           <Route path="/settings" element={<SettingsPage />}>
             <Route index element={<Navigate to="profile" replace />} />

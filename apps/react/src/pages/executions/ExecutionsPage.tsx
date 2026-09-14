@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion, type Variants } from 'framer-motion';
 import {
   CheckCircle2,
   XCircle,
@@ -29,6 +30,16 @@ import {
 } from '@pipeline/ui';
 
 import { AppButton, DialogBody, DialogFooter, DialogHeader, TableSkeleton } from '@/shared/ui';
+import { SidebarToggle } from '@/widgets/canvas/components/SidebarToggle.tsx';
+
+export const PAGE_VARIANTS: Variants = {
+  initial: { opacity: 0, y: 12 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: [0.21, 1.02, 0.43, 1.01] },
+  },
+};
 
 export type TExecutionStatus = 'success' | 'failed' | 'running';
 
@@ -133,7 +144,13 @@ export const ExecutionsPage = () => {
   };
 
   return (
-    <div className="bg-background text-foreground flex min-h-screen w-full flex-col p-6 pt-20">
+    <motion.div
+      variants={PAGE_VARIANTS}
+      initial="initial"
+      animate="animate"
+      className="relative bg-background text-foreground flex min-h-screen w-full flex-col p-6 pt-20"
+    >
+      <SidebarToggle />
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Executions</h1>
@@ -328,6 +345,6 @@ export const ExecutionsPage = () => {
           </DialogContent>
         )}
       </Dialog>
-    </div>
+    </motion.div>
   );
 };
