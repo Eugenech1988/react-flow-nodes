@@ -1,4 +1,5 @@
 import { trpcClient } from '@/shared/api';
+import type { TCreateDatabaseNodeInputData } from '@pipeline/contracts';
 import type { TNodeExecutor, TNodeExecutionResult } from '../model/types';
 import { resolveTemplate } from '../model/utils';
 
@@ -14,19 +15,12 @@ type TCreateDatabaseRecordInput = {
   status: 'SUCCESS';
 };
 
-//TODO fix DTO on BE
-
 const createDatabaseRecord = async (
   input: TCreateDatabaseRecordInput,
 ): Promise<TDatabaseRecord> => {
-  const mutate = trpcClient.databaseNodes.createRecord.mutate as unknown as (
-    payload: Record<string, unknown>,
-  ) => Promise<TDatabaseRecord>;
+  // const now = new Date();
 
-  const now = new Date().toISOString();
-
-  return mutate({
-    id: crypto.randomUUID(),
+  const payload: TCreateDatabaseNodeInputData = {
     nodeId: input.nodeId,
     pipelineId: input.pipelineId,
     query: input.query,
@@ -34,9 +28,9 @@ const createDatabaseRecord = async (
     status: input.status,
     data: null,
     userId: null,
-    createdAt: now,
-    updatedAt: now,
-  });
+  };
+
+  return trpcClient.databaseNodes.createRecord.mutate(payload);
 };
 
 export const executeDatabaseNode: TNodeExecutor = async (node, input, context) => {

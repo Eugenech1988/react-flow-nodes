@@ -17,6 +17,7 @@ import { createContext } from '@/trpc/context';
 import { AiService } from '@/ai/ai.service';
 import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
 import { doubleCsrf } from 'csrf-csrf';
+import { ExecutionsService } from '@/executions/executions.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
@@ -82,6 +83,7 @@ async function bootstrap() {
     profileService: app.get(ProfileService),
     usersService,
     databaseNodesService: app.get(DatabaseNodesService),
+    executionsService: app.get(ExecutionsService),
   });
 
   app.getHttpAdapter().getInstance().use(

@@ -1,13 +1,13 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { TCreateDatabaseNodeInputData } from '@pipeline/contracts';
+import { CreateDatabaseNodeInputDto } from './dtos/createDatabaseNode.dto';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class DatabaseNodesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createRecord(userId: string | null, dto: TCreateDatabaseNodeInputData) {
+  async createRecord(userId: string | null, dto: CreateDatabaseNodeInputDto) {
     if (!dto.query || !dto.query.trim().toUpperCase().startsWith('SELECT')) {
       const errorMsg = 'Only SELECT queries are allowed for security reasons.';
       console.error(errorMsg);
