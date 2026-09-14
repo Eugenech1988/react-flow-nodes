@@ -54,8 +54,10 @@ export const Header = () => {
         <ShareDialog />
 
         <button
-          className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all"
+          className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40"
+          disabled={!isHome}
           onClick={triggerSave}
+          title={!isHome ? "Saving is only available on the canvas page" : "Save pipeline"}
         >
           <Save className="h-4 w-4" />
         </button>

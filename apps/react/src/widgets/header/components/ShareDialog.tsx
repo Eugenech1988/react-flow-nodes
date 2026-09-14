@@ -3,11 +3,16 @@ import { Check, Clipboard, Link2, Share2 } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { useUser } from '@/shared/hooks';
 import { AppButton, DialogBody, DialogHeader } from '@/shared/ui';
+import { useLocation } from 'react-router-dom';
 
 export const ShareDialog = () => {
-  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const { user } = useUser();
+
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
   const pipelineId = user?.currentPipeline?.id;
 
   const shareUrl = useMemo(() => {
@@ -34,6 +39,7 @@ export const ShareDialog = () => {
         icon={Share2}
         variant="primary"
         size="xs"
+        isDisabled={!isHome}
         onClick={() => setIsOpen(true)}
       />
 
