@@ -3,7 +3,7 @@ import {
   type Table,
   type SortingState,
   type ColumnDef,
-  type TableFeatures,
+  type TableFeatures
 } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import {
@@ -12,7 +12,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
+  TableRow
 } from '@pipeline/ui';
 import { AppButton } from '@/shared/ui';
 
@@ -34,7 +34,7 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
                                                                                    sorting,
                                                                                    totalRuns,
                                                                                    onSort,
-                                                                                   onSelect,
+                                                                                   onSelect
                                                                                  }: TExecutionsTableProps<TFeatures>) => {
   const rows = table.getRowModel().rows;
 
@@ -58,8 +58,6 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
                       ? 'desc'
                       : 'asc'
                     : false;
-                  const isLast =
-                    header.index === headerGroup.headers.length - 1;
 
                   return (
                     <TableHead
@@ -67,28 +65,24 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
                       className={`font-semibold text-muted-foreground py-3 select-none ${
                         canSort ? 'cursor-pointer hover:text-foreground' : ''
                       } ${header.index === 0 ? 'pl-4' : ''} ${
-                        isLast ? 'pr-4 text-right' : ''
+                        header.index === headerGroup.headers.length - 1 ? 'pr-4' : ''
                       }`}
                       onClick={
                         canSort ? () => onSort(header.column.id) : undefined
                       }
                     >
                       {header.isPlaceholder ? null : (
-                        <div
-                          className={`inline-flex items-center gap-1.5 ${
-                            isLast ? 'justify-end w-full' : ''
-                          }`}
-                        >
-                          <span>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                          </span>
+                        <div className="inline-flex items-center gap-1.5">
+          <span>
+            {flexRender(
+              header.column.columnDef.header,
+              header.getContext()
+            )}
+          </span>
                           {canSort && (
                             <span className="text-muted-foreground/60 shrink-0">
-                              <SortIndicator state={sortState} />
-                            </span>
+              <SortIndicator state={sortState}/>
+            </span>
                           )}
                         </div>
                       )}
@@ -138,7 +132,8 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
         </TableUI>
       </div>
 
-      <div className="bg-muted/10 border-t border-border/60 flex items-center justify-between px-4 py-3 text-xs text-muted-foreground">
+      <div
+        className="bg-muted/10 border-t border-border/60 flex items-center justify-between px-4 py-3 text-xs text-muted-foreground">
         <span>
           Showing <strong className="text-foreground">{rows.length}</strong> of{' '}
           <strong className="text-foreground">{totalRuns}</strong> runs

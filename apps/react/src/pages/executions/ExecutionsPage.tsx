@@ -33,10 +33,10 @@ export const ExecutionsPage = () => {
     handleTabChange,
   } = useExecutionsTable();
 
-  // Указываем any в качестве 3-го дженерика TValue
+  // Вызываем buildColumns без аргументов и с пустым массивом зависимостей
   const columns: ColumnDef<TableFeatures, IExecutionItem, any>[] = useMemo(
-    () => buildColumns(setSelectedExec),
-    [setSelectedExec]
+    () => buildColumns(),
+    []
   );
 
   const table = useTable<TableFeatures, IExecutionItem>({

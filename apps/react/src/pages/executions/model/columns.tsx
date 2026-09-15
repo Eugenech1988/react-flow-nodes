@@ -1,21 +1,17 @@
-import type { MouseEvent } from 'react';
 import {
   createColumnHelper,
   type TableFeatures,
 } from '@tanstack/react-table';
-import { Clock, ExternalLink, PlayCircle } from 'lucide-react';
-import { AppButton } from '@/shared/ui';
+import { Clock, PlayCircle } from 'lucide-react';
 
 import { StatusBadge } from '@/pages/executions/components';
 import type { IExecutionItem } from '@/pages/executions/model';
 
 const columnHelper = createColumnHelper<TableFeatures, IExecutionItem>();
 
-export const buildColumns = (
-  onInspect: (item: IExecutionItem) => void
-) => [
+export const buildColumns = () => [
   columnHelper.accessor('id', {
-    header: 'Execution ID',
+    header: 'ID',
     cell: (info) => (
       <span className="font-mono text-[11px] font-medium text-foreground">
         {info.getValue()}
@@ -24,7 +20,7 @@ export const buildColumns = (
   }),
 
   columnHelper.accessor('workflowName', {
-    header: 'Workflow',
+    header: 'Pipeline',
     cell: (info) => (
       <div>
         <div className="font-medium text-foreground text-xs">
@@ -80,23 +76,12 @@ export const buildColumns = (
     ),
   }),
 
-  columnHelper.display({
-    id: 'actions',
-    header: 'Details',
+  columnHelper.accessor('startedAt', {
+    header: 'Finished At',
     cell: (info) => (
-      <div
-        className="text-right"
-        onClick={(e: MouseEvent) => e.stopPropagation()}
-      >
-        <AppButton
-          variant="ghost"
-          size="xs"
-          icon={ExternalLink}
-          text="Inspect"
-          onClick={() => onInspect(info.row.original)}
-          className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 p-0 h-auto min-h-0 border-none text-xs font-medium"
-        />
-      </div>
+      <span className="text-muted-foreground font-mono text-[11px]">
+        {info.getValue()}
+      </span>
     ),
   }),
 ];
