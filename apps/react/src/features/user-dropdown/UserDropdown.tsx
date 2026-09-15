@@ -6,8 +6,7 @@ import {
   Settings,
   CreditCard,
   ChevronDown,
-  Zap,
-  Workflow
+  Zap
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -119,14 +118,6 @@ export const UserDropdown = () => {
           >
             <CreditCard className="w-4 h-4 shrink-0" />
             <span>Billing</span>
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            render={<Link to="/pipelines" />}
-            className={itemClasses}
-          >
-            <Workflow className="w-4 h-4 shrink-0" />
-            <span>Pipelines</span>
           </DropdownMenuItem>
 
           {isFreePlan && (

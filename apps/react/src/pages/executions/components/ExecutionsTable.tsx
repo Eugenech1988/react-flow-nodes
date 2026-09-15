@@ -132,11 +132,10 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
         </TableUI>
       </div>
 
-      {/* Пагинация и подвал таблицы */}
       <div className="bg-muted/30 border-t border-border/60 flex items-center justify-between px-4 py-2 text-xs font-medium text-muted-foreground">
         <span>
-          Showing <strong className="text-foreground font-semibold">{rows.length}</strong> of{' '}
-          <strong className="text-foreground font-semibold">{totalRuns}</strong> runs
+          Showing <strong className="text-muted-foreground font-semibold">{rows.length}</strong> of{' '}
+          <strong className="text-muted-foreground font-semibold">{totalRuns}</strong> runs
         </span>
         <div className="flex items-center gap-1.5">
           <AppButton

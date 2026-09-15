@@ -8,30 +8,32 @@ import {
   type TableFeatures,
 } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
+import { TAB_OPTIONS } from '@/pages/pipelines/model';
 import { FloatingInput, Tabs, TableSkeleton } from '@/shared/ui';
 import { PAGE_VARIANTS } from '@/shared/lib';
 
 import { buildColumns } from './model';
-import { EXECUTION_TABS, MOCK_EXECUTIONS } from './model';
 import type { IExecutionItem } from './model';
 import { ExecutionsTable, ExecutionDetailsDialog, PageHeader } from './components';
 import { useExecutionsTable } from './hooks';
+
+import { useExecutions } from '@/shared/hooks/useExecutions';
 
 export const ExecutionsPage = () => {
   const {
     searchQuery,
     statusFilter,
-    isLoading,
     selectedExec,
     sorting,
     processedExecutions,
     setSelectedExec,
     setSorting,
-    handleRefresh,
     handleSortToggle,
     handleSearchChange,
     handleTabChange,
   } = useExecutionsTable();
+
+  const { executions, isLoading, isFetching } = useExecutions();
 
   const columns: ColumnDef<TableFeatures, IExecutionItem, any>[] = useMemo(
     () => buildColumns(),
@@ -56,7 +58,7 @@ export const ExecutionsPage = () => {
       animate="animate"
     >
       <div className="max-w-7xl mx-auto space-y-8">
-        <PageHeader isLoading={isLoading} onRefresh={handleRefresh} />
+        <PageHeader/>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="relative w-full sm:w-80 group">
@@ -71,7 +73,7 @@ export const ExecutionsPage = () => {
 
           <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             <Tabs
-              tabs={EXECUTION_TABS}
+              tabs={TAB_OPTIONS}
               layoutId="executions-filter-tabs"
               currentTab={statusFilter}
               onTabChange={handleTabChange}
@@ -79,14 +81,14 @@ export const ExecutionsPage = () => {
           </div>
         </div>
 
-        {isLoading ? (
+        {(isLoading || isFetching) ? (
           <TableSkeleton rowCount={5} columnCount={8} />
         ) : (
           <ExecutionsTable
             table={table}
             columns={columns}
             sorting={sorting}
-            totalRuns={MOCK_EXECUTIONS.length}
+            totalRuns={executions.length}
             onSort={handleSortToggle}
             onSelect={setSelectedExec}
           />

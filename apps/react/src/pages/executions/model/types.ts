@@ -5,13 +5,14 @@ export type TRunStatus = Exclude<TExecutionStatus, 'all'>;
 
 export interface IExecutionItem {
   id: string;
-  workflowName: string;
-  workflowId: string;
+  pipelineName: string;
+  pipelineId: string;
   status: TRunStatus;
-  startedAt: string;
   duration: string;
   triggeredBy: string;
   nodesExecuted: number;
+  startedAt: number;
+  finishedAt: number;
 }
 
 export type TSortState = false | 'asc' | 'desc';

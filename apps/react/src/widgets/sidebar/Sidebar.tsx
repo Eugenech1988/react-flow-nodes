@@ -1,5 +1,5 @@
 import type { ElementType } from 'react';
-import { Folder, History, LogOut, type LucideIcon } from 'lucide-react';
+import { Workflow, History, LogOut, type LucideIcon } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSidebarStore } from './model';
 import { SidebarToggle } from '@/widgets/sidebar/components';
@@ -17,7 +17,7 @@ export const Sidebar = () => {
   const navigate = useNavigate();
 
   const mainNavItems: NavItem[] = [
-    { label: 'Pipelines', icon: Folder, href: '/pipelines' },
+    { label: 'Pipelines', icon: Workflow, href: '/pipelines' },
     { label: 'Executions', icon: History, href: '/executions' },
   ];
 

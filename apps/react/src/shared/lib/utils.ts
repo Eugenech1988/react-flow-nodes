@@ -38,3 +38,38 @@ export const extractVariables = (text: string): string[] => {
 
   return uniqueVariables;
 };
+
+export const formatDuration = (durationMs: number | null | undefined): string => {
+  if (durationMs == null || isNaN(durationMs)) return '00.00.00';
+
+  const minutes = Math.floor(durationMs / 60000);
+  const seconds = Math.floor((durationMs % 60000) / 1000);
+  const milliseconds = Math.floor((durationMs % 1000) / 10);
+
+  const pad = (num: number) => String(num).padStart(2, '0');
+
+  return `${pad(minutes)}.${pad(seconds)}.${pad(milliseconds)}`;
+};
+
+export const formatDate = (
+  dateInput: string | Date | null | undefined,
+  options?: { showTime?: boolean }
+): string => {
+  if (!dateInput) return '—';
+
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  if (isNaN(date.getTime())) return '—';
+
+  const showTime = options?.showTime ?? true;
+
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    ...(showTime && {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }),
+  }).format(date);
+};

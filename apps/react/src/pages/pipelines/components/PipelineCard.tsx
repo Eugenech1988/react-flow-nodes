@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@pipeline/ui';
-import type { TPipeline } from '@/shared/lib';
+import { formatDate, type TPipeline } from '@/shared/lib';
 import { usePipelineHandler } from '@/pages/pipelines/hooks';
 import { usePipelineDialogStore } from '@/pages/pipelines/model';
 
@@ -160,7 +160,7 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
 
         <div className="flex items-center gap-1 text-muted-foreground">
           <Clock className="w-3.5 h-3.5" />
-          <span>{pipeline.lastRunAt || 'Never run'}</span>
+          <span>{formatDate(pipeline.lastRunAt) || 'Never run'}</span>
           {pipeline.lastRunStatus === 'SUCCESS' && (
             <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 ml-0.5" />
           )}

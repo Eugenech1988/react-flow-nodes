@@ -13,21 +13,18 @@ export const buildColumns = () => [
   columnHelper.accessor('id', {
     header: 'ID',
     cell: (info) => (
-      <span className="font-mono text-[11px] font-medium text-foreground">
+      <span className=" text-[11px] font-medium text-muted-foreground">
         {info.getValue()}
       </span>
     ),
   }),
 
-  columnHelper.accessor('workflowName', {
+  columnHelper.accessor('pipelineName', {
     header: 'Pipeline',
     cell: (info) => (
       <div>
-        <div className="font-medium text-foreground text-xs">
+        <div className="font-medium text-muted-foreground text-xs">
           {info.getValue()}
-        </div>
-        <div className="text-[10px] text-muted-foreground font-mono">
-          {info.row.original.workflowId}
         </div>
       </div>
     ),
@@ -51,7 +48,7 @@ export const buildColumns = () => [
   columnHelper.accessor('nodesExecuted', {
     header: 'Nodes',
     cell: (info) => (
-      <span className="text-muted-foreground font-mono text-[11px]">
+      <span className="text-muted-foreground  text-[11px]">
         {info.getValue()} nodes
       </span>
     ),
@@ -60,7 +57,7 @@ export const buildColumns = () => [
   columnHelper.accessor('duration', {
     header: 'Duration',
     cell: (info) => (
-      <span className="inline-flex items-center gap-1.5 text-muted-foreground font-mono text-[11px]">
+      <span className="inline-flex items-center gap-1.5 text-muted-foreground  text-[11px]">
         <Clock className="h-3.5 w-3.5 text-muted-foreground/70" />
         {info.getValue()}
       </span>
@@ -70,16 +67,16 @@ export const buildColumns = () => [
   columnHelper.accessor('startedAt', {
     header: 'Started At',
     cell: (info) => (
-      <span className="text-muted-foreground font-mono text-[11px]">
+      <span className="text-muted-foreground  text-[11px]">
         {info.getValue()}
       </span>
     ),
   }),
 
-  columnHelper.accessor('startedAt', {
+  columnHelper.accessor('finishedAt', {
     header: 'Finished At',
     cell: (info) => (
-      <span className="text-muted-foreground font-mono text-[11px]">
+      <span className="text-muted-foreground  text-[11px]">
         {info.getValue()}
       </span>
     ),

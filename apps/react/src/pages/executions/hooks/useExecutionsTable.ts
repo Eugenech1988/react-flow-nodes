@@ -1,21 +1,17 @@
 import { useMemo, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import type { SortingState } from '@tanstack/react-table';
+import { useExecutions } from '@/shared/hooks/useExecutions';
 
-import { MOCK_EXECUTIONS } from '@/pages/executions/model';
 import type { IExecutionItem, TExecutionStatus } from '@/pages/executions/model';
 
 export const useExecutionsTable = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<TExecutionStatus>('all');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedExec, setSelectedExec] = useState<IExecutionItem | null>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const handleRefresh = () => {
-    setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 800);
-  };
+  const { executions, isLoading } = useExecutions();
 
   const handleSortToggle = (columnId: string) => {
     setSorting((prev) => {
@@ -35,12 +31,14 @@ export const useExecutionsTable = () => {
   const processedExecutions = useMemo<IExecutionItem[]>(() => {
     const query = searchQuery.toLowerCase();
 
-    const filtered = MOCK_EXECUTIONS.filter((exec) => {
+    const filtered = executions.filter((exec) => {
       const matchesSearch =
-        exec.workflowName.toLowerCase().includes(query) ||
+        exec.pipelineName.toLowerCase().includes(query) ||
         exec.id.toLowerCase().includes(query);
+
       const matchesStatus =
-        statusFilter === 'all' || exec.status === statusFilter;
+        statusFilter === 'all' ||
+        exec.status.toLowerCase() === statusFilter.toLowerCase();
 
       return matchesSearch && matchesStatus;
     });
@@ -64,7 +62,8 @@ export const useExecutionsTable = () => {
 
       return desc ? -comparison : comparison;
     });
-  }, [searchQuery, statusFilter, sorting]);
+
+  }, [executions, searchQuery, statusFilter, sorting]);
 
   return {
     searchQuery,
@@ -75,7 +74,6 @@ export const useExecutionsTable = () => {
     processedExecutions,
     setSelectedExec,
     setSorting,
-    handleRefresh,
     handleSortToggle,
     handleSearchChange,
     handleTabChange,
