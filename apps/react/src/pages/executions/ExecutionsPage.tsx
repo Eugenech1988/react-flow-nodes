@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import { motion, type Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
+  History,
   CheckCircle2,
   XCircle,
   Clock,
   Search,
   RefreshCw,
   ExternalLink,
-  Filter,
   ChevronLeft,
   ChevronRight,
   PlayCircle,
-  Terminal,
+  Terminal
 } from 'lucide-react';
 import {
   Dialog,
@@ -21,38 +21,39 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  TableRow
 } from '@pipeline/ui';
 
-import { AppButton, DialogBody, DialogFooter, DialogHeader, TableSkeleton } from '@/shared/ui';
-import { SidebarToggle } from '@/widgets/canvas/components/SidebarToggle.tsx';
+import {
+  AppButton,
+  FloatingInput,
+  Tabs,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
+  TableSkeleton
+} from '@/shared/ui';
+import { PAGE_VARIANTS } from '@/shared/lib';
 
-export const PAGE_VARIANTS: Variants = {
-  initial: { opacity: 0, y: 12 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.35, ease: [0.21, 1.02, 0.43, 1.01] },
-  },
-};
-
-export type TExecutionStatus = 'success' | 'failed' | 'running';
+export type TExecutionStatus = 'all' | 'success' | 'failed' | 'running';
 
 export interface IExecutionItem {
   id: string;
   workflowName: string;
   workflowId: string;
-  status: TExecutionStatus;
+  status: Exclude<TExecutionStatus, 'all'>;
   startedAt: string;
   duration: string;
   triggeredBy: string;
   nodesExecuted: number;
 }
+
+const EXECUTION_TABS = [
+  { id: 'all', label: 'All Runs' },
+  { id: 'success', label: 'Success' },
+  { id: 'failed', label: 'Failed' },
+  { id: 'running', label: 'Running' },
+];
 
 const MOCK_EXECUTIONS: IExecutionItem[] = [
   {
@@ -63,7 +64,7 @@ const MOCK_EXECUTIONS: IExecutionItem[] = [
     startedAt: '2026-09-14 18:24:10',
     duration: '1.4s',
     triggeredBy: 'Manual Trigger',
-    nodesExecuted: 3,
+    nodesExecuted: 3
   },
   {
     id: 'exec-9820',
@@ -73,7 +74,7 @@ const MOCK_EXECUTIONS: IExecutionItem[] = [
     startedAt: '2026-09-14 17:50:02',
     duration: '450ms',
     triggeredBy: 'Webhook',
-    nodesExecuted: 2,
+    nodesExecuted: 2
   },
   {
     id: 'exec-9819',
@@ -83,7 +84,7 @@ const MOCK_EXECUTIONS: IExecutionItem[] = [
     startedAt: '2026-09-14 18:28:45',
     duration: 'in progress...',
     triggeredBy: 'Cron Schedule',
-    nodesExecuted: 1,
+    nodesExecuted: 1
   },
   {
     id: 'exec-9818',
@@ -93,13 +94,13 @@ const MOCK_EXECUTIONS: IExecutionItem[] = [
     startedAt: '2026-09-14 16:12:33',
     duration: '4.8s',
     triggeredBy: 'Manual Trigger',
-    nodesExecuted: 5,
-  },
+    nodesExecuted: 5
+  }
 ];
 
 export const ExecutionsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<TExecutionStatus>('all');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedExec, setSelectedExec] = useState<IExecutionItem | null>(null);
 
@@ -117,26 +118,26 @@ export const ExecutionsPage = () => {
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusBadge = (status: TExecutionStatus) => {
+  const getStatusBadge = (status: Exclude<TExecutionStatus, 'all'>) => {
     switch (status) {
       case 'success':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-            <CheckCircle2 className="h-3.5 w-3.5" />
-            Success
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium border bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20">
+            <CheckCircle2 className="h-3 w-3" />
+            Paid / Success
           </span>
         );
       case 'failed':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/30 bg-rose-500/10 px-2.5 py-0.5 text-xs font-medium text-rose-600 dark:text-rose-400">
-            <XCircle className="h-3.5 w-3.5" />
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium border bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20">
+            <XCircle className="h-3 w-3" />
             Failed
           </span>
         );
       case 'running':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-600 dark:text-blue-400">
-            <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium border bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20">
+            <RefreshCw className="h-3 w-3 animate-spin" />
             Running
           </span>
         );
@@ -145,193 +146,211 @@ export const ExecutionsPage = () => {
 
   return (
     <motion.div
+      className="bg-background text-foreground p-4 md:p-6 transition-colors duration-300"
       variants={PAGE_VARIANTS}
       initial="initial"
       animate="animate"
-      className="relative bg-background text-foreground flex min-h-screen w-full flex-col p-6 pt-20"
     >
-      <SidebarToggle />
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Executions</h1>
-          <p className="text-muted-foreground text-xs">
-            Monitor and inspect workflow runs, statuses, and execution logs.
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header Section */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <History className="w-6 h-6 text-teal-600 dark:text-teal-400" />
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">Executions</h1>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Monitor, inspect, and audit real-time workflow runs and execution logs.
+            </p>
+          </div>
 
-        <AppButton
-          text="Refresh"
-          variant="secondary"
-          size="xs"
-          icon={RefreshCw}
-          isPending={isLoading}
-          pendingText="Refreshing..."
-          onClick={handleRefresh}
-        />
-      </div>
-
-      <div className="bg-card border-border mb-4 flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1">
-          <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-4 w-4 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search by workflow name or execution ID..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="border-border bg-muted/20 text-foreground focus:border-primary w-full rounded-md border py-1.5 pr-3 pl-9 text-xs outline-none transition-colors"
+          <AppButton
+            variant="secondary"
+            size="md"
+            text="Refresh Logs"
+            icon={RefreshCw}
+            isPending={isLoading}
+            pendingText="Refreshing..."
+            onClick={handleRefresh}
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Filter className="h-3.5 w-3.5" />
-            <span>Status:</span>
+        {/* Search & Filter Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="relative w-full sm:w-80 group">
+            <FloatingInput
+              rounded="xl"
+              label="Search executions"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              icon={<Search className="w-4 h-4" />}
+            />
           </div>
 
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[140px] h-8 text-xs bg-muted/20">
-              <SelectValue placeholder="All statuses" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="success">Success</SelectItem>
-              <SelectItem value="failed">Failed</SelectItem>
-              <SelectItem value="running">Running</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <Tabs
+              tabs={EXECUTION_TABS}
+              layoutId="executions-filter-tabs"
+              currentTab={statusFilter}
+              onTabChange={(id) => setStatusFilter(id as TExecutionStatus)}
+            />
+          </div>
         </div>
-      </div>
 
-      {isLoading ? (
-        <TableSkeleton rowCount={5} columnCount={8} />
-      ) : (
-        <div className="bg-card border-border overflow-hidden rounded-lg border shadow-xs">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-muted/30">
-                <TableRow>
-                  <TableHead className="w-[120px]">Execution ID</TableHead>
-                  <TableHead>Workflow</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Trigger</TableHead>
-                  <TableHead>Nodes</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>Started At</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredExecutions.length > 0 ? (
-                  filteredExecutions.map((exec) => (
-                    <TableRow
-                      key={exec.id}
-                      className="cursor-pointer transition-colors hover:bg-muted/20"
-                      onClick={() => setSelectedExec(exec)}
-                    >
-                      <TableCell className="font-mono text-[11px] font-medium text-foreground/80">
-                        {exec.id}
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium text-foreground">{exec.workflowName}</div>
-                        <div className="text-[10px] text-muted-foreground font-mono">
-                          {exec.workflowId}
-                        </div>
-                      </TableCell>
-                      <TableCell>{getStatusBadge(exec.status)}</TableCell>
-                      <TableCell>
-                        <span className="inline-flex items-center gap-1 text-muted-foreground">
-                          <PlayCircle className="h-3 w-3" />
-                          {exec.triggeredBy}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground font-mono">
-                        {exec.nodesExecuted} nodes
-                      </TableCell>
-                      <TableCell>
-                        <span className="inline-flex items-center gap-1 text-muted-foreground font-mono">
-                          <Clock className="h-3 w-3" />
-                          {exec.duration}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground font-mono">
-                        {exec.startedAt}
-                      </TableCell>
-                      <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-                        <AppButton
-                          variant="ghost"
-                          size="xs"
-                          icon={ExternalLink}
-                          onClick={() => setSelectedExec(exec)}
-                          className="h-7 w-7 p-0"
-                        />
+        {/* Table / Content Section */}
+        {isLoading ? (
+          <TableSkeleton rowCount={5} columnCount={8} />
+        ) : (
+          <div className="rounded-xl border border-border/80 overflow-hidden bg-card shadow-xs">
+            <div className="overflow-x-auto">
+              <Table className="text-xs">
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent border-b border-border/60 bg-muted/30">
+                    <TableHead className="font-semibold text-muted-foreground py-3 pl-4">
+                      Execution ID
+                    </TableHead>
+                    <TableHead className="font-semibold text-muted-foreground py-3">
+                      Workflow
+                    </TableHead>
+                    <TableHead className="font-semibold text-muted-foreground py-3">
+                      Status
+                    </TableHead>
+                    <TableHead className="font-semibold text-muted-foreground py-3">
+                      Trigger
+                    </TableHead>
+                    <TableHead className="font-semibold text-muted-foreground py-3">
+                      Nodes
+                    </TableHead>
+                    <TableHead className="font-semibold text-muted-foreground py-3">
+                      Duration
+                    </TableHead>
+                    <TableHead className="font-semibold text-muted-foreground py-3">
+                      Started At
+                    </TableHead>
+                    <TableHead className="text-right font-semibold text-muted-foreground py-3 pr-4">
+                      Details
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredExecutions.length > 0 ? (
+                    filteredExecutions.map((exec) => (
+                      <TableRow
+                        key={exec.id}
+                        className="hover:bg-muted/30 border-b border-border/40 transition-colors cursor-pointer"
+                        onClick={() => setSelectedExec(exec)}
+                      >
+                        <TableCell className="font-mono text-[11px] font-medium py-3 pl-4 text-foreground">
+                          {exec.id}
+                        </TableCell>
+                        <TableCell className="py-3">
+                          <div className="font-medium text-foreground">{exec.workflowName}</div>
+                          <div className="text-[10px] text-muted-foreground font-mono">
+                            {exec.workflowId}
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-3">{getStatusBadge(exec.status)}</TableCell>
+                        <TableCell className="py-3">
+                          <span className="inline-flex items-center gap-1.5 text-muted-foreground text-[11px]">
+                            <PlayCircle className="h-3 w-3" />
+                            {exec.triggeredBy}
+                          </span>
+                        </TableCell>
+                        <TableCell className="py-3 text-muted-foreground font-mono text-[11px]">
+                          {exec.nodesExecuted} nodes
+                        </TableCell>
+                        <TableCell className="py-3">
+                          <span className="inline-flex items-center gap-1 text-muted-foreground font-mono text-[11px]">
+                            <Clock className="h-3 w-3" />
+                            {exec.duration}
+                          </span>
+                        </TableCell>
+                        <TableCell className="py-3 text-muted-foreground font-mono text-[11px]">
+                          {exec.startedAt}
+                        </TableCell>
+                        <TableCell
+                          className="text-right py-3 pr-4"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <AppButton
+                            variant="ghost"
+                            size="xs"
+                            icon={ExternalLink}
+                            text="Inspect"
+                            onClick={() => setSelectedExec(exec)}
+                            className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 p-0 h-auto min-h-0 border-none text-xs"
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={8} className="text-center py-8 text-muted-foreground text-xs">
+                        No executions found matching your filters.
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-muted-foreground py-8 text-center">
-                      No executions found matching your filters.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
 
-          <div className="bg-muted/10 border-border flex items-center justify-between border-t px-4 py-3 text-xs text-muted-foreground">
-            <span>
-              Showing <strong className="text-foreground">{filteredExecutions.length}</strong> of{' '}
-              <strong className="text-foreground">{MOCK_EXECUTIONS.length}</strong> runs
-            </span>
-            <div className="flex items-center gap-1.5">
-              <AppButton
-                variant="regular"
-                size="xs"
-                icon={ChevronLeft}
-                isDisabled
-                className="h-7 w-7 p-0"
-              />
-              <span className="px-1">Page 1 of 1</span>
-              <AppButton
-                variant="regular"
-                size="xs"
-                icon={ChevronRight}
-                isDisabled
-                className="h-7 w-7 p-0"
-              />
+            {/* Footer */}
+            <div className="bg-muted/10 border-t border-border/60 flex items-center justify-between px-4 py-3 text-xs text-muted-foreground">
+              <span>
+                Showing <strong className="text-foreground">{filteredExecutions.length}</strong> of{' '}
+                <strong className="text-foreground">{MOCK_EXECUTIONS.length}</strong> runs
+              </span>
+              <div className="flex items-center gap-1.5">
+                <AppButton
+                  variant="regular"
+                  size="xs"
+                  icon={ChevronLeft}
+                  isDisabled
+                  className="h-7 w-7 p-0 rounded-md"
+                />
+                <span className="px-1 text-[11px]">Page 1 of 1</span>
+                <AppButton
+                  variant="regular"
+                  size="xs"
+                  icon={ChevronRight}
+                  isDisabled
+                  className="h-7 w-7 p-0 rounded-md"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
+      {/* Execution Details Modal */}
       <Dialog open={Boolean(selectedExec)} onOpenChange={() => setSelectedExec(null)}>
         {selectedExec && (
-          <DialogContent className="sm:max-w-md p-0 overflow-hidden border-border bg-card">
+          <DialogContent showCloseButton={false} className="sm:max-w-md p-0 gap-0 overflow-hidden border-border bg-card rounded-2xl">
             <DialogHeader
               title={`Execution Details — ${selectedExec.id}`}
               description="Full execution runtime log summary"
-              icon={<Terminal className="h-4 w-4 text-primary" />}
+              icon={<Terminal className="h-4 w-4 text-teal-600 dark:text-teal-400" />}
               onClose={() => setSelectedExec(null)}
             />
 
-            <DialogBody withBorder className="space-y-3 text-xs my-0 py-4">
-              <div className="flex justify-between py-1 border-b border-border/40">
+            <DialogBody withBorder className="text-sm my-0 border-0 py-0">
+              <div className="flex justify-between py-2 border-b border-border/40">
                 <span className="text-muted-foreground">Workflow Name:</span>
                 <span className="font-medium">{selectedExec.workflowName}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-border/40">
+              <div className="flex justify-between py-2 border-b border-border/40">
                 <span className="text-muted-foreground">Status:</span>
                 <span>{getStatusBadge(selectedExec.status)}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-border/40">
+              <div className="flex justify-between py-2 border-b border-border/40">
                 <span className="text-muted-foreground">Trigger Source:</span>
                 <span>{selectedExec.triggeredBy}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-border/40">
+              <div className="flex justify-between py-2 border-b border-border/40">
                 <span className="text-muted-foreground">Start Timestamp:</span>
                 <span className="font-mono">{selectedExec.startedAt}</span>
               </div>
-              <div className="flex justify-between py-1">
+              <div className="flex justify-between py-2">
                 <span className="text-muted-foreground">Total Duration:</span>
                 <span className="font-mono">{selectedExec.duration}</span>
               </div>

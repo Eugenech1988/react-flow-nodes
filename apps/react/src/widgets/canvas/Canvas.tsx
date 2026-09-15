@@ -32,7 +32,6 @@ import {
   NODE_TYPE_TO_CATEGORY,
 } from './config';
 import { useDragAndDrop, useKeyboardShortcuts, useSavePipeline } from './hooks';
-import { SidebarToggle } from '@/widgets/canvas/components/SidebarToggle.tsx';
 import { NodesToolbar } from '@/widgets/nodes-toolbar';
 
 export const Canvas = () => {
@@ -149,7 +148,6 @@ export const Canvas = () => {
       className="relative h-full w-full bg-[#f1f5f9] transition-colors duration-300 [--react-flow__background-color:#cbd5e1] dark:bg-[#030712] dark:[--react-flow__background-color:#374151]"
     >
       <ImportExportToolbar onExport={exportJSON} onImport={importJSON} />
-      <SidebarToggle />
       <NodesToolbar />
       <HistoryControls />
       <AutoLayoutButton />
