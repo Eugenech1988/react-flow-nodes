@@ -1,10 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Connection, Edge, EdgeChange, Node, NodeChange, Position } from '@xyflow/react';
 
-// ==========================================
-// 1. DOMAIN & HELPER TYPES
-// ==========================================
-
 export type TNodeData = {
   id: string;
   nodeType: string;
@@ -30,10 +26,6 @@ export type TExecutionLog = {
   type: 'info' | 'success' | 'error';
   message: string;
 };
-
-// ==========================================
-// 2. STATES
-// ==========================================
 
 export type THistorySnapshot = {
   nodes: TPipelineNode[];
@@ -74,10 +66,6 @@ export type TExecutionState = {
   failedNodeId: string | null;
 };
 
-// ==========================================
-// 3. ACTIONS
-// ==========================================
-
 export type TGraphActions = {
   getNodeID: (type: string) => string;
   addNode: (node: TPipelineNode) => void;
@@ -115,17 +103,9 @@ export type TExecutionActions = {
   addLog: (message: string, type?: TExecutionLog['type'], nodeId?: string) => void;
 };
 
-// ==========================================
-// 4. COMBINED STORE TYPES
-// ==========================================
-
 export type TPipelineStoreState = TGraphState & TExecutionState;
 export type TPipelineStoreActions = TGraphActions & TExecutionActions;
 export type TPipelineStore = TPipelineStoreState & TPipelineStoreActions;
-
-// ==========================================
-// 5. NODE CONFIG & RENDER TYPES
-// ==========================================
 
 export type TFieldType = 'text' | 'number' | 'select' | 'textarea';
 
