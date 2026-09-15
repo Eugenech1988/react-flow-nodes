@@ -13,7 +13,6 @@ interface NavItem {
 
 export const Sidebar = () => {
   const isOpen = useSidebarStore((state) => state.isOpen);
-  const toggle = useSidebarStore((state) => state.toggle);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -28,25 +27,19 @@ export const Sidebar = () => {
 
   const itemClassName = (isActive?: boolean) =>
     `flex h-10 w-full cursor-pointer items-center overflow-hidden rounded-lg px-[13px] text-sm font-medium select-none transition-[background-color,color] duration-200 ${
-  isActive
-    ? 'bg-muted font-semibold text-foreground'
-    : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-}`;
+      isActive
+        ? 'bg-muted font-semibold text-foreground'
+        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+    }`;
 
   const renderNavItem = (item: NavItem) => {
     const Icon = item.icon;
-    const isActive = item.href
-      ? location.pathname === item.href
-      : false;
+    const isActive = item.href ? location.pathname === item.href : false;
 
     return (
       <div
         key={item.label}
         onClick={() => {
-          if (!isOpen) {
-            toggle();
-          }
-
           if (item.href) {
             navigate(item.href);
           }
@@ -57,15 +50,15 @@ export const Sidebar = () => {
         }}
         className={itemClassName(isActive)}
       >
-        <div className="flex w-[216px] shrink-0 items-center gap-3">
+        <div className="flex w-54 shrink-0 items-center gap-3">
           <Icon className="h-4 w-4 shrink-0" />
 
           <span
             className={`whitespace-nowrap transition-[opacity,transform] ${
-  isOpen
-    ? 'translate-x-0 opacity-100 duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]'
-    : '-translate-x-2 opacity-0 duration-150 ease-in'
-}`}
+              isOpen
+                ? 'translate-x-0 opacity-100 duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]'
+                : '-translate-x-2 opacity-0 duration-150 ease-in'
+            }`}
           >
             {item.label}
           </span>
@@ -77,19 +70,17 @@ export const Sidebar = () => {
   return (
     <aside
       className={`relative flex h-full shrink-0 flex-col justify-between overflow-hidden border-r border-border bg-background select-none ${
-  isOpen
-    ? 'w-64 transition-[width] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]'
-    : 'w-[60px] transition-[width] duration-200 ease-[cubic-bezier(0.4,0,1,1)]'
-}`}
+        isOpen
+          ? 'w-64 transition-[width] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]'
+          : 'w-15 transition-[width] duration-200 ease-in'
+      }`}
     >
       <div className="space-y-1 p-2">
         <div className="relative flex h-10 items-center">
           <div
             className={`absolute inset-0 flex items-center ${
-  isOpen
-    ? 'justify-end pr-1.5'
-    : 'justify-center'
-}`}
+              isOpen ? 'justify-end pr-1.5' : 'justify-center'
+            }`}
           >
             <SidebarToggle />
           </div>
