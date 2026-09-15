@@ -33,7 +33,6 @@ export const ExecutionsPage = () => {
     handleTabChange,
   } = useExecutionsTable();
 
-  // Вызываем buildColumns без аргументов и с пустым массивом зависимостей
   const columns: ColumnDef<TableFeatures, IExecutionItem, any>[] = useMemo(
     () => buildColumns(),
     []

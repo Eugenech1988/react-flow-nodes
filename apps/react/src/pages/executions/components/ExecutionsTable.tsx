@@ -39,14 +39,14 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
   const rows = table.getRowModel().rows;
 
   return (
-    <div className="rounded-xl border border-border/80 overflow-hidden bg-card shadow-xs">
+    <div className="rounded-xl border border-border/60 overflow-hidden bg-card/50 backdrop-blur-md shadow-xs">
       <div className="overflow-x-auto">
-        <TableUI className="text-xs">
+        <TableUI className="text-sm font-sans">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="hover:bg-transparent border-b border-border/60 bg-muted/30"
+                className="hover:bg-transparent border-b border-border/60 bg-muted/40"
               >
                 {headerGroup.headers.map((header) => {
                   const canSort = header.column.id !== 'actions';
@@ -62,7 +62,7 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
                   return (
                     <TableHead
                       key={header.id}
-                      className={`font-semibold text-muted-foreground py-3 select-none ${
+                      className={`font-semibold text-muted-foreground text-xs py-2.5 px-4 select-none ${
                         canSort ? 'cursor-pointer hover:text-foreground' : ''
                       } ${header.index === 0 ? 'pl-4' : ''} ${
                         header.index === headerGroup.headers.length - 1 ? 'pr-4' : ''
@@ -73,16 +73,16 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
                     >
                       {header.isPlaceholder ? null : (
                         <div className="inline-flex items-center gap-1.5">
-          <span>
-            {flexRender(
-              header.column.columnDef.header,
-              header.getContext()
-            )}
-          </span>
+                          <span>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                          </span>
                           {canSort && (
                             <span className="text-muted-foreground/60 shrink-0">
-              <SortIndicator state={sortState}/>
-            </span>
+                              <SortIndicator state={sortState} />
+                            </span>
                           )}
                         </div>
                       )}
@@ -99,13 +99,13 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
                 return (
                   <TableRow
                     key={row.id}
-                    className="hover:bg-muted/30 border-b border-border/40 transition-colors cursor-pointer text-xs"
+                    className="hover:bg-muted/40 border-b border-border/40 transition-all cursor-pointer text-sm font-medium text-foreground/90"
                     onClick={() => onSelect(row.original)}
                   >
                     {cells.map((cell, idx) => (
                       <TableCell
                         key={cell.id}
-                        className={`py-3 ${idx === 0 ? 'pl-4' : ''} ${
+                        className={`py-2.5 px-4 ${idx === 0 ? 'pl-4' : ''} ${
                           idx === cells.length - 1 ? 'pr-4' : ''
                         }`}
                       >
@@ -122,7 +122,7 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="text-center py-8 text-muted-foreground text-xs"
+                  className="text-center py-10 text-muted-foreground text-sm font-medium"
                 >
                   No executions found matching your filters.
                 </TableCell>
@@ -132,11 +132,11 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
         </TableUI>
       </div>
 
-      <div
-        className="bg-muted/10 border-t border-border/60 flex items-center justify-between px-4 py-3 text-xs text-muted-foreground">
+      {/* Пагинация и подвал таблицы */}
+      <div className="bg-muted/30 border-t border-border/60 flex items-center justify-between px-4 py-2 text-xs font-medium text-muted-foreground">
         <span>
-          Showing <strong className="text-foreground">{rows.length}</strong> of{' '}
-          <strong className="text-foreground">{totalRuns}</strong> runs
+          Showing <strong className="text-foreground font-semibold">{rows.length}</strong> of{' '}
+          <strong className="text-foreground font-semibold">{totalRuns}</strong> runs
         </span>
         <div className="flex items-center gap-1.5">
           <AppButton
@@ -144,15 +144,15 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
             size="xs"
             icon={ChevronLeft}
             isDisabled
-            className="h-7 w-7 p-0 rounded-md"
+            className="h-7 w-7 p-0 rounded-lg"
           />
-          <span className="px-1 text-[11px]">Page 1 of 1</span>
+          <span className="px-1 text-xs">Page 1 of 1</span>
           <AppButton
             variant="regular"
             size="xs"
             icon={ChevronRight}
             isDisabled
-            className="h-7 w-7 p-0 rounded-md"
+            className="h-7 w-7 p-0 rounded-lg"
           />
         </div>
       </div>
