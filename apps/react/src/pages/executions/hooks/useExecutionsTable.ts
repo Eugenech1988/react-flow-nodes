@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import type { SortingState } from '@tanstack/react-table';
-import { useExecutions } from '@/shared/hooks/useExecutions';
+import { useUser, useExecutions } from '@/shared/hooks';
 
 import type { IExecutionItem, TExecutionStatus } from '@/pages/executions/model';
 
@@ -11,7 +11,25 @@ export const useExecutionsTable = () => {
   const [selectedExec, setSelectedExec] = useState<IExecutionItem | null>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const { executions, isLoading } = useExecutions();
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
+
+  const { user } = useUser();
+
+  const {
+    executions,
+    totalRuns,
+    totalPages,
+    isLoading,
+    isFetching,
+    refetch
+  } = useExecutions({
+    pipelineId: user?.currentPipelineId ?? undefined,
+    page,
+    limit,
+    search: searchQuery,
+    status: statusFilter,
+  });
 
   const handleSortToggle = (columnId: string) => {
     setSorting((prev) => {
@@ -22,32 +40,23 @@ export const useExecutionsTable = () => {
     });
   };
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) =>
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+    setPage(1); // При поиске всегда сбрасываем на 1-ю страницу
+  };
 
-  const handleTabChange = (id: string) =>
+  const handleTabChange = (id: string) => {
     setStatusFilter(id as TExecutionStatus);
+    setPage(1); // При смене вкладки статуса сбрасываем на 1-ю страницу
+  };
 
+  // Клиентская сортировка остается для текущей страницы (или её можно тоже перенести на бэк, если нужно)
   const processedExecutions = useMemo<IExecutionItem[]>(() => {
-    const query = searchQuery.toLowerCase();
-
-    const filtered = executions.filter((exec) => {
-      const matchesSearch =
-        exec.pipelineName.toLowerCase().includes(query) ||
-        exec.id.toLowerCase().includes(query);
-
-      const matchesStatus =
-        statusFilter === 'all' ||
-        exec.status.toLowerCase() === statusFilter.toLowerCase();
-
-      return matchesSearch && matchesStatus;
-    });
-
-    if (!sorting.length) return filtered;
+    if (!sorting.length) return executions;
 
     const { id: sortKey, desc } = sorting[0];
 
-    return [...filtered].sort((a, b) => {
+    return [...executions].sort((a, b) => {
       const valA = a[sortKey as keyof IExecutionItem];
       const valB = b[sortKey as keyof IExecutionItem];
 
@@ -62,20 +71,27 @@ export const useExecutionsTable = () => {
 
       return desc ? -comparison : comparison;
     });
-
-  }, [executions, searchQuery, statusFilter, sorting]);
+  }, [executions, sorting]);
 
   return {
     searchQuery,
     statusFilter,
     isLoading,
+    isFetching,
     selectedExec,
     sorting,
     processedExecutions,
+    page,
+    limit,
+    totalPages,
+    totalRuns,
+    setPage,
+    setLimit,
     setSelectedExec,
     setSorting,
     handleSortToggle,
     handleSearchChange,
     handleTabChange,
+    handleRefresh: refetch,
   };
 };

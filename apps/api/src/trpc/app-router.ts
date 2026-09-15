@@ -208,11 +208,22 @@ export function createAppRouter(services: RouterServices) {
         z
           .object({
             pipelineId: z.string().optional(),
+            page: z.number().int().positive().optional(),
+            limit: z.number().int().positive().optional(),
+            search: z.string().optional(),
+            status: z.string().optional(),
           })
           .optional(),
       )
       .query(({ ctx, input }) => {
-        return services.executionsService.findAll(ctx.user.id, input?.pipelineId);
+        return services.executionsService.findAll({
+          userId: ctx.user.id,
+          pipelineId: input?.pipelineId,
+          page: input?.page,
+          limit: input?.limit,
+          search: input?.search,
+          status: input?.status,
+        });
       }),
     getById: protectedProcedure
       .input(z.object({ id: z.string() }))

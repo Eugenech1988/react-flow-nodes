@@ -27,8 +27,19 @@ export class ExecutionsController {
   findAll(
     @Query('userId') userId?: string,
     @Query('pipelineId') pipelineId?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+    @Query('status') status?: string,
   ) {
-    return this.executionsService.findAll(userId, pipelineId);
+    return this.executionsService.findAll({
+      userId,
+      pipelineId,
+      page: page ? parseInt(page, 10) : undefined,
+      limit: limit ? parseInt(limit, 10) : undefined,
+      search,
+      status,
+    });
   }
 
   @Get(':id')

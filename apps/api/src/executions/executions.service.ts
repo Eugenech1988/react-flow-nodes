@@ -1,7 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, ExecutionStatus } from '@prisma/client';
 import { TCreateExecutionInputData, TUpdateExecutionInputData, } from '@pipeline/contracts';
+
+interface FindAllOptions {
+  userId?: string;
+  pipelineId?: string;
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: string;
+}
 
 @Injectable()
 export class ExecutionsService {
@@ -50,26 +59,52 @@ export class ExecutionsService {
     return this.mapExecutionResponse(execution);
   }
 
-  async findAll(userId?: string, pipelineId?: string) {
-    const executions = await this.prisma.execution.findMany({
-      where: {
-        ...(userId && { userId }),
-        ...(pipelineId && { pipelineId }),
-      },
-      orderBy: {
-        startedAt: 'desc',
-      },
-      include: {
-        pipeline: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+  async findAll(options?: FindAllOptions) {
+    const userId = options?.userId;
+    const pipelineId = options?.pipelineId;
+    const search = options?.search?.trim();
+    const status = options?.status;
 
-    return executions.map((exec) => this.mapExecutionResponse(exec));
+    const page = options?.page && options.page > 0 ? options.page : 1;
+    const limit = options?.limit && options.limit > 0 ? options.limit : 10;
+    const skip = (page - 1) * limit;
+
+    // Безопасно приводим статус к верхнему регистру и типу ExecutionStatus
+    const validStatus = status && status !== 'all' ? (status.toUpperCase() as ExecutionStatus) : undefined;
+
+    // Формируем гибкий where для Prisma
+    const whereClause: Prisma.ExecutionWhereInput = {
+      ...(userId && { userId }),
+      ...(pipelineId && { pipelineId }),
+      ...(validStatus && { status: validStatus }), // <-- Используем валидный статус
+      ...(search && {
+        OR: [
+          { id: { contains: search, mode: 'insensitive' } },
+          { pipeline: { name: { contains: search, mode: 'insensitive' } } },
+        ],
+      }),
+    };
+
+    const [executions, total] = await Promise.all([
+      this.prisma.execution.findMany({
+        where: whereClause,
+        skip,
+        take: limit,
+        orderBy: { startedAt: 'desc' },
+        include: {
+          pipeline: { select: { id: true, name: true } },
+        },
+      }),
+      this.prisma.execution.count({ where: whereClause }),
+    ]);
+
+    return {
+      items: executions.map((exec) => this.mapExecutionResponse(exec)),
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: string) {

@@ -8,7 +8,7 @@ import {
   type TableFeatures,
 } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
-import { TAB_OPTIONS } from '@/pages/pipelines/model';
+import { EXECUTION_TABS } from '@/pages/executions/model';
 import { FloatingInput, Tabs, TableSkeleton } from '@/shared/ui';
 import { PAGE_VARIANTS } from '@/shared/lib';
 
@@ -17,23 +17,29 @@ import type { IExecutionItem } from './model';
 import { ExecutionsTable, ExecutionDetailsDialog, PageHeader } from './components';
 import { useExecutionsTable } from './hooks';
 
-import { useExecutions } from '@/shared/hooks/useExecutions';
-
 export const ExecutionsPage = () => {
   const {
     searchQuery,
     statusFilter,
     selectedExec,
     sorting,
+    isLoading,
+    isFetching,
     processedExecutions,
+    // 1. Достаем параметры и функции пагинации из хука
+    page,
+    totalPages,
+    limit,
+    totalRuns,
+    setPage,
+    setLimit,
     setSelectedExec,
     setSorting,
     handleSortToggle,
     handleSearchChange,
     handleTabChange,
+    handleRefresh
   } = useExecutionsTable();
-
-  const { executions, isLoading, isFetching } = useExecutions();
 
   const columns: ColumnDef<TableFeatures, IExecutionItem, any>[] = useMemo(
     () => buildColumns(),
@@ -58,7 +64,7 @@ export const ExecutionsPage = () => {
       animate="animate"
     >
       <div className="max-w-7xl mx-auto space-y-8">
-        <PageHeader/>
+        <PageHeader isFetching={isFetching} handleRefresh={handleRefresh}/>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="relative w-full sm:w-80 group">
@@ -73,7 +79,7 @@ export const ExecutionsPage = () => {
 
           <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             <Tabs
-              tabs={TAB_OPTIONS}
+              tabs={EXECUTION_TABS}
               layoutId="executions-filter-tabs"
               currentTab={statusFilter}
               onTabChange={handleTabChange}
@@ -88,9 +94,14 @@ export const ExecutionsPage = () => {
             table={table}
             columns={columns}
             sorting={sorting}
-            totalRuns={executions.length}
+            totalRuns={totalRuns}
+            page={page}
+            totalPages={totalPages}
+            limit={limit}
             onSort={handleSortToggle}
             onSelect={setSelectedExec}
+            onPageChange={setPage}
+            onLimitChange={setLimit}
           />
         )}
       </div>

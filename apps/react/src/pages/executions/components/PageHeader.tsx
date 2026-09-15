@@ -1,9 +1,12 @@
 import { History, RefreshCw } from 'lucide-react';
 import { AppButton } from '@/shared/ui';
-import { useExecutions } from '@/shared/hooks/useExecutions';
 
-export const PageHeader = () => {
-  const {refetch, isFetching} = useExecutions();
+interface IPageHeaderProps {
+  isFetching?: boolean;
+  handleRefresh: () => void;
+}
+
+export const PageHeader = ({isFetching, handleRefresh}: IPageHeaderProps) => {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
       <div className="space-y-1">
@@ -25,7 +28,7 @@ export const PageHeader = () => {
         icon={RefreshCw}
         isPending={isFetching}
         pendingText="Refreshing..."
-        onClick={() => refetch()}
+        onClick={() => handleRefresh()}
       />
     </div>
   );

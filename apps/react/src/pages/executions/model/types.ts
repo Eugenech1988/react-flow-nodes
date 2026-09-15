@@ -11,8 +11,8 @@ export interface IExecutionItem {
   duration: string;
   triggeredBy: string;
   nodesExecuted: number;
-  startedAt: number;
-  finishedAt: number;
+  startedAt: string;
+  finishedAt: string;
 }
 
 export type TSortState = false | 'asc' | 'desc';
