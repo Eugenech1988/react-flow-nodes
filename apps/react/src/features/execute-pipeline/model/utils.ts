@@ -1,5 +1,6 @@
-import type { TPipelineNode } from '@/entities/pipeline/model/types';
+import type { TExecutionLog, TPipelineNode, TTriggerType as TUiTriggerType } from '@/entities/pipeline/model/types';
 import type { TNodeExecutionResult } from './types';
+import type { TTriggerType as TBackendTriggerType } from '@pipeline/contracts';
 
 export const resolveTemplate = (
   value: string,
@@ -22,3 +23,19 @@ export const toNumber = (value: unknown, label: string): number => {
 
 export const getNodeKind = (node: TPipelineNode): string =>
   String(node.data.nodeType || node.type || '').toLowerCase();
+
+
+export const mapTriggerType = (trigger?: TUiTriggerType | string): TBackendTriggerType => {
+  if (trigger === 'SCHEDULED') return 'CRON';
+  if (trigger === 'WEBHOOK' || trigger === 'CRON' || trigger === 'API') {
+    return trigger;
+  }
+  return 'MANUAL';
+};
+
+export const formatLogsToRecord = (logs: TExecutionLog[]): Record<string, unknown> => {
+  return logs.reduce<Record<string, unknown>>((acc, log, index) => {
+    acc[log.id || `log_${index}`] = log;
+    return acc;
+  }, {});
+};

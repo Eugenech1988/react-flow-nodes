@@ -15,7 +15,7 @@ export const triggerTypeSchema = z.enum([
 ]);
 
 export const createExecutionInputSchema = z.object({
-  id: z.string().optional(),
+  id: z.string().optional().nullable(),
   pipelineId: z.string(),
   userId: z.string(),
   status: executionStatusSchema.default('RUNNING'),
@@ -25,8 +25,7 @@ export const createExecutionInputSchema = z.object({
   durationMs: z.number().int().nullable().optional(),
   nodesExecuted: z.number().int().default(0),
   logs: z.record(z.string(), z.unknown()).nullable().optional(),
-  createdAt: z.union([z.string(), z.date()]).optional(),
-  updatedAt: z.union([z.string(), z.date()]).optional(),
+  createdAt: z.union([z.string(), z.date()]).optional().nullable(),
 });
 
 export const updateExecutionInputSchema = z.object({

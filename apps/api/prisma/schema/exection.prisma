@@ -13,7 +13,7 @@ model Execution {
 
   startedAt  DateTime  @default(now()) @map("started_at")
   finishedAt DateTime? @map("finished_at")
-  durationMs Int?      @map("duration_ms") // Длительность в мс
+  durationMs Int?      @map("duration_ms")
 
   nodesExecuted Int   @default(0) @map("nodes_executed")
   logs          Json?

@@ -5,6 +5,7 @@ import type {
   TExecutionActions,
 } from '@/entities/pipeline/model/types';
 import { executeNode, type TNodeExecutionResult } from '@/features/execute-pipeline';
+import { pipelineExecutionService } from '@/features/execute-pipeline/pipelineExecutionService';
 
 export const createExecutionSlice: StateCreator<
   TPipelineStore,
@@ -125,7 +126,7 @@ export const createExecutionSlice: StateCreator<
     }
 
     set({
-      id: crypto.randomUUID(),
+      id: null,
       executionStatus: 'running',
       triggeredBy: 'MANUAL',
       startedAt,
@@ -138,6 +139,18 @@ export const createExecutionSlice: StateCreator<
       failedNodeId: null,
     });
     addLog('Workflow execution started.', 'info');
+
+    let backendExecutionId: string | null = null;
+    if (pipelineId) {
+      backendExecutionId = await pipelineExecutionService.startExecution({
+        pipelineId,
+        triggeredBy: get().triggeredBy,
+        logs: get().logs,
+      });
+      if (backendExecutionId) {
+        set({ id: backendExecutionId });
+      }
+    }
 
     const nodeMap = new Map(nodes.map((n) => [n.id, n]));
     const outgoingEdges = new Map<string, typeof edges>();
@@ -200,28 +213,45 @@ export const createExecutionSlice: StateCreator<
         }
 
         const endTime = Date.now();
+        const durationMs = endTime - startTime;
+        const finishedAt = new Date().toISOString();
+
         set({
           executionStatus: 'failed',
           failedNodeId: node.id,
           activeNodeId: null,
-          finishedAt: new Date().toISOString(),
-          durationMs: endTime - startTime,
+          finishedAt,
+          durationMs,
         });
         addLog(`Execution stopped at node "${node.id}": ${error.message}`, 'error', node.id);
+
+        if (backendExecutionId) {
+          await pipelineExecutionService.finishExecution(backendExecutionId, {
+            status: 'FAILED',
+            finishedAt,
+            durationMs,
+            nodesExecuted: executedNodeIds.size,
+            logs: get().logs,
+          });
+        }
         return;
       }
     }
 
     const endTime = Date.now();
+    const durationMs = endTime - startTime;
+    const finishedAt = new Date().toISOString();
+
     if (get().executionStatus === 'running') {
       const hasUnreachableNodes = nodes.length > executedNodeIds.size;
+      const isSuccess = !hasUnreachableNodes;
 
       if (hasUnreachableNodes) {
         set({
           executionStatus: 'failed',
           activeNodeId: null,
-          finishedAt: new Date().toISOString(),
-          durationMs: endTime - startTime,
+          finishedAt,
+          durationMs,
         });
         addLog(
           'Workflow failed: some nodes were unreachable or skipped due to condition branches.',
@@ -231,10 +261,20 @@ export const createExecutionSlice: StateCreator<
         set({
           executionStatus: 'success',
           activeNodeId: null,
-          finishedAt: new Date().toISOString(),
-          durationMs: endTime - startTime,
+          finishedAt,
+          durationMs,
         });
         addLog('Workflow executed completely!', 'success');
+      }
+
+      if (backendExecutionId) {
+        await pipelineExecutionService.finishExecution(backendExecutionId, {
+          status: isSuccess ? 'SUCCESS' : 'FAILED',
+          finishedAt,
+          durationMs,
+          nodesExecuted: executedNodeIds.size,
+          logs: get().logs,
+        });
       }
     }
   },
@@ -260,7 +300,7 @@ export const createExecutionSlice: StateCreator<
     }
 
     set({
-      id: crypto.randomUUID(),
+      id: null,
       executionStatus: 'running',
       triggeredBy: 'MANUAL',
       startedAt,
@@ -275,49 +315,99 @@ export const createExecutionSlice: StateCreator<
     const nodeType = String(node.data?.nodeType || node.type || 'unknown');
     addLog(`Node "${node.id}" [${nodeType}] execution started.`, 'info', node.id);
 
+    let backendExecutionId: string | null = null;
+    if (pipelineId) {
+      backendExecutionId = await pipelineExecutionService.startExecution({
+        pipelineId,
+        triggeredBy: get().triggeredBy,
+        logs: get().logs,
+      });
+      if (backendExecutionId) {
+        set({ id: backendExecutionId });
+      }
+    }
+
     try {
       const output = await executeNode(node, {}, pipelineId);
       const endTime = Date.now();
+      const durationMs = endTime - startTime;
+      const finishedAt = new Date().toISOString();
+
       set({
         executionStatus: 'success',
         activeNodeId: null,
         successNodeIds: [node.id],
         nodesExecuted: 1,
-        finishedAt: new Date().toISOString(),
-        durationMs: endTime - startTime,
+        finishedAt,
+        durationMs,
       });
       addLog(
         `Node "${node.id}" successfully finished: ${JSON.stringify(output).slice(0, 120)}`,
         'success',
         node.id,
       );
+
+      if (backendExecutionId) {
+        await pipelineExecutionService.finishExecution(backendExecutionId, {
+          status: 'SUCCESS',
+          finishedAt,
+          durationMs,
+          nodesExecuted: 1,
+          logs: get().logs,
+        });
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown node execution error.';
       const endTime = Date.now();
+      const durationMs = endTime - startTime;
+      const finishedAt = new Date().toISOString();
+
       set({
         executionStatus: 'failed',
         activeNodeId: null,
         failedNodeId: node.id,
         nodesExecuted: 0,
-        finishedAt: new Date().toISOString(),
-        durationMs: endTime - startTime,
+        finishedAt,
+        durationMs,
       });
       addLog(`Node "${node.id}" failed: ${message}`, 'error', node.id);
+
+      if (backendExecutionId) {
+        await pipelineExecutionService.finishExecution(backendExecutionId, {
+          status: 'FAILED',
+          finishedAt,
+          durationMs,
+          nodesExecuted: 0,
+          logs: get().logs,
+        });
+      }
     }
   },
 
   stopWorkflow: () => {
-    const { startedAt } = get();
+    const { startedAt, id: backendExecutionId, logs } = get();
     const startTime = startedAt ? new Date(startedAt).getTime() : Date.now();
     const endTime = Date.now();
+    const durationMs = endTime - startTime;
+    const finishedAt = new Date().toISOString();
 
     set({
       executionStatus: 'idle',
       activeNodeId: null,
-      finishedAt: new Date().toISOString(),
-      durationMs: endTime - startTime,
+      finishedAt,
+      durationMs,
     });
     get().addLog('Workflow execution manually terminated by user.', 'info');
+
+    if (backendExecutionId) {
+      pipelineExecutionService.finishExecution(backendExecutionId, {
+        status: 'CANCELED',
+        finishedAt,
+        durationMs,
+        nodesExecuted: get().nodesExecuted,
+        logs: get().logs,
+      });
+    }
   },
 
   clearLogs: () => set({ logs: [] }),
