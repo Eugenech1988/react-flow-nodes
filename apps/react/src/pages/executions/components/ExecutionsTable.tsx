@@ -50,7 +50,7 @@ export const ExecutionsTable = <TFeatures extends TableFeatures = TableFeatures>
 
   return (
     <div className="rounded-xl border border-border/60 overflow-hidden bg-card/50 backdrop-blur-md shadow-xs flex flex-col">
-      <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-21rem)] relative">
+      <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-21.5rem)] relative">
         <TableUI className="text-sm font-sans w-full">
           <TableHeader className="sticky top-0 z-10 bg-muted/90 backdrop-blur-xs">
             {table.getHeaderGroups().map((headerGroup) => (

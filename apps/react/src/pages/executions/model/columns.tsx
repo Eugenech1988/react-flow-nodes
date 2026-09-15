@@ -12,11 +12,15 @@ const columnHelper = createColumnHelper<TableFeatures, IExecutionItem>();
 export const buildColumns = () => [
   columnHelper.accessor('id', {
     header: 'ID',
-    cell: (info) => (
-      <span className=" text-[11px] font-medium text-muted-foreground">
-        {info.getValue()}
+    cell: ({ getValue }) => {
+      const id = getValue() as string;
+
+      return (
+        <span title={id} className="block max-w-12 truncate text-muted-foreground cursor-help">
+        {id}
       </span>
-    ),
+      );
+    },
   }),
 
   columnHelper.accessor('pipelineName', {

@@ -22,7 +22,7 @@ export const BillingTab = () => {
   }
 
   return (
-    <div className="space-y-8 max-w-5xl">
+    <div className="space-y-8 max-w-5xl overflow-y-auto pb-20 max-h-[calc(100vh-12rem)] pr-2">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold tracking-tight">Subscription & Billing</h2>

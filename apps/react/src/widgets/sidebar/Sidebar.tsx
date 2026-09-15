@@ -1,5 +1,5 @@
 import type { ElementType } from 'react';
-import { Workflow, History, LogOut, type LucideIcon } from 'lucide-react';
+import { Workflow, History, BoxSelect, LogOut, type LucideIcon } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSidebarStore } from './model';
 import { SidebarToggle } from '@/widgets/sidebar/components';
@@ -9,6 +9,7 @@ interface NavItem {
   icon: LucideIcon | ElementType;
   href?: string;
   action?: () => void;
+  isDanger?: boolean;
 }
 
 export const Sidebar = () => {
@@ -17,19 +18,22 @@ export const Sidebar = () => {
   const navigate = useNavigate();
 
   const mainNavItems: NavItem[] = [
+    { label: 'Studio', icon: BoxSelect, href: '/' },
     { label: 'Pipelines', icon: Workflow, href: '/pipelines' },
     { label: 'Executions', icon: History, href: '/executions' },
   ];
 
   const bottomNavItems: NavItem[] = [
-    { label: 'Sign out', icon: LogOut, action: () => {} },
+    { label: 'Sign out', icon: LogOut, action: () => {}, isDanger: true },
   ];
 
-  const itemClassName = (isActive?: boolean) =>
+  const itemClassName = (isActive?: boolean, isDanger?: boolean) =>
     `flex h-10 w-full cursor-pointer items-center overflow-hidden rounded-lg px-[13px] text-sm font-medium select-none transition-[background-color,color] duration-200 ${
-      isActive
-        ? 'bg-muted font-semibold text-foreground'
-        : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+      isDanger
+        ? 'text-destructive hover:bg-destructive/10 hover:text-destructive'
+        : isActive
+          ? 'bg-muted font-semibold text-foreground'
+          : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
     }`;
 
   const renderNavItem = (item: NavItem) => {
@@ -48,7 +52,7 @@ export const Sidebar = () => {
             item.action();
           }
         }}
-        className={itemClassName(isActive)}
+        className={itemClassName(isActive, item.isDanger)}
       >
         <div className="flex w-54 shrink-0 items-center gap-3">
           <Icon className="h-4 w-4 shrink-0" />
