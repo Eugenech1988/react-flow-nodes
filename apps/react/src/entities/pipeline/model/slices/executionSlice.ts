@@ -12,7 +12,13 @@ export const createExecutionSlice: StateCreator<
   [],
   TExecutionState & TExecutionActions
 > = (set, get) => ({
+  id: null,
   executionStatus: 'idle',
+  triggeredBy: 'MANUAL',
+  startedAt: null,
+  finishedAt: null,
+  durationMs: null,
+  nodesExecuted: 0,
   activeNodeId: null,
   logs: [],
   successNodeIds: [],
@@ -35,9 +41,18 @@ export const createExecutionSlice: StateCreator<
 
   runWorkflow: async () => {
     const { nodes, edges, addLog, pipelineId } = get();
+    const startTime = Date.now();
+    const startedAt = new Date().toISOString();
+
     if (nodes.length === 0) {
       addLog('Execution aborted: pipeline has no nodes', 'error');
-      set({ executionStatus: 'failed' });
+      set({
+        executionStatus: 'failed',
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        durationMs: Date.now() - startTime,
+        nodesExecuted: 0,
+      });
       return;
     }
 
@@ -52,7 +67,13 @@ export const createExecutionSlice: StateCreator<
     });
 
     if (startNodes.length === 0) {
-      set({ executionStatus: 'failed' });
+      set({
+        executionStatus: 'failed',
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        durationMs: Date.now() - startTime,
+        nodesExecuted: 0,
+      });
       addLog(
         'Execution aborted: No valid start node (Input) found. Text nodes cannot trigger the workflow alone.',
         'error',
@@ -92,13 +113,25 @@ export const createExecutionSlice: StateCreator<
     }
 
     if (topologicalOrder.length < nodes.length) {
-      set({ executionStatus: 'failed' });
+      set({
+        executionStatus: 'failed',
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        durationMs: Date.now() - startTime,
+        nodesExecuted: 0,
+      });
       addLog('Execution aborted: Infinite loop detected in the workflow configuration.', 'error');
       return;
     }
 
     set({
+      id: crypto.randomUUID(),
       executionStatus: 'running',
+      triggeredBy: 'MANUAL',
+      startedAt,
+      finishedAt: null,
+      durationMs: null,
+      nodesExecuted: 0,
       logs: [],
       activeNodeId: null,
       successNodeIds: [],
@@ -139,6 +172,7 @@ export const createExecutionSlice: StateCreator<
         executedNodeIds.add(node.id);
         set((state) => ({
           successNodeIds: [...state.successNodeIds, node.id],
+          nodesExecuted: executedNodeIds.size,
         }));
         addLog(`Node "${node.id}" successfully finished`, 'success', node.id);
 
@@ -153,6 +187,7 @@ export const createExecutionSlice: StateCreator<
       } catch (error: any) {
         if (node.data?.continueOnError === 'true') {
           executedNodeIds.add(node.id);
+          set({ nodesExecuted: executedNodeIds.size });
           addLog(
             `Node "${node.id}" failed, but the workflow will continue by node option.`,
             'error',
@@ -164,27 +199,41 @@ export const createExecutionSlice: StateCreator<
           continue;
         }
 
+        const endTime = Date.now();
         set({
           executionStatus: 'failed',
           failedNodeId: node.id,
           activeNodeId: null,
+          finishedAt: new Date().toISOString(),
+          durationMs: endTime - startTime,
         });
         addLog(`Execution stopped at node "${node.id}": ${error.message}`, 'error', node.id);
         return;
       }
     }
 
+    const endTime = Date.now();
     if (get().executionStatus === 'running') {
       const hasUnreachableNodes = nodes.length > executedNodeIds.size;
 
       if (hasUnreachableNodes) {
-        set({ executionStatus: 'failed', activeNodeId: null });
+        set({
+          executionStatus: 'failed',
+          activeNodeId: null,
+          finishedAt: new Date().toISOString(),
+          durationMs: endTime - startTime,
+        });
         addLog(
           'Workflow failed: some nodes were unreachable or skipped due to condition branches.',
           'error',
         );
       } else {
-        set({ executionStatus: 'success', activeNodeId: null });
+        set({
+          executionStatus: 'success',
+          activeNodeId: null,
+          finishedAt: new Date().toISOString(),
+          durationMs: endTime - startTime,
+        });
         addLog('Workflow executed completely!', 'success');
       }
     }
@@ -193,6 +242,8 @@ export const createExecutionSlice: StateCreator<
   runNode: async (nodeId) => {
     const { nodes, addLog, pipelineId } = get();
     const node = nodes.find((item) => item.id === nodeId);
+    const startTime = Date.now();
+    const startedAt = new Date().toISOString();
 
     if (!node) {
       addLog('Node execution aborted: node was not found.', 'error', nodeId);
@@ -209,7 +260,13 @@ export const createExecutionSlice: StateCreator<
     }
 
     set({
+      id: crypto.randomUUID(),
       executionStatus: 'running',
+      triggeredBy: 'MANUAL',
+      startedAt,
+      finishedAt: null,
+      durationMs: null,
+      nodesExecuted: 0,
       activeNodeId: nodeId,
       successNodeIds: [],
       failedNodeId: null,
@@ -220,7 +277,15 @@ export const createExecutionSlice: StateCreator<
 
     try {
       const output = await executeNode(node, {}, pipelineId);
-      set({ executionStatus: 'success', activeNodeId: null, successNodeIds: [node.id] });
+      const endTime = Date.now();
+      set({
+        executionStatus: 'success',
+        activeNodeId: null,
+        successNodeIds: [node.id],
+        nodesExecuted: 1,
+        finishedAt: new Date().toISOString(),
+        durationMs: endTime - startTime,
+      });
       addLog(
         `Node "${node.id}" successfully finished: ${JSON.stringify(output).slice(0, 120)}`,
         'success',
@@ -228,17 +293,29 @@ export const createExecutionSlice: StateCreator<
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown node execution error.';
-      set({ executionStatus: 'failed', activeNodeId: null, failedNodeId: node.id });
+      const endTime = Date.now();
+      set({
+        executionStatus: 'failed',
+        activeNodeId: null,
+        failedNodeId: node.id,
+        nodesExecuted: 0,
+        finishedAt: new Date().toISOString(),
+        durationMs: endTime - startTime,
+      });
       addLog(`Node "${node.id}" failed: ${message}`, 'error', node.id);
     }
   },
 
   stopWorkflow: () => {
+    const { startedAt } = get();
+    const startTime = startedAt ? new Date(startedAt).getTime() : Date.now();
+    const endTime = Date.now();
+
     set({
       executionStatus: 'idle',
       activeNodeId: null,
-      successNodeIds: [],
-      failedNodeId: null,
+      finishedAt: new Date().toISOString(),
+      durationMs: endTime - startTime,
     });
     get().addLog('Workflow execution manually terminated by user.', 'info');
   },

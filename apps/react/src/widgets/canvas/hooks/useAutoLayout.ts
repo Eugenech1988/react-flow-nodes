@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import dagre from '@dagrejs/dagre';
 import type { Edge } from '@xyflow/react';
-import type { PipelineNode } from '@/entities';
+import type { TPipelineNode } from '@/entities';
 
 export const useAutoLayout = (
-  nodes: PipelineNode[],
+  nodes: TPipelineNode[],
   edges: Edge[],
   direction: 'TB' | 'LR' = 'LR'
 ) => {
@@ -26,7 +26,7 @@ export const useAutoLayout = (
 
     dagre.layout(dagreGraph);
 
-    return nodes.map((node): PipelineNode => {
+    return nodes.map((node): TPipelineNode => {
       const nodeWithPosition = dagreGraph.node(node.id);
 
       return {

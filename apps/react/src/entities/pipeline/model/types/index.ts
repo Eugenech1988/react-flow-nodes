@@ -21,6 +21,7 @@ export type TClipboardNodesData = {
 
 export type TLastRunStatus = 'SUCCESS' | 'FAILED' | 'RUNNING' | null;
 export type TExecutionStatus = 'idle' | 'running' | 'success' | 'failed';
+export type TTriggerType = 'MANUAL' | 'SCHEDULED' | 'WEBHOOK' | 'API';
 
 export type TExecutionLog = {
   id: string;
@@ -60,7 +61,13 @@ export type TGraphState = {
 };
 
 export type TExecutionState = {
+  id: string | null;
   executionStatus: TExecutionStatus;
+  triggeredBy: TTriggerType;
+  startedAt: string | null;
+  finishedAt: string | null;
+  durationMs: number | null;
+  nodesExecuted: number;
   activeNodeId: string | null;
   logs: TExecutionLog[];
   successNodeIds: string[];

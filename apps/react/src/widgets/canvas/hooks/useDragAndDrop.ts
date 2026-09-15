@@ -1,10 +1,10 @@
 import { type DragEvent, useCallback } from 'react';
 import type { ReactFlowInstance } from '@xyflow/react';
-import type { PipelineNode, PipelineEdge } from '@/entities';
+import type { TPipelineNode, TPipelineEdge } from '@/entities';
 
 interface UseDragAndDropParams {
-  rfInstance: ReactFlowInstance<PipelineNode, PipelineEdge> | null;
-  addNode: (node: PipelineNode) => void;
+  rfInstance: ReactFlowInstance<TPipelineNode, TPipelineEdge> | null;
+  addNode: (node: TPipelineNode) => void;
   getNodeID: (type: string) => string;
 }
 
@@ -30,7 +30,7 @@ export const useDragAndDrop = ({ rfInstance, addNode, getNodeID }: UseDragAndDro
       });
 
       const nodeID = getNodeID(nodeType);
-      const newNode: PipelineNode = {
+      const newNode: TPipelineNode = {
         id: nodeID,
         type: nodeType,
         position,

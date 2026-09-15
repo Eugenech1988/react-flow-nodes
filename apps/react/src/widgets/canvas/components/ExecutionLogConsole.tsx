@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Terminal, Trash2, Square, X, AlertCircle } from 'lucide-react';
+import { Terminal, Trash2, Square, X, AlertCircle, Clock, Zap, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/entities';
 import { Button } from '@pipeline/ui';
@@ -9,6 +9,9 @@ export const ExecutionLogConsole = () => {
 
   const logs = useStore((state) => state.logs);
   const status = useStore((state) => state.executionStatus);
+  const triggeredBy = useStore((state) => state.triggeredBy);
+  const durationMs = useStore((state) => state.durationMs);
+  const nodesExecuted = useStore((state) => state.nodesExecuted);
   const clearLogs = useStore((state) => state.clearLogs);
   const stopWorkflow = useStore((state) => state.stopWorkflow);
 
@@ -18,6 +21,11 @@ export const ExecutionLogConsole = () => {
     if (status === 'failed') return 'text-[var(--node-math)]';
     if (status === 'running') return 'text-[var(--node-output)]';
     return 'text-[var(--foreground)]';
+  };
+
+  const formatDuration = (ms: number | null) => {
+    if (ms === null) return null;
+    return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(2)}s`;
   };
 
   return (
@@ -30,7 +38,7 @@ export const ExecutionLogConsole = () => {
             y: 0,
             scale: 1,
             width: isMinimized ? '40px' : 'calc(100% - 32px)',
-            height: isMinimized ? '40px' : '192px',
+            height: isMinimized ? '40px' : '210px',
           }}
           exit={{ opacity: 0, y: 100, scale: 0.9 }}
           transition={{ type: 'spring', damping: 20, stiffness: 200 }}
@@ -53,6 +61,7 @@ export const ExecutionLogConsole = () => {
             </button>
           ) : (
             <>
+              {/* Header */}
               <div className="flex shrink-0 items-center justify-between border-b border-[var(--border)] bg-[var(--accent)] px-4 py-2 text-[var(--foreground)]">
                 <div
                   className={`flex items-center gap-2 text-xs font-semibold tracking-wide ${getHeaderColor()}`}
@@ -73,8 +82,14 @@ export const ExecutionLogConsole = () => {
                       failed
                     </span>
                   )}
+                  {status === 'success' && (
+                    <span className="inline-flex items-center rounded-full bg-[var(--node-output)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--node-output)]">
+                      success
+                    </span>
+                  )}
                 </div>
 
+                {/* Actions */}
                 <div className="flex items-center gap-0.5">
                   {status === 'running' && (
                     <Button
@@ -108,6 +123,30 @@ export const ExecutionLogConsole = () => {
                 </div>
               </div>
 
+              {/* Execution Summary Bar */}
+              <div className="flex shrink-0 items-center gap-4 border-b border-[var(--border)] bg-[var(--background)]/30 px-4 py-1 text-[10px] font-medium text-[var(--muted-foreground)]">
+                <div className="flex items-center gap-1">
+                  <Zap className="h-3 w-3" />
+                  <span>Trigger:</span>
+                  <span className="font-mono text-[var(--foreground)]">{triggeredBy}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Layers className="h-3 w-3" />
+                  <span>Nodes Executed:</span>
+                  <span className="font-mono text-[var(--foreground)]">{nodesExecuted}</span>
+                </div>
+                {durationMs !== null && (
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    <span>Duration:</span>
+                    <span className="font-mono text-[var(--foreground)]">
+                      {formatDuration(durationMs)}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Log Output */}
               <div className="flex-1 scrollbar-thin space-y-1.5 overflow-y-auto bg-[var(--background)]/50 p-3 font-mono text-[11px]">
                 {logs.map((log) => (
                   <div key={log.id} className="flex items-start gap-2 leading-relaxed">

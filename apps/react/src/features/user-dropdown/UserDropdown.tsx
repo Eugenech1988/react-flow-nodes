@@ -19,7 +19,7 @@ import {
   DropdownMenuGroup
 } from '@pipeline/ui';
 
-const BASE_URL = import.meta.env.API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const UserDropdown = () => {
   const { user } = useUser();
