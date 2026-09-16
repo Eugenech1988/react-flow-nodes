@@ -86,8 +86,7 @@ export const UniversalTable = <
                   return (
                     <TableHead
                       key={header.id}
-                      // ИЗМЕНЕНИЕ: добавлен text-center для горизонтального центрирования заголовков
-                      className={`font-semibold text-muted-foreground text-xs py-2.5 px-4 select-none text-center ${
+                      className={`font-semibold text-muted-foreground text-xs py-2.5 px-4 select-none ${
                         canSort ? 'cursor-pointer hover:text-foreground' : ''
                       } ${header.index === 0 ? 'pl-4' : ''} ${
                         header.index === headerGroup.headers.length - 1 ? 'pr-4' : ''
@@ -97,7 +96,6 @@ export const UniversalTable = <
                       }
                     >
                       {header.isPlaceholder ? null : (
-                        // ИЗМЕНЕНИЕ: inline-flex заменен на flex w-full, добавлен justify-center
                         <div className="flex w-full items-center justify-center gap-1.5">
                           <span>
                             {flexRender(
@@ -133,7 +131,7 @@ export const UniversalTable = <
                     {cells.map((cell, idx) => (
                       <TableCell
                         key={cell.id}
-                        className={`py-2.5 px-4 align-middle text-center ${idx === 0 ? 'pl-4' : ''} ${
+                        className={`py-2.5 px-4 align-middle ${idx === 0 ? 'pl-4' : ''} ${
                           idx === cells.length - 1 ? 'pr-4' : ''
                         }`}
                       >
