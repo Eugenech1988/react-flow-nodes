@@ -8,3 +8,6 @@ export * from './skeletons';
 export * from './dialog-parts';
 export * from './buttons';
 export * from './Tabs';
+export * from './UniversalTable';
+export * from './SortIndicator';
+export * from './StatusBadge';

@@ -42,15 +42,14 @@ export const useExecutionsTable = () => {
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setPage(1); // При поиске всегда сбрасываем на 1-ю страницу
+    setPage(1);
   };
 
   const handleTabChange = (id: string) => {
     setStatusFilter(id as TExecutionStatus);
-    setPage(1); // При смене вкладки статуса сбрасываем на 1-ю страницу
+    setPage(1);
   };
 
-  // Клиентская сортировка остается для текущей страницы (или её можно тоже перенести на бэк, если нужно)
   const processedExecutions = useMemo<IExecutionItem[]>(() => {
     if (!sorting.length) return executions;
 

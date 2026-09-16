@@ -9,12 +9,12 @@ import {
 } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
 import { EXECUTION_TABS } from '@/pages/executions/model';
-import { FloatingInput, Tabs, TableSkeleton } from '@/shared/ui';
+import { FloatingInput, Tabs, TableSkeleton, UniversalTable } from '@/shared/ui';
 import { PAGE_VARIANTS } from '@/shared/lib';
 
 import { buildColumns } from './model';
 import type { IExecutionItem } from './model';
-import { ExecutionsTable, ExecutionDetailsDialog, PageHeader } from './components';
+import { ExecutionDetailsDialog, PageHeader } from './components';
 import { useExecutionsTable } from './hooks';
 
 export const ExecutionsPage = () => {
@@ -26,7 +26,6 @@ export const ExecutionsPage = () => {
     isLoading,
     isFetching,
     processedExecutions,
-    // 1. Достаем параметры и функции пагинации из хука
     page,
     totalPages,
     limit,
@@ -41,8 +40,8 @@ export const ExecutionsPage = () => {
     handleRefresh
   } = useExecutionsTable();
 
-  const columns: ColumnDef<TableFeatures, IExecutionItem, any>[] = useMemo(
-    () => buildColumns(),
+  const columns = useMemo<ColumnDef<TableFeatures, IExecutionItem>[]>(
+    () => buildColumns() as ColumnDef<TableFeatures, IExecutionItem>[],
     []
   );
 
@@ -90,11 +89,13 @@ export const ExecutionsPage = () => {
         {(isLoading || isFetching) ? (
           <TableSkeleton rowCount={5} columnCount={8} />
         ) : (
-          <ExecutionsTable
+          <UniversalTable
             table={table}
             columns={columns}
             sorting={sorting}
-            totalRuns={totalRuns}
+            totalItems={totalRuns}
+            itemsUnitLabel="runs"
+            noDataText="No executions found matching your filters."
             page={page}
             totalPages={totalPages}
             limit={limit}

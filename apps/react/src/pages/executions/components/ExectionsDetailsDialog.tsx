@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from '@pipeline/ui';
 import { DialogBody, DialogFooter, DialogHeader } from '@/shared/ui';
 
 import { DetailsRow } from './DetailsRow';
-import { StatusBadge } from './StatusBadge';
+// import { StatusBadge } from './StatusBadge';
 import type { IExecutionItem } from '@/pages/executions/model';
 
 type TExecutionDetailsDialogProps = {
@@ -34,11 +34,11 @@ export const ExecutionDetailsDialog = ({
           withBorder
           className="text-xs my-0 border-0 py-2 space-y-1"
         >
-          <DetailsRow label="Workflow Name" value={execution.workflowName} />
-          <DetailsRow
-            label="Status"
-            value={<StatusBadge status={execution.status} />}
-          />
+          {/*<DetailsRow label="Workflow Name" value={execution.workflowName} />*/}
+          {/*<DetailsRow*/}
+          {/*  label="Status"*/}
+          {/*  value={<StatusBadge status={execution.status} />}*/}
+          {/*/>*/}
           <DetailsRow label="Trigger Source" value={execution.triggeredBy} />
           <DetailsRow
             label="Start Timestamp"
