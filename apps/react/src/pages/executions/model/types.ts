@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import type { TExecutionLog } from '@/entities';
 
 export type TExecutionStatus = 'all' | 'success' | 'failed' | 'running';
 export type TRunStatus = Exclude<TExecutionStatus, 'all'>;
@@ -13,6 +14,7 @@ export interface IExecutionItem {
   nodesExecuted: number;
   startedAt: string;
   finishedAt: string;
+  logs: TExecutionLog[];
 }
 
 export type TSortState = false | 'asc' | 'desc';

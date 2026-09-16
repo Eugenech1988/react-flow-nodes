@@ -32,7 +32,7 @@ export const createExecutionSlice: StateCreator<
         {
           id: crypto.randomUUID(),
           nodeId,
-          timestamp: new Date().toLocaleTimeString(),
+          timestamp: Date.now(),
           type,
           message,
         },
@@ -385,7 +385,7 @@ export const createExecutionSlice: StateCreator<
   },
 
   stopWorkflow: () => {
-    const { startedAt, id: backendExecutionId, logs } = get();
+    const { startedAt, id: backendExecutionId } = get();
     const startTime = startedAt ? new Date(startedAt).getTime() : Date.now();
     const endTime = Date.now();
     const durationMs = endTime - startTime;

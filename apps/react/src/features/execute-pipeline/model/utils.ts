@@ -33,8 +33,10 @@ export const mapTriggerType = (trigger?: TUiTriggerType | string): TBackendTrigg
   return 'MANUAL';
 };
 
-export const formatLogsToRecord = (logs: TExecutionLog[]): Record<string, unknown> => {
-  return logs.reduce<Record<string, unknown>>((acc, log, index) => {
+export const formatLogsToRecord = (
+  logs: TExecutionLog[]
+): Record<string, TExecutionLog> => {
+  return logs.reduce<Record<string, TExecutionLog>>((acc, log, index) => {
     acc[log.id || `log_${index}`] = log;
     return acc;
   }, {});

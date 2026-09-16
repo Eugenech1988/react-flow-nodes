@@ -29,10 +29,12 @@ export class ExecutionsService {
     return `${formattedMinutes}.${formattedSeconds}`;
   }
 
-  private mapExecutionResponse<T extends { durationMs?: number | null }>(execution: T) {
+  private mapExecutionResponse<T extends Record<string, any>>(execution: T) {
+    const durationMs = execution.durationMs as number | null | undefined;
+
     return {
       ...execution,
-      durationFormatted: this.formatDurationToMMSS(execution.durationMs),
+      durationFormatted: this.formatDurationToMMSS(durationMs),
     };
   }
 

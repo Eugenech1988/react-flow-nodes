@@ -22,7 +22,7 @@ export type TTriggerType = 'MANUAL' | 'SCHEDULED' | 'WEBHOOK' | 'API';
 export type TExecutionLog = {
   id: string;
   nodeId?: string;
-  timestamp: string;
+  timestamp: number;
   type: 'info' | 'success' | 'error';
   message: string;
 };

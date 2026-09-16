@@ -73,3 +73,28 @@ export const formatDate = (
     }),
   }).format(date);
 };
+
+export const formatLogTimestamp = (ts: number | string): string => {
+  if (!ts) return '';
+
+  let date: Date;
+
+  if (typeof ts === 'number') {
+    date = new Date(ts);
+  } else if (!isNaN(Number(ts))) {
+    date = new Date(Number(ts));
+  } else {
+    date = new Date(ts);
+  }
+
+  if (!isNaN(date.getTime())) {
+    return date.toLocaleTimeString('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
+  }
+
+  return String(ts);
+};

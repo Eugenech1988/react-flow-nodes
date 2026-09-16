@@ -44,6 +44,7 @@ export const useExecutions = (options?: UseExecutionsOptions) => {
         startedAt: formatDate(item.startedAt),
         finishedAt: item.finishedAt ? formatDate(item.finishedAt) : 'In progress...',
         duration: formatDuration(item.durationMs),
+        logs: item.logs ?? [],
       }));
 
       return {
@@ -53,8 +54,8 @@ export const useExecutions = (options?: UseExecutionsOptions) => {
       };
     },
 
-    staleTime: 1000 * 60 * 2, // 2 минуты свежие данные
-    placeholderData: (previousData) => previousData, // Сохраняет старые данные при переключении страниц (нет мигания лоадера)
+    staleTime: 1000 * 60 * 2,
+    placeholderData: (previousData) => previousData,
   });
 
   return {

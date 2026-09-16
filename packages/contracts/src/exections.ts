@@ -14,6 +14,15 @@ export const triggerTypeSchema = z.enum([
   'API',
 ]);
 
+export const executionLogSchema = z.object({
+  id: z.string().optional(),
+  nodeId: z.string().optional(),
+  timestamp: z.number(),
+  type: z.enum(['info', 'success', 'error']),
+  message: z.string(),
+  order: z.number().optional(),
+}).passthrough();
+
 export const createExecutionInputSchema = z.object({
   id: z.string().optional().nullable(),
   pipelineId: z.string(),
@@ -24,7 +33,7 @@ export const createExecutionInputSchema = z.object({
   finishedAt: z.union([z.string(), z.date()]).nullable().optional(),
   durationMs: z.number().int().nullable().optional(),
   nodesExecuted: z.number().int().default(0),
-  logs: z.record(z.string(), z.unknown()).nullable().optional(),
+  logs: z.record(z.string(), executionLogSchema).nullable().optional(),
   createdAt: z.union([z.string(), z.date()]).optional().nullable(),
 });
 
@@ -33,10 +42,11 @@ export const updateExecutionInputSchema = z.object({
   finishedAt: z.union([z.string(), z.date()]).nullable().optional(),
   durationMs: z.number().int().nullable().optional(),
   nodesExecuted: z.number().int().optional(),
-  logs: z.record(z.string(), z.unknown()).nullable().optional(),
+  logs: z.record(z.string(), executionLogSchema).nullable().optional(),
 });
 
 export type TExecutionStatus = z.infer<typeof executionStatusSchema>;
 export type TTriggerType = z.infer<typeof triggerTypeSchema>;
+export type TExecutionLogInput = z.infer<typeof executionLogSchema>;
 export type TCreateExecutionInputData = z.infer<typeof createExecutionInputSchema>;
 export type TUpdateExecutionInputData = z.infer<typeof updateExecutionInputSchema>;
