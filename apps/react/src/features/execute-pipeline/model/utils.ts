@@ -35,9 +35,27 @@ export const mapTriggerType = (trigger?: TUiTriggerType | string): TBackendTrigg
 
 export const formatLogsToRecord = (
   logs: TExecutionLog[]
-): Record<string, TExecutionLog> => {
-  return logs.reduce<Record<string, TExecutionLog>>((acc, log, index) => {
-    acc[log.id || `log_${index}`] = log;
-    return acc;
-  }, {});
+): Record<string, Omit<TExecutionLog, 'timestamp'> & { timestamp: number }> => {
+  return logs.reduce<Record<string, Omit<TExecutionLog, 'timestamp'> & { timestamp: number }>>(
+    (acc, log, index) => {
+      let parsedTimestamp: number;
+
+      if (typeof log.timestamp === 'number') {
+        parsedTimestamp = log.timestamp;
+      } else if (!isNaN(Number(log.timestamp))) {
+        parsedTimestamp = Number(log.timestamp);
+      } else {
+        const time = new Date(log.timestamp).getTime();
+        parsedTimestamp = isNaN(time) ? Date.now() : time;
+      }
+
+      acc[log.id || `log_${index}`] = {
+        ...log,
+        timestamp: parsedTimestamp,
+      };
+
+      return acc;
+    },
+    {}
+  );
 };
