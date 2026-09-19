@@ -4,7 +4,7 @@ import { DialogBody, DialogFooter, DialogHeader } from '@/shared/ui';
 
 import { DetailsRow } from './DetailsRow';
 import type { IExecutionItem } from '@/pages/executions/model';
-import { formatLogTimestamp } from '@/shared/lib';
+import { formatTimestamp } from '@/shared/lib';
 
 export type TExecutionLog = {
   id: string;
@@ -115,7 +115,7 @@ export const ExecutionDetailsDialog = ({
                         className="flex items-start gap-2 leading-relaxed"
                       >
                         <span className="text-muted-foreground shrink-0 select-none">
-                          [{formatLogTimestamp(log.timestamp)}]
+                          [{formatTimestamp(log.timestamp)}]
                         </span>
 
                         <span

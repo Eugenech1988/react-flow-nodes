@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useShallow } from 'zustand/react/shallow';
 import { useStore } from '@/entities';
 import { Button } from '@pipeline/ui';
-import { formatLogTimestamp } from '@/shared/lib';
+import { formatTimestamp } from '@/shared/lib';
 
 export const ExecutionLogConsole = () => {
   const [isMinimized, setIsMinimized] = useState(false);
@@ -56,7 +56,7 @@ export const ExecutionLogConsole = () => {
           }}
           exit={{ opacity: 0, y: 100, scale: 0.9 }}
           transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-          className={`absolute bottom-4 ${isMinimized ? 'left-14' : 'left-4'} z-40 flex flex-col overflow-hidden rounded-(--radius) border border-border bg-(--header-bg) shadow-xl backdrop-blur-md select-none`}
+          className={`absolute bottom-4 ${isMinimized ? 'left-14' : 'left-4'} z-40 flex flex-col overflow-hidden rounded-lg border border-border bg-(--header-bg) shadow-xl backdrop-blur-md select-none`}
         >
           {isMinimized ? (
             <button
@@ -161,7 +161,7 @@ export const ExecutionLogConsole = () => {
                 {logs.map((log) => (
                   <div key={log.id} className="flex items-start gap-2 leading-relaxed">
                     <span className="text-foreground opacity-40">
-                      [{formatLogTimestamp(log.timestamp)}]
+                      [{formatTimestamp(log.timestamp)}]
                     </span>
                     <span
                       className={

@@ -74,7 +74,7 @@ export const formatDate = (
   }).format(date);
 };
 
-export const formatLogTimestamp = (ts: number | string): string => {
+export const formatTimestamp = (ts: number | string): string => {
   if (!ts) return '';
 
   let date: Date;
