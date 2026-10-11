@@ -14,7 +14,8 @@
     "paths": {
       "@/*": [
         "src/*",
-        "../api/src/*"
+        "../api/src/*",
+        "../../packages/ui/src/*"
       ]
     }
   },

@@ -2,33 +2,14 @@
   "name": "@pipeline/contracts",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./src/index.ts",
+      "browser": "./src/index.ts",
       "default": "./dist/index.js"
-    },
-    "./auth": {
-      "types": "./dist/auth.d.ts",
-      "default": "./dist/auth.js"
-    },
-    "./billing": {
-      "types": "./dist/billing.d.ts",
-      "default": "./dist/billing.js"
-    },
-    "./database-nodes": {
-      "types": "./dist/database-nodes.d.ts",
-      "default": "./dist/database-nodes.js"
-    },
-    "./pipelines": {
-      "types": "./dist/pipelines.d.ts",
-      "default": "./dist/pipelines.js"
-    },
-    "./profile": {
-      "types": "./dist/profile.d.ts",
-      "default": "./dist/profile.js"
     }
   },
   "scripts": {
