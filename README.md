@@ -82,6 +82,27 @@ Open your browser:
 - **Astro Landing:** `http://localhost:4321`
 - **API (Swagger UI):** `http://localhost:3000`
 
+## Running with Docker
+
+Docker with Docker Compose is required. Run this command from the repository root:
+
+```bash
+docker compose up --build
+```
+
+The applications are available at:
+
+- React: `http://localhost:5173`
+- Astro: `http://localhost:4321`
+- API and Swagger: `http://localhost:3000` and `http://localhost:3000/api/docs`
+- PostgreSQL: `localhost:5432` (base `pipeline`, user and pass `pipeline`)
+
+Stop the containers with `docker compose down`. PostgreSQL data is stored in a Docker volume. To remove it along with the containers, run `docker compose down -v`.
+
+The API loads defaults from `apps/api/.env.example` and overrides them with `apps/api/.env` when that file exists. Compose overrides the database URL and local frontend URLs so containers can reach each other. Set real OAuth, payment, and SMTP credentials in `apps/api/.env` when using those integrations.
+
+The API container applies pending Prisma migrations before starting NestJS.
+
 ---
 
 ## Development Commands

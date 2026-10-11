@@ -138,7 +138,7 @@ export const PipelineModal = ({
     if (isCreate) {
       if (!user?.id) return;
       createPipeline.mutate(
-        { userId: user.id, data: data as TCreatePipelineInputData, file: file ?? undefined },
+        { data: data as TCreatePipelineInputData, file: file ?? undefined },
         { onSuccess: handleClose }
       );
     } else if (initialData?.id) {

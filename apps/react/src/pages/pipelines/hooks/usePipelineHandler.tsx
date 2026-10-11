@@ -14,12 +14,12 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
   const trpc = useTRPC();
 
   const createPipeline = useMutation({
-    mutationFn: async ({ userId, data, file }: { userId: string; data: TCreatePipelineInputData; file?: File }) => {
+    mutationFn: async ({ data, file }: { data: TCreatePipelineInputData; file?: File }) => {
       const formData = new FormData();
       formData.append('name', data.name);
       if (data.description) formData.append('description', data.description);
       if (file) formData.append('file', file);
-      return api.post(`/pipelines/user/${userId}`, formData);
+      return api.post('/pipelines', formData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: trpc.pipelines.list.queryKey() });
@@ -59,8 +59,8 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
         if (!oldUser) return oldUser;
         return {
           ...oldUser,
-          currentPipelineId: pipeline.id,
-          currentPipeline: updatedUser.currentPipeline || pipeline,
+          currentPipelineId: updatedUser.currentPipelineId,
+          currentPipeline: pipeline,
         };
       });
 

@@ -29,6 +29,9 @@ export const useExecutions = (options?: UseExecutionsOptions) => {
   const query = useQuery({
     ...queryOptions,
     enabled: options?.enabled ?? true,
+    refetchOnMount: 'always',
+    refetchInterval: 3000,
+    refetchIntervalInBackground: false,
 
     select: (data) => {
       const items = Array.isArray(data) ? data : (data?.items ?? []);
