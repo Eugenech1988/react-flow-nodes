@@ -18,8 +18,8 @@ export type TExecutionLog = {
 type TExecutionDetailsDialogProps = {
   execution:
     | (IExecutionItem & {
-    logs?: Record<string, TExecutionLog> | TExecutionLog[];
-  })
+        logs?: Record<string, TExecutionLog> | TExecutionLog[];
+      })
     | null;
   onClose: () => void;
 };
@@ -58,18 +58,22 @@ const normalizeLogs = (
         typeof log?.order === 'number' && Number.isFinite(log.order)
           ? log.order
           : Number.MAX_SAFE_INTEGER,
+      timestamp:
+        typeof log?.timestamp === 'number'
+          ? log.timestamp
+          : new Date(log?.timestamp ?? 0).getTime(),
     }))
     .sort((a, b) => {
       if (a.order !== b.order) return a.order - b.order;
+      if (a.order === Number.MAX_SAFE_INTEGER && a.timestamp !== b.timestamp) {
+        return a.timestamp - b.timestamp;
+      }
       return a.index - b.index;
     })
     .map((entry) => entry.log);
 };
 
-export const ExecutionDetailsDialog = ({
-                                         execution,
-                                         onClose,
-                                       }: TExecutionDetailsDialogProps) => {
+export const ExecutionDetailsDialog = ({ execution, onClose }: TExecutionDetailsDialogProps) => {
   const logsList = normalizeLogs(execution?.logs);
 
   return (
@@ -77,7 +81,7 @@ export const ExecutionDetailsDialog = ({
       {execution && (
         <DialogContent
           showCloseButton={false}
-          className="sm:max-w-lg p-0 gap-0 overflow-hidden border-border bg-card rounded-2xl"
+          className="border-border bg-card gap-0 overflow-hidden rounded-2xl p-0 sm:max-w-lg"
         >
           <DialogHeader
             title="Execution Details"
@@ -88,7 +92,7 @@ export const ExecutionDetailsDialog = ({
 
           <DialogBody
             withBorder
-            className="text-xs my-0 border-0 py-3 space-y-4 max-h-105 overflow-y-auto"
+            className="my-0 max-h-105 space-y-4 overflow-y-auto border-0 py-3 text-xs"
           >
             <div className="space-y-1">
               <DetailsRow label="Execution ID" value={execution.id} mono />
@@ -99,12 +103,12 @@ export const ExecutionDetailsDialog = ({
             </div>
 
             <div className="space-y-2">
-              <div className="font-semibold text-muted-foreground text-[11px] uppercase tracking-wider">
+              <div className="text-muted-foreground text-[11px] font-semibold tracking-wider uppercase">
                 Execution Logs ({logsList.length})
               </div>
 
               {logsList.length > 0 ? (
-                <div className="space-y-1.5 font-mono text-[11px] rounded-lg border border-border bg-muted/30 p-2.5 max-h-56 overflow-y-auto">
+                <div className="border-border bg-muted/30 max-h-56 space-y-1.5 overflow-y-auto rounded-lg border p-2.5 font-mono text-[11px]">
                   {logsList.map((log, index) => {
                     const style = LOG_TYPE_STYLES[log.type] ?? LOG_TYPE_STYLES.info;
                     const Icon = style.icon;
@@ -119,7 +123,7 @@ export const ExecutionDetailsDialog = ({
                         </span>
 
                         <span
-                          className={`inline-flex items-center gap-1 px-1.5 py-0.2 rounded border text-[10px] font-sans font-medium uppercase shrink-0 ${style.text} ${style.bg}`}
+                          className={`py-0.2 inline-flex shrink-0 items-center gap-1 rounded border px-1.5 font-sans text-[10px] font-medium uppercase ${style.text} ${style.bg}`}
                         >
                           <Icon className="h-3 w-3" />
                           {log.type}
@@ -131,7 +135,7 @@ export const ExecutionDetailsDialog = ({
                   })}
                 </div>
               ) : (
-                <div className="text-center py-4 text-muted-foreground text-xs italic border border-dashed rounded-lg">
+                <div className="text-muted-foreground rounded-lg border border-dashed py-4 text-center text-xs italic">
                   No logs recorded for this execution.
                 </div>
               )}

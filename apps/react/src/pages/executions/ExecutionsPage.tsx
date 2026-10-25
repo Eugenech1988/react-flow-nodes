@@ -8,7 +8,7 @@ import {
   type TableFeatures,
 } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
-import { EXECUTION_TABS } from '@/pages/executions/model';
+import { EXECUTION_TABS } from './model';
 import { FloatingInput, Tabs, TableSkeleton, UniversalTable } from '@/shared/ui';
 import { PAGE_VARIANTS } from '@/shared/lib';
 
@@ -37,12 +37,12 @@ export const ExecutionsPage = () => {
     handleSortToggle,
     handleSearchChange,
     handleTabChange,
-    handleRefresh
+    handleRefresh,
   } = useExecutionsTable();
 
   const columns = useMemo<ColumnDef<TableFeatures, IExecutionItem>[]>(
     () => buildColumns() as ColumnDef<TableFeatures, IExecutionItem>[],
-    []
+    [],
   );
 
   const table = useTable<TableFeatures, IExecutionItem>({
@@ -57,26 +57,26 @@ export const ExecutionsPage = () => {
 
   return (
     <motion.div
-      className="bg-background text-foreground p-4 md:p-6 transition-colors duration-300"
+      className="bg-background text-foreground p-4 transition-colors duration-300 md:p-6"
       variants={PAGE_VARIANTS}
       initial="initial"
       animate="animate"
     >
-      <div className="max-w-7xl mx-auto space-y-8">
-        <PageHeader isFetching={isFetching} handleRefresh={handleRefresh}/>
+      <div className="mx-auto max-w-7xl space-y-8">
+        <PageHeader isFetching={isFetching} handleRefresh={handleRefresh} />
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="relative w-full sm:w-80 group">
+        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <div className="group relative w-full sm:w-80">
             <FloatingInput
               rounded="xl"
               label="Search executions"
               value={searchQuery}
               onChange={handleSearchChange}
-              icon={<Search className="w-4 h-4" />}
+              icon={<Search className="h-4 w-4" />}
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
             <Tabs
               tabs={EXECUTION_TABS}
               layoutId="executions-filter-tabs"
@@ -86,7 +86,7 @@ export const ExecutionsPage = () => {
           </div>
         </div>
 
-        {(isLoading || isFetching) ? (
+        {isLoading ? (
           <TableSkeleton rowCount={5} columnCount={8} />
         ) : (
           <UniversalTable
@@ -107,10 +107,7 @@ export const ExecutionsPage = () => {
         )}
       </div>
 
-      <ExecutionDetailsDialog
-        execution={selectedExec}
-        onClose={() => setSelectedExec(null)}
-      />
+      <ExecutionDetailsDialog execution={selectedExec} onClose={() => setSelectedExec(null)} />
     </motion.div>
   );
 };

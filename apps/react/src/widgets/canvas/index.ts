@@ -1,1 +1,1 @@
-export * from '@/widgets/canvas/Canvas';
+export * from './Canvas';

@@ -10,8 +10,8 @@ import {
   resetSchema,
   type TRecoveryMode,
   type TResetFormData,
-  type TRequestFormData
-} from '@/pages/login/model';
+  type TRequestFormData,
+} from '../model';
 
 interface RecoveryFormProps {
   mode: TRecoveryMode;
@@ -24,14 +24,14 @@ interface RecoveryFormProps {
 }
 
 export const RecoveryForm: FC<RecoveryFormProps> = ({
-                                                      mode,
-                                                      error,
-                                                      isSuccess,
-                                                      isLoading,
-                                                      onRequestSubmit,
-                                                      onResetSubmit,
-                                                      onBack,
-                                                    }) => {
+  mode,
+  error,
+  isSuccess,
+  isLoading,
+  onRequestSubmit,
+  onResetSubmit,
+  onBack,
+}) => {
   const isRequest = mode === 'request';
 
   const requestForm = useForm<TRequestFormData>({

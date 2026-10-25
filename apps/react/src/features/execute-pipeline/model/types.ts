@@ -1,4 +1,4 @@
-import type { TPipelineNode } from '@/entities/pipeline/model/types';
+import type { TPipelineNode } from '@/entities';
 
 export type TNodeExecutionResult = Record<string, unknown>;
 

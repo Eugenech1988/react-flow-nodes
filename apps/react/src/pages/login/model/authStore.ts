@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { create } from 'zustand';
 import { trpcClient } from '@/shared/api';
-import type { FormMode, LoginResponseData } from '@/pages/login/model/types';
+import type { FormMode, LoginResponseData } from './types';
 import { twoFactorLoginInputSchema } from '@pipeline/contracts';
 
 type TTwoFactorLoginInputData = z.infer<typeof twoFactorLoginInputSchema>;
@@ -28,8 +28,15 @@ interface AuthState {
   resetState: () => void;
   handleLoginResponse: (data: LoginResponseData) => boolean;
   login: (email: string, password: string, onSuccess: () => Promise<void> | void) => Promise<void>;
-  register: (email: string, password: string, onSuccess: () => Promise<void> | void) => Promise<void>;
-  verifyTwoFactor: (data: TTwoFactorLoginInputData, onSuccess: () => Promise<void> | void) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    onSuccess: () => Promise<void> | void,
+  ) => Promise<void>;
+  verifyTwoFactor: (
+    data: TTwoFactorLoginInputData,
+    onSuccess: () => Promise<void> | void,
+  ) => Promise<void>;
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (token: string, password: string, onSuccess: () => void) => Promise<void>;
 }
@@ -105,9 +112,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       let message = 'Unable to sign in. Please verify your credentials and try again.';
       if (error instanceof Error) {
-        if (error.message.toLowerCase().includes('invalid credentials') || error.message.toLowerCase().includes('wrong password') || error.message.toLowerCase().includes('user not found')) {
+        if (
+          error.message.toLowerCase().includes('invalid credentials') ||
+          error.message.toLowerCase().includes('wrong password') ||
+          error.message.toLowerCase().includes('user not found')
+        ) {
           message = 'Invalid email address or password.';
-        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+        } else if (
+          error.message.toLowerCase().includes('network') ||
+          error.message.toLowerCase().includes('failed to fetch')
+        ) {
           message = 'Network error. Please check your internet connection.';
         } else {
           message = error.message;
@@ -129,9 +143,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       let message = 'Registration failed. Please try again later.';
       if (error instanceof Error) {
-        if (error.message.toLowerCase().includes('already exists') || error.message.toLowerCase().includes('conflict')) {
+        if (
+          error.message.toLowerCase().includes('already exists') ||
+          error.message.toLowerCase().includes('conflict')
+        ) {
           message = 'An account with this email address already exists.';
-        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+        } else if (
+          error.message.toLowerCase().includes('network') ||
+          error.message.toLowerCase().includes('failed to fetch')
+        ) {
           message = 'Network error. Please check your internet connection.';
         } else {
           message = error.message;
@@ -158,7 +178,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (error instanceof Error) {
         if (error.message.toLowerCase().includes('expired')) {
           message = 'The verification code has expired. Please request a new one.';
-        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+        } else if (
+          error.message.toLowerCase().includes('network') ||
+          error.message.toLowerCase().includes('failed to fetch')
+        ) {
           message = 'Network error. Please check your internet connection.';
         } else {
           message = error.message;
@@ -178,9 +201,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       let message = 'Failed to send password reset email. Please try again.';
       if (error instanceof Error) {
-        if (error.message.toLowerCase().includes('not found') || error.message.toLowerCase().includes('does not exist')) {
+        if (
+          error.message.toLowerCase().includes('not found') ||
+          error.message.toLowerCase().includes('does not exist')
+        ) {
           message = 'No account found with this email address.';
-        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+        } else if (
+          error.message.toLowerCase().includes('network') ||
+          error.message.toLowerCase().includes('failed to fetch')
+        ) {
           message = 'Network error. Please check your internet connection.';
         } else {
           message = error.message;
@@ -200,9 +229,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       let message = 'Failed to reset password. The link may have expired.';
       if (error instanceof Error) {
-        if (error.message.toLowerCase().includes('invalid') || error.message.toLowerCase().includes('expired')) {
+        if (
+          error.message.toLowerCase().includes('invalid') ||
+          error.message.toLowerCase().includes('expired')
+        ) {
           message = 'The password reset link is invalid or has expired.';
-        } else if (error.message.toLowerCase().includes('network') || error.message.toLowerCase().includes('failed to fetch')) {
+        } else if (
+          error.message.toLowerCase().includes('network') ||
+          error.message.toLowerCase().includes('failed to fetch')
+        ) {
           message = 'Network error. Please check your internet connection.';
         } else {
           message = error.message;

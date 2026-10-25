@@ -10,7 +10,7 @@ export type TProfile = {
   jobTitle?: string | null;
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export type TTransaction = {
   id: string;
@@ -23,7 +23,7 @@ export type TTransaction = {
   invoiceUrl: string | null;
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export type TSubscription = {
   id: string;
@@ -37,21 +37,7 @@ export type TSubscription = {
   cancelAtPeriodEnd: string;
   createdAt: string;
   updatedAt: string;
-}
-
-export type TPipeline = {
-  id: string;
-  name: string;
-  description?: string | null;
-  screenshotUrl?: string | null;
-  status: 'ACTIVE' | 'PAUSED' | 'DRAFT' | 'ARCHIVED';
-  createdAt: string;
-  updatedAt: string;
-  graphData: JSON;
-  userId: string;
-  lastRunAt?: string | null;
-  lastRunStatus?: 'SUCCESS' | 'FAILED' | 'RUNNING' | null;
-}
+};
 
 export interface IUser {
   id: string;
@@ -72,4 +58,4 @@ export type TRoundedSize = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 export type AlertState = {
   type: 'success' | 'error';
   message: string;
-} | null
+} | null;

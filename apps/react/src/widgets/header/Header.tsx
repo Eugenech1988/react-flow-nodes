@@ -1,10 +1,10 @@
-import { Save } from 'lucide-react';
+import { Camera, Save } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
 import { UserDropdown } from '@/features/user-dropdown';
-import { WorkflowExecutionControl } from '@/widgets/header/components/WorkflowExecutionControl';
-import { ShareDialog } from '@/widgets/header/components/ShareDialog';
+import { WorkflowExecutionControl } from './components/WorkflowExecutionControl';
+import { ShareDialog } from './components/ShareDialog';
 import { useUser } from '@/shared/hooks';
 import { useStore } from '@/entities';
 
@@ -56,10 +56,22 @@ export const Header = () => {
         <button
           className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40"
           disabled={!isHome}
-          onClick={triggerSave}
-          title={!isHome ? "Saving is only available on the canvas page" : "Save pipeline"}
+          onClick={() => triggerSave()}
+          title={!isHome ? 'Saving is only available on the canvas page' : 'Save pipeline'}
         >
           <Save className="h-4 w-4" />
+        </button>
+        <button
+          className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40"
+          disabled={!isHome}
+          onClick={() => triggerSave(true)}
+          title={
+            !isHome
+              ? 'Saving is only available on the canvas page'
+              : 'Center canvas and save screenshot'
+          }
+        >
+          <Camera className="h-4 w-4" />
         </button>
 
         <ThemeToggle />

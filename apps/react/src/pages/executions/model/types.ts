@@ -17,8 +17,6 @@ export interface IExecutionItem {
   logs: TExecutionLog[];
 }
 
-export type TSortState = false | 'asc' | 'desc';
-
 export type TStatusConfig = {
   label: string;
   icon: LucideIcon;

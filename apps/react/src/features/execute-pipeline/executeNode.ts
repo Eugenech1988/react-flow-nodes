@@ -1,4 +1,4 @@
-import type { TPipelineNode } from '@/entities/pipeline/model/types';
+import type { TPipelineNode } from '@/entities';
 import type { TNodeExecutionResult, TNodeExecutor } from './model/types';
 import { getNodeKind } from './model/utils';
 
@@ -10,7 +10,7 @@ import {
   executeApiNode,
   executeDatabaseNode,
   executeLlmNode,
-  executeImageNode
+  executeImageNode,
 } from './executors';
 
 const EXECUTORS: Record<string, TNodeExecutor> = {
@@ -37,9 +37,7 @@ export const executeNode = async (
 ): Promise<TNodeExecutionResult> => {
   const kind = getNodeKind(node);
 
-  const executorKey = Object.keys(EXECUTORS).find(
-    (key) => kind === key || kind.includes(key),
-  );
+  const executorKey = Object.keys(EXECUTORS).find((key) => kind === key || kind.includes(key));
 
   if (executorKey && EXECUTORS[executorKey]) {
     return EXECUTORS[executorKey](node, input, { pipelineId });

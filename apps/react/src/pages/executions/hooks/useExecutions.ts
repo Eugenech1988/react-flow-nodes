@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
-import type { IExecutionItem } from '@/pages/executions/model';
+import type { IExecutionItem } from '../model';
 import { formatDate, formatDuration } from '@/shared/lib';
+
+const EXECUTION_POLL_INTERVAL_MS = 3000;
 
 interface UseExecutionsOptions {
   pipelineId?: string;
@@ -30,7 +32,15 @@ export const useExecutions = (options?: UseExecutionsOptions) => {
     ...queryOptions,
     enabled: options?.enabled ?? true,
     refetchOnMount: 'always',
-    refetchInterval: 3000,
+    refetchInterval: (query) => {
+      const data = query.state.data;
+      const items = Array.isArray(data) ? data : (data?.items ?? []);
+      const hasRunningExecution = items.some(
+        (item) => String(item.status).toUpperCase() === 'RUNNING',
+      );
+
+      return hasRunningExecution ? EXECUTION_POLL_INTERVAL_MS : false;
+    },
     refetchIntervalInBackground: false,
 
     select: (data) => {

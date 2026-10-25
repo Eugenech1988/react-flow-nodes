@@ -4,8 +4,8 @@ import type {
   TUpdateExecutionInputData,
   // TTriggerType as TBackendTriggerType,
 } from '@pipeline/contracts';
-import type { TExecutionLog, TTriggerType as TUiTriggerType } from '@/entities/pipeline/model/types';
-import { mapTriggerType, formatLogsToRecord } from '@/features/execute-pipeline/model/utils.ts';
+import type { TExecutionLog, TTriggerType as TUiTriggerType } from '@/entities';
+import { mapTriggerType, formatLogsToRecord } from './model/utils';
 
 export const pipelineExecutionService = {
   async startExecution(params: {
@@ -56,7 +56,10 @@ export const pipelineExecutionService = {
         data: payload,
       });
     } catch (err) {
-      console.error(`[PipelineExecutionService] Failed to update execution ${executionId} in BE:`, err);
+      console.error(
+        `[PipelineExecutionService] Failed to update execution ${executionId} in BE:`,
+        err,
+      );
     }
   },
 };

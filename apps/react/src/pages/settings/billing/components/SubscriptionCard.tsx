@@ -1,6 +1,6 @@
 import { Zap, CheckCircle2, ShieldCheck, XCircle, CreditCard } from 'lucide-react';
 import { AppButton } from '@/shared/ui';
-import { PLAN_FEATURES } from '@/pages/settings/model';
+import { PLAN_FEATURES } from '../../model';
 import { useBilling } from '../hooks/useBilling';
 import { useUser } from '@/shared/hooks';
 
@@ -10,25 +10,25 @@ export const SubscriptionCard = () => {
 
   return (
     <div
-      className={`relative border bg-card rounded-xl p-6 shadow-xs overflow-hidden backdrop-blur-xs transition-all ${
+      className={`bg-card relative overflow-hidden rounded-xl border p-6 shadow-xs backdrop-blur-xs transition-all ${
         isProActive ? 'border-teal-500/30 ring-1 ring-teal-500/20' : 'border-border'
       }`}
     >
       <div
-        className={`absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl pointer-events-none ${
+        className={`pointer-events-none absolute top-0 right-0 h-48 w-48 rounded-full blur-3xl ${
           isProActive ? 'bg-teal-500/10' : 'bg-gradient-to-br from-teal-500/5 to-teal-600/5'
         }`}
       />
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
+      <div className="border-border/60 flex flex-col justify-between gap-4 border-b pb-6 sm:flex-row sm:items-center">
         <div className="space-y-1.5">
           {isProActive ? (
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
-              <Zap className="w-3.5 h-3.5 fill-current" />
+            <div className="inline-flex items-center gap-1.5 rounded-md border border-teal-500/20 bg-teal-500/10 px-2.5 py-1 text-xs font-semibold text-teal-600 dark:text-teal-400">
+              <Zap className="h-3.5 w-3.5 fill-current" />
               Active Plan
             </div>
           ) : (
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-muted text-muted-foreground border border-border">
+            <div className="bg-muted text-muted-foreground border-border inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-semibold">
               Free Tier
             </div>
           )}
@@ -38,25 +38,25 @@ export const SubscriptionCard = () => {
         <div className="sm:text-right">
           <div className="text-2xl font-bold">
             {isProActive ? '$49' : '$0'}
-            <span className="text-sm font-normal text-muted-foreground">/month</span>
+            <span className="text-muted-foreground text-sm font-normal">/month</span>
           </div>
           {isProActive && subscription?.currentPeriodEnd && (
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-muted-foreground mt-0.5 text-xs">
               Next billing date: {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
             </p>
           )}
         </div>
       </div>
 
-      <div className="py-6 space-y-4">
-        <h4 className="text-xs font-semibold tracking-wide uppercase text-foreground/80">
+      <div className="space-y-4 py-6">
+        <h4 className="text-foreground/80 text-xs font-semibold tracking-wide uppercase">
           {isProActive ? 'Included features' : 'Unlock Pro features'}
         </h4>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {PLAN_FEATURES.map((feature, idx) => (
-            <li key={idx} className="flex items-start gap-2.5 text-sm text-foreground/90">
+            <li key={idx} className="text-foreground/90 flex items-start gap-2.5 text-sm">
               <CheckCircle2
-                className={`w-4 h-4 shrink-0 mt-0.5 ${
+                className={`mt-0.5 h-4 w-4 shrink-0 ${
                   isProActive ? 'text-teal-600 dark:text-teal-400' : 'text-muted-foreground/60'
                 }`}
               />
@@ -66,14 +66,14 @@ export const SubscriptionCard = () => {
         </ul>
       </div>
 
-      <div className="pt-6 border-t border-border/60 flex flex-col sm:flex-row gap-4 justify-between items-center text-xs text-muted-foreground">
+      <div className="border-border/60 text-muted-foreground flex flex-col items-center justify-between gap-4 border-t pt-6 text-xs sm:flex-row">
         <div className="flex items-center gap-2">
           <ShieldCheck
-            className={`w-4 h-4 ${isProActive ? 'text-teal-600 dark:text-teal-400' : 'text-muted-foreground/60'}`}
+            className={`h-4 w-4 ${isProActive ? 'text-teal-600 dark:text-teal-400' : 'text-muted-foreground/60'}`}
           />
           Secure payments via Stripe
         </div>
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+        <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-end">
           {isProActive ? (
             <>
               <AppButton

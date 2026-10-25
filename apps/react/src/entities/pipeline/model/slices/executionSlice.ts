@@ -1,11 +1,10 @@
 import type { StateCreator } from 'zustand';
-import type {
-  TPipelineStore,
-  TExecutionState,
-  TExecutionActions,
-} from '@/entities/pipeline/model/types';
-import { executeNode, type TNodeExecutionResult } from '@/features/execute-pipeline';
-import { pipelineExecutionService } from '@/features/execute-pipeline/pipelineExecutionService';
+import type { TPipelineStore, TExecutionState, TExecutionActions } from '../types';
+import {
+  executeNode,
+  pipelineExecutionService,
+  type TNodeExecutionResult,
+} from '@/features/execute-pipeline';
 
 export const createExecutionSlice: StateCreator<
   TPipelineStore,
@@ -197,7 +196,8 @@ export const createExecutionSlice: StateCreator<
           if (isCondition && edge.sourceHandle && edge.sourceHandle !== conditionHandle) return;
           nodeInputs.set(edge.target, { ...nodeInputs.get(edge.target), ...output });
         });
-      } catch (error: any) {
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown execution error.';
         if (node.data?.continueOnError === 'true') {
           executedNodeIds.add(node.id);
           set({ nodesExecuted: executedNodeIds.size });
@@ -223,7 +223,7 @@ export const createExecutionSlice: StateCreator<
           finishedAt,
           durationMs,
         });
-        addLog(`Execution stopped at node "${node.id}": ${error.message}`, 'error', node.id);
+        addLog(`Execution stopped at node "${node.id}": ${message}`, 'error', node.id);
 
         if (backendExecutionId) {
           await pipelineExecutionService.finishExecution(backendExecutionId, {

@@ -1,33 +1,17 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import { useTheme } from 'next-themes';
 import { useReactFlow } from '@xyflow/react';
 import { toPng } from 'html-to-image';
+import { toast } from 'sonner';
 
 import { useStore } from '@/entities';
 import type { TPipelineNode, TPipelineEdge } from '@/entities';
-import { usePipelineHandler } from '@/pages/pipelines/hooks';
+import { usePipelineHandler } from '@/features/manage-pipelines';
 import { useUser } from '@/shared/hooks';
 
 interface UseSavePipelineProps {
   wrapperRef: React.RefObject<HTMLDivElement | null>;
 }
-
-type TPipelineNodeDTO = {
-  id: string;
-  type: string;
-  position: { x: number; y: number };
-  data: Record<string, unknown>;
-  [key: string]: unknown;
-};
-
-type TPipelineEdgeDTO = {
-  id: string;
-  source: string;
-  target: string;
-  sourceHandle?: string | null;
-  targetHandle?: string | null;
-  [key: string]: unknown;
-};
 
 export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
   const { user } = useUser();
@@ -38,6 +22,8 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
   const lastRunAt = useStore((state) => state.lastRunAt);
   const lastRunStatus = useStore((state) => state.lastRunStatus);
   const setSaveAction = useStore((state) => state.setSaveAction);
+  const saveInProgress = useRef(false);
+  const savePipelineRef = useRef<(withScreenshot?: boolean) => Promise<void>>(async () => {});
 
   const { fitView } = useReactFlow<TPipelineNode, TPipelineEdge>();
 
@@ -61,45 +47,67 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
     }
   }, [wrapperRef, resolvedTheme]);
 
-  const handleSavePipeline = useCallback(async () => {
-    const id = user?.currentPipelineId || user?.currentPipeline?.id;
-    if (!id) return;
+  const handleSavePipeline = useCallback(
+    async (withScreenshot = false) => {
+      const id = user?.currentPipelineId || user?.currentPipeline?.id;
+      if (!id) return;
 
-    await fitView({ padding: 0.2, duration: 300 });
-    await new Promise((resolve) => setTimeout(resolve, 350));
+      let screenshotBase64: string | undefined;
+      if (withScreenshot) {
+        await fitView({ padding: 0.2, duration: 300 });
+        await new Promise((resolve) => setTimeout(resolve, 350));
+        screenshotBase64 = await captureScreenshot();
+      }
 
-    const screenshotBase64 = await captureScreenshot();
+      const formattedNodes = nodes.map((node: TPipelineNode) => ({
+        ...node,
+        type: node.type ?? 'default',
+      }));
 
-    const formattedNodes = nodes.map((node: TPipelineNode) => ({
-      ...node,
-      type: node.type ?? 'default',
-    }));
-
-    updatePipeline.mutate({
-      id,
-      graphData: {
-        nodes: formattedNodes as unknown as TPipelineNodeDTO[],
-        edges: edges as unknown as TPipelineEdgeDTO[],
-      },
-      screenshotBase64,
-      ...(lastRunAt && { lastRunAt: new Date(lastRunAt) }),
-      ...(lastRunStatus && { lastRunStatus }),
-    });
-  }, [
-    user,
-    fitView,
-    captureScreenshot,
-    nodes,
-    edges,
-    lastRunAt,
-    lastRunStatus,
-    updatePipeline,
-  ]);
+      await updatePipeline.mutateAsync({
+        id,
+        graphData: {
+          nodes: formattedNodes,
+          edges,
+        },
+        ...(screenshotBase64 && { screenshotBase64 }),
+        ...(lastRunAt && { lastRunAt: new Date(lastRunAt) }),
+        ...(lastRunStatus && { lastRunStatus }),
+      });
+    },
+    [user, fitView, captureScreenshot, nodes, edges, lastRunAt, lastRunStatus, updatePipeline],
+  );
 
   useEffect(() => {
     setSaveAction(handleSavePipeline);
     return () => setSaveAction(null);
   }, [setSaveAction, handleSavePipeline]);
+
+  useEffect(() => {
+    savePipelineRef.current = handleSavePipeline;
+  }, [handleSavePipeline]);
+
+  useEffect(() => {
+    const pipelineId = user?.currentPipelineId || user?.currentPipeline?.id;
+    if (!pipelineId) return;
+
+    const intervalId = window.setInterval(async () => {
+      if (saveInProgress.current) return;
+
+      saveInProgress.current = true;
+      try {
+        await savePipelineRef.current(false);
+        toast.success('Pipeline autosaved');
+      } catch (error) {
+        console.error('Failed to autosave pipeline:', error);
+        toast.error('Failed to autosave pipeline');
+      } finally {
+        saveInProgress.current = false;
+      }
+    }, 30_000);
+
+    return () => window.clearInterval(intervalId);
+  }, [user?.currentPipelineId, user?.currentPipeline?.id]);
 
   return {
     handleSavePipeline,

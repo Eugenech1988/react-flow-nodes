@@ -1,7 +1,4 @@
-import {
-  createColumnHelper,
-  type TableFeatures,
-} from '@tanstack/react-table';
+import { createColumnHelper, type TableFeatures } from '@tanstack/react-table';
 import {
   Clock,
   PlayCircle,
@@ -13,7 +10,7 @@ import {
 } from 'lucide-react';
 
 import { StatusBadge, type TStatusConfigItem } from '@/shared/ui';
-import type { IExecutionItem } from '@/pages/executions/model';
+import type { IExecutionItem } from './types';
 
 const columnHelper = createColumnHelper<TableFeatures, IExecutionItem>();
 
@@ -53,7 +50,7 @@ export const buildColumns = () => [
       const id = getValue() as string;
 
       return (
-        <span title={id} className="block max-w-12 truncate text-muted-foreground cursor-help">
+        <span title={id} className="text-muted-foreground block max-w-12 cursor-help truncate">
           {id}
         </span>
       );
@@ -64,9 +61,7 @@ export const buildColumns = () => [
     header: 'Pipeline',
     cell: (info) => (
       <div>
-        <div className="font-medium text-muted-foreground text-xs">
-          {info.getValue()}
-        </div>
+        <div className="text-muted-foreground text-xs font-medium">{info.getValue()}</div>
       </div>
     ),
   }),
@@ -87,8 +82,8 @@ export const buildColumns = () => [
   columnHelper.accessor('triggeredBy', {
     header: 'Trigger',
     cell: (info) => (
-      <span className="inline-flex items-center gap-1.5 text-muted-foreground text-xs">
-        <PlayCircle className="h-3.5 w-3.5 text-muted-foreground/70" />
+      <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs">
+        <PlayCircle className="text-muted-foreground/70 h-3.5 w-3.5" />
         {info.getValue()}
       </span>
     ),
@@ -97,17 +92,15 @@ export const buildColumns = () => [
   columnHelper.accessor('nodesExecuted', {
     header: 'Nodes',
     cell: (info) => (
-      <span className="text-muted-foreground text-[11px]">
-        {info.getValue()} nodes
-      </span>
+      <span className="text-muted-foreground text-[11px]">{info.getValue()} nodes</span>
     ),
   }),
 
   columnHelper.accessor('duration', {
     header: 'Duration',
     cell: (info) => (
-      <span className="inline-flex items-center gap-1.5 text-muted-foreground text-[11px]">
-        <Clock className="h-3.5 w-3.5 text-muted-foreground/70" />
+      <span className="text-muted-foreground inline-flex items-center gap-1.5 text-[11px]">
+        <Clock className="text-muted-foreground/70 h-3.5 w-3.5" />
         {info.getValue()}
       </span>
     ),
@@ -115,19 +108,11 @@ export const buildColumns = () => [
 
   columnHelper.accessor('startedAt', {
     header: 'Started At',
-    cell: (info) => (
-      <span className="text-muted-foreground text-[11px]">
-        {info.getValue()}
-      </span>
-    ),
+    cell: (info) => <span className="text-muted-foreground text-[11px]">{info.getValue()}</span>,
   }),
 
   columnHelper.accessor('finishedAt', {
     header: 'Finished At',
-    cell: (info) => (
-      <span className="text-muted-foreground text-[11px]">
-        {info.getValue()}
-      </span>
-    ),
+    cell: (info) => <span className="text-muted-foreground text-[11px]">{info.getValue()}</span>,
   }),
 ];

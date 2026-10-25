@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, trpcClient, useTRPC } from '@/shared/api';
 import type { TCreatePipelineInputData, TUpdatePipelineInputData } from '@pipeline/contracts';
-import type { TPipeline } from '@/shared/lib';
+import type { TPipeline } from '@/entities';
 
 interface UsePipelineHandlersOptions {
   onCreateSuccess?: () => void;
@@ -52,20 +52,22 @@ export const usePipelineHandler = (options?: UsePipelineHandlersOptions) => {
 
   const setCurrentPipeline = useMutation({
     mutationFn: (pipeline: TPipeline) =>
-      trpcClient.users.setCurrentPipeline.mutate(pipeline),
-
-    onSuccess: (updatedUser, pipeline) => {
-      queryClient.setQueryData(trpc.auth.me.queryKey(), (oldUser: any) => {
-        if (!oldUser) return oldUser;
-        return {
-          ...oldUser,
-          currentPipelineId: updatedUser.currentPipelineId,
-          currentPipeline: pipeline,
-        };
-      });
-
-      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
-
+      trpcClient.users.setCurrentPipeline.mutate({
+        id: pipeline.id,
+        name: pipeline.name,
+        description: pipeline.description,
+        status: pipeline.status,
+        lastRunAt: pipeline.lastRunAt,
+        lastRunStatus:
+          pipeline.lastRunStatus === 'SUCCESS' ||
+          pipeline.lastRunStatus === 'FAILED' ||
+          pipeline.lastRunStatus === 'RUNNING'
+            ? pipeline.lastRunStatus
+            : null,
+        screenshotUrl: pipeline.screenshotUrl,
+      }),
+    onSuccess: (updatedUser) => {
+      queryClient.setQueryData(trpc.auth.me.queryKey(), updatedUser);
       options?.onSetCurrentSuccess?.();
     },
   });

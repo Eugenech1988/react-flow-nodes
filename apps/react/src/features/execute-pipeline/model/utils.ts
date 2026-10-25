@@ -1,15 +1,9 @@
-import type { TExecutionLog, TPipelineNode, TTriggerType as TUiTriggerType } from '@/entities/pipeline/model/types';
+import type { TExecutionLog, TPipelineNode, TTriggerType as TUiTriggerType } from '@/entities';
 import type { TNodeExecutionResult } from './types';
 import type { TTriggerType as TBackendTriggerType } from '@pipeline/contracts';
 
-export const resolveTemplate = (
-  value: string,
-  input: TNodeExecutionResult,
-): string =>
-  value.replace(
-    /\{\{\s*([^}\s]+)\s*\}\}/g,
-    (_, key: string) => String(input[key] ?? ''),
-  );
+export const resolveTemplate = (value: string, input: TNodeExecutionResult): string =>
+  value.replace(/\{\{\s*([^}\s]+)\s*\}\}/g, (_, key: string) => String(input[key] ?? ''));
 
 export const toNumber = (value: unknown, label: string): number => {
   const number = Number(value);
@@ -24,7 +18,6 @@ export const toNumber = (value: unknown, label: string): number => {
 export const getNodeKind = (node: TPipelineNode): string =>
   String(node.data.nodeType || node.type || '').toLowerCase();
 
-
 export const mapTriggerType = (trigger?: TUiTriggerType | string): TBackendTriggerType => {
   if (trigger === 'SCHEDULED') return 'CRON';
   if (trigger === 'WEBHOOK' || trigger === 'CRON' || trigger === 'API') {
@@ -34,7 +27,7 @@ export const mapTriggerType = (trigger?: TUiTriggerType | string): TBackendTrigg
 };
 
 export const formatLogsToRecord = (
-  logs: TExecutionLog[]
+  logs: TExecutionLog[],
 ): Record<string, Omit<TExecutionLog, 'timestamp'> & { timestamp: number }> => {
   return logs.reduce<Record<string, Omit<TExecutionLog, 'timestamp'> & { timestamp: number }>>(
     (acc, log, index) => {
@@ -52,10 +45,13 @@ export const formatLogsToRecord = (
       acc[log.id || `log_${index}`] = {
         ...log,
         timestamp: parsedTimestamp,
+        // JSON object key order is not a reliable log sequence in the database.
+        // Persist an explicit position so readers can restore execution order.
+        order: typeof log.order === 'number' ? log.order : index,
       };
 
       return acc;
     },
-    {}
+    {},
   );
 };

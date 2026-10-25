@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useUser } from '@/shared/hooks';
-import { PLAN_USAGE_STATS } from '@/pages/settings/model';
+import { PLAN_USAGE_STATS } from '../../model';
 import { UsageChartModal, type UsageStatItem } from './UsageChartModal';
 
 export const UsageStats = () => {
@@ -9,33 +9,31 @@ export const UsageStats = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {PLAN_USAGE_STATS(isProActive).map((stat, idx) => (
           <div
             key={idx}
             onClick={() => setSelectedStat(stat)}
-            className="group relative border border-border bg-card rounded-xl p-4 space-y-3 shadow-xs cursor-pointer transition-all duration-200 hover:border-teal-500/50 hover:bg-teal-500/5 hover:shadow-md hover:shadow-teal-500/5"
+            className="group border-border bg-card relative cursor-pointer space-y-3 rounded-xl border p-4 shadow-xs transition-all duration-200 hover:border-teal-500/50 hover:bg-teal-500/5 hover:shadow-md hover:shadow-teal-500/5"
           >
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5 font-medium text-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">
+            <div className="text-muted-foreground flex items-center justify-between text-xs">
+              <span className="text-foreground flex items-center gap-1.5 font-medium transition-colors group-hover:text-teal-600 dark:group-hover:text-teal-400">
                 {stat.icon} {stat.label}
               </span>
-              <span className="font-medium text-foreground/90">{stat.value}</span>
+              <span className="text-foreground/90 font-medium">{stat.value}</span>
             </div>
 
-            <div className="w-full bg-muted/60 h-2 rounded-full overflow-hidden">
+            <div className="bg-muted/60 h-2 w-full overflow-hidden rounded-full">
               <div
                 className={`h-full transition-all duration-500 ${stat.barColor}`}
                 style={{ width: `${Math.min(stat.percentage, 100)}%` }}
               />
             </div>
 
-            <div className="flex items-end justify-between gap-2 text-[11px] text-muted-foreground pt-0.5">
-              <span className="line-clamp-2 leading-tight">
-                {stat.sub}
-              </span>
+            <div className="text-muted-foreground flex items-end justify-between gap-2 pt-0.5 text-[11px]">
+              <span className="line-clamp-2 leading-tight">{stat.sub}</span>
 
-              <span className="shrink-0 whitespace-nowrap text-xs font-medium text-teal-600 dark:text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <span className="shrink-0 text-xs font-medium whitespace-nowrap text-teal-600 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:text-teal-400">
                 View chart
               </span>
             </div>
@@ -43,10 +41,7 @@ export const UsageStats = () => {
         ))}
       </div>
 
-      <UsageChartModal
-        stat={selectedStat}
-        onClose={() => setSelectedStat(null)}
-      />
+      <UsageChartModal stat={selectedStat} onClose={() => setSelectedStat(null)} />
     </>
   );
 };

@@ -1,2 +1,4 @@
 export * from './executeNode';
-export type { TNodeExecutionResult } from './lib/types';
+export * from './pipelineExecutionService';
+export * from './executors';
+export type { TNodeExecutionResult, TNodeExecutor, TNodeExecutorContext } from './model/types';

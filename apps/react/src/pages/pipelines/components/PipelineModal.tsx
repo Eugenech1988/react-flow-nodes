@@ -13,14 +13,14 @@ import {
   DialogFooter,
   AppButton,
 } from '@/shared/ui';
-import { usePipelineHandler } from '@/pages/pipelines/hooks';
+import { usePipelineHandler } from '@/features/manage-pipelines';
 import {
   createPipelineInputSchema,
   updatePipelineInputSchema,
   type TCreatePipelineInputData,
   type TUpdatePipelineInputData,
 } from '@pipeline/contracts';
-import type { TPipeline } from '@/shared/lib';
+import type { TPipeline } from '@/entities';
 
 interface TPipelineDialogProps {
   isOpen: boolean;
@@ -33,8 +33,8 @@ type TPipelineStatusOption = 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'ARCHIVED';
 
 type TFormData = TCreatePipelineInputData &
   Partial<TUpdatePipelineInputData> & {
-  status?: TPipelineStatusOption;
-};
+    status?: TPipelineStatusOption;
+  };
 
 const STATUS_OPTIONS: { value: TPipelineStatusOption; label: string }[] = [
   { value: 'DRAFT', label: 'Draft' },
@@ -44,11 +44,11 @@ const STATUS_OPTIONS: { value: TPipelineStatusOption; label: string }[] = [
 ];
 
 export const PipelineModal = ({
-                                isOpen,
-                                onClose,
-                                mode = 'create',
-                                initialData,
-                              }: TPipelineDialogProps) => {
+  isOpen,
+  onClose,
+  mode = 'create',
+  initialData,
+}: TPipelineDialogProps) => {
   const { user } = useUser();
   const isCreate = mode === 'create';
 
@@ -139,7 +139,7 @@ export const PipelineModal = ({
       if (!user?.id) return;
       createPipeline.mutate(
         { data: data as TCreatePipelineInputData, file: file ?? undefined },
-        { onSuccess: handleClose }
+        { onSuccess: handleClose },
       );
     } else if (initialData?.id) {
       updatePipeline.mutate(
@@ -149,7 +149,7 @@ export const PipelineModal = ({
           description: data.description,
           status: data.status,
         },
-        { onSuccess: handleClose }
+        { onSuccess: handleClose },
       );
     }
   };
@@ -160,14 +160,14 @@ export const PipelineModal = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-md border border-border bg-card p-0 gap-0 overflow-hidden rounded-xl shadow-xs backdrop-blur-xs"
+        className="border-border bg-card gap-0 overflow-hidden rounded-xl border p-0 shadow-xs backdrop-blur-xs sm:max-w-md"
       >
         <DialogHeader
           title={isCreate ? 'Create Pipeline' : 'Update Pipeline'}
           description={
             isCreate ? 'Configure your new automation workflow' : 'Edit your pipeline details'
           }
-          icon={<Workflow className="w-6 h-6 text-teal-600 dark:text-teal-400" />}
+          icon={<Workflow className="h-6 w-6 text-teal-600 dark:text-teal-400" />}
           onClose={handleClose}
         />
 
@@ -204,7 +204,7 @@ export const PipelineModal = ({
                     onChange={(val) => {
                       const value =
                         typeof val === 'object' && val !== null
-                          ? (val as React.ChangeEvent<HTMLSelectElement>).target?.value ?? val
+                          ? ((val as React.ChangeEvent<HTMLSelectElement>).target?.value ?? val)
                           : val;
                       field.onChange(value);
                     }}
@@ -228,16 +228,16 @@ export const PipelineModal = ({
 
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="group relative w-full h-36 rounded-xl border border-dashed border-input bg-muted/20 hover:border-teal-500/50 hover:bg-teal-500/5 transition-all overflow-hidden cursor-pointer flex flex-col items-center justify-center"
+                  className="group border-input bg-muted/20 relative flex h-36 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed transition-all hover:border-teal-500/50 hover:bg-teal-500/5"
                 >
                   {!filePreview ? (
                     <div className="flex flex-col items-center gap-2 p-4 text-center">
-                      <div className="p-2.5 rounded-full bg-background border border-border shadow-2xs group-hover:scale-105 transition-transform">
-                        <ImageIcon className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                      <div className="bg-background border-border rounded-full border p-2.5 shadow-2xs transition-transform group-hover:scale-105">
+                        <ImageIcon className="h-5 w-5 text-teal-600 dark:text-teal-400" />
                       </div>
                       <div>
-                        <p className="text-xs font-medium text-foreground">Select Screenshot</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">
+                        <p className="text-foreground text-xs font-medium">Select Screenshot</p>
+                        <p className="text-muted-foreground mt-0.5 text-[10px]">
                           PNG, JPG or WEBP up to 5MB
                         </p>
                       </div>
@@ -247,9 +247,9 @@ export const PipelineModal = ({
                       <img
                         src={filePreview}
                         alt="Pipeline preview"
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-[2px]">
+                      <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/60 opacity-0 backdrop-blur-[2px] transition-opacity group-hover:opacity-100">
                         <AppButton
                           variant="ghost"
                           size="xs"
@@ -259,7 +259,7 @@ export const PipelineModal = ({
                             e?.stopPropagation();
                             fileInputRef.current?.click();
                           }}
-                          className="bg-white/25 hover:bg-white/35 text-white border-none backdrop-blur-md"
+                          className="border-none bg-white/25 text-white backdrop-blur-md hover:bg-white/35"
                         />
                         <AppButton
                           variant="danger"

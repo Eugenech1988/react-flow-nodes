@@ -14,7 +14,8 @@ import type { ReactFlowInstance } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useUser } from '@/shared/hooks';
 import { useStore } from '@/entities';
-import type { TPipelineNode, TPipelineEdge } from '@/entities';
+import type { TPipeline, TPipelineNode, TPipelineEdge } from '@/entities';
+import { graphDataSchema } from '@pipeline/contracts';
 
 import {
   HistoryControls,
@@ -79,30 +80,28 @@ export const Canvas = () => {
       getNodeID: state.getNodeID,
       undo: state.undo,
       redo: state.redo,
-    }))
+    })),
   );
 
   const { user } = useUser();
-  const currentPipeline = user?.currentPipeline;
+  const currentPipeline = user?.currentPipeline as
+    Pick<TPipeline, 'id' | 'graphData'> | null | undefined;
+  const currentPipelineId = currentPipeline?.id;
+  const currentPipelineGraphData = currentPipeline?.graphData;
 
   useEffect(() => {
-    if (currentPipeline) {
-      const pipelineRecord = currentPipeline as unknown as Record<string, unknown>;
-      const graph = pipelineRecord.graphData as
-        | {
-        nodes?: TPipelineNode[];
-        edges?: TPipelineEdge[];
-      }
-        | null
-        | undefined;
+    if (currentPipelineId) {
+      const graph = graphDataSchema.safeParse(currentPipelineGraphData);
+      const nodes = graph.success ? graph.data.nodes : [];
+      const edges = graph.success ? graph.data.edges : [];
 
-      const pipelineId = String(pipelineRecord.id || '');
-      initGraph(graph?.nodes || [], graph?.edges || [], pipelineId);    }
+      initGraph(nodes, edges, currentPipelineId);
+    }
 
     return () => {
       resetGraph();
     };
-  }, [currentPipeline?.id, initGraph, resetGraph]);
+  }, [currentPipelineId, currentPipelineGraphData, initGraph, resetGraph]);
 
   useEffect(() => {
     const navState = location.state as { autoRun?: boolean } | null;
@@ -138,7 +137,10 @@ export const Canvas = () => {
   const gridColor = resolvedTheme === 'dark' ? '#374151' : '#cbd5e1';
 
   const getMiniMapNodeColor = (node: TPipelineNode) => {
-    const category = node.data?.category || NODE_TYPE_TO_CATEGORY[node.type || ''] || 'default';
+    const category =
+      (typeof node.data?.category === 'string' && node.data.category) ||
+      NODE_TYPE_TO_CATEGORY[node.type || ''] ||
+      'default';
     return NODE_COLORS[category] || '#94a3b8';
   };
 

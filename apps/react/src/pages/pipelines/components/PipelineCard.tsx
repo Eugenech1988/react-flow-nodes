@@ -18,9 +18,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@pipeline/ui';
-import { formatDate, type TPipeline } from '@/shared/lib';
-import { usePipelineHandler } from '@/pages/pipelines/hooks';
-import { usePipelineDialogStore } from '@/pages/pipelines/model';
+import { formatDate } from '@/shared/lib';
+import { usePipelineHandler } from '@/features/manage-pipelines';
+import type { TPipeline } from '@/entities';
+import { usePipelineDialogStore } from '../model';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -33,7 +34,6 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
   const navigate = useNavigate();
 
   const { deletePipeline, setCurrentPipeline } = usePipelineHandler({
-    
     onSetCurrentSuccess: () => navigate('/'),
   });
 
@@ -59,12 +59,12 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: deletePipeline.isPending ? 0.5 : 1 }}
       transition={{ duration: 0.15, ease: 'easeOut' }}
-      className="group border border-border/80 bg-card rounded-2xl overflow-hidden shadow-xs hover:shadow-md hover:border-teal-500/40 transition-all flex flex-col justify-between relative pointer-events-auto cursor-pointer"
+      className="group border-border/80 bg-card pointer-events-auto relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border shadow-xs transition-all hover:border-teal-500/40 hover:shadow-md"
       onClick={handleCardClick}
     >
       {deletePipeline.isPending && (
-        <div className="absolute inset-0 bg-background/50 backdrop-blur-xs z-10 flex items-center justify-center">
-          <Loader2 className="w-6 h-6 animate-spin text-teal-600 dark:text-teal-400" />
+        <div className="bg-background/50 absolute inset-0 z-10 flex items-center justify-center backdrop-blur-xs">
+          <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
         </div>
       )}
 
@@ -73,33 +73,33 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
           <div className="flex items-start justify-between gap-2">
             <span
               onClick={handleEdit}
-              className="font-semibold text-base text-foreground group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors line-clamp-1"
+              className="text-foreground line-clamp-1 text-base font-semibold transition-colors group-hover:text-teal-600 dark:group-hover:text-teal-400"
             >
               {pipeline.name}
             </span>
 
             <div onClick={(e) => e.stopPropagation()}>
               <DropdownMenu>
-                <DropdownMenuTrigger className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors outline-none cursor-pointer shrink-0">
-                  <MoreVertical className="w-4 h-4" />
+                <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground hover:bg-muted/60 shrink-0 cursor-pointer rounded-lg p-1 transition-colors outline-none">
+                  <MoreVertical className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="w-40 border border-border/80 bg-card p-1 rounded-xl shadow-lg"
+                  className="border-border/80 bg-card w-40 rounded-xl border p-1 shadow-lg"
                 >
                   <DropdownMenuItem
                     onClick={handleEdit}
-                    className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg cursor-pointer transition-colors"
+                    className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors"
                   >
-                    <Edit3 className="w-3.5 h-3.5 text-muted-foreground" />
+                    <Edit3 className="text-muted-foreground h-3.5 w-3.5" />
                     <span>Edit Workflow</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={handleDelete}
                     disabled={deletePipeline.isPending}
-                    className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg cursor-pointer text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 focus:bg-rose-500/10 transition-colors"
+                    className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-rose-600 transition-colors hover:bg-rose-500/10 focus:bg-rose-500/10 dark:text-rose-400"
                   >
-                    <Trash2 className="w-3.5 h-3.5 text-current" />
+                    <Trash2 className="h-3.5 w-3.5 text-current" />
                     <span>Delete</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -107,12 +107,12 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
             </div>
           </div>
 
-          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+          <p className="text-muted-foreground line-clamp-2 text-xs leading-relaxed">
             {pipeline.description || 'No description provided.'}
           </p>
         </div>
 
-        <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted/40 border border-border/40">
+        <div className="bg-muted/40 border-border/40 relative aspect-video w-full overflow-hidden rounded-xl border">
           {imageSrc ? (
             <>
               <img
@@ -120,52 +120,52 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
                 alt={pipeline.name}
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
             </>
           ) : (
-            <div className="h-full w-full flex flex-col items-center justify-center gap-2 text-muted-foreground/60 bg-muted/20 select-none">
-              <ImageOff className="w-12 h-12 stroke-[1.5]" />
+            <div className="text-muted-foreground/60 bg-muted/20 flex h-full w-full flex-col items-center justify-center gap-2 select-none">
+              <ImageOff className="h-12 w-12 stroke-[1.5]" />
               <span className="text-base font-medium tracking-wide">No screenshot</span>
             </div>
           )}
         </div>
       </div>
 
-      <div className="px-5 py-3.5 border-t border-border/50 bg-muted/20 flex items-center justify-between text-xs">
+      <div className="border-border/50 bg-muted/20 flex items-center justify-between border-t px-5 py-3.5 text-xs">
         <div className="flex items-center gap-1.5">
           {status === 'ACTIVE' && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
+            <span className="inline-flex items-center gap-1 rounded-full border border-teal-500/20 bg-teal-500/10 px-2 py-0.5 text-[11px] font-medium text-teal-600 dark:text-teal-400">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal-500" />
               Active
             </span>
           )}
           {status === 'PAUSED' && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-              <PauseCircle className="w-3 h-3" />
+            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-600 dark:text-amber-400">
+              <PauseCircle className="h-3 w-3" />
               Paused
             </span>
           )}
           {status === 'ARCHIVED' && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20">
-              <Archive className="w-3 h-3" />
+            <span className="inline-flex items-center gap-1 rounded-full border border-slate-500/20 bg-slate-500/10 px-2 py-0.5 text-[11px] font-medium text-slate-600 dark:text-slate-400">
+              <Archive className="h-3 w-3" />
               Archived
             </span>
           )}
           {(status === 'DRAFT' || !status) && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-muted text-muted-foreground border border-border/50">
+            <span className="bg-muted text-muted-foreground border-border/50 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium">
               Draft
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <Clock className="w-3.5 h-3.5" />
+        <div className="text-muted-foreground flex items-center gap-1">
+          <Clock className="h-3.5 w-3.5" />
           <span>{formatDate(pipeline.lastRunAt) || 'Never run'}</span>
           {pipeline.lastRunStatus === 'SUCCESS' && (
-            <CheckCircle2 className="w-3.5 h-3.5 text-teal-500 ml-0.5" />
+            <CheckCircle2 className="ml-0.5 h-3.5 w-3.5 text-teal-500" />
           )}
           {pipeline.lastRunStatus === 'FAILED' && (
-            <AlertCircle className="w-3.5 h-3.5 text-rose-500 ml-0.5" />
+            <AlertCircle className="ml-0.5 h-3.5 w-3.5 text-rose-500" />
           )}
         </div>
       </div>

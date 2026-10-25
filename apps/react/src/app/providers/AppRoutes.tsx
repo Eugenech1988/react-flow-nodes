@@ -3,12 +3,12 @@ import { ProtectedRoute } from '@/app/providers/ProtectedRoute';
 import { PublicOnlyRoute } from '@/app/providers/PublicOnlyRoute';
 import { AppLayout } from '@/app/AppLayout';
 import { LoginPage } from '@/pages/login';
-import { CanvasPage } from '@/pages/canvas/CanvasPage';
+import { CanvasPage } from '@/pages/canvas';
 import { SettingsPage, ProfileTab, AccountTab, BillingTab } from '@/pages/settings';
 import { PlansPage } from '@/pages/plans';
 import { PipelinesPage } from '@/pages/pipelines';
 import { ExecutionsPage } from '@/pages/executions';
-import { NotFoundPage } from '@/pages/not-found/NotFoundPage';
+import { NotFoundPage } from '@/pages/not-found';
 
 export const AppRoutes = () => {
   return (

@@ -1,7 +1,7 @@
 import { Search, ArrowUpDown } from 'lucide-react';
-import { TAB_OPTIONS, SORT_OPTIONS, type TTabType, type TSortOption } from '@/pages/pipelines/model';
+import { TAB_OPTIONS, SORT_OPTIONS, type TTabType, type TSortOption } from '../model';
 import { FloatingInput, Tabs, AppButton } from '@/shared/ui';
-import { usePipelines } from '@/shared/hooks';
+import { usePipelines } from '@/entities';
 
 interface PipelineSearchAndFilterProps {
   searchQuery: string;
@@ -14,14 +14,14 @@ interface PipelineSearchAndFilterProps {
 }
 
 export const PipelineSearchAndFilter = ({
-                                          searchQuery,
-                                          onSearchChange,
-                                          statusFilter,
-                                          onStatusFilterChange,
-                                          sortBy,
-                                          sortOrder,
-                                          onSortChange,
-                                        }: PipelineSearchAndFilterProps) => {
+  searchQuery,
+  onSearchChange,
+  statusFilter,
+  onStatusFilterChange,
+  sortBy,
+  sortOrder,
+  onSortChange,
+}: PipelineSearchAndFilterProps) => {
   const { pipelines } = usePipelines();
 
   const toggleSortOrder = () => {
@@ -33,18 +33,18 @@ export const PipelineSearchAndFilter = ({
   }
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div className="relative w-full sm:w-80 group">
+    <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+      <div className="group relative w-full sm:w-80">
         <FloatingInput
           rounded="xl"
           label="Search pipelines"
           value={searchQuery}
           onChange={onSearchChange}
-          icon={<Search className="w-4 h-4" />}
+          icon={<Search className="h-4 w-4" />}
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+      <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
         <Tabs
           tabs={TAB_OPTIONS}
           layoutId="pipelines-search-tabs"
@@ -53,11 +53,11 @@ export const PipelineSearchAndFilter = ({
           capitalizeLabels
         />
 
-        <div className="h-11 flex items-center gap-1.5 bg-muted/40 border border-border/60 px-3 rounded-xl backdrop-blur-md shadow-xs">
+        <div className="bg-muted/40 border-border/60 flex h-11 items-center gap-1.5 rounded-xl border px-3 shadow-xs backdrop-blur-md">
           <select
             value={sortBy}
             onChange={(e) => onSortChange(e.target.value as TSortOption['value'], sortOrder)}
-            className="bg-transparent border-0 text-sm font-medium text-foreground outline-none cursor-pointer pr-1 py-1 pl-1"
+            className="text-foreground cursor-pointer border-0 bg-transparent py-1 pr-1 pl-1 text-sm font-medium outline-none"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -71,7 +71,7 @@ export const PipelineSearchAndFilter = ({
             size="xs"
             icon={ArrowUpDown}
             onClick={toggleSortOrder}
-            className="p-1.5 h-auto min-h-0 rounded-lg"
+            className="h-auto min-h-0 rounded-lg p-1.5"
           />
         </div>
       </div>

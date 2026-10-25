@@ -1,14 +1,27 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { Connection, Edge, EdgeChange, Node, NodeChange, Position } from '@xyflow/react';
+export type TPipeline = {
+  id: string;
+  name: string;
+  description: string | null;
+  screenshotUrl: string | null;
+  status: 'ACTIVE' | 'PAUSED' | 'DRAFT' | 'ARCHIVED' | null;
+  createdAt: string;
+  updatedAt: string;
+  graphData: unknown;
+  userId: string;
+  lastRunAt: string | null;
+  lastRunStatus: string | null;
+};
 
 export type TNodeData = {
-  id: string;
-  nodeType: string;
-  [key: string]: string | number | undefined;
+  id?: string;
+  nodeType?: string;
+  [key: string]: unknown;
 };
 
 export type TPipelineNode = Node<TNodeData>;
-export type TPipelineEdge = Edge<Record<string, never>>;
+export type TPipelineEdge = Edge<Record<string, unknown>>;
 
 export type TClipboardNodesData = {
   nodes: TPipelineNode[];
@@ -48,7 +61,7 @@ export type TGraphState = {
   isHistoryAction: boolean;
   lastRunAt: Date | string | null;
   lastRunStatus: TLastRunStatus;
-  saveAction: (() => Promise<void> | void) | null;
+  saveAction: ((withScreenshot?: boolean) => Promise<void> | void) | null;
   pipelineId: string | null;
 };
 
@@ -81,7 +94,7 @@ export type TGraphActions = {
   copyNodes: (nodes: TPipelineNode[], edges: TPipelineEdge[]) => void;
   pasteNodes: () => void;
   onConnect: (connection: Connection) => void;
-  updateNodeField: (nodeId: string, fieldName: string, fieldValue: string | number) => void;
+  updateNodeField: (nodeId: string, fieldName: string, fieldValue: unknown) => void;
   exportJSON: () => void;
   importJSON: (file: File) => void;
   clearCanvas: () => void;
@@ -90,8 +103,8 @@ export type TGraphActions = {
   canUndo: () => boolean;
   canRedo: () => boolean;
   takeSnapshot: () => void;
-  setSaveAction: (action: (() => Promise<void> | void) | null) => void;
-  triggerSave: () => Promise<void>;
+  setSaveAction: (action: ((withScreenshot?: boolean) => Promise<void> | void) | null) => void;
+  triggerSave: (withScreenshot?: boolean) => Promise<void>;
   setLastRunInfo: (status: TLastRunStatus, date?: Date | string) => void;
 };
 

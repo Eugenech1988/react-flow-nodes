@@ -1,5 +1,10 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 
+const getCsrfToken = () => {
+  const match = document.cookie.match(/(?:^|;\s*)x-csrf-token=([^;]*)/);
+  return match ? decodeURIComponent(match[1]) : '';
+};
+
 let isRefreshing = false;
 let refreshSubscribers: ((error?: Error) => void)[] = [];
 
@@ -25,6 +30,7 @@ const request = async <T>(
     credentials: 'include',
     headers: {
       ...(!isFormData && { 'Content-Type': 'application/json' }),
+      'x-csrf-token': getCsrfToken(),
       ...options.headers,
     },
   };
@@ -67,8 +73,7 @@ const request = async <T>(
 
   if (!response.ok) {
     const errorData = (await response.json().catch(() => ({}))) as Record<string, unknown>;
-    const errorMessage =
-      typeof errorData.message === 'string' ? errorData.message : 'API Error';
+    const errorMessage = typeof errorData.message === 'string' ? errorData.message : 'API Error';
 
     throw new Error(errorMessage);
   }

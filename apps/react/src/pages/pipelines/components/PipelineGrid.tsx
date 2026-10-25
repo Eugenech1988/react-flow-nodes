@@ -1,7 +1,7 @@
 import { AnimatePresence } from 'framer-motion';
-import { PipelineCard } from '@/pages/pipelines/components/PipelineCard';
-import { EmptyState } from '@/pages/pipelines/components/EmptyState';
-import type { TPipeline } from '@/shared/lib';
+import { PipelineCard } from './PipelineCard';
+import { EmptyState } from './EmptyState';
+import type { TPipeline } from '@/entities';
 
 interface PipelineGridProps {
   pipelines: TPipeline[];
@@ -10,10 +10,10 @@ interface PipelineGridProps {
 }
 
 export const PipelineGrid = ({
-                               pipelines,
-                               searchQuery,
-                               totalPipelinesCount
-                             }: PipelineGridProps) => {
+  pipelines,
+  searchQuery,
+  totalPipelinesCount,
+}: PipelineGridProps) => {
   if (pipelines.length === 0) {
     return (
       <EmptyState
@@ -24,7 +24,7 @@ export const PipelineGrid = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
       <AnimatePresence mode="popLayout">
         {pipelines.map((pipeline) => (
           <PipelineCard key={pipeline.id} pipeline={pipeline} />

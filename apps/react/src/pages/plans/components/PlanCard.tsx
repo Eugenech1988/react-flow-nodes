@@ -1,13 +1,6 @@
 import { motion } from 'framer-motion';
-import {
-  CheckCircle2,
-  Sparkles,
-  CreditCard,
-  Building2,
-  ArrowRight,
-  Loader2,
-} from 'lucide-react';
-import type { IPlan, TPlanId } from '@/pages/plans/model';
+import { CheckCircle2, Sparkles, CreditCard, Building2, ArrowRight, Loader2 } from 'lucide-react';
+import type { IPlan, TPlanId } from '../model';
 
 interface PlanCardProps {
   plan: IPlan;
@@ -21,15 +14,15 @@ interface PlanCardProps {
 }
 
 export const PlanCard = ({
-                           plan,
-                           isCurrent,
-                           price,
-                           billingCycle,
-                           buttonText,
-                           buttonVariant,
-                           isProcessing,
-                           onSelect,
-                         }: PlanCardProps) => {
+  plan,
+  isCurrent,
+  price,
+  billingCycle,
+  buttonText,
+  buttonVariant,
+  isProcessing,
+  onSelect,
+}: PlanCardProps) => {
   const isPopular = plan.popular;
 
   const handleClick = () => {
@@ -56,10 +49,10 @@ export const PlanCard = ({
   };
 
   const renderIcon = () => {
-    if (isProcessing) return <Loader2 className="w-3.5 h-3.5 animate-spin" />;
+    if (isProcessing) return <Loader2 className="h-3.5 w-3.5 animate-spin" />;
 
-    if (plan.id === 'pro' && !isCurrent) return <CreditCard className="w-3.5 h-3.5" />;
-    if (plan.id === 'enterprise') return <Building2 className="w-3.5 h-3.5" />;
+    if (plan.id === 'pro' && !isCurrent) return <CreditCard className="h-3.5 w-3.5" />;
+    if (plan.id === 'enterprise') return <Building2 className="h-3.5 w-3.5" />;
     return null;
   };
 
@@ -67,7 +60,7 @@ export const PlanCard = ({
     if (isProcessing) {
       return (
         <>
-          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
           Processing...
         </>
       );
@@ -77,16 +70,16 @@ export const PlanCard = ({
       <>
         {renderIcon()}
         {buttonText}
-        {!isCurrent && plan.id !== 'free' && <ArrowRight className="w-3.5 h-3.5" />}
+        {!isCurrent && plan.id !== 'free' && <ArrowRight className="h-3.5 w-3.5" />}
       </>
     );
   };
 
   return (
     <motion.div
-      className={`relative border bg-card rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 backdrop-blur-xs ${
+      className={`bg-card relative flex flex-col justify-between rounded-2xl border p-6 backdrop-blur-xs transition-all duration-300 ${
         isCurrent
-          ? '-translate-y-2 shadow-lg border-teal-500/60 ring-2 ring-teal-500/30'
+          ? '-translate-y-2 border-teal-500/60 shadow-lg ring-2 ring-teal-500/30'
           : isPopular
             ? 'border-teal-500/40 shadow-md'
             : 'border-border shadow-xs'
@@ -96,13 +89,13 @@ export const PlanCard = ({
       transition={{ duration: 0.3 }}
     >
       {isPopular && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[11px] font-semibold bg-linear-to-r from-teal-700 to-teal-600 text-white shadow-xs flex items-center gap-1">
-          <Sparkles className="w-3 h-3" /> Most Popular
+        <div className="absolute -top-3 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full bg-linear-to-r from-teal-700 to-teal-600 px-3 py-0.5 text-[11px] font-semibold text-white shadow-xs">
+          <Sparkles className="h-3 w-3" /> Most Popular
         </div>
       )}
 
       <div
-        className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl pointer-events-none ${
+        className={`pointer-events-none absolute top-0 right-0 h-32 w-32 rounded-full blur-3xl ${
           isCurrent || isPopular ? 'bg-teal-500/10' : 'bg-muted/20'
         }`}
       />
@@ -112,40 +105,46 @@ export const PlanCard = ({
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-bold">{plan.name}</h3>
             {isCurrent && (
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
+              <span className="rounded border border-teal-500/20 bg-teal-500/10 px-2 py-0.5 text-[10px] font-bold tracking-wider text-teal-600 uppercase dark:text-teal-400">
                 Current
               </span>
             )}
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed min-h-9">
+          <p className="text-muted-foreground min-h-9 text-xs leading-relaxed">
             {plan.description}
           </p>
         </div>
 
         <div className="flex items-baseline gap-1">
           <span className="text-3xl font-extrabold">${price}</span>
-          <span className="text-xs text-muted-foreground font-normal">
+          <span className="text-muted-foreground text-xs font-normal">
             /month {billingCycle === 'yearly' && price > 0 ? '(billed annually)' : ''}
           </span>
         </div>
 
-        <div className="border-t border-border/60 pt-4" />
+        <div className="border-border/60 border-t pt-4" />
 
         <div className="space-y-3">
-          <span className="text-xs font-semibold tracking-wide uppercase text-foreground/80">
+          <span className="text-foreground/80 text-xs font-semibold tracking-wide uppercase">
             What's included:
           </span>
           <ul className="space-y-2.5">
             {plan.features.map((feature, idx) => (
               <li key={idx} className="flex items-start gap-2.5 text-xs">
                 {feature.included ? (
-                  <CheckCircle2 className="w-4 h-4 shrink-0 text-teal-600 dark:text-teal-400 mt-0.5" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" />
                 ) : (
-                  <div className="w-4 h-4 shrink-0 rounded-full border border-border/60 flex items-center justify-center mt-0.5">
-                    <span className="block w-1.5 h-px bg-muted-foreground/40" />
+                  <div className="border-border/60 mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border">
+                    <span className="bg-muted-foreground/40 block h-px w-1.5" />
                   </div>
                 )}
-                <span className={feature.included ? 'text-foreground/90' : 'text-muted-foreground/50 line-through'}>
+                <span
+                  className={
+                    feature.included
+                      ? 'text-foreground/90'
+                      : 'text-muted-foreground/50 line-through'
+                  }
+                >
                   {feature.text}
                 </span>
               </li>
@@ -154,7 +153,7 @@ export const PlanCard = ({
         </div>
       </div>
 
-      <div className="pt-6 mt-6 border-t border-border/60">
+      <div className="border-border/60 mt-6 border-t pt-6">
         <button
           type="button"
           onClick={handleClick}

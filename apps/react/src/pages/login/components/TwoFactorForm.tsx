@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@pipeline/ui';
 import { AppButton, LocalAlert } from '@/shared/ui';
 import { twoFactorLoginInputSchema, type TTwoFactorLoginInputData } from '@pipeline/contracts';
-import { useAuthStore } from '@/pages/login/model';
+import { useAuthStore } from '../model';
 import { Link } from 'react-router-dom';
 
 interface TwoFactorFormProps {
@@ -15,12 +15,7 @@ interface TwoFactorFormProps {
   onBack: () => void;
 }
 
-export const TwoFactorForm: FC<TwoFactorFormProps> = ({
-                                                        error,
-                                                        isLoading,
-                                                        onVerify,
-                                                        onBack,
-                                                      }) => {
+export const TwoFactorForm: FC<TwoFactorFormProps> = ({ error, isLoading, onVerify, onBack }) => {
   const { tempToken } = useAuthStore();
 
   const {
@@ -62,14 +57,14 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({
           autoComplete="one-time-code"
           placeholder="123456 or recovery code"
           {...register('code')}
-          className={`h-11 text-center font-mono text-2xl font-bold tracking-normal placeholder:tracking-normal focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none transition-all ${
+          className={`h-11 text-center font-mono text-2xl font-bold tracking-normal transition-all placeholder:tracking-normal focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none ${
             hasCodeError
-              ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus-visible:border-rose-500 focus-visible:ring-rose-500/30'
+              ? 'border-rose-500 bg-rose-500/5 text-rose-600 focus-visible:border-rose-500 focus-visible:ring-rose-500/30 dark:text-rose-400'
               : 'border-border bg-background text-foreground focus-visible:border-teal-500 focus-visible:ring-teal-500/30'
           }`}
         />
         {errors.code && (
-          <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 text-center">
+          <p className="mt-1 text-center text-xs font-medium text-rose-600 dark:text-rose-400">
             {errors.code.message}
           </p>
         )}
@@ -96,11 +91,11 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({
         />
       </div>
 
-      <p className="text-center text-xs text-zinc-600 dark:text-zinc-400 pt-1">
+      <p className="pt-1 text-center text-xs text-zinc-600 dark:text-zinc-400">
         Lost access to your authenticator?{' '}
         <Link
           to="/support"
-          className="text-teal-600 dark:text-teal-400 font-medium hover:underline focus:outline-none"
+          className="font-medium text-teal-600 hover:underline focus:outline-none dark:text-teal-400"
         >
           Contact support
         </Link>

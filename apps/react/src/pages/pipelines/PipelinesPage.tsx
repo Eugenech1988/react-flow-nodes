@@ -1,10 +1,9 @@
 import { motion } from 'framer-motion';
-import { usePipelines } from '@/shared/hooks';
+import { usePipelines } from '@/entities';
 import { usePipelinesFilter } from './hooks';
 import { PAGE_VARIANTS } from '@/shared/lib';
 import { PipelineHeader, PipelineSearchAndFilter, PipelineGrid, PipelineModal } from './components';
-import type { TPipeline } from '@/shared/lib';
-import { usePipelineDialogStore } from '@/pages/pipelines/model';
+import { usePipelineDialogStore } from './model';
 
 export const PipelinesPage = () => {
   const { isOpen, mode, pipelineToEdit, closeModal } = usePipelineDialogStore();
@@ -20,16 +19,16 @@ export const PipelinesPage = () => {
     handleSearchChange,
     setStatusFilter,
     filteredPipelines,
-  } = usePipelinesFilter((pipelines || []) as unknown as TPipeline[]);
+  } = usePipelinesFilter(pipelines);
 
   return (
     <motion.div
-      className="bg-background text-foreground p-4 md:p-6 transition-colors duration-300"
+      className="bg-background text-foreground p-4 transition-colors duration-300 md:p-6"
       variants={PAGE_VARIANTS}
       initial="initial"
       animate="animate"
     >
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="mx-auto max-w-7xl space-y-8">
         <PipelineHeader />
         <PipelineSearchAndFilter
           searchQuery={searchQuery}
@@ -43,7 +42,11 @@ export const PipelinesPage = () => {
             setSortOrder(order);
           }}
         />
-        <PipelineGrid totalPipelinesCount={pipelines.length} pipelines={filteredPipelines} searchQuery={searchQuery}/>
+        <PipelineGrid
+          totalPipelinesCount={pipelines.length}
+          pipelines={filteredPipelines}
+          searchQuery={searchQuery}
+        />
         <PipelineModal
           isOpen={isOpen}
           mode={mode}

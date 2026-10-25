@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Navigate } from 'react-router-dom';
 
-import { usePipelines } from '@/shared/hooks';
+import { usePipelines } from '@/entities';
 import { Canvas } from '@/widgets/canvas';
 
 export const CanvasPage = () => {

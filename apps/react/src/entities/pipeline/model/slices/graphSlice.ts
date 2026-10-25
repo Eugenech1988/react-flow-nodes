@@ -1,13 +1,17 @@
 import type { StateCreator } from 'zustand';
 import { applyNodeChanges, applyEdgeChanges, addEdge } from '@xyflow/react';
-import type { TPipelineStore, TGraphState, TGraphActions, TPipelineNode, TPipelineEdge } from '@/entities/pipeline/model/types';
-
-export const createGraphSlice: StateCreator<
+import type {
   TPipelineStore,
-  [],
-  [],
-  TGraphState & TGraphActions & { past: any[]; future: any[] }
-> = (set, get) => ({
+  TGraphState,
+  TGraphActions,
+  TPipelineNode,
+  TPipelineEdge,
+} from '../types';
+
+export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState & TGraphActions> = (
+  set,
+  get,
+) => ({
   nodes: [],
   edges: [],
   nodeIDs: {},
@@ -29,10 +33,10 @@ export const createGraphSlice: StateCreator<
 
   setSaveAction: (action) => set({ saveAction: action }),
 
-  triggerSave: async () => {
+  triggerSave: async (withScreenshot = false) => {
     const { saveAction } = get();
     if (saveAction) {
-      await saveAction();
+      await saveAction(withScreenshot);
     } else {
       console.warn('Save action is not registered yet.');
     }
@@ -54,15 +58,23 @@ export const createGraphSlice: StateCreator<
     const { nodes, edges, past } = get();
 
     const currentStateStr = JSON.stringify({
-      n: nodes.map(n => ({ id: n.id, x: Math.round(n.position.x), y: Math.round(n.position.y) })),
-      e: edges.map(e => ({ id: e.id, s: e.source, t: e.target }))
+      n: nodes.map((node) => ({
+        id: node.id,
+        x: Math.round(node.position.x),
+        y: Math.round(node.position.y),
+      })),
+      e: edges.map((edge) => ({ id: edge.id, s: edge.source, t: edge.target })),
     });
 
     if (past.length > 0) {
       const last = past[past.length - 1];
       const lastStateStr = JSON.stringify({
-        n: last.nodes.map((n: any) => ({ id: n.id, x: Math.round(n.position.x), y: Math.round(n.position.y) })),
-        e: last.edges.map((e: any) => ({ id: e.id, s: e.source, t: e.target }))
+        n: last.nodes.map((node) => ({
+          id: node.id,
+          x: Math.round(node.position.x),
+          y: Math.round(node.position.y),
+        })),
+        e: last.edges.map((edge) => ({ id: edge.id, s: edge.source, t: edge.target })),
       });
 
       if (currentStateStr === lastStateStr) {
@@ -155,7 +167,7 @@ export const createGraphSlice: StateCreator<
   copyNodes: (selectedNodes: TPipelineNode[], allEdges: TPipelineEdge[]) => {
     const selectedNodeIds = new Set(selectedNodes.map((n) => n.id));
     const edgesToCopy = allEdges.filter(
-      (edge) => selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target)
+      (edge) => selectedNodeIds.has(edge.source) && selectedNodeIds.has(edge.target),
     );
     set({
       clipboard: {
@@ -178,8 +190,8 @@ export const createGraphSlice: StateCreator<
         nodes.some(
           (canvasNode) =>
             Math.round(canvasNode.position.x) === Math.round(clipNode.position.x + checkOffset) &&
-            Math.round(canvasNode.position.y) === Math.round(clipNode.position.y + checkOffset)
-        )
+            Math.round(canvasNode.position.y) === Math.round(clipNode.position.y + checkOffset),
+        ),
       );
     };
 

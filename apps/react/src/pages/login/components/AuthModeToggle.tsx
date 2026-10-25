@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@pipeline/ui';
-import type { FormMode } from '@/pages/login/model/types';
+import type { FormMode } from '../model/types';
 
 interface AuthModeToggleProps {
   mode: FormMode;
@@ -14,7 +14,7 @@ export const AuthModeToggle: React.FC<AuthModeToggleProps> = ({ mode, onToggle }
       <Button
         type="button"
         onClick={onToggle}
-        className="cursor-pointer px-1 bg-transparent font-medium text-zinc-100 hover:text-white transition-colors hover:bg-transparent focus:outline-none hover:underline"
+        className="cursor-pointer bg-transparent px-1 font-medium text-zinc-100 transition-colors hover:bg-transparent hover:text-white hover:underline focus:outline-none"
       >
         {mode === 'login' ? 'Sign up' : 'Sign in'}
       </Button>

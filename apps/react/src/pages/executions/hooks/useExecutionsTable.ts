@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import type { SortingState } from '@tanstack/react-table';
-import { useUser, useExecutions } from '@/shared/hooks';
+import { useUser } from '@/shared/hooks';
+import { useExecutions } from './useExecutions';
 
-import type { IExecutionItem, TExecutionStatus } from '@/pages/executions/model';
+import type { IExecutionItem, TExecutionStatus } from '../model';
 
 export const useExecutionsTable = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -16,14 +17,7 @@ export const useExecutionsTable = () => {
 
   const { user } = useUser();
 
-  const {
-    executions,
-    totalRuns,
-    totalPages,
-    isLoading,
-    isFetching,
-    refetch
-  } = useExecutions({
+  const { executions, totalRuns, totalPages, isLoading, isFetching, refetch } = useExecutions({
     pipelineId: user?.currentPipelineId ?? undefined,
     page,
     limit,

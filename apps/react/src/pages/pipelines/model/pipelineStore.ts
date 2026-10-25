@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { TPipeline } from '@/shared/lib';
+import type { TPipeline } from '@/entities';
 
 interface PipelineDialogState {
   isOpen: boolean;

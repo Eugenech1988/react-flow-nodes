@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import { createGraphSlice } from '@/entities/pipeline/model/slices/graphSlice';
-import { createExecutionSlice } from '@/entities/pipeline/model/slices/executionSlice';
-import type { TPipelineStore } from '@/entities/pipeline/model/types';
+import { createGraphSlice } from './slices/graphSlice';
+import { createExecutionSlice } from './slices/executionSlice';
+import type { TPipelineStore } from './types';
 
 export const useStore = create<TPipelineStore>()(
   devtools(
@@ -18,8 +18,8 @@ export const useStore = create<TPipelineStore>()(
           edges: state.edges,
           nodeIDs: state.nodeIDs,
         }),
-      }
+      },
     ),
-    { name: 'PipelineStore' }
-  )
+    { name: 'PipelineStore' },
+  ),
 );

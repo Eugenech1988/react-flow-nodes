@@ -1,11 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
-import type { TTabType, TSortOption } from '@/pages/pipelines/model';
-import type { TPipeline } from '@/shared/lib';
+import type { TTabType, TSortOption } from '../model';
+import type { TPipeline } from '@/entities';
 
 export const usePipelinesFilter = (
   pipelines: TPipeline[] = [],
   initialSortBy: TSortOption['value'] = 'name',
-  initialSortOrder: 'asc' | 'desc' = 'asc'
+  initialSortOrder: 'asc' | 'desc' = 'asc',
 ) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<TTabType>('all');

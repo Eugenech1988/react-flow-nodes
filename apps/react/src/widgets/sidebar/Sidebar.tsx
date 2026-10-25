@@ -2,7 +2,7 @@ import type { ElementType } from 'react';
 import { Workflow, History, BoxSelect, LogOut, type LucideIcon } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSidebarStore } from './model';
-import { SidebarToggle } from '@/widgets/sidebar/components';
+import { SidebarToggle } from './components';
 
 interface NavItem {
   label: string;
@@ -73,7 +73,7 @@ export const Sidebar = () => {
 
   return (
     <aside
-      className={`relative flex h-full shrink-0 flex-col justify-between overflow-hidden border-r border-border bg-background select-none ${
+      className={`border-border bg-background relative flex h-full shrink-0 flex-col justify-between overflow-hidden border-r select-none ${
         isOpen
           ? 'w-64 transition-[width] duration-350 ease-[cubic-bezier(0.22,1,0.36,1)]'
           : 'w-15 transition-[width] duration-200 ease-in'
@@ -93,9 +93,7 @@ export const Sidebar = () => {
         {mainNavItems.map(renderNavItem)}
       </div>
 
-      <div className="space-y-1 p-2">
-        {bottomNavItems.map(renderNavItem)}
-      </div>
+      <div className="space-y-1 p-2">{bottomNavItems.map(renderNavItem)}</div>
     </aside>
   );
 };

@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { trpcClient } from '@/shared/api';
-import type { TPlanId } from '@/pages/plans/model';
+import type { TPlanId } from '../model';
 
 export const usePlanSelection = (isProActive: boolean) => {
   const [processingPlan, setProcessingPlan] = useState<TPlanId | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSelectPlan = async (
-    planId: TPlanId,
-    _billingCycle: 'monthly' | 'yearly'
-  ) => {
+  const handleSelectPlan = async (planId: TPlanId, _billingCycle: 'monthly' | 'yearly') => {
     if (planId === 'free') {
       if (isProActive) {
         window.location.href = '/settings/billing/portal';
@@ -18,8 +15,7 @@ export const usePlanSelection = (isProActive: boolean) => {
     }
 
     if (planId === 'enterprise') {
-      window.location.href =
-        'mailto:enterprise@yourdomain.com?subject=Enterprise%20Plan%20Inquiry';
+      window.location.href = 'mailto:enterprise@yourdomain.com?subject=Enterprise%20Plan%20Inquiry';
       return;
     }
 
@@ -45,8 +41,8 @@ export const usePlanSelection = (isProActive: boolean) => {
           : serverMessage;
         setErrorMessage(
           detailedMessage ||
-          error?.message ||
-          'Failed to initialize payment. Please try again later.'
+            error?.message ||
+            'Failed to initialize payment. Please try again later.',
         );
       } finally {
         setProcessingPlan(null);

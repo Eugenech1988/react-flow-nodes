@@ -1,6 +1,6 @@
 import { useRef, type ComponentPropsWithoutRef, type ChangeEvent, type Ref } from 'react';
 import { Textarea } from '@pipeline/ui';
-import { useAutosizeTextarea } from '@/features/manage-nodes';
+import { useAutosizeTextarea } from '@/shared/hooks';
 
 interface AutosizeTextareaProps extends ComponentPropsWithoutRef<'textarea'> {
   value: string;
@@ -9,15 +9,15 @@ interface AutosizeTextareaProps extends ComponentPropsWithoutRef<'textarea'> {
 }
 
 export const AutosizeTextarea = ({
-                                   value,
-                                   onChange,
-                                   className,
-                                   ref,
-                                   ...props
-                                 }: AutosizeTextareaProps) => {
+  value,
+  onChange,
+  className,
+  ref,
+  ...props
+}: AutosizeTextareaProps) => {
   const internalRef = useRef<HTMLTextAreaElement | null>(null);
 
-  useAutosizeTextarea(internalRef.current, value);
+  useAutosizeTextarea(internalRef, value);
 
   return (
     <Textarea
