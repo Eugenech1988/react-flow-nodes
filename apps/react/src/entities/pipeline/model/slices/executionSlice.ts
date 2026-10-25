@@ -5,6 +5,7 @@ import {
   pipelineExecutionService,
   type TNodeExecutionResult,
 } from '@/features/execute-pipeline';
+import { validatePipeline } from '../lib/validatePipeline';
 
 export const createExecutionSlice: StateCreator<
   TPipelineStore,
@@ -53,6 +54,25 @@ export const createExecutionSlice: StateCreator<
         durationMs: Date.now() - startTime,
         nodesExecuted: 0,
       });
+      return;
+    }
+
+    const validation = validatePipeline(nodes, edges);
+    if (!validation.isValid) {
+      set({
+        id: null,
+        executionStatus: 'failed',
+        startedAt,
+        finishedAt: new Date().toISOString(),
+        durationMs: Date.now() - startTime,
+        nodesExecuted: 0,
+        logs: [],
+        activeNodeId: null,
+        successNodeIds: [],
+        failedNodeId: null,
+      });
+      addLog('Execution aborted: Pipeline validation failed.', 'error');
+      validation.errors.forEach((error) => addLog(error, 'error'));
       return;
     }
 
