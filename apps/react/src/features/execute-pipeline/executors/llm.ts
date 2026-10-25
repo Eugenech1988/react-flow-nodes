@@ -5,7 +5,13 @@ import { resolveTemplate } from '../model/utils';
 export const executeLlmNode: TNodeExecutor = async (node, input) => {
   const data = node.data;
   const rawMessage = String(
-    data.prompt || data.message || data.text || input.prompt || input.message || input.text || '',
+    input.connectedPrompt ??
+      data.prompt ??
+      data.message ??
+      input.prompt ??
+      input.message ??
+      input.text ??
+      '',
   );
 
   if (!rawMessage) {
@@ -13,13 +19,18 @@ export const executeLlmNode: TNodeExecutor = async (node, input) => {
   }
 
   const message = resolveTemplate(rawMessage, input);
+  const system = resolveTemplate(
+    String(input.connectedSystemPrompt ?? data.systemPrompt ?? 'You are a helpful assistant.'),
+    input,
+  );
 
   try {
-    const mutate = trpcClient.ai.test.mutate as (
-      input: { message: string },
-    ) => Promise<{ text: string }>;
+    const mutate = trpcClient.ai.test.mutate as (input: {
+      message: string;
+      system: string;
+    }) => Promise<{ text: string }>;
 
-    const { text } = await mutate({ message });
+    const { text } = await mutate({ message, system });
 
     return {
       ...input,
@@ -28,9 +39,7 @@ export const executeLlmNode: TNodeExecutor = async (node, input) => {
     };
   } catch (error) {
     throw new Error(
-      `LLM node execution failed: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
+      `LLM node execution failed: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 };

@@ -15,7 +15,20 @@ import {
 
 const EXECUTORS: Record<string, TNodeExecutor> = {
   input: executeInputNode,
-  output: (_node, input) => input,
+  output: (node, input) => {
+    const outputName = String(node.data.outputName || 'output');
+    const value =
+      node.data.outputType === 'image'
+        ? (input.imageUrl ?? input.processed ?? input.value ?? '')
+        : (input.value ??
+          input.result ??
+          input.text ??
+          input.response ??
+          input.rows ??
+          input.inputValue ??
+          input);
+    return { ...input, [outputName]: value, output: value };
+  },
 
   text: executeTextNode,
   image: executeImageNode,

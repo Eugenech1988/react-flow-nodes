@@ -1,7 +1,7 @@
 import { Position } from '@xyflow/react';
 import { createNode } from './BaseNode';
 
-const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE'] as const;
+const HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const;
 
 export const APINode = createNode({
   title: 'API Call',
@@ -16,6 +16,8 @@ export const APINode = createNode({
       defaultValue: 'GET',
       options: HTTP_METHODS.map((method) => ({ value: method, label: method })),
     },
+    { key: 'headers', label: 'Headers (JSON)', type: 'textarea', defaultValue: '{}' },
+    { key: 'body', label: 'Request Body', type: 'textarea', defaultValue: '' },
   ],
   handles: [
     { id: 'input', type: 'target', position: Position.Left },

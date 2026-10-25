@@ -6,7 +6,14 @@ export const LLMNode = createNode({
   category: 'llm',
   icon: '✨',
   fields: [
-    { key: 'prompt', label: 'System Prompt', type: 'textarea', rows: 2, defaultValue: 'You are a helpful assistant.' },
+    {
+      key: 'systemPrompt',
+      label: 'System Prompt',
+      type: 'textarea',
+      rows: 2,
+      defaultValue: 'You are a helpful assistant.',
+    },
+    { key: 'prompt', label: 'Prompt', type: 'textarea', rows: 2, defaultValue: '' },
   ],
   handles: [
     { id: 'system', type: 'target', position: Position.Left },

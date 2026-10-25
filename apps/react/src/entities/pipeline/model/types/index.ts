@@ -61,7 +61,8 @@ export type TGraphState = {
   isHistoryAction: boolean;
   lastRunAt: Date | string | null;
   lastRunStatus: TLastRunStatus;
-  saveAction: ((withScreenshot?: boolean) => Promise<void> | void) | null;
+  saveStatus: 'saved' | 'saving' | 'unsaved' | 'error';
+  saveAction: ((withScreenshot?: boolean, notify?: boolean) => Promise<void> | void) | null;
   pipelineId: string | null;
 };
 
@@ -103,8 +104,11 @@ export type TGraphActions = {
   canUndo: () => boolean;
   canRedo: () => boolean;
   takeSnapshot: () => void;
-  setSaveAction: (action: ((withScreenshot?: boolean) => Promise<void> | void) | null) => void;
-  triggerSave: (withScreenshot?: boolean) => Promise<void>;
+  setSaveAction: (
+    action: ((withScreenshot?: boolean, notify?: boolean) => Promise<void> | void) | null,
+  ) => void;
+  setSaveStatus: (status: TGraphState['saveStatus']) => void;
+  triggerSave: (withScreenshot?: boolean, notify?: boolean) => Promise<void>;
   setLastRunInfo: (status: TLastRunStatus, date?: Date | string) => void;
 };
 

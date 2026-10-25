@@ -23,6 +23,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
   lastRunAt: null,
   lastRunStatus: null,
   saveAction: null,
+  saveStatus: 'saved',
   pipelineId: null,
 
   setLastRunInfo: (status, date = new Date()) =>
@@ -32,11 +33,12 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
     }),
 
   setSaveAction: (action) => set({ saveAction: action }),
+  setSaveStatus: (saveStatus) => set({ saveStatus }),
 
-  triggerSave: async (withScreenshot = false) => {
+  triggerSave: async (withScreenshot = false, notify = false) => {
     const { saveAction } = get();
     if (saveAction) {
-      await saveAction(withScreenshot);
+      await saveAction(withScreenshot, notify);
     } else {
       console.warn('Save action is not registered yet.');
     }
@@ -92,6 +94,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
     get().takeSnapshot();
     set((state) => ({
       nodes: [...state.nodes, node],
+      saveStatus: 'unsaved',
     }));
   },
 
@@ -100,22 +103,23 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
     set((state) => ({
       nodes: state.nodes.filter((n) => n.id !== nodeId),
       edges: state.edges.filter((e) => e.source !== nodeId && e.target !== nodeId),
+      saveStatus: 'unsaved',
     }));
   },
 
   setNodes: (nodes) => {
-    set({ nodes });
+    set({ nodes, saveStatus: 'unsaved' });
   },
 
   setEdges: (edges) => {
-    set({ edges });
+    set({ edges, saveStatus: 'unsaved' });
   },
 
   setPipelineId: (pipelineId) => set({ pipelineId }),
 
   setGraph: (nodes, edges) => {
     get().takeSnapshot();
-    set({ nodes, edges });
+    set({ nodes, edges, saveStatus: 'unsaved' });
   },
 
   initGraph: (nodes, edges, pipelineId = null) => {
@@ -125,6 +129,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
       pipelineId,
       past: [],
       future: [],
+      saveStatus: 'saved',
     });
   },
 
@@ -135,6 +140,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
       past: [],
       future: [],
       clipboard: null,
+      saveStatus: 'saved',
     });
   },
 
@@ -148,6 +154,9 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
 
     set({
       nodes: applyNodeChanges(changes, nodes) as TPipelineNode[],
+      ...(changes.some((change) => change.type !== 'select' && change.type !== 'dimensions') && {
+        saveStatus: 'unsaved' as const,
+      }),
     });
   },
 
@@ -161,6 +170,9 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
 
     set((state) => ({
       edges: applyEdgeChanges(changes, state.edges),
+      ...(changes.some((change) => change.type !== 'select') && {
+        saveStatus: 'unsaved' as const,
+      }),
     }));
   },
 
@@ -231,6 +243,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
     set({
       nodes: [...unselectedNodes, ...newNodes],
       edges: [...get().edges, ...newEdges],
+      saveStatus: 'unsaved',
     });
   },
 
@@ -238,6 +251,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
     get().takeSnapshot();
     set((state) => ({
       edges: addEdge(connection, state.edges),
+      saveStatus: 'unsaved',
     }));
   },
 
@@ -256,6 +270,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
         }
         return node;
       }),
+      saveStatus: 'unsaved',
     }));
   },
 
@@ -280,6 +295,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
           set({
             nodes: parsed.nodes,
             edges: parsed.edges,
+            saveStatus: 'unsaved',
           });
         }
       } catch (e) {
@@ -291,7 +307,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
 
   clearCanvas: () => {
     get().takeSnapshot();
-    set({ nodes: [], edges: [] });
+    set({ nodes: [], edges: [], saveStatus: 'unsaved' });
   },
 
   undo: () => {
@@ -306,6 +322,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
       future: [{ nodes: structuredClone(nodes), edges: structuredClone(edges) }, ...future],
       nodes: previous.nodes,
       edges: previous.edges,
+      saveStatus: 'unsaved',
     });
   },
 
@@ -321,6 +338,7 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
       future: newFuture,
       nodes: next.nodes,
       edges: next.edges,
+      saveStatus: 'unsaved',
     });
   },
 

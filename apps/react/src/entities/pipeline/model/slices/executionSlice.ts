@@ -1,11 +1,60 @@
 import type { StateCreator } from 'zustand';
-import type { TPipelineStore, TExecutionState, TExecutionActions } from '../types';
+import type {
+  TPipelineStore,
+  TExecutionState,
+  TExecutionActions,
+  TPipelineEdge,
+  TPipelineNode,
+} from '../types';
 import {
   executeNode,
   pipelineExecutionService,
   type TNodeExecutionResult,
 } from '@/features/execute-pipeline';
 import { validatePipeline } from '../lib/validatePipeline';
+
+const getConnectedValue = (output: TNodeExecutionResult, sourceHandle?: string | null) => {
+  if (sourceHandle && output[sourceHandle] !== undefined) return output[sourceHandle];
+  return (
+    output.value ??
+    output.result ??
+    output.text ??
+    output.response ??
+    output.imageUrl ??
+    output.rows ??
+    output.inputValue ??
+    output
+  );
+};
+
+const mapOutputToTarget = (
+  output: TNodeExecutionResult,
+  edge: TPipelineEdge,
+  targetNode: TPipelineNode,
+): TNodeExecutionResult => {
+  const value = getConnectedValue(output, edge.sourceHandle);
+  const targetKind = String(targetNode.data?.nodeType || targetNode.type || '').toLowerCase();
+  const targetHandle = edge.targetHandle || '';
+
+  if (targetKind.includes('math')) {
+    if (targetHandle === 'a') return { connectedLeftOperand: value };
+    if (targetHandle === 'b') return { connectedRightOperand: value };
+  }
+  if (targetKind.includes('condition')) {
+    if (targetHandle === 'value') return { connectedValue: value };
+    if (targetHandle === 'compare') return { connectedCompareWith: value };
+  }
+  if (targetKind.includes('llm')) {
+    if (targetHandle === 'system') return { connectedSystemPrompt: value };
+    if (targetHandle === 'prompt') return { connectedPrompt: value };
+  }
+  if (targetKind.includes('image') && targetHandle === 'image') {
+    return { connectedImageUrl: value };
+  }
+  if (targetKind.includes('api') && targetHandle === 'input') return { body: value };
+  if (targetKind.includes('output')) return { value };
+  return {};
+};
 
 export const createExecutionSlice: StateCreator<
   TPipelineStore,
@@ -182,6 +231,7 @@ export const createExecutionSlice: StateCreator<
     });
 
     const executedNodeIds = new Set<string>();
+    const conditionSkippedNodeIds = new Set<string>();
 
     for (const currentNodeId of topologicalOrder) {
       if (get().executionStatus !== 'running') {
@@ -192,7 +242,14 @@ export const createExecutionSlice: StateCreator<
 
       const isStartNode = startNodes.some((startNode) => startNode.id === node.id);
       const input = nodeInputs.get(node.id);
-      if (!isStartNode && !input) continue;
+      if (!isStartNode && !input) {
+        if (
+          edges.some((edge) => edge.target === node.id && conditionSkippedNodeIds.has(edge.source))
+        ) {
+          conditionSkippedNodeIds.add(node.id);
+        }
+        continue;
+      }
 
       set({ activeNodeId: node.id });
       const currentTypeName = node.data?.nodeType || node.type || 'unknown';
@@ -201,6 +258,7 @@ export const createExecutionSlice: StateCreator<
       try {
         const output = await executeNode(node, input, pipelineId);
 
+        conditionSkippedNodeIds.delete(node.id);
         executedNodeIds.add(node.id);
         set((state) => ({
           successNodeIds: [...state.successNodeIds, node.id],
@@ -213,8 +271,16 @@ export const createExecutionSlice: StateCreator<
           .includes('condition');
         const conditionHandle = output.matched ? 'true' : 'false';
         (outgoingEdges.get(currentNodeId) || []).forEach((edge) => {
-          if (isCondition && edge.sourceHandle && edge.sourceHandle !== conditionHandle) return;
-          nodeInputs.set(edge.target, { ...nodeInputs.get(edge.target), ...output });
+          if (isCondition && edge.sourceHandle && edge.sourceHandle !== conditionHandle) {
+            conditionSkippedNodeIds.add(edge.target);
+            return;
+          }
+          const targetNode = nodeMap.get(edge.target);
+          nodeInputs.set(edge.target, {
+            ...nodeInputs.get(edge.target),
+            ...output,
+            ...(targetNode ? mapOutputToTarget(output, edge, targetNode) : {}),
+          });
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown execution error.';
@@ -263,7 +329,8 @@ export const createExecutionSlice: StateCreator<
     const finishedAt = new Date().toISOString();
 
     if (get().executionStatus === 'running') {
-      const hasUnreachableNodes = nodes.length > executedNodeIds.size;
+      const hasUnreachableNodes =
+        nodes.length > executedNodeIds.size + conditionSkippedNodeIds.size;
       const isSuccess = !hasUnreachableNodes;
 
       if (hasUnreachableNodes) {

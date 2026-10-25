@@ -2,22 +2,34 @@ import type { TNodeExecutor } from '../model/types';
 import { resolveTemplate, toNumber } from '../model/utils';
 
 type TMathOperation =
-  | 'add' | 'subtract' | 'multiply' | 'divide'
-  | 'modulo' | 'power' | 'min' | 'max' | 'avg'
-  | 'abs' | 'round' | 'floor' | 'ceil' | 'sqrt' | 'negate';
+  | 'add'
+  | 'subtract'
+  | 'multiply'
+  | 'divide'
+  | 'modulo'
+  | 'power'
+  | 'min'
+  | 'max'
+  | 'avg'
+  | 'abs'
+  | 'round'
+  | 'floor'
+  | 'ceil'
+  | 'sqrt'
+  | 'negate';
 
 const UNARY_OPS: ReadonlySet<TMathOperation> = new Set([
-  'abs', 'round', 'floor', 'ceil', 'sqrt', 'negate',
+  'abs',
+  'round',
+  'floor',
+  'ceil',
+  'sqrt',
+  'negate',
 ]);
 
-const resolveOperands = (
-  raw: unknown,
-  input: Record<string, unknown>,
-): number[] => {
+const resolveOperands = (raw: unknown, input: Record<string, unknown>): number[] => {
   if (Array.isArray(raw)) {
-    return raw.map((item) =>
-      toNumber(resolveTemplate(String(item), input), 'Operand'),
-    );
+    return raw.map((item) => toNumber(resolveTemplate(String(item), input), 'Operand'));
   }
 
   if (typeof raw === 'string' && raw.includes(',')) {
@@ -33,19 +45,26 @@ const resolveOperands = (
 
 const applyBinary = (op: TMathOperation, a: number, b: number): number => {
   switch (op) {
-    case 'add':      return a + b;
-    case 'subtract': return a - b;
-    case 'multiply': return a * b;
+    case 'add':
+      return a + b;
+    case 'subtract':
+      return a - b;
+    case 'multiply':
+      return a * b;
     case 'divide':
       if (b === 0) throw new Error('Division by zero is not allowed.');
       return a / b;
     case 'modulo':
       if (b === 0) throw new Error('Modulo by zero is not allowed.');
       return a % b;
-    case 'power':    return a ** b;
-    case 'min':      return Math.min(a, b);
-    case 'max':      return Math.max(a, b);
-    case 'avg':      return (a + b) / 2;
+    case 'power':
+      return a ** b;
+    case 'min':
+      return Math.min(a, b);
+    case 'max':
+      return Math.max(a, b);
+    case 'avg':
+      return (a + b) / 2;
     default:
       throw new Error(`Unsupported binary operation "${op}".`);
   }
@@ -53,14 +72,19 @@ const applyBinary = (op: TMathOperation, a: number, b: number): number => {
 
 const applyUnary = (op: TMathOperation, a: number): number => {
   switch (op) {
-    case 'abs':    return Math.abs(a);
-    case 'round':  return Math.round(a);
-    case 'floor':  return Math.floor(a);
-    case 'ceil':   return Math.ceil(a);
+    case 'abs':
+      return Math.abs(a);
+    case 'round':
+      return Math.round(a);
+    case 'floor':
+      return Math.floor(a);
+    case 'ceil':
+      return Math.ceil(a);
     case 'sqrt':
       if (a < 0) throw new Error('Cannot take sqrt of a negative number.');
       return Math.sqrt(a);
-    case 'negate': return -a;
+    case 'negate':
+      return -a;
     default:
       throw new Error(`Unsupported unary operation "${op}".`);
   }
@@ -71,11 +95,16 @@ const applyNary = (op: TMathOperation, values: number[]): number => {
     throw new Error(`Operation "${op}" requires at least one operand.`);
   }
   switch (op) {
-    case 'add':      return values.reduce((acc, v) => acc + v, 0);
-    case 'multiply': return values.reduce((acc, v) => acc * v, 1);
-    case 'min':      return Math.min(...values);
-    case 'max':      return Math.max(...values);
-    case 'avg':      return values.reduce((acc, v) => acc + v, 0) / values.length;
+    case 'add':
+      return values.reduce((acc, v) => acc + v, 0);
+    case 'multiply':
+      return values.reduce((acc, v) => acc * v, 1);
+    case 'min':
+      return Math.min(...values);
+    case 'max':
+      return Math.max(...values);
+    case 'avg':
+      return values.reduce((acc, v) => acc + v, 0) / values.length;
     default:
       throw new Error(`Operation "${op}" does not support n operands.`);
   }
@@ -83,13 +112,15 @@ const applyNary = (op: TMathOperation, values: number[]): number => {
 
 export const executeMathNode: TNodeExecutor = (node, input) => {
   const data = node.data;
-  const operation = String(
-    data.operation || 'add',
-  ).toLowerCase() as TMathOperation;
+  const operation = String(data.operation || 'add').toLowerCase() as TMathOperation;
 
   const operandsRaw = data.operands ?? [
-    data.leftOperand ?? input.leftOperand ?? 0,
-    data.rightOperand ?? input.rightOperand ?? 0,
+    input.connectedLeftOperand ?? data.leftOperand ?? input.leftOperand ?? input.value ?? 0,
+    input.connectedRightOperand ??
+      data.rightOperand ??
+      input.rightOperand ??
+      input.compareWith ??
+      0,
   ];
 
   const operands = resolveOperands(operandsRaw, input);

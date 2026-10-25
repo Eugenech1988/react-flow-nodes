@@ -13,9 +13,10 @@ export class AiService {
     });
   }
 
-  async test(message: string) {
+  async test(message: string, system?: string) {
     const { text } = await generateText({
       model: this.google('gemini-3.6-flash'),
+      ...(system && { system }),
       prompt: message,
     });
 

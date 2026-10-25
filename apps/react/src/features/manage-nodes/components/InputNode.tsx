@@ -2,6 +2,7 @@ import { useState, useRef, type DragEvent } from 'react';
 import { Position } from '@xyflow/react';
 import { Input } from '@pipeline/ui';
 import { Upload, FileText, X } from 'lucide-react';
+import { toast } from 'sonner';
 import { createNode } from './BaseNode';
 import { inputFieldClassName } from './BaseNode/BaseNode.utils';
 
@@ -31,7 +32,18 @@ export const InputNode = createNode({
 
     const handleFileSelect = (file?: File) => {
       if (!file) return;
-      handleFieldChange('inputValue', file.name);
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error('File must be 10MB or smaller.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        handleFieldChange('inputFileName', file.name);
+        handleFieldChange('inputValue', String(reader.result ?? ''));
+      };
+      reader.onerror = () => toast.error('Could not read the selected file.');
+      reader.readAsDataURL(file);
     };
 
     const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -72,15 +84,18 @@ export const InputNode = createNode({
               onChange={(e) => handleFileSelect(e.target.files?.[0])}
             />
 
-            {values.inputValue ? (
+            {values.inputFileName ? (
               <div className="border-border/80 bg-muted/25 flex items-center justify-between gap-2 rounded-md border p-2 text-xs">
                 <div className="flex items-center gap-1.5 overflow-hidden">
                   <FileText className="text-muted-foreground h-4 w-4 shrink-0" />
-                  <span className="truncate text-xs font-medium">{values.inputValue}</span>
+                  <span className="truncate text-xs font-medium">{values.inputFileName}</span>
                 </div>
                 <button
                   type="button"
-                  onClick={() => handleFieldChange('inputValue', '')}
+                  onClick={() => {
+                    handleFieldChange('inputFileName', '');
+                    handleFieldChange('inputValue', '');
+                  }}
                   className="hover:bg-destructive/10 hover:text-destructive rounded p-0.5 transition-colors"
                   title="Remove file"
                 >
@@ -93,13 +108,13 @@ export const InputNode = createNode({
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                className={`border-border/80 bg-muted/10 hover:border-[var(--node-accent)]/60 hover:bg-muted/30 flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-md border-2 border-dashed p-3 text-center transition-all ${
+                className={`border-border/80 bg-muted/10 hover:bg-muted/30 flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-md border-2 border-dashed p-3 text-center transition-all hover:border-[var(--node-accent)]/60 ${
                   isDragOver ? 'border-[var(--node-accent)] bg-[var(--node-accent)]/10' : ''
                 }`}
               >
                 <Upload className="text-muted-foreground h-5 w-5" />
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[11px] font-medium leading-tight">
+                  <span className="text-[11px] leading-tight font-medium">
                     Click to upload or drag & drop
                   </span>
                   <span className="text-muted-foreground text-[9px]">Any file up to 10MB</span>

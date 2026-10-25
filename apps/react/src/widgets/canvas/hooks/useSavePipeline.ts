@@ -1,5 +1,4 @@
 import { useEffect, useCallback, useRef } from 'react';
-import { useTheme } from 'next-themes';
 import { useReactFlow } from '@xyflow/react';
 import { toPng } from 'html-to-image';
 import { toast } from 'sonner';
@@ -15,15 +14,17 @@ interface UseSavePipelineProps {
 
 export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
   const { user } = useUser();
-  const { resolvedTheme } = useTheme();
   const { updatePipeline } = usePipelineHandler();
   const nodes = useStore((state) => state.nodes);
   const edges = useStore((state) => state.edges);
   const lastRunAt = useStore((state) => state.lastRunAt);
   const lastRunStatus = useStore((state) => state.lastRunStatus);
   const setSaveAction = useStore((state) => state.setSaveAction);
+  const setSaveStatus = useStore((state) => state.setSaveStatus);
   const saveInProgress = useRef(false);
-  const savePipelineRef = useRef<(withScreenshot?: boolean) => Promise<void>>(async () => {});
+  const savePipelineRef = useRef<(withScreenshot?: boolean, notify?: boolean) => Promise<void>>(
+    async () => {},
+  );
 
   const { fitView } = useReactFlow<TPipelineNode, TPipelineEdge>();
 
@@ -33,7 +34,6 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
 
     try {
       return await toPng(viewportElement, {
-        backgroundColor: resolvedTheme === 'dark' ? '#030712' : '#f1f5f9',
         quality: 0.8,
         fontEmbedCSS: '',
         filter: (node: Node) => {
@@ -45,37 +45,56 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
       console.error('Failed to capture canvas screenshot:', error);
       return undefined;
     }
-  }, [wrapperRef, resolvedTheme]);
+  }, [wrapperRef]);
 
   const handleSavePipeline = useCallback(
-    async (withScreenshot = false) => {
+    async (withScreenshot = false, notify = false) => {
       const id = user?.currentPipelineId || user?.currentPipeline?.id;
       if (!id) return;
 
-      let screenshotBase64: string | undefined;
-      if (withScreenshot) {
-        await fitView({ padding: 0.2, duration: 300 });
-        await new Promise((resolve) => setTimeout(resolve, 350));
-        screenshotBase64 = await captureScreenshot();
+      setSaveStatus('saving');
+      try {
+        let screenshotBase64: string | undefined;
+        if (withScreenshot) {
+          await fitView({ padding: 0.2, duration: 300 });
+          await new Promise((resolve) => setTimeout(resolve, 350));
+          screenshotBase64 = await captureScreenshot();
+        }
+
+        const formattedNodes = nodes.map((node: TPipelineNode) => ({
+          ...node,
+          type: node.type ?? 'default',
+        }));
+
+        await updatePipeline.mutateAsync({
+          id,
+          graphData: {
+            nodes: formattedNodes,
+            edges,
+          },
+          ...(screenshotBase64 && { screenshotBase64 }),
+          ...(lastRunAt && { lastRunAt: new Date(lastRunAt) }),
+          ...(lastRunStatus && { lastRunStatus }),
+        });
+        setSaveStatus('saved');
+        if (notify) toast.success('Pipeline saved');
+      } catch (error) {
+        setSaveStatus('error');
+        console.error('Failed to save pipeline:', error);
+        if (notify) toast.error('Failed to save pipeline');
       }
-
-      const formattedNodes = nodes.map((node: TPipelineNode) => ({
-        ...node,
-        type: node.type ?? 'default',
-      }));
-
-      await updatePipeline.mutateAsync({
-        id,
-        graphData: {
-          nodes: formattedNodes,
-          edges,
-        },
-        ...(screenshotBase64 && { screenshotBase64 }),
-        ...(lastRunAt && { lastRunAt: new Date(lastRunAt) }),
-        ...(lastRunStatus && { lastRunStatus }),
-      });
     },
-    [user, fitView, captureScreenshot, nodes, edges, lastRunAt, lastRunStatus, updatePipeline],
+    [
+      user,
+      fitView,
+      captureScreenshot,
+      nodes,
+      edges,
+      lastRunAt,
+      lastRunStatus,
+      updatePipeline,
+      setSaveStatus,
+    ],
   );
 
   useEffect(() => {
@@ -97,14 +116,12 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
       saveInProgress.current = true;
       try {
         await savePipelineRef.current(false);
-        toast.success('Pipeline autosaved');
       } catch (error) {
         console.error('Failed to autosave pipeline:', error);
-        toast.error('Failed to autosave pipeline');
       } finally {
         saveInProgress.current = false;
       }
-    }, 30_000);
+    }, 120_000);
 
     return () => window.clearInterval(intervalId);
   }, [user?.currentPipelineId, user?.currentPipeline?.id]);

@@ -1,4 +1,4 @@
-import { Camera, Save } from 'lucide-react';
+import { Camera, Cloud, CloudAlert, CloudCheck, Save } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
@@ -16,6 +16,7 @@ export const Header = () => {
   const currentPipelineName = user?.currentPipeline?.name;
 
   const triggerSave = useStore((state) => state.triggerSave);
+  const saveStatus = useStore((state) => state.saveStatus);
 
   const handleHeaderClick = () => {
     if (!isHome) {
@@ -43,7 +44,23 @@ export const Header = () => {
               <span className="text-foreground truncate text-sm font-medium">
                 {currentPipelineName}
               </span>
-              {/*<CloudCheck className="w-4 h-4 text-muted-foreground shrink-0"/>*/}
+              {saveStatus === 'saved' ? (
+                <span title="Saved">
+                  <CloudCheck className="h-4 w-4 shrink-0 text-emerald-500" />
+                </span>
+              ) : saveStatus === 'error' ? (
+                <span title="Save failed">
+                  <CloudAlert className="text-destructive h-4 w-4 shrink-0" />
+                </span>
+              ) : (
+                <span title={saveStatus === 'saving' ? 'Saving…' : 'Not saved'}>
+                  <Cloud
+                    className={`text-muted-foreground h-4 w-4 shrink-0 ${
+                      saveStatus === 'saving' ? 'animate-pulse' : ''
+                    }`}
+                  />
+                </span>
+              )}
             </div>
           </>
         )}
@@ -56,7 +73,7 @@ export const Header = () => {
         <button
           className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40"
           disabled={!isHome}
-          onClick={() => triggerSave()}
+          onClick={() => triggerSave(false, true)}
           title={!isHome ? 'Saving is only available on the canvas page' : 'Save pipeline'}
         >
           <Save className="h-4 w-4" />
@@ -64,7 +81,7 @@ export const Header = () => {
         <button
           className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40"
           disabled={!isHome}
-          onClick={() => triggerSave(true)}
+          onClick={() => triggerSave(true, true)}
           title={
             !isHome
               ? 'Saving is only available on the canvas page'

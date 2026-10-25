@@ -122,10 +122,11 @@ export function createAppRouter(services: RouterServices) {
       .input(
         z.object({
           message: z.string(),
+          system: z.string().optional(),
         }),
       )
       .mutation(({ input }) => {
-        return services.aiService.test(input.message);
+        return services.aiService.test(input.message, input.system);
       }),
   });
 
