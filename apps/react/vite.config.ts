@@ -32,9 +32,32 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     workspaceAliases,
   ],
+  resolve: {
+    alias: {
+      'react/compiler-runtime': 'react-compiler-runtime',
+      'react': path.resolve(import.meta.dirname, './node_modules/react'),
+      'react-dom': path.resolve(import.meta.dirname, './node_modules/react-dom'),
+      'react/jsx-runtime': path.resolve(import.meta.dirname, './node_modules/react/jsx-runtime.js'),
+      'react/jsx-dev-runtime': path.resolve(import.meta.dirname, './node_modules/react/jsx-dev-runtime.js'),
+    },
+  },
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react/jsx-dev-runtime',
+      'react/jsx-runtime',
+      'react-compiler-runtime'
+    ],
+  },
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
+    server: {
+      deps: {
+        inline: [/@pipeline\/.*/],
+      },
+    },
   },
 })

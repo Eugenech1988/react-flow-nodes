@@ -1,9 +1,16 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ExecutionLogConsole } from '@/widgets/canvas/components/ExecutionLogConsole';
+import { ExecutionLogConsole } from './ExecutionLogConsole';
+
+type TLog = {
+  id: string;
+  timestamp: string;
+  message: string;
+  type: 'info' | 'error' | 'warning' | string;
+}
 
 const mockStore = {
-  logs: [],
+  logs: [] as TLog[],
   executionStatus: 'idle',
   clearLogs: vi.fn(),
   stopWorkflow: vi.fn(),

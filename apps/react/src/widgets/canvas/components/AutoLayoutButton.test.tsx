@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { AutoLayoutButton } from '@/widgets/canvas/components/AutoLayoutButton';
+import { AutoLayoutButton } from './AutoLayoutButton';
 
 const mockSetNodes = vi.fn();
 const mockLayoutedNodes = [{ id: '1', position: { x: 10, y: 10 } }];
@@ -8,13 +8,13 @@ const mockLayoutedNodes = [{ id: '1', position: { x: 10, y: 10 } }];
 vi.mock('@/entities', () => ({
   useStore: (selector: any) =>
     selector({
-      nodes: [],
+      nodes: [{ id: '1', position: { x: 0, y: 0 } }],
       edges: [],
       setNodes: mockSetNodes,
     }),
 }));
 
-vi.mock('@pipeline/lib/hooks', () => ({
+vi.mock('../hooks/useAutoLayout', () => ({
   useAutoLayout: () => mockLayoutedNodes,
 }));
 
