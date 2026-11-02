@@ -85,7 +85,7 @@ describe('UsersController', () => {
 
     it('should delete account and return success true', async () => {
       const req = { user: { id: 'user_1' } } as any;
-      service.delete.mockResolvedValue();
+      service.delete.mockResolvedValue(undefined as any);
 
       const result = await controller.deleteAccount(req);
 

@@ -24,6 +24,7 @@ const mockPrismaService = {
   execution: {
     create: jest.fn(),
     findMany: jest.fn(),
+    count: jest.fn(), // Добавлено, так как сервис вызывает count
     findUnique: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -79,16 +80,23 @@ describe('ExecutionsService', () => {
   });
 
   describe('findAll', () => {
-    it('should return array of executions with durationFormatted', async () => {
+    it('should return paginated result of executions with durationFormatted', async () => {
       prisma.execution.findMany.mockResolvedValue([{ ...mockExecution, durationMs: 65000 }]);
+      prisma.execution.count.mockResolvedValue(1);
 
-      const result = await service.findAll('user_123');
+      const result = await service.findAll({ userId: 'user_123' });
 
-      expect(result[0].durationFormatted).toBe('01.05');
+      expect(result.items[0].durationFormatted).toBe('01.05');
+      expect(result.total).toBe(1);
       expect(prisma.execution.findMany).toHaveBeenCalledWith({
         where: { userId: 'user_123' },
+        skip: 0,
+        take: 10,
         orderBy: { startedAt: 'desc' },
         include: { pipeline: { select: { id: true, name: true } } },
+      });
+      expect(prisma.execution.count).toHaveBeenCalledWith({
+        where: { userId: 'user_123' },
       });
     });
   });

@@ -61,13 +61,27 @@ describe('ExecutionsController', () => {
   });
 
   describe('findAll', () => {
-    it('should call service.findAll with query params', async () => {
-      service.findAll.mockResolvedValue([mockExecutionResponse]);
+    it('should call service.findAll with query params object', async () => {
+      const paginatedResponse = {
+        items: [mockExecutionResponse],
+        total: 1,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      };
+      service.findAll.mockResolvedValue(paginatedResponse);
 
       const result = await controller.findAll('user_123', 'pipe_123');
 
-      expect(service.findAll).toHaveBeenCalledWith('user_123', 'pipe_123');
-      expect(result).toEqual([mockExecutionResponse]);
+      expect(service.findAll).toHaveBeenCalledWith({
+        userId: 'user_123',
+        pipelineId: 'pipe_123',
+        page: undefined,
+        limit: undefined,
+        search: undefined,
+        status: undefined,
+      });
+      expect(result).toEqual(paginatedResponse);
     });
   });
 
