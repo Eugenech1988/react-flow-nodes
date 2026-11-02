@@ -11,7 +11,7 @@ export const DatabaseNode = (props: DatabaseNodeProps) => (
     category="database"
     icon="⛁"
     fields={[
-      { key: 'query', label: 'Query', type: 'textarea', defaultValue: 'SELECT * FROM table' }
+      { key: 'query', label: 'Query', type: 'textarea', defaultValue: 'SELECT * FROM table' },
     ]}
     handles={[
       { id: 'params', type: 'target', position: Position.Left },

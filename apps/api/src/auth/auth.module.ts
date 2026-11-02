@@ -17,16 +17,16 @@ import { MailModule } from '@/mail/mail.module';
   imports: [
     UsersModule,
     MailModule,
-    PassportModule.register({defaultStrategy: 'google'}),
+    PassportModule.register({ defaultStrategy: 'google' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.getOrThrow('JWT_ACCESS_SECRET'),
         signOptions: {
-          expiresIn: configService.getOrThrow('JWT_ACCESS_EXPIRES')
-        }
-      })
-    })
+          expiresIn: configService.getOrThrow('JWT_ACCESS_EXPIRES'),
+        },
+      }),
+    }),
   ],
   controllers: [AuthController],
   providers: [
@@ -36,7 +36,7 @@ import { MailModule } from '@/mail/mail.module';
     JwtAccessStrategy,
     GoogleStrategy,
     GithubStrategy,
-    MailService
-  ]
+    MailService,
+  ],
 })
 export class AuthModule {}

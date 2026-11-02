@@ -13,7 +13,7 @@ export const BillingToggle = ({ billingCycle, onChange }: BillingToggleProps) =>
     <div className="flex items-center justify-center gap-3">
       <span
         onClick={handleMonthly}
-        className={`text-xs font-medium cursor-pointer transition-colors ${
+        className={`cursor-pointer text-xs font-medium transition-colors ${
           billingCycle === 'monthly' ? 'text-foreground' : 'text-muted-foreground'
         }`}
       >
@@ -26,17 +26,17 @@ export const BillingToggle = ({ billingCycle, onChange }: BillingToggleProps) =>
         style={{
           backgroundColor: billingCycle === 'yearly' ? 'var(--color-teal-600, #0d9488)' : undefined,
         }}
-        className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent cursor-pointer"
+        className="cursor-pointer border-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
       />
 
       <span
         onClick={handleYearly}
-        className={`text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-colors ${
+        className={`flex cursor-pointer items-center gap-1.5 text-xs font-medium transition-colors ${
           billingCycle === 'yearly' ? 'text-foreground' : 'text-muted-foreground'
         }`}
       >
         Yearly
-        <span className="px-2 py-0.5 text-[10px] font-semibold text-teal-600 dark:text-teal-400 bg-teal-500/10 border border-teal-500/20 rounded-full">
+        <span className="rounded-full border border-teal-500/20 bg-teal-500/10 px-2 py-0.5 text-[10px] font-semibold text-teal-600 dark:text-teal-400">
           Save 20%
         </span>
       </span>

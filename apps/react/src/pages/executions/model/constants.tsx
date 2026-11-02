@@ -12,20 +12,17 @@ export const STATUS_CONFIG: Record<TRunStatus, TStatusConfig> = {
   success: {
     label: 'Success',
     icon: CheckCircle2,
-    className:
-      'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20',
+    className: 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20',
   },
   failed: {
     label: 'Failed',
     icon: XCircle,
-    className:
-      'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
+    className: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
   },
   running: {
     label: 'Running',
     icon: RefreshCw,
-    className:
-      'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+    className: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
     iconClassName: 'animate-spin',
   },
 };

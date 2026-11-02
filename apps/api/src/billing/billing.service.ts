@@ -1,4 +1,10 @@
-import { Injectable, BadRequestException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Plan } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -100,9 +106,8 @@ export class BillingService {
 
   private async processSuccessfulCheckout(session: Stripe.Checkout.Session) {
     try {
-      const subscriptionId = typeof session.subscription === 'string'
-        ? session.subscription
-        : session.subscription?.id;
+      const subscriptionId =
+        typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
 
       if (!subscriptionId) {
         throw new BadRequestException('Subscription ID missing in session');
@@ -111,35 +116,40 @@ export class BillingService {
       const stripeSubscription = await this.stripe.subscriptions.retrieve(subscriptionId);
 
       const userId = session.metadata?.userId || stripeSubscription.metadata?.userId;
-      const plan = (session.metadata?.plan || stripeSubscription.metadata?.plan) as Plan | undefined;
+      const plan = (session.metadata?.plan || stripeSubscription.metadata?.plan) as
+        Plan | undefined;
 
       if (!userId || !plan) {
         throw new BadRequestException('User metadata missing in session and subscription');
       }
 
       const rawCustomer = session.customer ?? stripeSubscription.customer;
-      const customerId = typeof rawCustomer === 'string'
-        ? rawCustomer
-        : rawCustomer && 'id' in rawCustomer
-          ? rawCustomer.id
-          : null;
+      const customerId =
+        typeof rawCustomer === 'string'
+          ? rawCustomer
+          : rawCustomer && 'id' in rawCustomer
+            ? rawCustomer.id
+            : null;
 
-      const stripeInvoiceId = typeof session.invoice === 'string'
-        ? session.invoice
-        : session.invoice?.id;
+      const stripeInvoiceId =
+        typeof session.invoice === 'string' ? session.invoice : session.invoice?.id;
 
-      const firstItem = stripeSubscription.items.data[0] as (Stripe.SubscriptionItem & { current_period_start?: number; current_period_end?: number }) | undefined;
+      const firstItem = stripeSubscription.items.data[0] as
+        | (Stripe.SubscriptionItem & { current_period_start?: number; current_period_end?: number })
+        | undefined;
 
       const startTimestamp = firstItem?.current_period_start ?? Math.floor(Date.now() / 1000);
-      const endTimestamp = firstItem?.current_period_end ?? Math.floor(Date.now() / 1000) + 30 * 86400;
+      const endTimestamp =
+        firstItem?.current_period_end ?? Math.floor(Date.now() / 1000) + 30 * 86400;
 
       const currentPeriodStart = new Date(startTimestamp * 1000);
       const currentPeriodEnd = new Date(endTimestamp * 1000);
       const cancelAtPeriodEnd = stripeSubscription.cancel_at_period_end ?? false;
 
-      const rawPaymentIntent = typeof session.payment_intent === 'string'
-        ? session.payment_intent
-        : session.payment_intent?.id;
+      const rawPaymentIntent =
+        typeof session.payment_intent === 'string'
+          ? session.payment_intent
+          : session.payment_intent?.id;
       const providerTxId = rawPaymentIntent || `tx_${session.id}`;
 
       await this.prisma.$transaction([

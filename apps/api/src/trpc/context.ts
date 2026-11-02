@@ -19,12 +19,9 @@ export async function createContext(
 
   if (accessToken) {
     try {
-      const payload = await services.jwtService.verifyAsync<{ userId: string }>(
-        accessToken,
-        {
-          secret: process.env.JWT_ACCESS_SECRET,
-        },
-      );
+      const payload = await services.jwtService.verifyAsync<{ userId: string }>(accessToken, {
+        secret: process.env.JWT_ACCESS_SECRET,
+      });
 
       user = await services.usersService.findOneById(payload.userId);
     } catch {

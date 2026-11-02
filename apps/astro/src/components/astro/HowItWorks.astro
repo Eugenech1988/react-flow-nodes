@@ -2,181 +2,219 @@
 import { Network, Sliders, Play, ArrowRight } from '@lucide/astro';
 
 const steps = [
-    {
-        title: "Drag and Connect Nodes",
-        subtitle: "Design Phase",
-        description: "Select from over 100+ pre-built triggers, actions, and logical operators. Drag them onto the zero-lag canvas and route your data by connecting matching output-to-input ports."
-    },
-    {
-        title: "Configure Payloads",
-        subtitle: "Validation Phase",
-        description: "Click on any node to open its properties. Map incoming JSON fields, write custom mapping expressions with autocomplete support, and let our strict schema engine validate your connections."
-    },
-    {
-        title: "Deploy and Run",
-        subtitle: "Production Phase",
-        description: "Hit <strong>Deploy</strong> to publish your workspace. Your workflow immediately compiles into a highly optimized, stateful execution pipeline running on global edge nodes."
-    }
+  {
+    title: 'Drag and Connect Nodes',
+    subtitle: 'Design Phase',
+    description:
+      'Select from over 100+ pre-built triggers, actions, and logical operators. Drag them onto the zero-lag canvas and route your data by connecting matching output-to-input ports.',
+  },
+  {
+    title: 'Configure Payloads',
+    subtitle: 'Validation Phase',
+    description:
+      'Click on any node to open its properties. Map incoming JSON fields, write custom mapping expressions with autocomplete support, and let our strict schema engine validate your connections.',
+  },
+  {
+    title: 'Deploy and Run',
+    subtitle: 'Production Phase',
+    description:
+      'Hit <strong>Deploy</strong> to publish your workspace. Your workflow immediately compiles into a highly optimized, stateful execution pipeline running on global edge nodes.',
+  },
 ];
 ---
 
 <section class="relative py-20 bg-slate-950 overflow-hidden border-t border-slate-900">
-    <div class="absolute inset-0 bg-[linear-gradient(to_right,var(--color-teal-950/20)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-teal-950/20)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-60"/>
+  <div
+    class="absolute inset-0 bg-[linear-gradient(to_right,var(--color-teal-950/20)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-teal-950/20)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-60"
+  >
+  </div>
 
-    <div class="max-w-5xl mx-auto px-6 relative z-10">
-
-        <div class="text-center max-w-2xl mx-auto mb-16">
-            <h2 class="text-xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white via-slate-100 to-teal-400">
-                How It Works
-            </h2>
-            <p class="mt-4 text-base text-slate-400">
-                Go from a blank canvas to a production-ready, event-driven API in three simple steps. No complex infra hosting required.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center">
-
-            <ol class="relative flex flex-col list-none sequence-container" role="list">
-                {steps.map((step, index) => (
-                  <li
-                    class="step-item relative pl-8 sm:pl-10 group outline-hidden focus-visible:ring-2 focus-visible:ring-teal-500/50 rounded-lg cursor-pointer select-none transition-all duration-500"
-                    tabindex="0"
-                    role="listitem"
-                    data-step={index}
-                    style="--dist: 0;"
-                  >
-                      <div class="absolute left-2.75 top-7 bottom-0 w-0.5 bg-slate-800 group-last:hidden" />
-                      <div class="step-badge absolute left-0 top-1.5 w-6 h-6 rounded-full bg-slate-900 border border-slate-850 flex items-center justify-center text-xs font-mono font-bold transition-all duration-500" aria-hidden="true" />
-
-                      <div class="pb-8">
-                          <div class="flex flex-wrap items-baseline gap-2 mb-1">
-                              <h3 class="text-md font-bold text-slate-200 transition-colors duration-500">{step.title}</h3>
-                              <span class="text-xs text-slate-500 font-mono">({step.subtitle})</span>
-                          </div>
-                          <p class="text-xs text-slate-400 leading-relaxed" set:html={step.description} />
-                      </div>
-                  </li>
-                ))}
-            </ol>
-
-            <div class="relative bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-2xl">
-                <div class="space-y-4">
-
-                    <div data-node="0" class="visual-node flex items-center gap-3 p-3 bg-slate-950/80 border border-slate-800 rounded-xl transition-all duration-500" style="--dist: 0;">
-                        <div class="p-2 bg-teal-500/10 rounded-lg">
-                            <Network class="w-4 h-4 text-teal-400" />
-                        </div>
-                        <div class="flex-1">
-                            <div class="text-xs font-mono text-slate-500">webhook_trigger</div>
-                            <div class="text-xs font-bold text-slate-200">POST /v1/incoming</div>
-                        </div>
-                        <div class="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-                    </div>
-
-                    <div class="h-6 w-0.5 bg-linear-to-b from-teal-500/20 to-slate-800/40 ml-6" />
-
-                    <div data-node="1" class="visual-node flex items-center gap-3 p-3 bg-slate-950/80 border border-slate-800 rounded-xl transition-all duration-500" style="--dist: 1;">
-                        <div class="p-2 bg-teal-500/10 rounded-lg">
-                            <Sliders class="w-4 h-4 text-teal-400" />
-                        </div>
-                        <div class="flex-1">
-                            <div class="text-xs font-mono text-slate-500">filter_payload</div>
-                            <div class="text-xs font-bold text-slate-200">amount &gt; 1000</div>
-                        </div>
-                        <div class="w-2 h-2 rounded-full bg-teal-400" />
-                    </div>
-
-                    <div class="h-6 w-0.5 bg-linear-to-b from-slate-800/40 to-teal-500/20 ml-6" />
-
-                    <div data-node="2" class="visual-node flex items-center gap-3 p-3 bg-slate-950/80 border border-slate-800 rounded-xl transition-all duration-500" style="--dist: 2;">
-                        <div class="p-2 bg-teal-500/10 rounded-lg">
-                            <Play class="w-4 h-4 text-teal-400 fill-teal-400/20" />
-                        </div>
-                        <div class="flex-1">
-                            <div class="text-xs font-mono text-slate-500">slack_notification</div>
-                            <div class="text-xs font-bold text-slate-200">Send Alert #billing</div>
-                        </div>
-                        <div class="w-2 h-2 rounded-full bg-teal-400" />
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="mt-16 text-center">
-            <a href="#" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-slate-800 bg-teal-400 hover:bg-teal-350 rounded-xl shadow-lg shadow-teal-500/10 transition-colors cursor-pointer">
-                Start Building Free
-                <ArrowRight class="w-4 h-4 text-slate-800" />
-            </a>
-        </div>
-
+  <div class="max-w-5xl mx-auto px-6 relative z-10">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <h2
+        class="text-xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white via-slate-100 to-teal-400"
+      >
+        How It Works
+      </h2>
+      <p class="mt-4 text-base text-slate-400">
+        Go from a blank canvas to a production-ready, event-driven API in three simple steps. No
+        complex infra hosting required.
+      </p>
     </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-12 items-center">
+      <ol class="relative flex flex-col list-none sequence-container" role="list">
+        {
+          steps.map((step, index) => (
+            <li
+              class="step-item relative pl-8 sm:pl-10 group outline-hidden focus-visible:ring-2 focus-visible:ring-teal-500/50 rounded-lg cursor-pointer select-none transition-all duration-500"
+              tabindex="0"
+              role="listitem"
+              data-step={index}
+              style="--dist: 0;"
+            >
+              <div class="absolute left-2.75 top-7 bottom-0 w-0.5 bg-slate-800 group-last:hidden" />
+              <div
+                class="step-badge absolute left-0 top-1.5 w-6 h-6 rounded-full bg-slate-900 border border-slate-850 flex items-center justify-center text-xs font-mono font-bold transition-all duration-500"
+                aria-hidden="true"
+              />
+
+              <div class="pb-8">
+                <div class="flex flex-wrap items-baseline gap-2 mb-1">
+                  <h3 class="text-md font-bold text-slate-200 transition-colors duration-500">
+                    {step.title}
+                  </h3>
+                  <span class="text-xs text-slate-500 font-mono">({step.subtitle})</span>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed" set:html={step.description} />
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div
+        class="relative bg-slate-900/50 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-2xl"
+      >
+        <div class="space-y-4">
+          <div
+            data-node="0"
+            class="visual-node flex items-center gap-3 p-3 bg-slate-950/80 border border-slate-800 rounded-xl transition-all duration-500"
+            style="--dist: 0;"
+          >
+            <div class="p-2 bg-teal-500/10 rounded-lg">
+              <Network class="w-4 h-4 text-teal-400" />
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-mono text-slate-500">webhook_trigger</div>
+              <div class="text-xs font-bold text-slate-200">POST /v1/incoming</div>
+            </div>
+            <div class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></div>
+          </div>
+
+          <div class="h-6 w-0.5 bg-linear-to-b from-teal-500/20 to-slate-800/40 ml-6"></div>
+
+          <div
+            data-node="1"
+            class="visual-node flex items-center gap-3 p-3 bg-slate-950/80 border border-slate-800 rounded-xl transition-all duration-500"
+            style="--dist: 1;"
+          >
+            <div class="p-2 bg-teal-500/10 rounded-lg">
+              <Sliders class="w-4 h-4 text-teal-400" />
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-mono text-slate-500">filter_payload</div>
+              <div class="text-xs font-bold text-slate-200">amount &gt; 1000</div>
+            </div>
+            <div class="w-2 h-2 rounded-full bg-teal-400"></div>
+          </div>
+
+          <div class="h-6 w-0.5 bg-linear-to-b from-slate-800/40 to-teal-500/20 ml-6"></div>
+
+          <div
+            data-node="2"
+            class="visual-node flex items-center gap-3 p-3 bg-slate-950/80 border border-slate-800 rounded-xl transition-all duration-500"
+            style="--dist: 2;"
+          >
+            <div class="p-2 bg-teal-500/10 rounded-lg">
+              <Play class="w-4 h-4 text-teal-400 fill-teal-400/20" />
+            </div>
+            <div class="flex-1">
+              <div class="text-xs font-mono text-slate-500">slack_notification</div>
+              <div class="text-xs font-bold text-slate-200">Send Alert #billing</div>
+            </div>
+            <div class="w-2 h-2 rounded-full bg-teal-400"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-16 text-center">
+      <a
+        href="#"
+        class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-slate-800 bg-teal-400 hover:bg-teal-350 rounded-xl shadow-lg shadow-teal-500/10 transition-colors cursor-pointer"
+      >
+        Start Building Free
+        <ArrowRight class="w-4 h-4 text-slate-800" />
+      </a>
+    </div>
+  </div>
 </section>
 
 <style>
-    .sequence-container {
-        counter-reset: step-counter;
-    }
+  .sequence-container {
+    counter-reset: step-counter;
+  }
 
-    .step-badge {
-        counter-increment: step-counter;
-    }
+  .step-badge {
+    counter-increment: step-counter;
+  }
 
-    .step-badge::before {
-        content: counter(step-counter);
-    }
+  .step-badge::before {
+    content: counter(step-counter);
+  }
 
-    .step-item, .visual-node {
-        opacity: calc(1 - (var(--dist) * 0.4));
-    }
+  .step-item,
+  .visual-node {
+    opacity: calc(1 - (var(--dist) * 0.4));
+  }
 
-    .step-badge {
-        color: color-mix(in srgb, var(--color-teal-400) calc(100% - (var(--dist) * 40%)), var(--color-slate-600));
-        border-color: color-mix(in srgb, var(--color-teal-500) calc(100% - (var(--dist) * 40%)), var(--color-slate-800));
-        box-shadow: 0 0 10px color-mix(in srgb, var(--color-teal-500) calc(20% - (var(--dist) * 10%)), transparent);
-    }
+  .step-badge {
+    color: color-mix(
+      in srgb,
+      var(--color-teal-400) calc(100% - (var(--dist) * 40%)),
+      var(--color-slate-600)
+    );
+    border-color: color-mix(
+      in srgb,
+      var(--color-teal-500) calc(100% - (var(--dist) * 40%)),
+      var(--color-slate-800)
+    );
+    box-shadow: 0 0 10px
+      color-mix(in srgb, var(--color-teal-500) calc(20% - (var(--dist) * 10%)), transparent);
+  }
 </style>
 
 <script>
-    const steps = document.querySelectorAll('.step-item');
-    const nodes = document.querySelectorAll('.visual-node');
+  const steps = document.querySelectorAll('.step-item');
+  const nodes = document.querySelectorAll('.visual-node');
 
-    function updateFading(activeIndex: number) {
-        steps.forEach((step, i) => {
-            const dist = Math.abs(i - activeIndex);
-            step.setAttribute('style', `--dist: ${dist}`);
+  function updateFading(activeIndex: number) {
+    steps.forEach((step, i) => {
+      const dist = Math.abs(i - activeIndex);
+      step.setAttribute('style', `--dist: ${dist}`);
 
-            const title = step.querySelector('h3');
-            if (title) {
-                if (i === activeIndex) {
-                    title.classList.add('text-teal-400');
-                    title.classList.remove('text-slate-200');
-                } else {
-                    title.classList.remove('text-teal-400');
-                    title.classList.add('text-slate-200');
-                }
-            }
-        });
-
-        nodes.forEach((node, i) => {
-            const dist = Math.abs(i - activeIndex);
-            node.setAttribute('style', `--dist: ${dist}`);
-
-            if (i === activeIndex) {
-                node.classList.add('border-teal-500/30', 'shadow-[0_0_15px_var(--color-teal-500/5)]');
-            } else {
-                node.classList.remove('border-teal-500/30', 'shadow-[0_0_15px_var(--color-teal-500/5)]');
-            }
-        });
-    }
-
-    steps.forEach((step) => {
-        const index = parseInt(step.getAttribute('data-step') || '0', 10);
-
-        step.addEventListener('click', () => updateFading(index));
-        step.addEventListener('mouseenter', () => updateFading(index));
-        step.addEventListener('focus', () => updateFading(index));
+      const title = step.querySelector('h3');
+      if (title) {
+        if (i === activeIndex) {
+          title.classList.add('text-teal-400');
+          title.classList.remove('text-slate-200');
+        } else {
+          title.classList.remove('text-teal-400');
+          title.classList.add('text-slate-200');
+        }
+      }
     });
 
-    updateFading(0);
+    nodes.forEach((node, i) => {
+      const dist = Math.abs(i - activeIndex);
+      node.setAttribute('style', `--dist: ${dist}`);
+
+      if (i === activeIndex) {
+        node.classList.add('border-teal-500/30', 'shadow-[0_0_15px_var(--color-teal-500/5)]');
+      } else {
+        node.classList.remove('border-teal-500/30', 'shadow-[0_0_15px_var(--color-teal-500/5)]');
+      }
+    });
+  }
+
+  steps.forEach((step) => {
+    const index = parseInt(step.getAttribute('data-step') || '0', 10);
+
+    step.addEventListener('click', () => updateFading(index));
+    step.addEventListener('mouseenter', () => updateFading(index));
+    step.addEventListener('focus', () => updateFading(index));
+  });
+
+  updateFading(0);
 </script>

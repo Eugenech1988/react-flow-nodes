@@ -36,7 +36,7 @@ export const HeaderTabs = ({ onTabChange, defaultTab = 'editor' }: HeaderTabsPro
 
   return (
     <div
-      className="absolute left-1/2 -translate-x-1/2 flex bg-foreground/3 p-1 rounded-lg border border-border/50 text-sm"
+      className="bg-foreground/3 border-border/50 absolute left-1/2 flex -translate-x-1/2 rounded-lg border p-1 text-sm"
       onClick={preventNavigation}
     >
       {TABS.map((tab) => {
@@ -45,14 +45,14 @@ export const HeaderTabs = ({ onTabChange, defaultTab = 'editor' }: HeaderTabsPro
           <button
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
-            className={`relative px-3 py-1 rounded-md text-sm font-medium cursor-pointer transition-colors z-10 ${
+            className={`relative z-10 cursor-pointer rounded-md px-3 py-1 text-sm font-medium transition-colors ${
               isActive ? 'text-foreground' : 'text-foreground/60 hover:text-foreground'
             }`}
           >
             {isActive && (
               <motion.div
                 layoutId="header-active-tab-indicator"
-                className="absolute inset-0 bg-card rounded-md shadow-xs border border-border/40 z-[-1]"
+                className="bg-card border-border/40 absolute inset-0 z-[-1] rounded-md border shadow-xs"
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               />
             )}

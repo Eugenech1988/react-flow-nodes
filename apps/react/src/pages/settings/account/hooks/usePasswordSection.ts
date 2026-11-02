@@ -25,7 +25,10 @@ export const usePasswordSection = () => {
     },
   });
 
-  const { formState: { isDirty }, reset } = form;
+  const {
+    formState: { isDirty },
+    reset,
+  } = form;
 
   const updatePasswordMutation = useMutation(
     trpc.users.updatePassword.mutationOptions({
@@ -39,7 +42,7 @@ export const usePasswordSection = () => {
       onError: (error) => {
         setAlert({ type: 'error', message: error.message || 'Failed to update password.' });
       },
-    })
+    }),
   );
 
   const onSubmit = (data: TAccountFormData) => {

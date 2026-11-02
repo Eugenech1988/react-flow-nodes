@@ -16,7 +16,7 @@ export const StatusBadge = ({ config }: TUniversalStatusBadgeProps) => {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium border ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px] font-medium ${className}`}
     >
       <Icon className={`h-3 w-3 ${iconClassName ?? ''}`} />
       {label}

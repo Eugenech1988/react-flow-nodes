@@ -1,10 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsDateString,
-  IsObject,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDateString, IsObject, IsOptional, IsString } from 'class-validator';
 
 export class CreateDatabaseNodeInputDto {
   @ApiPropertyOptional({

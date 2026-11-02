@@ -1,4 +1,10 @@
-import { Injectable, InternalServerErrorException, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
 import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
@@ -20,11 +26,7 @@ export class PipelinesService {
     }
   }
 
-  async create(
-    userId: string,
-    dto: CreatePipelineDto,
-    file?: Express.Multer.File,
-  ) {
+  async create(userId: string, dto: CreatePipelineDto, file?: Express.Multer.File) {
     const screenshotUrl = file ? `/uploads/screenshots/${file.filename}` : null;
 
     try {

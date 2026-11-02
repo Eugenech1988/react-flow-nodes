@@ -52,20 +52,20 @@ const sizeStyles: Record<ButtonSize, { button: string; icon: string }> = {
 };
 
 export const AppButton = ({
-                            text,
-                            variant = 'primary',
-                            size = 'md',
-                            icon: Icon,
-                            iconClassName,
-                            isPending = false,
-                            pendingText,
-                            isDisabled = false,
-                            type = 'button',
-                            onClick,
-                            className,
-                            isLink = false,
-                            linkTo = '#',
-                          }: AppButtonProps) => {
+  text,
+  variant = 'primary',
+  size = 'md',
+  icon: Icon,
+  iconClassName,
+  isPending = false,
+  pendingText,
+  isDisabled = false,
+  type = 'button',
+  onClick,
+  className,
+  isLink = false,
+  linkTo = '#',
+}: AppButtonProps) => {
   const disabled = isDisabled || isPending;
   const currentSize = sizeStyles[size];
 
@@ -73,7 +73,7 @@ export const AppButton = ({
     'inline-flex items-center justify-center gap-2 font-medium cursor-pointer transition-all outline-none focus-visible:ring-2 disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed shrink-0 box-border',
     variantStyles[variant],
     currentSize.button,
-    className
+    className,
   );
 
   const content = (
@@ -98,17 +98,12 @@ export const AppButton = ({
     return (
       <Button
         render={(buttonProps) => {
-          const { ref: _ref, ...linkProps } = buttonProps as { ref?: unknown } & ComponentPropsWithoutRef<'a'>;
+          const { ref: _ref, ...linkProps } = buttonProps as {
+            ref?: unknown;
+          } & ComponentPropsWithoutRef<'a'>;
 
           if (isExternal) {
-            return (
-              <a
-                href={linkTo}
-                target="_blank"
-                rel="noopener noreferrer"
-                {...linkProps}
-              />
-            );
+            return <a href={linkTo} target="_blank" rel="noopener noreferrer" {...linkProps} />;
           }
 
           return <Link to={linkTo} {...linkProps} />;
@@ -122,12 +117,7 @@ export const AppButton = ({
   }
 
   return (
-    <Button
-      type={type}
-      disabled={disabled}
-      onClick={onClick}
-      className={sharedClasses}
-    >
+    <Button type={type} disabled={disabled} onClick={onClick} className={sharedClasses}>
       {content}
     </Button>
   );

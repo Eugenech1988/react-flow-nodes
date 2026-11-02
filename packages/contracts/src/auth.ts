@@ -1,10 +1,7 @@
 import { z } from 'zod';
 
 export const loginInputSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Invalid email address'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
   password: z
     .string()
     .min(1, 'Password is required')
@@ -45,12 +42,9 @@ export const twoFactorCodeOrBackupSchema = z.object({
     .string()
     .min(1, 'Code is required')
     .transform((val) => val.trim().replace(/-/g, ''))
-    .refine(
-      (val) => /^\d{6}$/.test(val) || /^[a-zA-Z0-9]{8,10}$/.test(val),
-      {
-        message: 'Enter a valid 6-digit code or recovery code',
-      }
-    ),
+    .refine((val) => /^\d{6}$/.test(val) || /^[a-zA-Z0-9]{8,10}$/.test(val), {
+      message: 'Enter a valid 6-digit code or recovery code',
+    }),
 });
 
 export const twoFactorLoginInputSchema = z.object({
@@ -69,10 +63,7 @@ export const passwordResetInputSchema = z.object({
 export type TPasswordResetInputData = z.infer<typeof passwordResetInputSchema>;
 
 export const requestResetInputSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .email('Invalid email address'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
 });
 export type TRequestResetInputData = z.infer<typeof requestResetInputSchema>;
 

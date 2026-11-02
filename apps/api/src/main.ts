@@ -58,12 +58,7 @@ async function bootstrap() {
   const doubleCsrfProtection = csrf.doubleCsrfProtection;
 
   app.use((req, res, next) => {
-    const excludedPaths = [
-      '/csrf-token',
-      '/billing/webhook',
-      '/stripe/webhook',
-      '/inngest',
-    ];
+    const excludedPaths = ['/csrf-token', '/billing/webhook', '/stripe/webhook', '/inngest'];
 
     if (excludedPaths.some((path) => req.path.startsWith(path))) {
       return next();
@@ -86,14 +81,17 @@ async function bootstrap() {
     executionsService: app.get(ExecutionsService),
   });
 
-  app.getHttpAdapter().getInstance().use(
-    '/trpc',
-    createExpressMiddleware({
-      router,
-      createContext: ({ req, res }) =>
-        createContext({ req, res }, { jwtService, usersService, authService }),
-    }),
-  );
+  app
+    .getHttpAdapter()
+    .getInstance()
+    .use(
+      '/trpc',
+      createExpressMiddleware({
+        router,
+        createContext: ({ req, res }) =>
+          createContext({ req, res }, { jwtService, usersService, authService }),
+      }),
+    );
 
   const expressApp = app.getHttpAdapter().getInstance();
   expressApp.get('/csrf-token', (req, res) => {
@@ -108,9 +106,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
 
-  SwaggerModule.setup('api/docs', app, () =>
-    SwaggerModule.createDocument(app, swaggerConfig),
-  );
+  SwaggerModule.setup('api/docs', app, () => SwaggerModule.createDocument(app, swaggerConfig));
 
   await app.listen(process.env.PORT ?? 3000);
 }

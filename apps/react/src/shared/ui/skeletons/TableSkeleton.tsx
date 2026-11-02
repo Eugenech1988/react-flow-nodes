@@ -6,19 +6,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@pipeline/ui";
+} from '@pipeline/ui';
 
 interface TableSkeletonProps {
   rowCount?: number;
   columnCount?: number;
 }
 
-export function TableSkeleton({
-                                rowCount = 5,
-                                columnCount = 4,
-                              }: TableSkeletonProps) {
+export function TableSkeleton({ rowCount = 5, columnCount = 4 }: TableSkeletonProps) {
   return (
-    <div className="rounded-md border border-border">
+    <div className="border-border rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>

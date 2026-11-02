@@ -39,13 +39,10 @@ const robots = noindex ? 'noindex, nofollow' : 'index, follow';
 
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8" />
 
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <meta name="generator" content={Astro.generator} />
 
@@ -87,16 +84,13 @@ const robots = noindex ? 'noindex, nofollow' : 'index, follow';
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageURL} />
-    <meta
-            name="twitter:image:alt"
-            content={`${siteName} — ${description}`}
-    />
+    <meta name="twitter:image:alt" content={`${siteName} — ${description}`} />
 
     <ClientRouter />
-</head>
+  </head>
 
-<body transition:animate="none">
-{showHeader && <Header />}
-<slot />
-</body>
+  <body transition:animate="none">
+    {showHeader && <Header />}
+    <slot />
+  </body>
 </html>

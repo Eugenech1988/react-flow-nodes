@@ -86,5 +86,4 @@ export const trpcClient = createTRPCClient<AppRouter>({
   ],
 });
 
-export const { TRPCProvider, useTRPC } =
-  createTRPCContext<AppRouter>();
+export const { TRPCProvider, useTRPC } = createTRPCContext<AppRouter>();

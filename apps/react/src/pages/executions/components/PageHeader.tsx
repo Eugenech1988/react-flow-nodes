@@ -6,17 +6,15 @@ interface IPageHeaderProps {
   handleRefresh: () => void;
 }
 
-export const PageHeader = ({isFetching, handleRefresh}: IPageHeaderProps) => {
+export const PageHeader = ({ isFetching, handleRefresh }: IPageHeaderProps) => {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/60">
+    <div className="border-border/60 flex flex-col justify-between gap-4 border-b pb-6 sm:flex-row sm:items-center">
       <div className="space-y-1">
         <div className="flex items-center gap-2">
-          <History className="w-6 h-6 text-teal-600 dark:text-teal-400"/>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Executions
-          </h1>
+          <History className="h-6 w-6 text-teal-600 dark:text-teal-400" />
+          <h1 className="text-foreground text-2xl font-bold tracking-tight">Executions</h1>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Monitor, inspect, and audit real-time workflow runs and execution logs.
         </p>
       </div>

@@ -131,9 +131,7 @@ describe('AuthService', () => {
 
   describe('generateTokens', () => {
     it('should sign access and refresh tokens and save hashed refresh token in DB', async () => {
-      jwtService.sign
-        .mockReturnValueOnce('access_token')
-        .mockReturnValueOnce('refresh_token');
+      jwtService.sign.mockReturnValueOnce('access_token').mockReturnValueOnce('refresh_token');
 
       const result = await service.generateTokens('user_1');
 
@@ -151,9 +149,7 @@ describe('AuthService', () => {
         throw new Error('JWT error');
       });
 
-      await expect(service.refreshTokens('invalid_token')).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(service.refreshTokens('invalid_token')).rejects.toThrow(UnauthorizedException);
     });
 
     it('should refresh tokens if valid token record exists', async () => {
@@ -178,13 +174,14 @@ describe('AuthService', () => {
     it('should throw BadRequestException if user is not found', async () => {
       usersService.findOneById.mockResolvedValue(null);
 
-      await expect(service.generateTwoFactorSecret('user_1')).rejects.toThrow(
-        BadRequestException,
-      );
+      await expect(service.generateTwoFactorSecret('user_1')).rejects.toThrow(BadRequestException);
     });
 
     it('should return QR code image and secret', async () => {
-      usersService.findOneById.mockResolvedValue({ id: 'user_1', email: 'test@example.com' } as any);
+      usersService.findOneById.mockResolvedValue({
+        id: 'user_1',
+        email: 'test@example.com',
+      } as any);
 
       const result = await service.generateTwoFactorSecret('user_1');
 
@@ -192,13 +189,18 @@ describe('AuthService', () => {
         qrCodeImage: 'mock_qr_code_url',
         secret: 'mock_secret',
       });
-      expect(usersService.update).toHaveBeenCalledWith('user_1', { twoFactorSecret: 'mock_secret' });
+      expect(usersService.update).toHaveBeenCalledWith('user_1', {
+        twoFactorSecret: 'mock_secret',
+      });
     });
   });
 
   describe('turnOnTwoFactor', () => {
     it('should enable 2FA and return recovery codes', async () => {
-      usersService.findOneById.mockResolvedValue({ id: 'user_1', twoFactorSecret: 'secret' } as any);
+      usersService.findOneById.mockResolvedValue({
+        id: 'user_1',
+        twoFactorSecret: 'secret',
+      } as any);
 
       const result = await service.turnOnTwoFactor('user_1', '123456');
 
@@ -217,9 +219,9 @@ describe('AuthService', () => {
         throw new Error('Expired');
       });
 
-      await expect(
-        service.resetPassword({ token: 'bad_token', password: 'new' }),
-      ).rejects.toThrow('Invalid or expired recovery token');
+      await expect(service.resetPassword({ token: 'bad_token', password: 'new' })).rejects.toThrow(
+        'Invalid or expired recovery token',
+      );
     });
 
     it('should update user password and delete all refresh tokens in transaction', async () => {

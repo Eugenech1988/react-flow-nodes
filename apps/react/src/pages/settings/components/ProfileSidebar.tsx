@@ -6,34 +6,32 @@ export const ProfileSidebar = () => {
   const { displayName, jobTitle, isTwoFactorEnabled } = useProfileSidebar();
 
   return (
-    <div className="md:col-span-1 flex flex-col items-center p-6 border border-border bg-card rounded-xl shadow-xs h-fit backdrop-blur-xs">
+    <div className="border-border bg-card flex h-fit flex-col items-center rounded-xl border p-6 shadow-xs backdrop-blur-xs md:col-span-1">
       <ProfileAvatar />
 
-      <h2 className="text-lg font-semibold mt-4 text-center text-foreground">
-        {displayName}
-      </h2>
+      <h2 className="text-foreground mt-4 text-center text-lg font-semibold">{displayName}</h2>
 
-      {jobTitle && (
-        <p className="text-xs text-muted-foreground text-center mt-0.5">{jobTitle}</p>
-      )}
+      {jobTitle && <p className="text-muted-foreground mt-0.5 text-center text-xs">{jobTitle}</p>}
 
-      <div className="w-full h-px bg-border/60 my-4" />
+      <div className="bg-border/60 my-4 h-px w-full" />
 
-      <div className="w-full space-y-2 text-xs text-muted-foreground">
+      <div className="text-muted-foreground w-full space-y-2 text-xs">
         <div className="flex items-center gap-2">
-          <Shield className="w-3.5 h-3.5 text-emerald-500" />
+          <Shield className="h-3.5 w-3.5 text-emerald-500" />
           <span>
-            Account Status: <strong className="text-emerald-500 font-medium">Pro Plan</strong>
+            Account Status: <strong className="font-medium text-emerald-500">Pro Plan</strong>
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <KeyRound className={`w-3.5 h-3.5 ${isTwoFactorEnabled ? 'text-emerald-500' : 'text-muted-foreground/80'}`} />
+          <KeyRound
+            className={`h-3.5 w-3.5 ${isTwoFactorEnabled ? 'text-emerald-500' : 'text-muted-foreground/80'}`}
+          />
           <span>
             Two-Factor Auth:{' '}
             {isTwoFactorEnabled ? (
-              <strong className="text-emerald-500 font-medium">Enabled</strong>
+              <strong className="font-medium text-emerald-500">Enabled</strong>
             ) : (
-              <strong className="text-red-400 font-medium">Disabled</strong>
+              <strong className="font-medium text-red-400">Disabled</strong>
             )}
           </span>
         </div>

@@ -48,9 +48,9 @@ describe('ProfileService', () => {
     it('should throw NotFoundException if user does not exist', async () => {
       prisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.update('non-existent-id', { firstName: 'John' }),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.update('non-existent-id', { firstName: 'John' })).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should update profile with plain text data successfully', async () => {
@@ -99,7 +99,8 @@ describe('ProfileService', () => {
         profile: null,
       };
 
-      const base64Image = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+      const base64Image =
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
       const input = {
         firstName: 'John',
         avatarUrl: base64Image,
@@ -123,9 +124,9 @@ describe('ProfileService', () => {
       prisma.user.findUnique.mockResolvedValue({ id: 'user_1', email: 'test@example.com' });
       prisma.user.update.mockRejectedValue(new Error('Database error'));
 
-      await expect(
-        service.update('user_1', { firstName: 'John' }),
-      ).rejects.toThrow(InternalServerErrorException);
+      await expect(service.update('user_1', { firstName: 'John' })).rejects.toThrow(
+        InternalServerErrorException,
+      );
     });
   });
 });

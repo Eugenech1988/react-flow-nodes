@@ -5,15 +5,12 @@ import { useProfileForm } from '../hooks';
 
 export const ProfileForm = () => {
   const { user } = useUser();
-  const {
-    form,
-    onSubmit,
-    isPristine,
-    isPending,
-    alert
-  } = useProfileForm();
+  const { form, onSubmit, isPristine, isPending, alert } = useProfileForm();
 
-  const { register, formState: { errors } } = form;
+  const {
+    register,
+    formState: { errors },
+  } = form;
 
   const rootError = errors.root?.message;
   const hasError = alert?.type === 'error' || !!rootError;
@@ -21,19 +18,15 @@ export const ProfileForm = () => {
   const alertMessage = alert?.message || rootError || '';
 
   return (
-    <div className="border border-border bg-card rounded-xl shadow-xs overflow-hidden backdrop-blur-xs">
-      <div className="px-6 py-4 border-b border-border/60 bg-muted/10">
-        <h3 className="font-medium text-sm text-foreground/90">Personal Information</h3>
+    <div className="border-border bg-card overflow-hidden rounded-xl border shadow-xs backdrop-blur-xs">
+      <div className="border-border/60 bg-muted/10 border-b px-6 py-4">
+        <h3 className="text-foreground/90 text-sm font-medium">Personal Information</h3>
       </div>
 
-      <form onSubmit={onSubmit} className="p-6 space-y-4">
-        <LocalAlert
-          hasSuccess={hasSuccess}
-          hasError={hasError}
-          alertMessage={alertMessage}
-        />
+      <form onSubmit={onSubmit} className="space-y-4 p-6">
+        <LocalAlert hasSuccess={hasSuccess} hasError={hasError} alertMessage={alertMessage} />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FloatingInput
             {...register('firstName')}
             label="First Name"
@@ -59,7 +52,7 @@ export const ProfileForm = () => {
           className="opacity-60"
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FloatingInput
             {...register('company')}
             label="Company"
@@ -76,14 +69,8 @@ export const ProfileForm = () => {
           />
         </div>
 
-        <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
-          <AppButton
-            variant="ghost"
-            isLink
-            linkTo="/"
-            icon={ArrowLeft}
-            text="Back to app"
-          />
+        <div className="border-border/60 flex items-center justify-end gap-2 border-t pt-4">
+          <AppButton variant="ghost" isLink linkTo="/" icon={ArrowLeft} text="Back to app" />
 
           <AppButton
             type="submit"

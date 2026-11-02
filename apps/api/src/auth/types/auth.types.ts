@@ -1,4 +1,8 @@
-import { User as PrismaUser, Profile as PrismaProfile, Subscription as PrismaSubscription } from '@prisma/client';
+import {
+  User as PrismaUser,
+  Profile as PrismaProfile,
+  Subscription as PrismaSubscription,
+} from '@prisma/client';
 
 export type TDescriptionSafe = PrismaSubscription;
 
@@ -10,7 +14,7 @@ export type TUserSafe = Omit<PrismaUser, 'password'> & {
 
 export type TJwtPayload = {
   userId: string;
-}
+};
 
 export type TOauthUser = {
   email: string;
@@ -23,4 +27,4 @@ export type TOauthUser = {
   twoFactorSecret?: string;
   providerId: string;
   provider: 'google' | 'github' | ' local';
-}
+};

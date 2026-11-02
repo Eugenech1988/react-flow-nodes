@@ -1,6 +1,6 @@
 export * from './AutosizeTextarea';
 export * from './FloatingInput';
-export * from './FloatingTextarea'
+export * from './FloatingTextarea';
 export * from './FloatingSelect';
 export * from './LocalAlert';
 export * from './Loader.tsx';

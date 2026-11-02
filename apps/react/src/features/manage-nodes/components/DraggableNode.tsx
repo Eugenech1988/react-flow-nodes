@@ -39,7 +39,7 @@ export const DraggableNode = ({ type, label, icon }: DraggableNodeProps) => {
 
   return (
     <div
-      className="flex items-center gap-1.5 px-3 py-1.5 bg-card border rounded-full text-[13px] font-medium cursor-grab hover:bg-muted/30 active:cursor-grabbing hover:shadow-xs select-none transition-all duration-150"
+      className="bg-card hover:bg-muted/30 flex cursor-grab items-center gap-1.5 rounded-full border px-3 py-1.5 text-[13px] font-medium transition-all duration-150 select-none hover:shadow-xs active:cursor-grabbing"
       style={{
         ...chipStyle,
         borderRadius: '9999px',
@@ -50,7 +50,7 @@ export const DraggableNode = ({ type, label, icon }: DraggableNodeProps) => {
       onDragEnd={onDragEnd}
       draggable
     >
-      {icon && <span className="text-sm shrink-0">{icon}</span>}
+      {icon && <span className="shrink-0 text-sm">{icon}</span>}
       <span className="text-foreground">{label}</span>
     </div>
   );

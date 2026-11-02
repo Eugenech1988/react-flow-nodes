@@ -60,9 +60,7 @@ describe('MailService', () => {
 
       mailerService.sendMail.mockRejectedValue(mockError);
 
-      await expect(service.sendRecoveryEmail(email, link)).rejects.toThrow(
-        'SMTP connection error',
-      );
+      await expect(service.sendRecoveryEmail(email, link)).rejects.toThrow('SMTP connection error');
     });
   });
 });

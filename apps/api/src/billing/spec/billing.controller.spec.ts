@@ -56,12 +56,16 @@ describe('BillingController', () => {
 
     it('should throw BadRequestException if signature is missing', async () => {
       const mockReq = { rawBody: Buffer.from('data') } as any;
-      await expect(controller.handleStripeWebhook('', mockReq)).rejects.toThrow(BadRequestException);
+      await expect(controller.handleStripeWebhook('', mockReq)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw BadRequestException if rawBody is missing', async () => {
       const mockReq = {} as any;
-      await expect(controller.handleStripeWebhook('sig_123', mockReq)).rejects.toThrow(BadRequestException);
+      await expect(controller.handleStripeWebhook('sig_123', mockReq)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 

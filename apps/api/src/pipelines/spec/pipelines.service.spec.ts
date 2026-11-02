@@ -107,7 +107,10 @@ describe('PipelinesService', () => {
 
   describe('findAllByUserId', () => {
     it('should return pipelines array ordered by name asc', async () => {
-      const mockPipelines = [{ id: 'p1', name: 'A' }, { id: 'p2', name: 'B' }];
+      const mockPipelines = [
+        { id: 'p1', name: 'A' },
+        { id: 'p2', name: 'B' },
+      ];
       prisma.pipeline.findMany.mockResolvedValue(mockPipelines);
 
       const result = await service.findAllByUserId('user_1');
@@ -124,9 +127,9 @@ describe('PipelinesService', () => {
     it('should throw NotFoundException if pipeline does not exist', async () => {
       prisma.pipeline.findUnique.mockResolvedValue(null);
 
-      await expect(
-        service.update('pipe_1', 'user_1', { name: 'Updated' }),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.update('pipe_1', 'user_1', { name: 'Updated' })).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw ForbiddenException if pipeline belongs to another user', async () => {
@@ -135,9 +138,9 @@ describe('PipelinesService', () => {
         userId: 'other_user',
       });
 
-      await expect(
-        service.update('pipe_1', 'user_1', { name: 'Updated' }),
-      ).rejects.toThrow(ForbiddenException);
+      await expect(service.update('pipe_1', 'user_1', { name: 'Updated' })).rejects.toThrow(
+        ForbiddenException,
+      );
     });
 
     it('should process screenshotBase64 and write file to disk', async () => {
@@ -174,9 +177,7 @@ describe('PipelinesService', () => {
     it('should throw NotFoundException if pipeline missing', async () => {
       prisma.pipeline.findUnique.mockResolvedValue(null);
 
-      await expect(service.remove('pipe_1', 'user_1')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.remove('pipe_1', 'user_1')).rejects.toThrow(NotFoundException);
     });
 
     it('should throw ForbiddenException if pipeline belongs to another user', async () => {
@@ -185,9 +186,7 @@ describe('PipelinesService', () => {
         userId: 'other_user',
       });
 
-      await expect(service.remove('pipe_1', 'user_1')).rejects.toThrow(
-        ForbiddenException,
-      );
+      await expect(service.remove('pipe_1', 'user_1')).rejects.toThrow(ForbiddenException);
     });
 
     it('should delete screenshot file and pipeline successfully', async () => {

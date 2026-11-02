@@ -44,7 +44,9 @@ describe('ImportExportToolbar', () => {
     render(<ImportExportToolbar onExport={onExportMock} onImport={onImportMock} />);
 
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    const file = new File(['{"nodes":[],"edges":[]}'], 'pipeline.json', { type: 'application/json' });
+    const file = new File(['{"nodes":[],"edges":[]}'], 'pipeline.json', {
+      type: 'application/json',
+    });
 
     fireEvent.change(fileInput, {
       target: { files: [file] },

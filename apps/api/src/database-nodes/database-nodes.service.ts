@@ -34,9 +34,10 @@ export class DatabaseNodesService {
       const payloadData = {
         query: dto.query || null,
         params: dto.params ? (dto.params as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
-        data: queryResult !== undefined && queryResult !== null
-          ? (queryResult as unknown as Prisma.InputJsonValue)
-          : ([] as unknown as Prisma.InputJsonValue),
+        data:
+          queryResult !== undefined && queryResult !== null
+            ? (queryResult as unknown as Prisma.InputJsonValue)
+            : ([] as unknown as Prisma.InputJsonValue),
         status: 'SUCCESS',
         userId: userId || null,
       };

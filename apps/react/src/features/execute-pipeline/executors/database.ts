@@ -35,10 +35,7 @@ const createDatabaseRecord = async (
 
 export const executeDatabaseNode: TNodeExecutor = async (node, input, context) => {
   const data = node.data;
-  const query = resolveTemplate(
-    String(data.query || 'SELECT * FROM table'),
-    input,
-  );
+  const query = resolveTemplate(String(data.query || 'SELECT * FROM table'), input);
 
   const rawPipelineId =
     context?.pipelineId ||
@@ -86,9 +83,7 @@ export const executeDatabaseNode: TNodeExecutor = async (node, input, context) =
     };
   } catch (error) {
     throw new Error(
-      `Database node execution failed: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
+      `Database node execution failed: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
 };

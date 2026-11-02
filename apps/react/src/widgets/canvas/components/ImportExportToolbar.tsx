@@ -1,7 +1,13 @@
 import { useRef } from 'react';
 import { Upload, Download } from 'lucide-react';
 
-export const ImportExportToolbar = ({ onExport, onImport }: { onExport: () => void, onImport: (file: File) => void }) => {
+export const ImportExportToolbar = ({
+  onExport,
+  onImport,
+}: {
+  onExport: () => void;
+  onImport: (file: File) => void;
+}) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,14 +19,14 @@ export const ImportExportToolbar = ({ onExport, onImport }: { onExport: () => vo
     <div className="absolute top-4 right-4 z-10 flex gap-2">
       <button
         onClick={onExport}
-        className="flex items-center cursor-pointer h-8.5 gap-1.5 px-3 py-1.5 bg-[var(--card)] border border-[var(--border)] text-[var(--card-foreground)] text-xs font-medium rounded-[var(--radius)] shadow-md hover:bg-[var(--accent)] transition-colors"
+        className="flex h-8.5 cursor-pointer items-center gap-1.5 rounded-(--radius) border border-border bg-card px-3 py-1.5 text-xs font-medium text-card-foreground shadow-md transition-colors hover:bg-accent"
       >
         <Download size={16} />
         Export
       </button>
       <button
         onClick={() => fileInputRef.current?.click()}
-        className="flex items-center cursor-pointer h-8.5 gap-1.5 px-3 py-1.5 bg-[var(--card)] border border-[var(--border)] text-[var(--card-foreground)] text-xs font-medium rounded-[var(--radius)] shadow-md hover:bg-[var(--accent)] transition-colors"
+        className="flex h-8.5 cursor-pointer items-center gap-1.5 rounded-(--radius) border border-border bg-card px-3 py-1.5 text-xs font-medium text-card-foreground shadow-md transition-colors hover:bg-accent"
       >
         <Upload size={16} />
         Import

@@ -6,7 +6,7 @@ import type { TPipelineNode } from '@/entities';
 export const useAutoLayout = (
   nodes: TPipelineNode[],
   edges: Edge[],
-  direction: 'TB' | 'LR' = 'LR'
+  direction: 'TB' | 'LR' = 'LR',
 ) => {
   return useMemo(() => {
     const dagreGraph = new dagre.graphlib.Graph();
@@ -16,7 +16,7 @@ export const useAutoLayout = (
     nodes.forEach((node) => {
       dagreGraph.setNode(node.id, {
         width: node.measured?.width ?? 172,
-        height: node.measured?.height ?? 36
+        height: node.measured?.height ?? 36,
       });
     });
 
@@ -33,7 +33,7 @@ export const useAutoLayout = (
         ...node,
         position: {
           x: nodeWithPosition.x - (node.measured?.width ?? 172) / 2,
-          y: nodeWithPosition.y - (node.measured?.height ?? 36) / 2
+          y: nodeWithPosition.y - (node.measured?.height ?? 36) / 2,
         },
       };
     });

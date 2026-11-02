@@ -6,24 +6,19 @@ export const NotFoundPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 transition-colors">
-      <div className="flex flex-col items-center text-center max-w-md">
+    <div className="bg-background text-foreground flex min-h-screen items-center justify-center p-4 transition-colors">
+      <div className="flex max-w-md flex-col items-center text-center">
         <div className="mb-6 opacity-85">
-          <img src={Logo} alt="Logo" className="w-20 h-20 mx-auto" />
+          <img src={Logo} alt="Logo" className="mx-auto h-20 w-20" />
         </div>
 
-        <h1 className="text-6xl font-black mb-2 tracking-tight">404</h1>
-        <h2 className="text-xl font-semibold mb-3">Page not found</h2>
-        <p className="text-sm mb-8 text-muted-foreground">
+        <h1 className="mb-2 text-6xl font-black tracking-tight">404</h1>
+        <h2 className="mb-3 text-xl font-semibold">Page not found</h2>
+        <p className="text-muted-foreground mb-8 text-sm">
           The page you are looking for doesn't exist or has been moved.
         </p>
 
-        <AppButton
-          text="Back to App"
-          variant="primary"
-          size="md"
-          onClick={() => navigate('/')}
-        />
+        <AppButton text="Back to App" variant="primary" size="md" onClick={() => navigate('/')} />
       </div>
     </div>
   );

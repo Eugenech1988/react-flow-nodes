@@ -18,7 +18,7 @@ export const QueryProvider: React.FC<QueryProviderProps> = ({ children }) => {
             staleTime: 5 * 60 * 1000,
           },
         },
-      })
+      }),
   );
 
   return (

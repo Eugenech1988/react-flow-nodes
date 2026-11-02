@@ -1,6 +1,14 @@
 import {
-  Controller, Get, Post, Body, Param, UseInterceptors,
-  UploadedFile, Delete, Patch, UseGuards
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseInterceptors,
+  UploadedFile,
+  Delete,
+  Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { PipelinesService } from '@/pipelines/pipelines.service';
 import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
@@ -65,10 +73,7 @@ export class PipelinesController {
   }
 
   @Delete(':id')
-  async remove(
-    @Param('id') id: string,
-    @CurrentUser('id') userId: string,
-  ) {
+  async remove(@Param('id') id: string, @CurrentUser('id') userId: string) {
     return this.pipelinesService.remove(id, userId);
   }
 }

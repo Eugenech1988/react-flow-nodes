@@ -8,13 +8,13 @@ export const HistoryControls = () => {
   const canRedo = useStore((state) => state.future.length > 0);
 
   return (
-    <div className="absolute top-4 left-4 z-10 flex bg-[var(--card)] border border-[var(--border)] rounded-[var(--radius)] shadow-md overflow-hidden">
+    <div className="absolute top-4 left-4 z-10 flex overflow-hidden rounded-[var(--radius)] border border-[var(--border)] bg-[var(--card)] shadow-md">
       <button
         onClick={() => undo()}
         disabled={!canUndo}
         aria-label="Undo"
         title="Undo"
-        className="p-2 text-[var(--card-foreground)] cursor-pointer hover:bg-[var(--accent)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="cursor-pointer p-2 text-[var(--card-foreground)] transition-colors hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-30"
       >
         <Undo size={16} />
       </button>
@@ -23,7 +23,7 @@ export const HistoryControls = () => {
         disabled={!canRedo}
         aria-label="Redo"
         title="Redo"
-        className="p-2 text-[var(--card-foreground)] cursor-pointer hover:bg-[var(--accent)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors border-l border-[var(--border)]"
+        className="cursor-pointer border-l border-[var(--border)] p-2 text-[var(--card-foreground)] transition-colors hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-30"
       >
         <Redo size={16} />
       </button>

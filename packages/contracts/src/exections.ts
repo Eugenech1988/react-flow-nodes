@@ -1,27 +1,19 @@
 import { z } from 'zod';
 
-export const executionStatusSchema = z.enum([
-  'RUNNING',
-  'SUCCESS',
-  'FAILED',
-  'CANCELED',
-]);
+export const executionStatusSchema = z.enum(['RUNNING', 'SUCCESS', 'FAILED', 'CANCELED']);
 
-export const triggerTypeSchema = z.enum([
-  'MANUAL',
-  'WEBHOOK',
-  'CRON',
-  'API',
-]);
+export const triggerTypeSchema = z.enum(['MANUAL', 'WEBHOOK', 'CRON', 'API']);
 
-export const executionLogSchema = z.object({
-  id: z.string().optional(),
-  nodeId: z.string().optional(),
-  timestamp: z.number(),
-  type: z.enum(['info', 'success', 'error']),
-  message: z.string(),
-  order: z.number().optional(),
-}).passthrough();
+export const executionLogSchema = z
+  .object({
+    id: z.string().optional(),
+    nodeId: z.string().optional(),
+    timestamp: z.number(),
+    type: z.enum(['info', 'success', 'error']),
+    message: z.string(),
+    order: z.number().optional(),
+  })
+  .passthrough();
 
 export const createExecutionInputSchema = z.object({
   id: z.string().optional().nullable(),

@@ -25,7 +25,7 @@ export const ProfileAvatar = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(trpc.auth.me.queryFilter());
       },
-    })
+    }),
   );
 
   const handleContainerClick = () => {
@@ -47,7 +47,7 @@ export const ProfileAvatar = () => {
     try {
       const base64Avatar = await fileToBase64(file);
       await uploadAvatarMutation.mutateAsync({ avatarUrl: base64Avatar });
-    } catch(e: any) {
+    } catch (e: any) {
       console.error(e);
     }
   };
@@ -63,21 +63,17 @@ export const ProfileAvatar = () => {
       />
       <div
         onClick={handleContainerClick}
-        className="relative group cursor-pointer w-24 h-24 rounded-full overflow-hidden shadow-xs border border-teal-500/30 bg-gradient-to-br from-teal-500 to-teal-700 transition-transform active:scale-95"
+        className="group relative h-24 w-24 cursor-pointer overflow-hidden rounded-full border border-teal-500/30 bg-gradient-to-br from-teal-500 to-teal-700 shadow-xs transition-transform active:scale-95"
       >
         {avatarUrl ? (
-          <img
-            src={avatarUrl}
-            alt="Avatar Preview"
-            className="w-full h-full object-cover"
-          />
+          <img src={avatarUrl} alt="Avatar Preview" className="h-full w-full object-cover" />
         ) : (
-          <div className="flex items-center justify-center w-full h-full text-3xl font-bold text-white tracking-wider">
+          <div className="flex h-full w-full items-center justify-center text-3xl font-bold tracking-wider text-white">
             {initials}
           </div>
         )}
-        <div className="absolute inset-0 flex items-center justify-center bg-teal-950/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-200">
-          <Camera className="w-6 h-6 text-white drop-shadow-xs" />
+        <div className="absolute inset-0 flex items-center justify-center bg-teal-950/50 opacity-0 backdrop-blur-[2px] transition-all duration-200 group-hover:opacity-100">
+          <Camera className="h-6 w-6 text-white drop-shadow-xs" />
         </div>
       </div>
     </>

@@ -1,4 +1,3 @@
-
 import { User, Shield, CreditCard, Cpu, Clock, HardDrive } from 'lucide-react';
 
 export const SETTINGS_TABS = (isProActive: boolean) => [
@@ -22,7 +21,7 @@ export const PLAN_FEATURES = [
 export const PLAN_USAGE_STATS = (isProActive: boolean) => [
   {
     label: 'Pipeline Executions',
-    icon: <Cpu className="w-4 h-4 text-teal-500" />,
+    icon: <Cpu className="h-4 w-4 text-teal-500" />,
     value: isProActive ? 'Unlimited' : '85 / 100',
     sub: 'Resets on the 1st of next month',
     percentage: isProActive ? 100 : 85,
@@ -30,7 +29,7 @@ export const PLAN_USAGE_STATS = (isProActive: boolean) => [
   },
   {
     label: 'Execution Time',
-    icon: <Clock className="w-4 h-4 text-teal-500" />,
+    icon: <Clock className="h-4 w-4 text-teal-500" />,
     value: isProActive ? '12.4 hrs' : '4.2 / 5 hrs',
     sub: 'Compute hours consumed this cycle',
     percentage: isProActive ? 30 : 84,
@@ -38,10 +37,10 @@ export const PLAN_USAGE_STATS = (isProActive: boolean) => [
   },
   {
     label: 'Pipeline Storage',
-    icon: <HardDrive className="w-4 h-4 text-teal-500" />,
+    icon: <HardDrive className="h-4 w-4 text-teal-500" />,
     value: `1.2 GB / ${isProActive ? '100 GB' : '2 GB'}`,
     sub: 'Artifacts and cache storage',
     percentage: isProActive ? 1.2 : 60,
     barColor: 'bg-teal-600 dark:bg-teal-500',
   },
-]
+];

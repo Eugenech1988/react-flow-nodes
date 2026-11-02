@@ -81,10 +81,7 @@ describe('Auth & Users (e2e)', () => {
     });
 
     it('should fail registration with duplicate email (409 Conflict)', async () => {
-      await request(app.getHttpServer())
-        .post('/auth/register')
-        .send(testUser)
-        .expect(409);
+      await request(app.getHttpServer()).post('/auth/register').send(testUser).expect(409);
     });
   });
 

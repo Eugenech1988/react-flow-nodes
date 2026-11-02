@@ -49,7 +49,12 @@ function setTokenCookies(res: { cookie: Function }, accessToken: string, refresh
 }
 
 function toSafeUser<T extends Record<string, any>>(user: T) {
-  const { password: _password, twoFactorSecret: _twoFactorSecret, recoveryCodes: _recoveryCodes, ...safeUser } = user;
+  const {
+    password: _password,
+    twoFactorSecret: _twoFactorSecret,
+    recoveryCodes: _recoveryCodes,
+    ...safeUser
+  } = user;
   return safeUser;
 }
 
@@ -60,19 +65,24 @@ export function createAppRouter(services: RouterServices) {
       const user = await services.authService.validateUser(input.email, input.password);
       if (!user) throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid credentials' });
       if (user.isTwoFactorEnabled) {
-        return { isTwoFactorRequired: true as const, tempToken: services.authService.generateTempToken(user.id) };
+        return {
+          isTwoFactorRequired: true as const,
+          tempToken: services.authService.generateTempToken(user.id),
+        };
       }
 
       const tokens = await services.authService.generateTokens(user.id);
       setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
       return { isTwoFactorRequired: false as const, user: toSafeUser(user) };
     }),
-    loginWith2fa: publicProcedure.input(twoFactorLoginInputSchema).mutation(async ({ ctx, input }) => {
-      const user = await services.authService.authenticateWith2Fa(input.tempToken, input.code);
-      const tokens = await services.authService.generateTokens(user.id);
-      setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
-      return toSafeUser(user);
-    }),
+    loginWith2fa: publicProcedure
+      .input(twoFactorLoginInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const user = await services.authService.authenticateWith2Fa(input.tempToken, input.code);
+        const tokens = await services.authService.generateTokens(user.id);
+        setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
+        return toSafeUser(user);
+      }),
     generate2fa: protectedProcedure.mutation(async ({ ctx }) => {
       return services.authService.generateTwoFactorSecret(ctx.user.id);
     }),
@@ -110,11 +120,9 @@ export function createAppRouter(services: RouterServices) {
       .mutation(async ({ input }) => {
         return services.authService.publicRequestResetPassword(input);
       }),
-    resetPassword: publicProcedure
-      .input(passwordResetInputSchema)
-      .mutation(async ({ input }) => {
-        return services.authService.publicResetPassword(input);
-      }),
+    resetPassword: publicProcedure.input(passwordResetInputSchema).mutation(async ({ input }) => {
+      return services.authService.publicResetPassword(input);
+    }),
   });
 
   const aiRouter = router({
@@ -131,49 +139,59 @@ export function createAppRouter(services: RouterServices) {
   });
 
   const usersRouter = router({
-    updatePassword: protectedProcedure.input(updatePasswordInputSchema).mutation(async ({ ctx, input }) => {
-      await services.usersService.updatePassword(ctx.user.id, input);
-      return { success: true };
-    }),
+    updatePassword: protectedProcedure
+      .input(updatePasswordInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        await services.usersService.updatePassword(ctx.user.id, input);
+        return { success: true };
+      }),
     remove: protectedProcedure.mutation(async ({ ctx }) => {
       await services.usersService.delete(ctx.user.id);
       return { success: true };
     }),
-    setCurrentPipeline: protectedProcedure.input(currentPipelineInputSchema).mutation(async ({ ctx, input }) => {
-      const updatedUser = await services.usersService.setCurrentPipeline(ctx.user.id, input.id);
-      return toSafeUser(updatedUser);
-    }),
+    setCurrentPipeline: protectedProcedure
+      .input(currentPipelineInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const updatedUser = await services.usersService.setCurrentPipeline(ctx.user.id, input.id);
+        return toSafeUser(updatedUser);
+      }),
   });
 
   const billingRouter = router({
-    subscription: protectedProcedure.query(({ ctx }) => services.billingService.getSubscriptionByUserId(ctx.user.id)),
-    transactions: protectedProcedure.query(({ ctx }) => services.billingService.getTransactionsByUserId(ctx.user.id)),
-    checkout: protectedProcedure.input(planSchema).mutation(({ ctx, input }) =>
-      services.billingService.createCheckoutSession(ctx.user.id, input),
+    subscription: protectedProcedure.query(({ ctx }) =>
+      services.billingService.getSubscriptionByUserId(ctx.user.id),
     ),
-    cancel: protectedProcedure.mutation(({ ctx }) => services.billingService.cancelSubscription(ctx.user.id)),
+    transactions: protectedProcedure.query(({ ctx }) =>
+      services.billingService.getTransactionsByUserId(ctx.user.id),
+    ),
+    checkout: protectedProcedure
+      .input(planSchema)
+      .mutation(({ ctx, input }) =>
+        services.billingService.createCheckoutSession(ctx.user.id, input),
+      ),
+    cancel: protectedProcedure.mutation(({ ctx }) =>
+      services.billingService.cancelSubscription(ctx.user.id),
+    ),
   });
 
   const pipelinesRouter = router({
-    list: protectedProcedure.query(({ ctx }) => services.pipelinesService.findAllByUserId(ctx.user.id)),
-    remove: protectedProcedure.input(removePipelineInputSchema.pick({ id: true })).mutation(({ ctx, input }) =>
-      services.pipelinesService.remove(input.id, ctx.user.id),
+    list: protectedProcedure.query(({ ctx }) =>
+      services.pipelinesService.findAllByUserId(ctx.user.id),
     ),
-    update: protectedProcedure
-      .input(updatePipelineInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        const { id, ...dto } = input;
-        return services.pipelinesService.update(id, ctx.user.id, dto as UpdatePipelineDto);
-      }),
+    remove: protectedProcedure
+      .input(removePipelineInputSchema.pick({ id: true }))
+      .mutation(({ ctx, input }) => services.pipelinesService.remove(input.id, ctx.user.id)),
+    update: protectedProcedure.input(updatePipelineInputSchema).mutation(async ({ ctx, input }) => {
+      const { id, ...dto } = input;
+      return services.pipelinesService.update(id, ctx.user.id, dto as UpdatePipelineDto);
+    }),
   });
 
   const profileRouter = router({
-    update: protectedProcedure
-      .input(updateProfileInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        const updatedUser = await services.profileService.update(ctx.user.id, input);
-        return toSafeUser(updatedUser);
-      }),
+    update: protectedProcedure.input(updateProfileInputSchema).mutation(async ({ ctx, input }) => {
+      const updatedUser = await services.profileService.update(ctx.user.id, input);
+      return toSafeUser(updatedUser);
+    }),
   });
 
   const databaseNodesRouter = router({
@@ -183,11 +201,9 @@ export function createAppRouter(services: RouterServices) {
         const userId = ctx.user.id;
         return services.databaseNodesService.createRecord(userId, input);
       }),
-    getByNodeId: protectedProcedure
-      .input(z.object({ nodeId: z.string() }))
-      .query(({ input }) => {
-        return services.databaseNodesService.findByNodeId(input.nodeId);
-      }),
+    getByNodeId: protectedProcedure.input(z.object({ nodeId: z.string() })).query(({ input }) => {
+      return services.databaseNodesService.findByNodeId(input.nodeId);
+    }),
     getByPipelineId: protectedProcedure
       .input(z.object({ pipelineId: z.string() }))
       .query(({ input }) => {
@@ -226,11 +242,9 @@ export function createAppRouter(services: RouterServices) {
           status: input?.status,
         });
       }),
-    getById: protectedProcedure
-      .input(z.object({ id: z.string() }))
-      .query(({ input }) => {
-        return services.executionsService.findOne(input.id);
-      }),
+    getById: protectedProcedure.input(z.object({ id: z.string() })).query(({ input }) => {
+      return services.executionsService.findOne(input.id);
+    }),
     update: protectedProcedure
       .input(
         z.object({
@@ -241,11 +255,9 @@ export function createAppRouter(services: RouterServices) {
       .mutation(({ input }) => {
         return services.executionsService.update(input.id, input.data);
       }),
-    remove: protectedProcedure
-      .input(z.object({ id: z.string() }))
-      .mutation(({ input }) => {
-        return services.executionsService.remove(input.id);
-      }),
+    remove: protectedProcedure.input(z.object({ id: z.string() })).mutation(({ input }) => {
+      return services.executionsService.remove(input.id);
+    }),
   });
 
   return router({

@@ -1,12 +1,6 @@
 import React, { useId } from 'react';
 import { ChevronDown } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@pipeline/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
 import type { TRoundedSize } from '@/shared/lib';
 import { ROUNDED_MAP } from '@/shared/lib';
@@ -33,19 +27,19 @@ export interface FloatingSelectProps {
 }
 
 export const FloatingSelect: React.FC<FloatingSelectProps> = ({
-                                                                label,
-                                                                value,
-                                                                onChange,
-                                                                options,
-                                                                error,
-                                                                errorMessage,
-                                                                disabled = false,
-                                                                className = '',
-                                                                labelClasses = '',
-                                                                fieldsetClasses = '',
-                                                                renderValue,
-                                                                rounded = 'xl',
-                                                              }) => {
+  label,
+  value,
+  onChange,
+  options,
+  error,
+  errorMessage,
+  disabled = false,
+  className = '',
+  labelClasses = '',
+  fieldsetClasses = '',
+  renderValue,
+  rounded = 'xl',
+}) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const id = useId();
 
@@ -61,7 +55,7 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
 
   return (
     <div className="w-full">
-      <div className={cn('relative w-full h-11 group flex items-center', roundedClass)}>
+      <div className={cn('group relative flex h-11 w-full items-center', roundedClass)}>
         <Select
           value={value || undefined}
           onValueChange={handleValueChange}
@@ -71,16 +65,16 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
           <SelectTrigger
             id={id}
             className={cn(
-              'peer w-full h-full border-0 bg-transparent focus:ring-0 focus-visible:ring-0 focus:outline-none px-3 py-0 transition-all z-10 relative flex items-center justify-between shadow-none cursor-pointer [&>svg]:hidden',
+              'peer relative z-10 flex h-full w-full cursor-pointer items-center justify-between border-0 bg-transparent px-3 py-0 shadow-none transition-all focus:ring-0 focus:outline-none focus-visible:ring-0 [&>svg]:hidden',
               roundedClass,
-              'disabled:cursor-not-allowed disabled:text-muted-foreground/60',
+              'disabled:text-muted-foreground/60 disabled:cursor-not-allowed',
               error
                 ? 'text-red-500! [-webkit-text-fill-color:var(--color-red-500)]!'
                 : 'text-foreground',
-              className
+              className,
             )}
           >
-            <div className="truncate text-left font-normal text-sm flex-1 pr-6">
+            <div className="flex-1 truncate pr-6 text-left text-sm font-normal">
               <SelectValue placeholder="">
                 {hasValue
                   ? renderValue
@@ -93,24 +87,24 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
 
           <ChevronDown
             className={cn(
-              'absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 shrink-0 transition-transform duration-200 z-20 pointer-events-none',
+              'pointer-events-none absolute top-1/2 right-3.5 z-20 h-4 w-4 shrink-0 -translate-y-1/2 transition-transform duration-200',
               isOpen && 'rotate-180',
               error
                 ? 'text-red-500'
-                : 'text-zinc-400 dark:text-zinc-500 group-hover:text-teal-500 dark:group-hover:text-teal-500'
+                : 'text-zinc-400 group-hover:text-teal-500 dark:text-zinc-500 dark:group-hover:text-teal-500',
             )}
           />
 
           <label
             htmlFor={id}
             className={cn(
-              'absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-sm font-sans transition-all duration-200 ease-in-out z-20 block select-none max-w-[calc(100%-36px)] truncate text-ellipsis origin-left',
+              'pointer-events-none absolute top-1/2 left-3.5 z-20 block max-w-[calc(100%-36px)] origin-left -translate-y-1/2 truncate font-sans text-sm text-ellipsis transition-all duration-200 ease-in-out select-none',
               'text-zinc-400 dark:text-zinc-500',
               'group-hover:text-teal-500 dark:group-hover:text-teal-500',
               (isOpen || hasValue) && 'top-0 -translate-y-1/2 text-[10px] text-teal-500',
               error ? 'text-red-500!' : (isOpen || hasValue) && 'text-teal-500 dark:text-teal-500',
               disabled && 'text-muted-foreground/50',
-              labelClasses
+              labelClasses,
             )}
           >
             {label}
@@ -118,34 +112,34 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
 
           <fieldset
             className={cn(
-              'pointer-events-none absolute inset-0 -top-1.5 m-0 min-w-0 border transition-all duration-200 z-0 box-border',
+              'pointer-events-none absolute inset-0 -top-1.5 z-0 m-0 box-border min-w-0 border transition-all duration-200',
               roundedClass,
-              '[&_legend]:max-w-0 [&_legend]:transition-all [&_legend]:duration-200 [&_legend]:p-0 [&_legend]:invisible',
-              (isOpen || hasValue) && '[&_legend]:max-w-full [&_legend]:px-1 [&_legend]:visible',
+              '[&_legend]:invisible [&_legend]:max-w-0 [&_legend]:p-0 [&_legend]:transition-all [&_legend]:duration-200',
+              (isOpen || hasValue) && '[&_legend]:visible [&_legend]:max-w-full [&_legend]:px-1',
               'peer-disabled:bg-muted/30 peer-disabled:border-border/40 peer-disabled:opacity-80',
               error
                 ? 'border-red-500! shadow-[0_0_15px_rgba(239,68,68,0.02)]'
-                : 'border-zinc-400 dark:border-zinc-500 hover:border-teal-500 dark:hover:border-teal-500 group-hover:border-teal-500 dark:group-hover:border-teal-500',
+                : 'border-zinc-400 group-hover:border-teal-500 hover:border-teal-500 dark:border-zinc-500 dark:group-hover:border-teal-500 dark:hover:border-teal-500',
               (isOpen || hasValue) && '!border-teal-500 dark:!border-teal-500',
-              fieldsetClasses
+              fieldsetClasses,
             )}
           >
             <legend
               className={cn(
-                'h-3 text-[10px] font-sans pointer-events-none block w-auto whitespace-nowrap box-border opacity-0 invisible select-none px-1 transition-all duration-200 ml-2.5',
-                (isOpen || hasValue) && 'visible'
+                'pointer-events-none invisible ml-2.5 box-border block h-3 w-auto px-1 font-sans text-[10px] whitespace-nowrap opacity-0 transition-all duration-200 select-none',
+                (isOpen || hasValue) && 'visible',
               )}
             >
               {label}
             </legend>
           </fieldset>
 
-          <SelectContent className="bg-card border-border rounded-xl shadow-lg z-50">
+          <SelectContent className="bg-card border-border z-50 rounded-xl shadow-lg">
             {options.map((opt) => (
               <SelectItem
                 key={opt.value}
                 value={opt.value}
-                className="text-xs cursor-pointer rounded-lg hover:bg-muted/60 transition-colors"
+                className="hover:bg-muted/60 cursor-pointer rounded-lg text-xs transition-colors"
               >
                 {opt.label}
               </SelectItem>
@@ -154,9 +148,7 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
         </Select>
       </div>
 
-      {error && errorMessage && (
-        <p className="text-xs text-red-500 mt-1 pl-1">{errorMessage}</p>
-      )}
+      {error && errorMessage && <p className="mt-1 pl-1 text-xs text-red-500">{errorMessage}</p>}
     </div>
   );
 };

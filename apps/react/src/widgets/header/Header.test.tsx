@@ -35,9 +35,7 @@ describe('Header', () => {
     render(<Header />);
 
     expect(screen.getByText('Pipeline Studio')).toBeInTheDocument();
-    expect(
-      screen.getByText('Drag, connect, and run your workflow')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Drag, connect, and run your workflow')).toBeInTheDocument();
   });
 
   it('renders application logo', () => {

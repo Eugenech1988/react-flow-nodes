@@ -10,14 +10,13 @@ interface UseExecutionsHandlersOptions {
 
 export const useExecutionsHandler = (
   // params?: { pipelineId?: string },
-  options?: UseExecutionsHandlersOptions
+  options?: UseExecutionsHandlersOptions,
 ) => {
   const queryClient = useQueryClient();
   const trpc = useTRPC();
 
   const createExecution = useMutation({
-    mutationFn: (data: TCreateExecutionInputData) =>
-      trpcClient.executions.create.mutate(data),
+    mutationFn: (data: TCreateExecutionInputData) => trpcClient.executions.create.mutate(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: trpc.executions.list.queryKey() });
       options?.onCreateSuccess?.();
@@ -37,8 +36,7 @@ export const useExecutionsHandler = (
   });
 
   const deleteExecution = useMutation({
-    mutationFn: (executionId: string) =>
-      trpcClient.executions.remove.mutate({ id: executionId }),
+    mutationFn: (executionId: string) => trpcClient.executions.remove.mutate({ id: executionId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: trpc.executions.list.queryKey() });
       options?.onDeleteSuccess?.();

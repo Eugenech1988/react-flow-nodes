@@ -1,44 +1,42 @@
-import { defineConfig } from 'vitest/config'
-import react, { reactCompilerPreset } from '@vitejs/plugin-react'
-import babel from '@rolldown/plugin-babel'
-import tailwindcss from '@tailwindcss/vite'
-import path from 'node:path'
-import type { Plugin } from 'vite'
+import { defineConfig } from 'vitest/config';
+import react, { reactCompilerPreset } from '@vitejs/plugin-react';
+import babel from '@rolldown/plugin-babel';
+import tailwindcss from '@tailwindcss/vite';
+import path from 'node:path';
+import type { Plugin } from 'vite';
 
-const appSrc = path.resolve(import.meta.dirname, './src')
-const uiSrc = path.resolve(import.meta.dirname, '../../packages/ui/src')
+const appSrc = path.resolve(import.meta.dirname, './src');
+const uiSrc = path.resolve(import.meta.dirname, '../../packages/ui/src');
 
 const workspaceAliases: Plugin = {
   name: 'workspace-source-aliases',
   enforce: 'pre' as const,
   resolveId(source, importer) {
-    if (!source.startsWith('@/')) return null
+    if (!source.startsWith('@/')) return null;
 
     const isUiSource = importer?.includes(
       `${path.sep}packages${path.sep}ui${path.sep}src${path.sep}`,
-    )
-    const sourceRoot = isUiSource ? uiSrc : appSrc
+    );
+    const sourceRoot = isUiSource ? uiSrc : appSrc;
 
     return this.resolve(path.resolve(sourceRoot, source.slice(2)), importer, {
       skipSelf: true,
-    })
+    });
   },
-}
+};
 
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-    babel({ presets: [reactCompilerPreset()] }),
-    workspaceAliases,
-  ],
+  plugins: [react(), tailwindcss(), babel({ presets: [reactCompilerPreset()] }), workspaceAliases],
   resolve: {
     alias: {
       'react/compiler-runtime': 'react-compiler-runtime',
-      'react': path.resolve(import.meta.dirname, './node_modules/react'),
+      react: path.resolve(import.meta.dirname, './node_modules/react'),
       'react-dom': path.resolve(import.meta.dirname, './node_modules/react-dom'),
       'react/jsx-runtime': path.resolve(import.meta.dirname, './node_modules/react/jsx-runtime.js'),
-      'react/jsx-dev-runtime': path.resolve(import.meta.dirname, './node_modules/react/jsx-dev-runtime.js'),
+      'react/jsx-dev-runtime': path.resolve(
+        import.meta.dirname,
+        './node_modules/react/jsx-dev-runtime.js',
+      ),
     },
   },
   optimizeDeps: {
@@ -47,7 +45,7 @@ export default defineConfig({
       'react-dom',
       'react/jsx-dev-runtime',
       'react/jsx-runtime',
-      'react-compiler-runtime'
+      'react-compiler-runtime',
     ],
   },
   test: {
@@ -60,4 +58,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

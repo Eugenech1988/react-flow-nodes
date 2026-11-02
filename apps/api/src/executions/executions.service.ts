@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { Prisma, ExecutionStatus } from '@prisma/client';
-import { TCreateExecutionInputData, TUpdateExecutionInputData, } from '@pipeline/contracts';
+import { TCreateExecutionInputData, TUpdateExecutionInputData } from '@pipeline/contracts';
 
 interface FindAllOptions {
   userId?: string;
@@ -72,7 +72,8 @@ export class ExecutionsService {
     const skip = (page - 1) * limit;
 
     // Безопасно приводим статус к верхнему регистру и типу ExecutionStatus
-    const validStatus = status && status !== 'all' ? (status.toUpperCase() as ExecutionStatus) : undefined;
+    const validStatus =
+      status && status !== 'all' ? (status.toUpperCase() as ExecutionStatus) : undefined;
 
     // Формируем гибкий where для Prisma
     const whereClause: Prisma.ExecutionWhereInput = {

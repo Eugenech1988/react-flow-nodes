@@ -1,4 +1,15 @@
-import { Controller, Post, Get, Body, UseGuards, Req, Res, HttpCode, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  UseGuards,
+  Req,
+  Res,
+  HttpCode,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
@@ -35,14 +46,14 @@ export class AuthController {
       httpOnly: true,
       secure: isProd,
       sameSite: 'lax',
-      maxAge: 15 * 60 * 1000
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: isProd,
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
   }
 
@@ -52,7 +63,7 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Bad request.' })
   async register(
     @Body() dto: RegisterDto,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ): Promise<TUserSafe> {
     const user = await this.authService.register(dto);
     const tokens = await this.authService.generateTokens(user.id);
@@ -68,7 +79,7 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async login(
     @Req() req: IRequestWithUser,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ): Promise<TUserSafe | { isTwoFactorRequired: true; tempToken: string }> {
     const user = req.user;
 
@@ -93,7 +104,7 @@ export class AuthController {
   async loginWith2fa(
     @Body('tempToken') tempToken: string,
     @Body('code') code: string,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ): Promise<TUserSafe> {
     const user = await this.authService.authenticateWith2Fa(tempToken, code);
     const tokens = await this.authService.generateTokens(user.id);
@@ -116,10 +127,7 @@ export class AuthController {
     status: 200,
     description: '2FA successfully enabled. Returns list of backup recovery codes.',
   })
-  async turnOn2fa(
-    @Req() req: IRequestWithUser,
-    @Body('code') code: string
-  ) {
+  async turnOn2fa(@Req() req: IRequestWithUser, @Body('code') code: string) {
     return this.authService.turnOnTwoFactor(req.user.id, code);
   }
 
@@ -127,10 +135,7 @@ export class AuthController {
   @Post('2fa/turn-off')
   @ApiOperation({ summary: 'Disable 2FA for account' })
   @ApiResponse({ status: 200, description: '2FA successfully disabled.' })
-  async turnOff2fa(
-    @Req() req: IRequestWithUser,
-    @Body('code') code: string
-  ) {
+  async turnOff2fa(@Req() req: IRequestWithUser, @Body('code') code: string) {
     return this.authService.turnOffTwoFactor(req.user.id, code);
   }
 
@@ -142,10 +147,7 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleOauthGuard)
   @ApiOperation({ summary: 'Google OAuth callback' })
-  async googleAuthCallback(
-    @Req() req: IRequestWithOauthUser,
-    @Res() res: Response
-  ) {
+  async googleAuthCallback(@Req() req: IRequestWithOauthUser, @Res() res: Response) {
     const user = await this.authService.validateOauthUser(req.user);
     const tokens = await this.authService.generateTokens(user.id);
     this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
@@ -162,10 +164,7 @@ export class AuthController {
   @Get('github/callback')
   @UseGuards(GithubOauthGuard)
   @ApiOperation({ summary: 'GitHub OAuth callback' })
-  async githubAuthCallback(
-    @Req() req: IRequestWithOauthUser,
-    @Res() res: Response
-  ) {
+  async githubAuthCallback(@Req() req: IRequestWithOauthUser, @Res() res: Response) {
     const user = await this.authService.validateOauthUser(req.user);
     const tokens = await this.authService.generateTokens(user.id);
     this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
@@ -181,9 +180,10 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Invalid or missing refresh token.' })
   async refresh(
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response
+    @Res({ passthrough: true }) res: Response,
   ): Promise<{ success: boolean }> {
-    const refreshToken = req.cookies?.['refreshToken'] || req.headers.authorization?.replace('Bearer ', '');
+    const refreshToken =
+      req.cookies?.['refreshToken'] || req.headers.authorization?.replace('Bearer ', '');
 
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token missing');
@@ -198,10 +198,7 @@ export class AuthController {
   @Get('me')
   @ApiOperation({ summary: 'Get current authorized user' })
   @ApiResponse({ status: 200, description: 'Returns current user info.' })
-  getMe(
-    @Req() req: IRequestWithUser,
-    @Res({ passthrough: true }) res: Response
-  ): TUserSafe {
+  getMe(@Req() req: IRequestWithUser, @Res({ passthrough: true }) res: Response): TUserSafe {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
@@ -213,10 +210,7 @@ export class AuthController {
   @Post('logout')
   @ApiOperation({ summary: 'Logout user and clear auth cookies' })
   @ApiResponse({ status: 200, description: 'Cookies cleared successfully.' })
-  async logout(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response
-  ) {
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies?.['refreshToken'];
 
     if (refreshToken) {

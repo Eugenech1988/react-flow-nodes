@@ -1,7 +1,7 @@
 export type TPlanFeature = {
   text: string;
   included: boolean;
-}
+};
 
 export type TPlanId = 'free' | 'pro' | 'enterprise';
 

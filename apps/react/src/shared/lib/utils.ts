@@ -5,10 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const debounce = <T extends (...args: unknown[]) => void>(
-  fn: T,
-  delay: number,
-) => {
+export const debounce = <T extends (...args: unknown[]) => void>(fn: T, delay: number) => {
   let timer: ReturnType<typeof setTimeout>;
 
   return (...args: Parameters<T>) => {
@@ -53,7 +50,7 @@ export const formatDuration = (durationMs: number | null | undefined): string =>
 
 export const formatDate = (
   dateInput: string | Date | null | undefined,
-  options?: { showTime?: boolean }
+  options?: { showTime?: boolean },
 ): string => {
   if (!dateInput) return '—';
 

@@ -3,10 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Canvas } from '@/widgets/canvas/Canvas';
 import { ReactFlowProvider } from '@xyflow/react';
 import { MemoryRouter } from 'react-router-dom';
-import type {
-  ReactFlowProps,
-  ReactFlowInstance,
-} from '@xyflow/react';
+import type { ReactFlowProps, ReactFlowInstance } from '@xyflow/react';
 
 const addNode = vi.fn();
 const getNodeID = vi.fn(() => 'customInput-1');
@@ -42,7 +39,7 @@ vi.mock('@/entities', () => ({
       runWorkflow,
       initGraph,
       resetGraph,
-    })
+    }),
   ),
 }));
 
@@ -125,7 +122,7 @@ describe('Canvas', () => {
         <ReactFlowProvider>
           <Canvas />
         </ReactFlowProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
   it('renders ReactFlow component', () => {
@@ -159,7 +156,7 @@ describe('Canvas', () => {
         id: 'customInput-1',
         type: 'customInput',
         position: { x: 100, y: 200 },
-      })
+      }),
     );
   });
 });

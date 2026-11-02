@@ -7,7 +7,7 @@ interface ILocalAlertProps {
   alertMessage: string;
 }
 
-export const LocalAlert = ({hasError, hasSuccess, alertMessage}: ILocalAlertProps) => {
+export const LocalAlert = ({ hasError, hasSuccess, alertMessage }: ILocalAlertProps) => {
   return (
     <>
       {(hasError || hasSuccess) && (
@@ -20,16 +20,24 @@ export const LocalAlert = ({hasError, hasSuccess, alertMessage}: ILocalAlertProp
           }
         >
           {hasError ? (
-            <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400"/>
+            <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
           ) : (
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-500"/>
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-500" />
           )}
           <AlertTitle
-            className={hasError ? 'text-red-800 dark:text-red-200' : 'text-emerald-800 dark:text-emerald-200'}>
+            className={
+              hasError ? 'text-red-800 dark:text-red-200' : 'text-emerald-800 dark:text-emerald-200'
+            }
+          >
             {hasError ? 'Error' : 'Success'}
           </AlertTitle>
           <AlertDescription
-            className={hasError ? 'text-red-700/90 dark:text-red-300' : 'text-emerald-700/90 dark:text-emerald-300'}>
+            className={
+              hasError
+                ? 'text-red-700/90 dark:text-red-300'
+                : 'text-emerald-700/90 dark:text-emerald-300'
+            }
+          >
             {alertMessage}
           </AlertDescription>
         </Alert>

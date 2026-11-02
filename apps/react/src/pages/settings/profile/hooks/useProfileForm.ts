@@ -30,7 +30,9 @@ export const useProfileForm = () => {
     },
   });
 
-  const { formState: { isDirty } } = form;
+  const {
+    formState: { isDirty },
+  } = form;
 
   const updateProfileMutation = useMutation(
     trpc.profile.update.mutationOptions({
@@ -45,7 +47,7 @@ export const useProfileForm = () => {
           message: error.message || 'Failed to update profile. Please try again.',
         });
       },
-    })
+    }),
   );
 
   const onSubmit = async (data: TUpdateProfileInputData) => {

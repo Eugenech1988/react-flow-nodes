@@ -13,13 +13,13 @@ import {
   type OnNodesChange,
   type OnEdgesChange,
   type OnConnect,
-  type Connection
+  type Connection,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 const InputNode = () => (
-  <div className="p-4 bg-slate-900 border border-[#39b39b]/30 rounded-lg shadow-lg text-left text-xs font-mono relative">
-    <div className="text-[#39b39b] font-bold mb-1">➔ InputNode</div>
+  <div className="relative rounded-lg border border-[#39b39b]/30 bg-slate-900 p-4 text-left font-mono text-xs shadow-lg">
+    <div className="mb-1 font-bold text-[#39b39b]">➔ InputNode</div>
     <div className="text-slate-500">trigger: "on_click"</div>
     <Handle
       type="source"
@@ -30,14 +30,14 @@ const InputNode = () => (
 );
 
 const ActionNode = () => (
-  <div className="p-4 bg-slate-900 border border-slate-100/20 rounded-lg shadow-lg text-left text-xs font-mono relative">
+  <div className="relative rounded-lg border border-slate-100/20 bg-slate-900 p-4 text-left font-mono text-xs shadow-lg">
     <Handle
       type="target"
       position={Position.Left}
       style={{ background: '#39b39b', width: 8, height: 8 }}
     />
-    <div className="text-slate-100 font-bold mb-1">✓ ActionNode</div>
-    <div className="text-slate-500">payload: {"{ status: 200 }"}</div>
+    <div className="mb-1 font-bold text-slate-100">✓ ActionNode</div>
+    <div className="text-slate-500">payload: {'{ status: 200 }'}</div>
   </div>
 );
 
@@ -84,15 +84,20 @@ export const HeroFlowCanvas = () => {
   };
 
   const onConnect: OnConnect = (connection: Connection) => {
-    setEdges((eds) => addEdge({
-      ...connection,
-      animated: true,
-      style: { stroke: '#39b39b', strokeWidth: 2 }
-    }, eds));
+    setEdges((eds) =>
+      addEdge(
+        {
+          ...connection,
+          animated: true,
+          style: { stroke: '#39b39b', strokeWidth: 2 },
+        },
+        eds,
+      ),
+    );
   };
 
   return (
-    <div className="w-full h-full touch-none">
+    <div className="h-full w-full touch-none">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -120,4 +125,4 @@ export const HeroFlowCanvas = () => {
       </ReactFlow>
     </div>
   );
-}
+};

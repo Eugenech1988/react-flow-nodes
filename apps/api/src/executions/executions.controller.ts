@@ -1,18 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ExecutionsService } from './executions.service';
-import type {
-  TCreateExecutionInputData,
-  TUpdateExecutionInputData,
-} from '@pipeline/contracts';
+import type { TCreateExecutionInputData, TUpdateExecutionInputData } from '@pipeline/contracts';
 
 @Controller('executions')
 export class ExecutionsController {
@@ -48,10 +36,7 @@ export class ExecutionsController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateExecutionDto: TUpdateExecutionInputData,
-  ) {
+  update(@Param('id') id: string, @Body() updateExecutionDto: TUpdateExecutionInputData) {
     return this.executionsService.update(id, updateExecutionDto);
   }
 

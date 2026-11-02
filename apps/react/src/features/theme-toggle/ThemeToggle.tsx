@@ -16,17 +16,17 @@ export const ThemeToggle = () => {
       variant="outline"
       size="icon"
       onClick={handleToggle}
-      className="relative flex items-center justify-center rounded-full border-border bg-card text-foreground/80 hover:text-foreground hover:bg-foreground/5 hover:border-border/80 cursor-pointer transition-all duration-200 active:scale-95"
+      className="border-border bg-card text-foreground/80 hover:text-foreground hover:bg-foreground/5 hover:border-border/80 relative flex cursor-pointer items-center justify-center rounded-full transition-all duration-200 active:scale-95"
       title="Toggle theme"
     >
       <Sun
-        className={`w-[1.2rem] h-[1.2rem] transition-all duration-300 ${
-          isDark ? 'rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'
+        className={`h-[1.2rem] w-[1.2rem] transition-all duration-300 ${
+          isDark ? 'scale-0 rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100'
         }`}
       />
       <Moon
-        className={`absolute w-[1.2rem] h-[1.2rem] transition-all duration-300 ${
-          isDark ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-0 opacity-0'
+        className={`absolute h-[1.2rem] w-[1.2rem] transition-all duration-300 ${
+          isDark ? 'scale-100 rotate-0 opacity-100' : 'scale-0 -rotate-90 opacity-0'
         }`}
       />
       <span className="sr-only">Toggle theme</span>

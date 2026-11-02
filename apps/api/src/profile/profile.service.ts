@@ -52,7 +52,8 @@ export class ProfileService {
                 location: input.location || null,
                 jobTitle: input.jobTitle || null,
                 avatarUrl: finalAvatarUrl || null,
-                nickName: user.email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 5),
+                nickName:
+                  user.email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 5),
               },
               update: {
                 firstName: input.firstName,

@@ -10,9 +10,8 @@ export const useProfileSidebar = () => {
   const nickname = user?.profile?.nickName || user?.email?.split('@')[0] || '';
   const jobTitle = user?.profile?.jobTitle || '';
 
-  const displayName = firstName || lastName
-    ? `${firstName} ${lastName}`.trim()
-    : nickname || 'User';
+  const displayName =
+    firstName || lastName ? `${firstName} ${lastName}`.trim() : nickname || 'User';
 
   let initials = `${firstName[0] || ''}${lastName[0] || ''}`.toUpperCase();
   if (!initials && nickname) {
@@ -24,7 +23,9 @@ export const useProfileSidebar = () => {
 
   const rawAvatarUrl = user?.profile?.avatarUrl;
   const avatarUrl = rawAvatarUrl
-    ? rawAvatarUrl.startsWith('http') || rawAvatarUrl.startsWith('blob:') || rawAvatarUrl.startsWith('data:')
+    ? rawAvatarUrl.startsWith('http') ||
+      rawAvatarUrl.startsWith('blob:') ||
+      rawAvatarUrl.startsWith('data:')
       ? rawAvatarUrl
       : `${BASE_URL}${rawAvatarUrl}`
     : null;

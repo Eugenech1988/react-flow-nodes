@@ -4,29 +4,24 @@ import { useBilling } from './hooks/useBilling';
 import { SubscriptionCard, UsageStats, PaymentMethod, InvoiceHistory } from './components';
 
 export const BillingTab = () => {
-  const {
-    isSubscriptionLoading,
-    errorMessage,
-    successMessage,
-    dismissSuccess,
-    dismissError,
-  } = useBilling();
+  const { isSubscriptionLoading, errorMessage, successMessage, dismissSuccess, dismissError } =
+    useBilling();
 
   if (isSubscriptionLoading) {
     return (
-      <div className="flex items-center justify-center p-12 text-sm text-muted-foreground gap-2">
-        <Loader2 className="w-4 h-4 animate-spin" />
+      <div className="text-muted-foreground flex items-center justify-center gap-2 p-12 text-sm">
+        <Loader2 className="h-4 w-4 animate-spin" />
         Loading subscription status...
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 max-w-5xl overflow-y-auto pb-20 max-h-[calc(100vh-12rem)] pr-2">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="max-h-[calc(100vh-12rem)] max-w-5xl space-y-8 overflow-y-auto pr-2 pb-20">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-xl font-bold tracking-tight">Subscription & Billing</h2>
-          <p className="text-muted-foreground text-sm mt-0.5">
+          <p className="text-muted-foreground mt-0.5 text-sm">
             Manage your billing cycle, plan tiers, usage, and invoices.
           </p>
         </div>
@@ -43,27 +38,27 @@ export const BillingTab = () => {
       </div>
 
       {successMessage && (
-        <div className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-600 dark:text-teal-400 text-sm flex items-center justify-between">
+        <div className="flex items-center justify-between rounded-xl border border-teal-500/20 bg-teal-500/10 p-4 text-sm text-teal-600 dark:text-teal-400">
           <span>{successMessage}</span>
           <AppButton
             variant="ghost"
             size="xs"
             onClick={dismissSuccess}
             text="Dismiss"
-            className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-semibold underline p-0 h-auto min-h-0 border-none"
+            className="h-auto min-h-0 border-none p-0 font-semibold text-teal-600 underline hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
           />
         </div>
       )}
 
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-sm flex items-center justify-between">
+        <div className="flex items-center justify-between rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-600 dark:text-rose-400">
           <span>{errorMessage}</span>
           <AppButton
             variant="ghost"
             size="xs"
             onClick={dismissError}
             text="Dismiss"
-            className="text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 font-semibold underline p-0 h-auto min-h-0 border-none"
+            className="h-auto min-h-0 border-none p-0 font-semibold text-rose-600 underline hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
           />
         </div>
       )}
@@ -71,23 +66,23 @@ export const BillingTab = () => {
       <SubscriptionCard />
 
       <div className="space-y-4">
-        <h3 className="text-xs font-bold tracking-wider uppercase text-foreground/80">
+        <h3 className="text-foreground/80 text-xs font-bold tracking-wider uppercase">
           Current Usage
         </h3>
         <UsageStats />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <PaymentMethod />
         <InvoiceHistory />
       </div>
 
-      <div className="border border-border bg-card/60 rounded-xl p-5 space-y-3 shadow-xs">
+      <div className="border-border bg-card/60 space-y-3 rounded-xl border p-5 shadow-xs">
         <div className="flex items-center gap-2 text-sm font-medium">
-          <Sparkles className="w-4 h-4 text-teal-500" />
+          <Sparkles className="h-4 w-4 text-teal-500" />
           Need more performance?
         </div>
-        <p className="text-xs text-muted-foreground leading-relaxed">
+        <p className="text-muted-foreground text-xs leading-relaxed">
           For dedicated infrastructure workloads, tailored execution timeout scales, and customized
           deployment topology models.
         </p>
@@ -98,7 +93,7 @@ export const BillingTab = () => {
           isLink
           linkTo="/plans"
           text="View Enterprise Plan details"
-          className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 underline p-0 h-auto min-h-0 border-none justify-start"
+          className="h-auto min-h-0 justify-start border-none p-0 text-teal-600 underline hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
         />
       </div>
     </div>

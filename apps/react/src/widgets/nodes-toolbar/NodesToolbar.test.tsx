@@ -42,11 +42,18 @@ describe('Toolbar', () => {
     expect(screen.getAllByTestId('draggable-node')).toHaveLength(9);
 
     const expectedLabels = [
-      'Input', 'Output', 'Text', 'Image', 'LLM',
-      'Math', 'Condition', 'API', 'Database'
+      'Input',
+      'Output',
+      'Text',
+      'Image',
+      'LLM',
+      'Math',
+      'Condition',
+      'API',
+      'Database',
     ];
 
-    expectedLabels.forEach(label => {
+    expectedLabels.forEach((label) => {
       expect(screen.getByText(label)).toBeInTheDocument();
     });
   });
@@ -67,7 +74,7 @@ describe('Toolbar', () => {
         { type: 'conditional', label: 'Condition', icon: '⑂' },
         { type: 'api', label: 'API', icon: '⇄' },
         { type: 'database', label: 'Database', icon: '⛁' },
-      ])
+      ]),
     );
   });
 });

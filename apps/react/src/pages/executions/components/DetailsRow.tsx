@@ -8,14 +8,8 @@ type TDetailRowProps = {
 };
 
 export const DetailsRow = ({ label, value, mono, last }: TDetailRowProps) => (
-  <div
-    className={`flex justify-between py-2 ${
-      last ? '' : 'border-b border-border/40'
-    }`}
-  >
+  <div className={`flex justify-between py-2 ${last ? '' : 'border-border/40 border-b'}`}>
     <span className="text-muted-foreground">{label}:</span>
-    <span className={mono ? 'font-mono text-foreground' : 'text-foreground'}>
-      {value}
-    </span>
+    <span className={mono ? 'text-foreground font-mono' : 'text-foreground'}>{value}</span>
   </div>
 );

@@ -24,7 +24,7 @@ async function bootstrap() {
           </Router>
         </ThemeProvider>
       </QueryProvider>
-    </StrictMode>
+    </StrictMode>,
   );
 }
 

@@ -16,9 +16,15 @@ const mockStripeWebhooksConstructEvent = jest.fn();
 jest.mock('stripe', () => {
   return jest.fn().mockImplementation(() => ({
     invoices: { retrieve: mockStripeInvoicesRetrieve },
-    subscriptions: { retrieve: mockStripeSubscriptionsRetrieve, cancel: mockStripeSubscriptionsCancel },
+    subscriptions: {
+      retrieve: mockStripeSubscriptionsRetrieve,
+      cancel: mockStripeSubscriptionsCancel,
+    },
     checkout: {
-      sessions: { create: mockStripeCheckoutSessionsCreate, retrieve: mockStripeCheckoutSessionsRetrieve },
+      sessions: {
+        create: mockStripeCheckoutSessionsCreate,
+        retrieve: mockStripeCheckoutSessionsRetrieve,
+      },
     },
     webhooks: { constructEvent: mockStripeWebhooksConstructEvent },
   }));
@@ -41,7 +47,12 @@ describe('BillingService', () => {
     const mockPrisma = {
       subscription: { findUnique: jest.fn(), upsert: jest.fn(), update: jest.fn() },
       user: { findUnique: jest.fn() },
-      transaction: { findUnique: jest.fn(), findMany: jest.fn(), upsert: jest.fn(), update: jest.fn() },
+      transaction: {
+        findUnique: jest.fn(),
+        findMany: jest.fn(),
+        upsert: jest.fn(),
+        update: jest.fn(),
+      },
       $transaction: jest.fn((promises) => Promise.all(promises)),
     };
 
@@ -111,11 +122,15 @@ describe('BillingService', () => {
 
     it('should throw BadRequestException if user is missing', async () => {
       prisma.user.findUnique.mockResolvedValue(null);
-      await expect(service.createCheckoutSession('user_1', Plan.PRO)).rejects.toThrow(BadRequestException);
+      await expect(service.createCheckoutSession('user_1', Plan.PRO)).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should throw BadRequestException for unconfigured plan price', async () => {
-      await expect(service.createCheckoutSession('user_1', Plan.FREE)).rejects.toThrow(BadRequestException);
+      await expect(service.createCheckoutSession('user_1', Plan.FREE)).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -150,7 +165,9 @@ describe('BillingService', () => {
         throw new Error('Invalid signature');
       });
 
-      await expect(service.handleWebhook('invalid_sig', Buffer.from('payload'))).rejects.toThrow(BadRequestException);
+      await expect(service.handleWebhook('invalid_sig', Buffer.from('payload'))).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -162,7 +179,9 @@ describe('BillingService', () => {
 
     it('should throw UnauthorizedException if transaction belongs to another user', async () => {
       prisma.transaction.findUnique.mockResolvedValue({ id: 'tx_1', userId: 'other_user' });
-      await expect(service.getInvoiceFilepath('user_1', 'tx_1')).rejects.toThrow(UnauthorizedException);
+      await expect(service.getInvoiceFilepath('user_1', 'tx_1')).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should return absolute path if invoice file already exists locally', async () => {
@@ -180,7 +199,10 @@ describe('BillingService', () => {
 
   describe('cancelSubscription', () => {
     it('should cancel stripe subscription and update local record', async () => {
-      prisma.subscription.findUnique.mockResolvedValue({ userId: 'user_1', subscriptionId: 'sub_123' });
+      prisma.subscription.findUnique.mockResolvedValue({
+        userId: 'user_1',
+        subscriptionId: 'sub_123',
+      });
       prisma.subscription.update.mockResolvedValue({ userId: 'user_1', plan: Plan.FREE });
 
       const result = await service.cancelSubscription('user_1');

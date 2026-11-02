@@ -30,20 +30,40 @@ vi.mock('@xyflow/react', () => ({
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  Input: ({ value, onChange }: { value: string | number; onChange: (e: ChangeEvent<HTMLInputElement>) => void }) => (
-    <input data-testid="input" value={value} onChange={onChange} />
-  ),
-  Select: ({ value, onChange, options }: { value: string; onChange: (e: ChangeEvent<HTMLSelectElement>) => void; options?: { value: string; label: string }[] }) => (
+  Input: ({
+    value,
+    onChange,
+  }: {
+    value: string | number;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  }) => <input data-testid="input" value={value} onChange={onChange} />,
+  Select: ({
+    value,
+    onChange,
+    options,
+  }: {
+    value: string;
+    onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+    options?: { value: string; label: string }[];
+  }) => (
     <select data-testid="select" value={value} onChange={onChange}>
-      {options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+      {options?.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
     </select>
   ),
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  AutosizeTextarea: ({ value, onChange }: { value: string; onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void }) => (
-    <textarea data-testid="textarea" value={value} onChange={onChange} />
-  ),
+  AutosizeTextarea: ({
+    value,
+    onChange,
+  }: {
+    value: string;
+    onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  }) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
 }));
 
 vi.mock('@/features/manage-nodes', () => ({
@@ -93,7 +113,9 @@ describe('BaseNode', () => {
   });
 
   it('renders handles', () => {
-    render(<BaseNode {...createMockNodeProps('node-1')} handles={[{ id: 'input', type: 'target' }]} />);
+    render(
+      <BaseNode {...createMockNodeProps('node-1')} handles={[{ id: 'input', type: 'target' }]} />,
+    );
     expect(screen.getByTestId('handle-input')).toBeInTheDocument();
   });
 
@@ -104,7 +126,7 @@ describe('BaseNode', () => {
         {...createMockNodeProps('node-1')}
         withVariables
         fields={[{ key: 'text', label: 'Content', type: 'textarea' }]}
-      />
+      />,
     );
     expect(screen.getByText('name')).toBeInTheDocument();
     expect(screen.getByText('email')).toBeInTheDocument();
@@ -137,7 +159,11 @@ describe('BaseNode', () => {
 
   it('createNode factory generates a valid component from configuration object', () => {
     const NodeComponent = createNode({ title: 'Config Node', category: 'test-category' });
-    render(<NodeComponent {...createMockNodeProps('node-factory', 'test-category', { selected: true })} />);
+    render(
+      <NodeComponent
+        {...createMockNodeProps('node-factory', 'test-category', { selected: true })}
+      />,
+    );
 
     expect(screen.getByText('Config Node')).toBeInTheDocument();
   });

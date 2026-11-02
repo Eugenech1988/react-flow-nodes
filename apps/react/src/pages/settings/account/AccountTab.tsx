@@ -2,7 +2,7 @@ import { TwoFactorSection, DangerZoneSection, PasswordSection } from './componen
 
 export const AccountTab = () => {
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="mx-auto max-w-4xl space-y-6">
       <TwoFactorSection />
       <PasswordSection />
       <DangerZoneSection />

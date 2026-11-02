@@ -18,25 +18,29 @@ interface DialogFooterProps {
 }
 
 export const DialogFooter = ({
-                               onCancel,
-                               onSubmit,
-                               isPending = false,
-                               submitText = 'Save',
-                               pendingText = 'Saving...',
-                               cancelText = 'Cancel',
-                               variant = 'submit',
-                               icon,
-                               withBorder = false,
-                               isReversedBtns = false,
-                               isDisabled = false,
-                               showSubmit = true,
-                               showCancel = true,
-                             }: DialogFooterProps) => {
+  onCancel,
+  onSubmit,
+  isPending = false,
+  submitText = 'Save',
+  pendingText = 'Saving...',
+  cancelText = 'Cancel',
+  variant = 'submit',
+  icon,
+  withBorder = false,
+  isReversedBtns = false,
+  isDisabled = false,
+  showSubmit = true,
+  showCancel = true,
+}: DialogFooterProps) => {
   const renderActionBtn = () => {
     if (!showSubmit) return null;
 
     const buttonVariant: ButtonVariant =
-      variant === 'submit' ? 'primary' : variant === 'danger' ? 'danger' : (variant as ButtonVariant);
+      variant === 'submit'
+        ? 'primary'
+        : variant === 'danger'
+          ? 'danger'
+          : (variant as ButtonVariant);
 
     return (
       <AppButton
@@ -72,8 +76,8 @@ export const DialogFooter = ({
 
   return (
     <div
-      className={`flex flex-col-reverse bg-background sm:flex-row sm:justify-end gap-2 p-4 ${
-        withBorder ? 'border-t border-b border-border/60' : ''
+      className={`bg-background flex flex-col-reverse gap-2 p-4 sm:flex-row sm:justify-end ${
+        withBorder ? 'border-border/60 border-t border-b' : ''
       }`}
     >
       {isReversedBtns ? (

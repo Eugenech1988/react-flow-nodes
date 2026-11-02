@@ -16,7 +16,17 @@ export const isInputElement = (element: Element | null): boolean => {
   const tagName = element.tagName;
   if (tagName === 'INPUT') {
     const inputType = (element as HTMLInputElement).type;
-    const nonTextInputs = ['checkbox', 'radio', 'button', 'submit', 'reset', 'file', 'image', 'range', 'color'];
+    const nonTextInputs = [
+      'checkbox',
+      'radio',
+      'button',
+      'submit',
+      'reset',
+      'file',
+      'image',
+      'range',
+      'color',
+    ];
     return !nonTextInputs.includes(inputType);
   }
   if (tagName === 'TEXTAREA' || tagName === 'SELECT') {
@@ -32,17 +42,16 @@ export const isInputElement = (element: Element | null): boolean => {
     return true;
   }
   return !!(element.closest && element.closest('[contenteditable="true"], [contenteditable=""]'));
-
 };
 
 export const useKeyboardShortcuts = ({
-                                       copyNodes,
-                                       pasteNodes,
-                                       getNodes,
-                                       getEdges,
-                                       undo,
-                                       redo,
-                                     }: UseKeyboardShortcutsParams) => {
+  copyNodes,
+  pasteNodes,
+  getNodes,
+  getEdges,
+  undo,
+  redo,
+}: UseKeyboardShortcutsParams) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as Element | null;

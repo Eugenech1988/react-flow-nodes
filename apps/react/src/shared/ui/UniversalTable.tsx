@@ -4,7 +4,7 @@ import {
   type SortingState,
   type ColumnDef,
   type TableFeatures,
-  type RowData
+  type RowData,
 } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import {
@@ -13,7 +13,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from '@pipeline/ui';
 import { AppButton } from '@/shared/ui';
 
@@ -23,7 +23,7 @@ type TSortDirection = 'asc' | 'desc' | false;
 
 type TUniversalTableProps<
   TFeatures extends TableFeatures = TableFeatures,
-  TData extends RowData = Record<string, unknown>
+  TData extends RowData = Record<string, unknown>,
 > = {
   table: Table<TFeatures, TData>;
   columns: ColumnDef<TFeatures, TData>[];
@@ -42,41 +42,39 @@ type TUniversalTableProps<
 
 export const UniversalTable = <
   TFeatures extends TableFeatures = TableFeatures,
-  TData extends RowData = Record<string, unknown>
+  TData extends RowData = Record<string, unknown>,
 >({
-    table,
-    columns,
-    sorting,
-    totalItems,
-    page,
-    totalPages,
-    limit,
-    onSort,
-    onSelect,
-    onPageChange,
-    onLimitChange,
-    noDataText = 'No items found matching your filters.',
-    itemsUnitLabel = 'items',
-  }: TUniversalTableProps<TFeatures, TData>) => {
+  table,
+  columns,
+  sorting,
+  totalItems,
+  page,
+  totalPages,
+  limit,
+  onSort,
+  onSelect,
+  onPageChange,
+  onLimitChange,
+  noDataText = 'No items found matching your filters.',
+  itemsUnitLabel = 'items',
+}: TUniversalTableProps<TFeatures, TData>) => {
   const rows = table.getRowModel().rows;
 
   const showFooter = totalItems > 10 || totalPages > 1;
 
   return (
-    <div className="rounded-xl border border-border/60 overflow-hidden bg-card/50 backdrop-blur-md shadow-xs flex flex-col">
-      <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-21.5rem)] relative">
-        <TableUI className="text-sm font-sans w-full">
-          <TableHeader className="sticky top-0 z-10 bg-muted/90 backdrop-blur-xs">
+    <div className="border-border/60 bg-card/50 flex flex-col overflow-hidden rounded-xl border shadow-xs backdrop-blur-md">
+      <div className="relative max-h-[calc(100vh-21.5rem)] overflow-x-auto overflow-y-auto">
+        <TableUI className="w-full font-sans text-sm">
+          <TableHeader className="bg-muted/90 sticky top-0 z-10 backdrop-blur-xs">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="hover:bg-transparent border-b border-border/60"
+                className="border-border/60 border-b hover:bg-transparent"
               >
                 {headerGroup.headers.map((header) => {
                   const canSort = header.column.id !== 'actions';
-                  const currentSort = sorting.find(
-                    (s) => s.id === header.column.id
-                  );
+                  const currentSort = sorting.find((s) => s.id === header.column.id);
                   const sortState: TSortDirection = currentSort
                     ? currentSort.desc
                       ? 'desc'
@@ -86,22 +84,17 @@ export const UniversalTable = <
                   return (
                     <TableHead
                       key={header.id}
-                      className={`font-semibold text-muted-foreground text-xs py-2.5 px-4 select-none ${
-                        canSort ? 'cursor-pointer hover:text-foreground' : ''
+                      className={`text-muted-foreground px-4 py-2.5 text-xs font-semibold select-none ${
+                        canSort ? 'hover:text-foreground cursor-pointer' : ''
                       } ${header.index === 0 ? 'pl-4' : ''} ${
                         header.index === headerGroup.headers.length - 1 ? 'pr-4' : ''
                       }`}
-                      onClick={
-                        canSort ? () => onSort(header.column.id) : undefined
-                      }
+                      onClick={canSort ? () => onSort(header.column.id) : undefined}
                     >
                       {header.isPlaceholder ? null : (
                         <div className="flex w-full items-center justify-center gap-1.5">
                           <span>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            {flexRender(header.column.columnDef.header, header.getContext())}
                           </span>
                           {canSort && (
                             <span className="text-muted-foreground/60 shrink-0">
@@ -123,7 +116,7 @@ export const UniversalTable = <
                 return (
                   <TableRow
                     key={row.id}
-                    className={`hover:bg-muted/40 border-b border-border/40 transition-all text-sm font-medium text-foreground/90 ${
+                    className={`hover:bg-muted/40 border-border/40 text-foreground/90 border-b text-sm font-medium transition-all ${
                       onSelect ? 'cursor-pointer' : ''
                     }`}
                     onClick={() => onSelect?.(row.original)}
@@ -131,15 +124,12 @@ export const UniversalTable = <
                     {cells.map((cell, idx) => (
                       <TableCell
                         key={cell.id}
-                        className={`py-2.5 px-4 align-middle ${idx === 0 ? 'pl-4' : ''} ${
+                        className={`px-4 py-2.5 align-middle ${idx === 0 ? 'pl-4' : ''} ${
                           idx === cells.length - 1 ? 'pr-4' : ''
                         }`}
                       >
                         <div className="flex w-full items-center justify-center">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </div>
                       </TableCell>
                     ))}
@@ -150,7 +140,7 @@ export const UniversalTable = <
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="text-center py-10 text-muted-foreground text-sm font-medium"
+                  className="text-muted-foreground py-10 text-center text-sm font-medium"
                 >
                   {noDataText}
                 </TableCell>
@@ -161,11 +151,12 @@ export const UniversalTable = <
       </div>
 
       {showFooter && (
-        <div className="bg-muted/30 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between px-4 py-2.5 gap-3 text-xs font-medium text-muted-foreground shrink-0">
+        <div className="bg-muted/30 border-border/60 text-muted-foreground flex shrink-0 flex-col items-center justify-between gap-3 border-t px-4 py-2.5 text-xs font-medium sm:flex-row">
           <div className="flex items-center gap-4">
             <span>
-              Showing <strong className="text-muted-foreground font-semibold">{rows.length}</strong> of{' '}
-              <strong className="text-muted-foreground font-semibold">{totalItems}</strong> {itemsUnitLabel}
+              Showing <strong className="text-muted-foreground font-semibold">{rows.length}</strong>{' '}
+              of <strong className="text-muted-foreground font-semibold">{totalItems}</strong>{' '}
+              {itemsUnitLabel}
             </span>
 
             <div className="flex items-center gap-1.5">
@@ -176,7 +167,7 @@ export const UniversalTable = <
                   onLimitChange(Number(e.target.value));
                   onPageChange(1);
                 }}
-                className="bg-background border border-border/80 rounded-lg px-2 py-1 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                className="bg-background border-border/80 text-foreground focus:ring-ring rounded-lg border px-2 py-1 text-xs focus:ring-1 focus:outline-none"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>
@@ -193,7 +184,7 @@ export const UniversalTable = <
               icon={ChevronLeft}
               isDisabled={page <= 1}
               onClick={() => onPageChange(page - 1)}
-              className="h-7 w-7 p-0 rounded-lg"
+              className="h-7 w-7 rounded-lg p-0"
             />
             <span className="px-1 text-xs">
               Page {page} of {Math.max(totalPages, 1)}
@@ -204,7 +195,7 @@ export const UniversalTable = <
               icon={ChevronRight}
               isDisabled={page >= totalPages}
               onClick={() => onPageChange(page + 1)}
-              className="h-7 w-7 p-0 rounded-lg"
+              className="h-7 w-7 rounded-lg p-0"
             />
           </div>
         </div>

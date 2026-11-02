@@ -8,7 +8,7 @@ export function useSubscription() {
     isLoading,
     isError,
     error,
-    refetch
+    refetch,
   } = useQuery({
     ...trpc.billing.subscription.queryOptions(),
     staleTime: 5 * 60 * 1000,
@@ -21,6 +21,6 @@ export function useSubscription() {
     isLoading,
     isError,
     error,
-    refetch
+    refetch,
   };
 }

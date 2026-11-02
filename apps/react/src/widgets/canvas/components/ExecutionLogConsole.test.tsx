@@ -7,7 +7,7 @@ type TLog = {
   timestamp: string;
   message: string;
   type: 'info' | 'error' | 'warning' | string;
-}
+};
 
 const mockStore = {
   logs: [] as TLog[],

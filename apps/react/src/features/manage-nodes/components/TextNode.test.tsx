@@ -17,7 +17,6 @@ vi.mock('./BaseNode', () => ({
   },
 }));
 
-
 const createMockNodeProps = (id: string, nodeType = 'text', overrides = {}) => ({
   id,
   data: { id, nodeType },
@@ -48,7 +47,7 @@ describe('TextNode', () => {
           nodeType: 'text',
           text: 'Hello {{name}} {{email}}',
         }}
-      />
+      />,
     );
 
     const props = baseNodeProps.current;

@@ -4,7 +4,7 @@ import { IsString, IsNotEmpty, Length } from 'class-validator';
 export class Login2faDto {
   @ApiProperty({
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-    description: 'Temporary token received from standard login when 2FA is enabled'
+    description: 'Temporary token received from standard login when 2FA is enabled',
   })
   @IsString()
   @IsNotEmpty()
@@ -12,7 +12,7 @@ export class Login2faDto {
 
   @ApiProperty({
     example: '123456',
-    description: '6-digit code from authenticator app'
+    description: '6-digit code from authenticator app',
   })
   @IsString()
   @IsNotEmpty()

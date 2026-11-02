@@ -17,14 +17,14 @@ interface TabsProps {
 }
 
 export const Tabs = ({
-                       tabs,
-                       currentTab,
-                       onTabChange,
-                       layoutId = 'activeTabIndicator',
-                       capitalizeLabels = false,
-                     }: TabsProps) => {
+  tabs,
+  currentTab,
+  onTabChange,
+  layoutId = 'activeTabIndicator',
+  capitalizeLabels = false,
+}: TabsProps) => {
   return (
-    <div className="h-11 bg-muted/40 border border-border/60 p-1.5 rounded-xl inline-flex items-center gap-1.5 backdrop-blur-md relative flex-wrap shadow-xs">
+    <div className="bg-muted/40 border-border/60 relative inline-flex h-11 flex-wrap items-center gap-1.5 rounded-xl border p-1.5 shadow-xs backdrop-blur-md">
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = currentTab === tab.id;
@@ -33,25 +33,27 @@ export const Tabs = ({
             key={tab.id}
             type="button"
             onClick={() => onTabChange(tab.id)}
-            className={`h-full flex items-center gap-2 px-4 text-sm font-medium rounded-lg transition-all cursor-pointer border-0 outline-none relative z-10 select-none ${
+            className={`relative z-10 flex h-full cursor-pointer items-center gap-2 rounded-lg border-0 px-4 text-sm font-medium transition-all outline-none select-none ${
               isActive
-                ? 'text-teal-700 dark:text-teal-300 font-semibold shadow-xs'
+                ? 'font-semibold text-teal-700 shadow-xs dark:text-teal-300'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
             }`}
           >
             {isActive && (
               <motion.div
                 layoutId={layoutId}
-                className="absolute inset-0 bg-teal-500/10 dark:bg-teal-500/20 border border-teal-500/30 rounded-lg -z-10"
+                className="absolute inset-0 -z-10 rounded-lg border border-teal-500/30 bg-teal-500/10 dark:bg-teal-500/20"
                 transition={{ type: 'spring', stiffness: 350, damping: 30 }}
               />
             )}
             {Icon && (
-              <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-teal-600 dark:text-teal-400' : ''}`} />
+              <Icon
+                className={`h-4 w-4 transition-colors ${isActive ? 'text-teal-600 dark:text-teal-400' : ''}`}
+              />
             )}
             <span className={capitalizeLabels ? 'capitalize' : ''}>{tab.label}</span>
             {tab.badge && (
-              <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold tracking-wider bg-teal-500/15 text-teal-700 dark:text-teal-300 border border-teal-500/30 rounded-md">
+              <span className="ml-1 rounded-md border border-teal-500/30 bg-teal-500/15 px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-teal-700 dark:text-teal-300">
                 {tab.badge}
               </span>
             )}

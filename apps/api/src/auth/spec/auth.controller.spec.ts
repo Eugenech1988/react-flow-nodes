@@ -110,9 +110,7 @@ describe('AuthController', () => {
     it('should throw UnauthorizedException if refresh token cookie is missing', async () => {
       const req = { cookies: {}, headers: {} } as any;
 
-      await expect(controller.refresh(req, mockRes)).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(controller.refresh(req, mockRes)).rejects.toThrow(UnauthorizedException);
     });
 
     it('should refresh tokens when refresh token is present in cookies', async () => {
@@ -150,14 +148,8 @@ describe('AuthController', () => {
       const result = await controller.logout(req, mockRes);
 
       expect(authService.logout).toHaveBeenCalledWith('rt_token');
-      expect(mockRes.clearCookie).toHaveBeenCalledWith(
-        'accessToken',
-        expect.any(Object),
-      );
-      expect(mockRes.clearCookie).toHaveBeenCalledWith(
-        'refreshToken',
-        expect.any(Object),
-      );
+      expect(mockRes.clearCookie).toHaveBeenCalledWith('accessToken', expect.any(Object));
+      expect(mockRes.clearCookie).toHaveBeenCalledWith('refreshToken', expect.any(Object));
       expect(result).toEqual({ success: true });
     });
   });

@@ -82,9 +82,7 @@ describe('UsersService', () => {
     it('should throw InternalServerErrorException on database failure', async () => {
       prisma.user.findMany.mockRejectedValue(new Error('DB Error'));
 
-      await expect(service.findAll()).rejects.toThrow(
-        InternalServerErrorException,
-      );
+      await expect(service.findAll()).rejects.toThrow(InternalServerErrorException);
     });
   });
 

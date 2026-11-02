@@ -33,25 +33,27 @@ export const InvoiceHistory = () => {
   };
 
   return (
-    <div className="lg:col-span-2 border border-border bg-card rounded-2xl p-6 space-y-4 shadow-xs">
+    <div className="border-border bg-card space-y-4 rounded-2xl border p-6 shadow-xs lg:col-span-2">
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-bold tracking-wider uppercase text-foreground/80 flex items-center gap-2">
-          <Receipt className="w-4 h-4 text-teal-500" /> Invoice History
+        <h3 className="text-foreground/80 flex items-center gap-2 text-xs font-bold tracking-wider uppercase">
+          <Receipt className="h-4 w-4 text-teal-500" /> Invoice History
         </h3>
       </div>
 
-      <div className="rounded-xl border border-border/80 overflow-hidden bg-card">
+      <div className="border-border/80 bg-card overflow-hidden rounded-xl border">
         {isTransactionLoading ? (
           <TableSkeleton rowCount={3} columnCount={5} />
         ) : (
           <Table className="text-xs">
             <TableHeader>
-              <TableRow className="hover:bg-transparent border-b border-border/60 bg-muted/30">
-                <TableHead className="font-semibold text-muted-foreground py-3 pl-4">Invoice</TableHead>
-                <TableHead className="font-semibold text-muted-foreground py-3">Date</TableHead>
-                <TableHead className="font-semibold text-muted-foreground py-3">Amount</TableHead>
-                <TableHead className="font-semibold text-muted-foreground py-3">Status</TableHead>
-                <TableHead className="text-right font-semibold text-muted-foreground py-3 pr-4">
+              <TableRow className="border-border/60 bg-muted/30 border-b hover:bg-transparent">
+                <TableHead className="text-muted-foreground py-3 pl-4 font-semibold">
+                  Invoice
+                </TableHead>
+                <TableHead className="text-muted-foreground py-3 font-semibold">Date</TableHead>
+                <TableHead className="text-muted-foreground py-3 font-semibold">Amount</TableHead>
+                <TableHead className="text-muted-foreground py-3 font-semibold">Status</TableHead>
+                <TableHead className="text-muted-foreground py-3 pr-4 text-right font-semibold">
                   Receipt
                 </TableHead>
               </TableRow>
@@ -69,10 +71,10 @@ export const InvoiceHistory = () => {
                   return (
                     <TableRow
                       key={tx.id}
-                      className="hover:bg-muted/30 border-b border-border/40 transition-colors"
+                      className="hover:bg-muted/30 border-border/40 border-b transition-colors"
                     >
                       <TableCell
-                        className="font-mono text-[11px] font-medium py-3 pl-4 text-foreground"
+                        className="text-foreground py-3 pl-4 font-mono text-[11px] font-medium"
                         title={rawId}
                       >
                         {displayId}
@@ -80,26 +82,26 @@ export const InvoiceHistory = () => {
                       <TableCell className="text-muted-foreground py-3">
                         {new Date(tx.createdAt).toLocaleDateString()}
                       </TableCell>
-                      <TableCell className="font-medium py-3 text-foreground">
+                      <TableCell className="text-foreground py-3 font-medium">
                         ${(tx.amount / 100).toFixed(2)}{' '}
-                        <span className="text-[10px] text-muted-foreground font-normal">
+                        <span className="text-muted-foreground text-[10px] font-normal">
                           {tx.currency?.toUpperCase()}
                         </span>
                       </TableCell>
                       <TableCell className="py-3">
                         <span
-                          className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium border ${
+                          className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium ${
                             isPaid
-                              ? 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20'
+                              ? 'border-teal-500/20 bg-teal-500/10 text-teal-600 dark:text-teal-400'
                               : isPending
-                                ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
-                                : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
+                                ? 'border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                                : 'border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400'
                           }`}
                         >
                           {isPaid ? 'Paid' : tx.status}
                         </span>
                       </TableCell>
-                      <TableCell className="text-right py-3 pr-4">
+                      <TableCell className="py-3 pr-4 text-right">
                         {isPaid ? (
                           <AppButton
                             variant="ghost"
@@ -108,7 +110,7 @@ export const InvoiceHistory = () => {
                             text="PDF"
                             isPending={isDownloading}
                             onClick={() => handleDownloadInvoice(tx.id)}
-                            className="text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 p-0 h-auto min-h-0 border-none"
+                            className="h-auto min-h-0 border-none p-0 text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300"
                           />
                         ) : (
                           <span className="text-muted-foreground/50 text-xs">—</span>
@@ -119,7 +121,7 @@ export const InvoiceHistory = () => {
                 })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground text-xs">
+                  <TableCell colSpan={5} className="text-muted-foreground py-8 text-center text-xs">
                     No previous invoices found.
                   </TableCell>
                 </TableRow>

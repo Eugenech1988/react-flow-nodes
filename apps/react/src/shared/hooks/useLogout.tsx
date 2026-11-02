@@ -12,11 +12,11 @@ export const useLogout = () => {
     },
     onError: (error) => {
       console.error('Logout failed:', error);
-    }
+    },
   });
 
   return {
     logout: mutation.mutate,
     isLoggingOut: mutation.isPending,
   };
-}
+};

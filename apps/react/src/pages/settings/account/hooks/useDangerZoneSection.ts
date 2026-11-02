@@ -23,7 +23,7 @@ export const useDangerZoneSection = () => {
       onError: (error) => {
         setAlert({ type: 'error', message: error.message || 'Failed to delete account.' });
       },
-    })
+    }),
   );
 
   return {

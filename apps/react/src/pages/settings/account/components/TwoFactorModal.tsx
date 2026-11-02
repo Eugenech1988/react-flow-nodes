@@ -5,10 +5,7 @@ import { z } from 'zod';
 import { ShieldCheck, Loader2, Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent, Input } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter, AppButton } from '@/shared/ui';
-import {
-  twoFactorTotpOnlySchema,
-  twoFactorCodeOrBackupSchema,
-} from '@pipeline/contracts';
+import { twoFactorTotpOnlySchema, twoFactorCodeOrBackupSchema } from '@pipeline/contracts';
 
 interface TwoFactorModalProps {
   isOpen: boolean;
@@ -21,14 +18,14 @@ interface TwoFactorModalProps {
 }
 
 export const TwoFactorModal = ({
-                                 isOpen,
-                                 onClose,
-                                 onConfirm,
-                                 mode,
-                                 qrCodeImage,
-                                 modalError,
-                                 isPending = false,
-                               }: TwoFactorModalProps) => {
+  isOpen,
+  onClose,
+  onConfirm,
+  mode,
+  qrCodeImage,
+  modalError,
+  isPending = false,
+}: TwoFactorModalProps) => {
   const isEnable = mode === 'enable';
   const [recoveryCodes, setRecoveryCodes] = useState<string[] | null>(null);
   const [copied, setCopied] = useState(false);
@@ -88,28 +85,27 @@ export const TwoFactorModal = ({
     <Dialog open={isOpen} onOpenChange={recoveryCodes ? undefined : handleClose}>
       <DialogContent
         showCloseButton={false}
-        className="sm:max-w-md border-border bg-card p-0 gap-0 overflow-hidden rounded-xl shadow-lg backdrop-blur-md"
+        className="border-border bg-card gap-0 overflow-hidden rounded-xl p-0 shadow-lg backdrop-blur-md sm:max-w-md"
       >
         <DialogHeader
           title={isEnable ? 'Enable 2FA' : 'Disable 2FA'}
-          icon={<ShieldCheck className="w-5 h-5 text-teal-600 dark:text-teal-400" />}
+          icon={<ShieldCheck className="h-5 w-5 text-teal-600 dark:text-teal-400" />}
           onClose={handleClose}
         />
 
         {recoveryCodes ? (
-          <div className="p-6 space-y-4">
+          <div className="space-y-4 p-6">
             <div className="space-y-1">
-              <h3 className="text-sm font-semibold text-foreground">
-                Save your recovery codes
-              </h3>
-              <p className="text-xs text-muted-foreground">
-                Store these backup codes in a safe place. You can use them to access your account if you lose your authenticator device.
+              <h3 className="text-foreground text-sm font-semibold">Save your recovery codes</h3>
+              <p className="text-muted-foreground text-xs">
+                Store these backup codes in a safe place. You can use them to access your account if
+                you lose your authenticator device.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 p-3 bg-muted/30 rounded-lg border border-border/60 font-mono text-xs text-center">
+            <div className="bg-muted/30 border-border/60 grid grid-cols-2 gap-2 rounded-lg border p-3 text-center font-mono text-xs">
               {recoveryCodes.map((c, i) => (
-                <div key={i} className="py-1 px-2 bg-background rounded border border-border/40">
+                <div key={i} className="bg-background border-border/40 rounded border px-2 py-1">
                   {c}
                 </div>
               ))}
@@ -139,7 +135,7 @@ export const TwoFactorModal = ({
           <form onSubmit={handleSubmit(handleFormSubmit)}>
             <DialogBody withBorder className="space-y-5">
               {modalError && (
-                <div className="p-3 rounded-lg border border-rose-500/20 bg-rose-500/10 text-xs font-medium text-rose-600 dark:text-rose-400">
+                <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-xs font-medium text-rose-600 dark:text-rose-400">
                   {modalError}
                 </div>
               )}
@@ -148,32 +144,33 @@ export const TwoFactorModal = ({
                 <>
                   <div className="space-y-3">
                     <div className="flex items-start gap-2.5">
-                      <span className="flex-none flex items-center justify-center w-5 h-5 rounded-full bg-teal-500/10 text-teal-600 dark:text-teal-400 text-xs font-bold leading-none">
+                      <span className="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-teal-500/10 text-xs leading-none font-bold text-teal-600 dark:text-teal-400">
                         1
                       </span>
-                      <p className="text-xs font-medium text-foreground/90 leading-relaxed pt-0.5">
-                        Scan this QR code with your Authenticator app (Google Authenticator, Authy, etc.):
+                      <p className="text-foreground/90 pt-0.5 text-xs leading-relaxed font-medium">
+                        Scan this QR code with your Authenticator app (Google Authenticator, Authy,
+                        etc.):
                       </p>
                     </div>
 
                     {qrCodeImage ? (
-                      <div className="flex justify-center bg-white p-2.5 rounded-xl border border-border/80 shadow-xs w-fit mx-auto">
-                        <img src={qrCodeImage} alt="2FA QR Code" className="w-40 h-40" />
+                      <div className="border-border/80 mx-auto flex w-fit justify-center rounded-xl border bg-white p-2.5 shadow-xs">
+                        <img src={qrCodeImage} alt="2FA QR Code" className="h-40 w-40" />
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center py-8 gap-2 text-xs text-muted-foreground bg-muted/10 rounded-xl border border-dashed border-border/60">
-                        <Loader2 className="w-5 h-5 animate-spin text-teal-600 dark:text-teal-400" />
+                      <div className="text-muted-foreground bg-muted/10 border-border/60 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed py-8 text-xs">
+                        <Loader2 className="h-5 w-5 animate-spin text-teal-600 dark:text-teal-400" />
                         <span>Generating QR code...</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="space-y-4 pt-1 mb-2 border-t border-border/40">
+                  <div className="border-border/40 mb-2 space-y-4 border-t pt-1">
                     <div className="flex items-start gap-2.5 pt-3">
-                      <span className="flex-none flex items-center justify-center w-5 h-5 rounded-full bg-teal-500/10 text-teal-600 dark:text-teal-400 text-xs font-bold leading-none">
+                      <span className="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-teal-500/10 text-xs leading-none font-bold text-teal-600 dark:text-teal-400">
                         2
                       </span>
-                      <p className="text-xs font-medium text-foreground/90 leading-relaxed pt-0.5">
+                      <p className="text-foreground/90 pt-0.5 text-xs leading-relaxed font-medium">
                         Enter the verification code from your app to confirm setup:
                       </p>
                     </div>
@@ -186,14 +183,14 @@ export const TwoFactorModal = ({
                         autoComplete="one-time-code"
                         placeholder="123456"
                         {...register('code')}
-                        className={`h-11 text-center font-mono text-3xl font-bold tracking-[0.3em] focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none transition-all ${
+                        className={`h-11 text-center font-mono text-3xl font-bold tracking-[0.3em] transition-all focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none ${
                           hasCodeError
-                            ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus-visible:border-rose-500 focus-visible:ring-rose-500/30'
+                            ? 'border-rose-500 bg-rose-500/5 text-rose-600 focus-visible:border-rose-500 focus-visible:ring-rose-500/30 dark:text-rose-400'
                             : 'border-border bg-background text-foreground focus-visible:border-teal-500 focus-visible:ring-teal-500/30'
                         }`}
                       />
                       {errors.code && (
-                        <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 text-center">
+                        <p className="mt-1 text-center text-xs font-medium text-rose-600 dark:text-rose-400">
                           {errors.code.message as string}
                         </p>
                       )}
@@ -202,8 +199,9 @@ export const TwoFactorModal = ({
                 </>
               ) : (
                 <div className="space-y-3">
-                  <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                    Enter a valid 6-digit code or a backup recovery code to confirm disabling Two-Factor Authentication:
+                  <p className="text-muted-foreground text-xs leading-relaxed font-medium">
+                    Enter a valid 6-digit code or a backup recovery code to confirm disabling
+                    Two-Factor Authentication:
                   </p>
 
                   <div className="space-y-1.5">
@@ -214,14 +212,14 @@ export const TwoFactorModal = ({
                       autoComplete="one-time-code"
                       placeholder="123456 or recovery code"
                       {...register('code')}
-                      className={`h-11 text-center font-mono text-2xl font-bold tracking-normal placeholder:tracking-normal focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none transition-all ${
+                      className={`h-11 text-center font-mono text-2xl font-bold tracking-normal transition-all placeholder:tracking-normal focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none ${
                         hasCodeError
-                          ? 'border-rose-500 bg-rose-500/5 text-rose-600 dark:text-rose-400 focus-visible:border-rose-500 focus-visible:ring-rose-500/30'
+                          ? 'border-rose-500 bg-rose-500/5 text-rose-600 focus-visible:border-rose-500 focus-visible:ring-rose-500/30 dark:text-rose-400'
                           : 'border-border bg-background text-foreground focus-visible:border-teal-500 focus-visible:ring-teal-500/30'
                       }`}
                     />
                     {errors.code && (
-                      <p className="text-xs text-rose-600 dark:text-rose-400 font-medium mt-1 text-center">
+                      <p className="mt-1 text-center text-xs font-medium text-rose-600 dark:text-rose-400">
                         {errors.code.message as string}
                       </p>
                     )}

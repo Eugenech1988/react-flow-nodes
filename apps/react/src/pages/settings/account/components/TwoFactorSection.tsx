@@ -8,7 +8,7 @@ export const TwoFactorSection = () => {
   const { user2fa, is2faPending, modal2fa, alert } = use2faSection();
 
   return (
-    <div className="border border-border bg-card rounded-xl shadow-xs p-6 space-y-4">
+    <div className="border-border bg-card space-y-4 rounded-xl border p-6 shadow-xs">
       {!modal2fa.isOpen && alert && (
         <LocalAlert
           hasSuccess={alert.type === 'success'}
@@ -19,16 +19,16 @@ export const TwoFactorSection = () => {
 
       <label
         htmlFor="2fa-switch"
-        className="group p-4 rounded-xl border border-border/60 bg-muted/5 hover:bg-muted/15 transition-colors flex items-center justify-between gap-4 cursor-pointer select-none"
+        className="group border-border/60 bg-muted/5 hover:bg-muted/15 flex cursor-pointer items-center justify-between gap-4 rounded-xl border p-4 transition-colors select-none"
       >
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-teal-600 transition-transform group-hover:scale-105" />
-            <span id="2fa-label" className="text-sm font-medium text-foreground">
+            <ShieldCheck className="h-4 w-4 text-teal-600 transition-transform group-hover:scale-105" />
+            <span id="2fa-label" className="text-foreground text-sm font-medium">
               Two-Factor Authentication (2FA)
             </span>
           </div>
-          <p id="2fa-description" className="text-xs text-muted-foreground">
+          <p id="2fa-description" className="text-muted-foreground text-xs">
             Add an extra layer of security to your account during login.
           </p>
         </div>
@@ -43,7 +43,7 @@ export const TwoFactorSection = () => {
           style={{
             backgroundColor: user2fa ? 'var(--color-teal-600, #0d9488)' : undefined,
           }}
-          className="focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none border-transparent cursor-pointer"
+          className="cursor-pointer border-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
         />
       </label>
 

@@ -72,7 +72,7 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
 
   return (
     <Dialog open={!!stat} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent showCloseButton={false} className="sm:max-w-2xl p-0 gap-0 overflow-hidden">
+      <DialogContent showCloseButton={false} className="gap-0 overflow-hidden p-0 sm:max-w-2xl">
         {stat && (
           <>
             <DialogHeader
@@ -85,13 +85,13 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
             <DialogBody withBorder className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs text-muted-foreground">Current Usage</span>
+                  <span className="text-muted-foreground text-xs">Current Usage</span>
                   <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">
                     {stat.value}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-lg text-xs relative">
+                <div className="bg-muted/60 relative flex items-center gap-1 rounded-lg p-1 text-xs">
                   {(['7d', '30d', '90d'] as TimeRange[]).map((range) => {
                     const isActive = timeRange === range;
 
@@ -99,7 +99,7 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
                       <button
                         key={range}
                         onClick={() => setTimeRange(range)}
-                        className={`relative px-2.5 py-1 rounded-md font-medium transition-colors duration-200 cursor-pointer ${
+                        className={`relative cursor-pointer rounded-md px-2.5 py-1 font-medium transition-colors duration-200 ${
                           isActive
                             ? 'text-teal-600 dark:text-teal-400'
                             : 'text-muted-foreground hover:text-foreground'
@@ -108,7 +108,7 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
                         {isActive && (
                           <motion.div
                             layoutId="activeTabIndicator"
-                            className="absolute inset-0 bg-card rounded-md shadow-xs"
+                            className="bg-card absolute inset-0 rounded-md shadow-xs"
                             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                           />
                         )}
@@ -121,7 +121,10 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
 
               <div className="h-64 w-full pt-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={MOCK_CHART_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <AreaChart
+                    data={MOCK_CHART_DATA}
+                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                  >
                     <defs>
                       <linearGradient id="strokeGradient" x1="0" y1="0" x2="0" y2="1">
                         {STROKE_STOPS.map((stop, i) => (
@@ -131,26 +134,57 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
 
                       <linearGradient id="fillGradient" x1="0" y1="0" x2="0" y2="1">
                         {FILL_STOPS.map((stop, i) => (
-                          <stop key={i} offset={stop.offset} stopColor={stop.color} stopOpacity={0.25} />
+                          <stop
+                            key={i}
+                            offset={stop.offset}
+                            stopColor={stop.color}
+                            stopOpacity={0.25}
+                          />
                         ))}
                       </linearGradient>
                     </defs>
 
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
-                    <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
-                    <YAxis dataKey="value" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="hsl(var(--border))"
+                      opacity={0.5}
+                    />
+                    <XAxis
+                      dataKey="day"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                    />
+                    <YAxis
+                      dataKey="value"
+                      domain={[0, 100]}
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                    />
 
                     <Tooltip
-                      cursor={{ stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1, strokeDasharray: '4 4' }}
+                      cursor={{
+                        stroke: 'hsl(var(--muted-foreground))',
+                        strokeWidth: 1,
+                        strokeDasharray: '4 4',
+                      }}
                       content={({ active, payload, label }) => {
                         if (active && payload && payload.length) {
                           const val = Number(payload[0].value);
                           const color = getLineColor(val);
                           return (
-                            <div className="bg-popover border border-border p-2.5 rounded-lg shadow-md text-xs space-y-1">
-                              <p className="font-semibold text-popover-foreground">{label}</p>
-                              <p className="font-medium flex items-center gap-1.5" style={{ color }}>
-                                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+                            <div className="bg-popover border-border space-y-1 rounded-lg border p-2.5 text-xs shadow-md">
+                              <p className="text-popover-foreground font-semibold">{label}</p>
+                              <p
+                                className="flex items-center gap-1.5 font-medium"
+                                style={{ color }}
+                              >
+                                <span
+                                  className="h-2 w-2 rounded-full"
+                                  style={{ backgroundColor: color }}
+                                />
                                 {stat.label}: {val}%
                               </p>
                             </div>
@@ -186,7 +220,12 @@ export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
               </div>
             </DialogBody>
 
-            <DialogFooter showSubmit={false} cancelText="Close" onCancel={onClose} withBorder={false} />
+            <DialogFooter
+              showSubmit={false}
+              cancelText="Close"
+              onCancel={onClose}
+              withBorder={false}
+            />
           </>
         )}
       </DialogContent>

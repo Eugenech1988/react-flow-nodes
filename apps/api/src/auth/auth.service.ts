@@ -54,7 +54,10 @@ export class AuthService {
   }
 
   async validateOauthUser(profile: TOauthUser): Promise<TUserSafe> {
-    const existingUser = await this.usersService.findOneByProvider(profile.provider, profile.providerId);
+    const existingUser = await this.usersService.findOneByProvider(
+      profile.provider,
+      profile.providerId,
+    );
 
     if (existingUser) {
       return this.sanitizeUser(existingUser);
@@ -267,7 +270,8 @@ export class AuthService {
     const payload = { userId, purpose: '2fa_pending' };
     return this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
-      expiresIn: this.configService.getOrThrow<JwtSignOptions['expiresIn']>('JWT_ACCESS_TEMP_EXPIRES'),
+      expiresIn:
+        this.configService.getOrThrow<JwtSignOptions['expiresIn']>('JWT_ACCESS_TEMP_EXPIRES'),
     });
   }
 
@@ -367,9 +371,7 @@ export class AuthService {
       displayCodes.push(formatted);
     }
 
-    const hashedCodes = await Promise.all(
-      rawCodes.map((c) => hash(c))
-    );
+    const hashedCodes = await Promise.all(rawCodes.map((c) => hash(c)));
 
     await this.usersService.update(userId, {
       isTwoFactorEnabled: true,
@@ -405,9 +407,8 @@ export class AuthService {
     }
 
     if (!isValid && user.recoveryCodes?.length) {
-      const formattedDash = cleanCode.length === 8
-        ? `${cleanCode.slice(0, 4)}-${cleanCode.slice(4)}`
-        : rawCode;
+      const formattedDash =
+        cleanCode.length === 8 ? `${cleanCode.slice(0, 4)}-${cleanCode.slice(4)}` : rawCode;
 
       const candidates = Array.from(
         new Set([
@@ -420,7 +421,7 @@ export class AuthService {
           formattedDash,
           formattedDash.toUpperCase(),
           formattedDash.toLowerCase(),
-        ])
+        ]),
       );
 
       for (const hashedCode of user.recoveryCodes) {
@@ -512,9 +513,7 @@ export class AuthService {
     }
 
     const rawRecoveryCodes = this.generateRecoveryCodes();
-    const hashedCodes = await Promise.all(
-      rawRecoveryCodes.map((c) => hash(c))
-    );
+    const hashedCodes = await Promise.all(rawRecoveryCodes.map((c) => hash(c)));
 
     await this.usersService.update(userId, {
       recoveryCodes: hashedCodes,

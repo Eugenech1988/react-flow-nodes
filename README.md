@@ -6,6 +6,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-22%2B-339933?logo=node.js)](https://nodejs.org/)
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Monorepo Structure](#monorepo-structure)
 - [Quick Start](#quick-start)
@@ -31,6 +32,7 @@
 ## Overview
 
 This repository implements a full‑stack pipeline/workflow automation platform managed as a **Bun** monorepo with **TurboRepo**. It provides:
+
 - A visual flow‑editor UI built with React, Vite, and **React Flow**.
 - A NestJS backend exposing a type‑safe **tRPC** API powered by Prisma.
 - A marketing landing site built with Astro.
@@ -78,6 +80,7 @@ bun run dev
 ```
 
 Open your browser:
+
 - **React UI:** `http://localhost:5173`
 - **Astro Landing:** `http://localhost:4321`
 - **API (Swagger UI):** `http://localhost:3000`
@@ -107,21 +110,21 @@ The API container applies pending Prisma migrations before starting NestJS.
 
 ## Development Commands
 
-| Command | Description |
-|---|---|
-| `bun install` | Install dependencies for the entire workspace |
-| `bun run dev` | Start **all** Turbo dev tasks (`apps/*` in parallel) |
-| `bun --filter pipelines-app run dev` | Run only the React UI |
-| `bun --filter pipelines-landing run dev` | Run only the Astro site |
-| `bun --filter @pipeline/api run dev` | Run only the NestJS API |
-| `bun run lint` | Run ESLint across all packages/apps |
-| `bun run check-types` | Type‑checking via `tsc` for the whole repo |
-| `bun run format:check` | Verify Prettier formatting |
-| `bun run format` | Auto‑format all files (use sparingly) |
-| `bun run build` | Build **all** apps/packages for production |
-| `bun --filter pipelines-app run test` | Run Vitest suite for the React app |
-| `bun --filter @pipeline/api run test` | Run Jest unit tests for the API |
-| `bun --filter @pipeline/api run test:e2e` | Run Jest E2E tests for the API |
+| Command                                   | Description                                          |
+| ----------------------------------------- | ---------------------------------------------------- |
+| `bun install`                             | Install dependencies for the entire workspace        |
+| `bun run dev`                             | Start **all** Turbo dev tasks (`apps/*` in parallel) |
+| `bun --filter pipelines-app run dev`      | Run only the React UI                                |
+| `bun --filter pipelines-landing run dev`  | Run only the Astro site                              |
+| `bun --filter @pipeline/api run dev`      | Run only the NestJS API                              |
+| `bun run lint`                            | Run ESLint across all packages/apps                  |
+| `bun run check-types`                     | Type‑checking via `tsc` for the whole repo           |
+| `bun run format:check`                    | Verify Prettier formatting                           |
+| `bun run format`                          | Auto‑format all files (use sparingly)                |
+| `bun run build`                           | Build **all** apps/packages for production           |
+| `bun --filter pipelines-app run test`     | Run Vitest suite for the React app                   |
+| `bun --filter @pipeline/api run test`     | Run Jest unit tests for the API                      |
+| `bun --filter @pipeline/api run test:e2e` | Run Jest E2E tests for the API                       |
 
 ---
 
@@ -161,6 +164,7 @@ bun run build
 ```
 
 The output directories are:
+
 - `apps/react/dist/`
 - `apps/astro/dist/`
 - `apps/api/dist/`
@@ -175,6 +179,7 @@ Deploy the compiled assets according to your hosting strategy (e.g., Vercel for 
 ### UI Components (`@pipeline/ui`)
 
 A Tailwind‑CSS v4‑based component library that includes:
+
 - Base UI primitives (Radix, Base UI)
 - Icon set (Lucide)
 - Toast notifications (Sonner)
@@ -207,6 +212,7 @@ Centralized configurations live in `packages/eslint-config` and `packages/typesc
   - `src/shared/` – reusable hooks (`usePipelines.ts`), API client wrappers, UI primitives.
 
 #### Data Flow Example
+
 ```tsx
 // src/features/manage-nodes/components/DatabaseNode.tsx
 import { useForm } from 'react-hook-form';
@@ -226,6 +232,7 @@ export function DatabaseNode({ node }) {
   // component implementation …
 }
 ```
+
 The component uses the shared **tRPC** client generated from the contracts package, ensuring type‑safe server calls.
 
 ---
@@ -250,12 +257,14 @@ The component uses the shared **tRPC** client generated from the contracts packa
   - `test/*.e2e‑spec.ts` – End‑to‑end integration tests.
 
 #### API Architecture Overview
+
 - **tRPC Layer** – Defined in `src/trpc/app‑router.ts`. Each procedure validates inputs using Zod schemas from `@pipeline/contracts` and returns typed responses.
 - **Service Layer** – Business logic lives in `src/modules/*/services/*`. Services are injected via Nest's DI and interact with Prisma.
 - **Controller Layer** – HTTP endpoints (`src/modules/*/controllers/*`) expose Swagger UI and optional REST fallback, but most UI interaction goes through tRPC.
 - **Background Jobs** – Inngest workflows are defined under `src/ingest/` and triggered by service actions (e.g., pipeline execution).
 
 #### Example tRPC Procedure
+
 ```ts
 // src/trpc/database‑nodes.ts
 import { z } from 'zod';
@@ -267,13 +276,12 @@ export const databaseNodeRouter = createTRPCRouter({
   getAll: publicProcedure.query(async () => {
     return prisma.databaseNode.findMany();
   }),
-  create: publicProcedure
-    .input(databaseNodeSchema)
-    .mutation(async ({ input }) => {
-      return prisma.databaseNode.create({ data: input });
-    }),
+  create: publicProcedure.input(databaseNodeSchema).mutation(async ({ input }) => {
+    return prisma.databaseNode.create({ data: input });
+  }),
 });
 ```
+
 The same `databaseNodeSchema` lives in `packages/contracts/src/database‑nodes.ts`, guaranteeing the React client and the API share identical validation.
 
 ---
@@ -289,6 +297,7 @@ The same `databaseNodeSchema` lives in `packages/contracts/src/database‑nodes.
 7. **Testing** – Unit tests mock Prisma via `@prisma/client/runtime` and use `TestingModule` to instantiate services. E2E tests spin up the Nest application and make real HTTP/tRPC calls.
 
 ### Useful Files
+
 - **tRPC Router**: [`src/trpc/app-router.ts`](file:///Users/eugene/WebstormProjects/untitled11/apps/api/src/trpc/app-router.ts)
 - **Prisma Schema**: [`prisma/schema.prisma`](file:///Users/eugene/WebstormProjects/untitled11/apps/api/prisma/schema.prisma)
 - **Auth Module**: [`src/auth/auth.module.ts`](file:///Users/eugene/WebstormProjects/untitled11/apps/api/src/auth/auth.module.ts)
@@ -320,6 +329,7 @@ The same `databaseNodeSchema` lives in `packages/contracts/src/database‑nodes.
 7. **Testing** – Components are tested with Vitest + React Testing Library. Mock `trpc` client using `msw` or `@trpc/client` test utilities.
 
 ### Key Files
+
 - **tRPC Provider**: [`src/app/trpc.tsx`](file:///Users/eugene/WebstormProjects/untitled11/apps/react/src/app/trpc.tsx)
 - **Main Entry**: [`src/main.tsx`](file:///Users/eugene/WebstormProjects/untitled11/apps/react/src/main.tsx)
 - **Database Node Component**: [`src/features/manage-nodes/components/DatabaseNode.tsx`](file:///Users/eugene/WebstormProjects/untitled11/apps/react/src/features/manage-nodes/components/DatabaseNode.tsx)

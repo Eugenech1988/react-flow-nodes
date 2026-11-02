@@ -39,7 +39,7 @@ export const useDragAndDrop = ({ rfInstance, addNode, getNodeID }: UseDragAndDro
 
       addNode(newNode);
     },
-    [rfInstance, addNode, getNodeID]
+    [rfInstance, addNode, getNodeID],
   );
 
   const onDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {

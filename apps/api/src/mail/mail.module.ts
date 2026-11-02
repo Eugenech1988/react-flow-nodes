@@ -16,9 +16,7 @@ import { existsSync } from 'node:fs';
         const distTemplatesDir = join(__dirname, 'templates');
         const srcTemplatesDir = join(__dirname, 'templates');
 
-        const templatesDir = existsSync(distTemplatesDir)
-          ? distTemplatesDir
-          : srcTemplatesDir;
+        const templatesDir = existsSync(distTemplatesDir) ? distTemplatesDir : srcTemplatesDir;
 
         return {
           transport: {

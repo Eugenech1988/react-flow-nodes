@@ -56,8 +56,7 @@ export const getPlans = (): IPlan[] => {
 };
 
 export const getPlanMeta = (planId: TPlanId, isProActive: boolean) => {
-  const isCurrent =
-    (planId === 'pro' && isProActive) || (planId === 'free' && !isProActive);
+  const isCurrent = (planId === 'pro' && isProActive) || (planId === 'free' && !isProActive);
 
   let buttonText: string;
   let buttonVariant: 'outline' | 'primary' | 'secondary';

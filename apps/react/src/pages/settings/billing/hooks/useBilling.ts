@@ -49,7 +49,7 @@ export const useBilling = () => {
       onError: (error) => {
         setBanner({ error: error.message || 'Failed to initialize payment.', success: null });
       },
-    })
+    }),
   );
 
   const cancelMutation = useMutation(
@@ -63,7 +63,7 @@ export const useBilling = () => {
       onError: (error) => {
         setBanner({ error: error.message || 'Failed to cancel subscription.', success: null });
       },
-    })
+    }),
   );
 
   const dismissError = () => {

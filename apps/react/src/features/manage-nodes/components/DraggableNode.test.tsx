@@ -4,13 +4,7 @@ import { DraggableNode } from './DraggableNode';
 
 describe('DraggableNode', () => {
   it('renders label and icon', () => {
-    render(
-      <DraggableNode
-        type="text"
-        label="Text"
-        icon="📝"
-      />
-    );
+    render(<DraggableNode type="text" label="Text" icon="📝" />);
 
     expect(screen.getByText('Text')).toBeInTheDocument();
     expect(screen.getByText('📝')).toBeInTheDocument();
@@ -56,7 +50,7 @@ describe('DraggableNode', () => {
 
     expect(setData).toHaveBeenCalledWith(
       'application/reactflow',
-      JSON.stringify({ nodeType: 'llm' })
+      JSON.stringify({ nodeType: 'llm' }),
     );
 
     expect(node.style.cursor).toBe('grabbing');

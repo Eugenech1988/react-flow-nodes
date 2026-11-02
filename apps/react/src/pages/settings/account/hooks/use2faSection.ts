@@ -22,7 +22,7 @@ export const use2faSection = () => {
       onError: (error) => {
         setModalError(error.message || 'Failed to generate 2FA secret.');
       },
-    })
+    }),
   );
 
   const turnOn2faMutation = useMutation(
@@ -34,7 +34,7 @@ export const use2faSection = () => {
       onError: (error) => {
         setModalError(error.message || 'Invalid code. Failed to enable 2FA.');
       },
-    })
+    }),
   );
 
   const turnOff2faMutation = useMutation(
@@ -47,7 +47,7 @@ export const use2faSection = () => {
       onError: (error) => {
         setModalError(error.message || 'Invalid code. Failed to disable 2FA.');
       },
-    })
+    }),
   );
 
   const is2faPending = turnOn2faMutation.isPending || turnOff2faMutation.isPending;

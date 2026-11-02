@@ -116,7 +116,9 @@ export class UsersService {
       });
     } catch (error) {
       console.error('Failed in create operations:', error);
-      throw new InternalServerErrorException('An unexpected error occurred during user raw creation');
+      throw new InternalServerErrorException(
+        'An unexpected error occurred during user raw creation',
+      );
     }
   }
 
@@ -165,7 +167,9 @@ export class UsersService {
       });
     } catch (error) {
       console.error(`Failed to update user with id ${id}:`, error);
-      throw new InternalServerErrorException('An unexpected error occurred while updating the user');
+      throw new InternalServerErrorException(
+        'An unexpected error occurred while updating the user',
+      );
     }
   }
 
@@ -228,7 +232,9 @@ export class UsersService {
       });
     } catch (error) {
       console.error(`Failed to delete user and related data for id ${id}:`, error);
-      throw new InternalServerErrorException('An unexpected error occurred while deleting the user account');
+      throw new InternalServerErrorException(
+        'An unexpected error occurred while deleting the user account',
+      );
     }
   }
 

@@ -17,21 +17,22 @@ interface AuthFormProps {
   currentApiError?: string | null;
   onLogin: (data: TLoginInputData) => Promise<void>;
   onRegister: (data: RegisterFormInputData) => Promise<void>;
-  onSocialLogin: (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onSocialLogin: (
+    provider: 'google' | 'github',
+  ) => (e: React.MouseEvent<HTMLButtonElement>) => void;
   onForgotPassword: () => void;
 }
 
 export const AuthForm: React.FC<AuthFormProps> = ({
-                                                    mode,
-                                                    currentApiError,
-                                                    onLogin,
-                                                    onRegister,
-                                                    onSocialLogin,
-                                                    onForgotPassword,
-                                                  }) => {
+  mode,
+  currentApiError,
+  onLogin,
+  onRegister,
+  onSocialLogin,
+  onForgotPassword,
+}) => {
   const isAuthError =
-    currentApiError === 'Unauthorized' ||
-    currentApiError?.toLowerCase().includes('invalid');
+    currentApiError === 'Unauthorized' || currentApiError?.toLowerCase().includes('invalid');
 
   const isLogin = mode === 'login';
 
@@ -66,20 +67,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         onGithubClick={onSocialLogin('github')}
       />
 
-      <div className="relative flex w-full items-center justify-center text-xs uppercase tracking-widest text-slate-200 dark:text-slate-400 before:h-px before:flex-1 before:bg-slate-200 dark:before:bg-slate-700 after:h-px after:flex-1 after:bg-slate-300 dark:after:bg-slate-700">
+      <div className="relative flex w-full items-center justify-center text-xs tracking-widest text-slate-200 uppercase before:h-px before:flex-1 before:bg-slate-200 after:h-px after:flex-1 after:bg-slate-300 dark:text-slate-400 dark:before:bg-slate-700 dark:after:bg-slate-700">
         <span className="px-3">or</span>
       </div>
 
       <form
-        onSubmit={
-          isLogin
-            ? handleLoginSubmit(onLogin)
-            : handleRegisterSubmit(onRegister)
-        }
+        onSubmit={isLogin ? handleLoginSubmit(onLogin) : handleRegisterSubmit(onRegister)}
         className="space-y-6"
       >
         {currentApiError && !isAuthError && (
-          <div className="text-sm font-medium text-red-400 bg-red-950/30 border border-red-900/40 p-3 rounded-xl text-center antialiased">
+          <div className="rounded-xl border border-red-900/40 bg-red-950/30 p-3 text-center text-sm font-medium text-red-400 antialiased">
             {currentApiError}
           </div>
         )}
@@ -105,17 +102,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 <button
                   type="button"
                   onClick={onForgotPassword}
-                  className="text-xs cursor-pointer text-teal-600 dark:text-teal-400 font-medium transition-colors duration-200 hover:underline focus:outline-none ml-auto"
+                  className="ml-auto cursor-pointer text-xs font-medium text-teal-600 transition-colors duration-200 hover:underline focus:outline-none dark:text-teal-400"
                 >
                   Forgot password?
                 </button>
               </div>
             </>
           ) : (
-            <RegisterFields
-              register={registerRegister}
-              errors={registerErrors}
-            />
+            <RegisterFields register={registerRegister} errors={registerErrors} />
           )}
         </div>
 
@@ -126,7 +120,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           text={isLogin ? 'Sign In' : 'Register'}
           pendingText="Processing..."
           icon={null}
-          className="w-full text-base transition-all h-11.5 rounded-xl tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)]"
+          className="h-11.5 w-full rounded-xl text-base tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)] transition-all"
         />
       </form>
     </>

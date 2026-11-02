@@ -4,7 +4,10 @@ import { usePasswordSection } from '../hooks';
 
 export const PasswordSection = () => {
   const { form, onSubmit, hasPassword, isPending, isPristine, alert } = usePasswordSection();
-  const { register, formState: { errors } } = form;
+  const {
+    register,
+    formState: { errors },
+  } = form;
 
   const rootError = errors.root?.message;
   const hasError = alert?.type === 'error' || !!rootError;
@@ -12,16 +15,12 @@ export const PasswordSection = () => {
   const alertMessage = alert?.message || rootError || '';
 
   return (
-    <div className="border border-border bg-card rounded-xl shadow-xs p-6 space-y-6">
-      <h3 className="font-medium text-sm text-foreground/90">
+    <div className="border-border bg-card space-y-6 rounded-xl border p-6 shadow-xs">
+      <h3 className="text-foreground/90 text-sm font-medium">
         {hasPassword ? 'Change Password' : 'Set Password'}
       </h3>
 
-      <LocalAlert
-        hasSuccess={hasSuccess}
-        hasError={hasError}
-        alertMessage={alertMessage}
-      />
+      <LocalAlert hasSuccess={hasSuccess} hasError={hasError} alertMessage={alertMessage} />
 
       <form onSubmit={onSubmit} className="space-y-4">
         {hasPassword ? (
@@ -36,7 +35,7 @@ export const PasswordSection = () => {
               errorMessage={errors.currentPassword?.message}
             />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FloatingInput
                 {...register('newPassword')}
                 id="newPassword"
@@ -59,10 +58,11 @@ export const PasswordSection = () => {
           </>
         ) : (
           <div className="space-y-4">
-            <p className="text-xs text-muted-foreground">
-              You logged in via OAuth or don’t have a password set yet. Create a password to enable email login.
+            <p className="text-muted-foreground text-xs">
+              You logged in via OAuth or don’t have a password set yet. Create a password to enable
+              email login.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FloatingInput
                 {...register('newPassword')}
                 id="newPassword"
@@ -85,14 +85,8 @@ export const PasswordSection = () => {
           </div>
         )}
 
-        <div className="flex justify-end items-center gap-2 pt-4 border-t border-border/60">
-          <AppButton
-            variant="ghost"
-            isLink
-            linkTo="/"
-            icon={ArrowLeft}
-            text="Back to app"
-          />
+        <div className="border-border/60 flex items-center justify-end gap-2 border-t pt-4">
+          <AppButton variant="ghost" isLink linkTo="/" icon={ArrowLeft} text="Back to app" />
 
           <AppButton
             type="submit"
