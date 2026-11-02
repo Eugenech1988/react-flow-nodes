@@ -2,23 +2,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { NodesToolbar } from '@/widgets';
 
-interface DraggableNodeProps {
-  type: string;
-  label: string;
-  icon: string;
-}
-
-const { draggableNodeMock } = vi.hoisted(() => ({
-  draggableNodeMock: vi.fn((props: DraggableNodeProps) => (
-    <div data-testid="draggable-node">{props.label}</div>
-  )),
-}));
+const draggableNodeMock = vi.fn();
 
 vi.mock('@/features/manage-nodes', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/features/manage-nodes')>();
   return {
     ...actual,
-    DraggableNode: draggableNodeMock,
+    DraggableNode: (props: { type: string; label: string; icon: string }) => {
+      draggableNodeMock(props);
+      return <div data-testid="draggable-node">{props.label}</div>;
+    },
   };
 });
 

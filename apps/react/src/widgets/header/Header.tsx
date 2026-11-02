@@ -4,7 +4,7 @@ import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
 import { UserDropdown } from '@/features/user-dropdown';
 import { WorkflowExecutionControl } from './components/WorkflowExecutionControl';
-import { ShareDialog } from './components/ShareDialog';
+import { ShareDialog } from '@/widgets';
 import { useUser } from '@/shared/hooks';
 import { useStore } from '@/entities';
 

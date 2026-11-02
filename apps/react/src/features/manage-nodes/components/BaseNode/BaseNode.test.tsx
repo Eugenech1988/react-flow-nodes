@@ -31,42 +31,48 @@ vi.mock('@xyflow/react', () => ({
 
 vi.mock('@pipeline/ui', () => ({
   Input: ({
-    value,
-    onChange,
-  }: {
+            value,
+            onChange,
+          }: {
     value: string | number;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   }) => <input data-testid="input" value={value} onChange={onChange} />,
-  Select: ({
-    value,
-    onChange,
-    options,
-  }: {
+  Textarea: ({
+               value,
+               onChange,
+             }: {
     value: string;
-    onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-    options?: { value: string; label: string }[];
+    onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  }) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
+  Select: ({
+             value,
+             onValueChange,
+             children,
+           }: {
+    value: string;
+    onValueChange: (value: string) => void;
+    children?: React.ReactNode;
   }) => (
-    <select data-testid="select" value={value} onChange={onChange}>
-      {options?.map((o) => (
-        <option key={o.value} value={o.value}>
-          {o.label}
-        </option>
-      ))}
+    <select data-testid="select" value={value} onChange={(e) => onValueChange(e.target.value)}>
+      {children}
     </select>
   ),
-}));
-
-vi.mock('@pipeline/ui', () => ({
+  SelectTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  SelectValue: () => <span />,
+  SelectContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  SelectItem: ({ value, children }: { value: string; children: React.ReactNode }) => (
+    <option value={value}>{children}</option>
+  ),
   AutosizeTextarea: ({
-    value,
-    onChange,
-  }: {
+                       value,
+                       onChange,
+                     }: {
     value: string;
     onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   }) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
 }));
 
-vi.mock('@/features/manage-nodes', () => ({
+vi.mock('@/shared/lib', () => ({
   extractVariables,
 }));
 
