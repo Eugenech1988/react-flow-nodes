@@ -6,7 +6,7 @@ const { useThemeMock } = vi.hoisted(() => ({
   useThemeMock: vi.fn(),
 }));
 
-vi.mock('@/app/providers', () => ({
+vi.mock('next-themes', () => ({
   useTheme: useThemeMock,
 }));
 
@@ -39,7 +39,7 @@ describe('ThemeToggle', () => {
 
   it('renders toggle button', () => {
     useThemeMock.mockReturnValue({
-      theme: 'light',
+      resolvedTheme: 'light',
       setTheme,
     });
 
@@ -52,7 +52,7 @@ describe('ThemeToggle', () => {
 
   it('switches from light to dark', () => {
     useThemeMock.mockReturnValue({
-      theme: 'light',
+      resolvedTheme: 'light',
       setTheme,
     });
 
@@ -65,7 +65,7 @@ describe('ThemeToggle', () => {
 
   it('switches from dark to light', () => {
     useThemeMock.mockReturnValue({
-      theme: 'dark',
+      resolvedTheme: 'dark',
       setTheme,
     });
 
@@ -87,7 +87,7 @@ describe('ThemeToggle', () => {
     }));
 
     useThemeMock.mockReturnValue({
-      theme: 'system',
+      resolvedTheme: 'light',
       setTheme,
     });
 
@@ -109,7 +109,7 @@ describe('ThemeToggle', () => {
     }));
 
     useThemeMock.mockReturnValue({
-      theme: 'system',
+      resolvedTheme: 'dark',
       setTheme,
     });
 

@@ -14,7 +14,7 @@
     "fix": "bun run lint:fix && bun run typecheck",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui",
+    "test:ui": "vitest --ui --api.token=''",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },

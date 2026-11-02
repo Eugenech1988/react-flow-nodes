@@ -7,10 +7,17 @@ const mockStore = {
   executionStatus: 'idle',
   runWorkflow: vi.fn(),
   stopWorkflow: vi.fn(),
+  setLastRunInfo: vi.fn(),
 };
 
 vi.mock('@/entities', () => ({
   useStore: (selector: (state: typeof mockStore) => unknown) => selector(mockStore),
+}));
+
+const mockNavigate = vi.fn();
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
+  useLocation: () => ({ pathname: '/' }),
 }));
 
 vi.mock('@pipeline/ui', () => ({
@@ -56,7 +63,7 @@ describe('WorkflowExecutionControl', () => {
     mockStore.executionStatus = 'running';
     renderWithProvider(<WorkflowExecutionControl />);
 
-    const btn = screen.getByRole('button', { name: /stop/i });
+    const btn = screen.getByRole('button', { name: /stop workflow/i });
     expect(btn).toBeInTheDocument();
 
     fireEvent.click(btn);
