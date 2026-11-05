@@ -6,25 +6,7 @@ import { NAV_LINKS } from '@/widgets/header/model';
 import PipelineLogo from '@/assets/logo.svg';
 import { AppButton } from '@/shared/ui';
 import { Menu, X } from 'lucide-react';
-import { cn } from '@/shared/lib';
-
-const Rivet = ({ className = '' }: { className?: string }) => (
-  <span
-    className={cn(
-      'pointer-events-none absolute z-10 h-1.5 w-1.5 rounded-full bg-[radial-gradient(circle_at_30%_30%,#f0fdfa,#5eead4_35%,#0f766e_70%,#042f2e_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),inset_0_-1px_1px_rgba(0,0,0,0.8),0_0_5px_rgba(57,179,155,0.45)]',
-      className,
-    )}
-  />
-);
-
-const CornerBracket = ({ className = '' }: { className?: string }) => (
-  <span
-    className={cn(
-      'pointer-events-none absolute h-3 w-3 border-teal-400/50',
-      className,
-    )}
-  />
-);
+import { Corner } from '@/shared/ui';
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,15 +17,10 @@ export const Header = () => {
         <span className="pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-teal-300/30 to-transparent md:inset-x-5" />
         <span className="pointer-events-none absolute inset-x-3 bottom-0 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent md:inset-x-5" />
 
-        <Rivet className="left-2 top-2 md:left-2.5 md:top-2.5" />
-        <Rivet className="right-2 top-2 md:right-2.5 md:top-2.5" />
-        <Rivet className="left-2 bottom-2 md:left-2.5 md:bottom-2.5" />
-        <Rivet className="right-2 bottom-2 md:right-2.5 md:bottom-2.5" />
-
-        <CornerBracket className="left-2.5 top-2.5 rounded-tl-sm border-l border-t md:left-3 md:top-3" />
-        <CornerBracket className="right-2.5 top-2.5 rounded-tr-sm border-r border-t md:right-3 md:top-3" />
-        <CornerBracket className="left-2.5 bottom-2.5 rounded-bl-sm border-l border-b md:left-3 md:bottom-3" />
-        <CornerBracket className="right-2.5 bottom-2.5 rounded-br-sm border-r border-b md:right-3 md:bottom-3" />
+        <Corner type="tl" className="left-2 top-2 md:left-2.5 md:top-2.5" />
+        <Corner type="tr" className="right-2 top-2 md:right-2.5 md:top-2.5" />
+        <Corner type="bl" className="left-2 bottom-2 md:left-2.5 md:bottom-2.5" />
+        <Corner type="br" className="right-2 bottom-2 md:right-2.5 md:bottom-2.5" />
 
         <div className="flex items-center justify-between gap-2">
           <Link
@@ -93,7 +70,7 @@ export const Header = () => {
             icon={isOpen ? X : Menu}
             iconClassName="h-5 w-5"
             onClick={() => setIsOpen(!isOpen)}
-            className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 text-white hover:bg-white/5 hover:text-white md:hidden p-0"
+            className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 text-white hover:bg-white/5 hover:text-white md:hidden p-0"
             aria-label="Toggle Menu"
           />
         </div>
