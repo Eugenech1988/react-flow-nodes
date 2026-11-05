@@ -13,7 +13,7 @@ export const HeroSection = () => {
           title="Visualize complex logic with drag-and-drop simplicity"
           description="A powerful canvas for building interactive nodes and connections. Design complex workflows, manage application data, and automate processes on the fly."
         />
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div className="flex mt-12 flex-col items-center justify-center gap-4 sm:flex-row">
           <button className="group relative flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl border border-teal-900/40 bg-linear-to-r from-teal-500 to-teal-600 px-8 py-4 font-bold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_4px_14px_rgba(57,179,155,0.25)] transition-all duration-300 before:absolute before:inset-0 before:bg-linear-to-r before:from-teal-400 before:to-teal-500 before:opacity-0 hover:scale-[1.02] hover:shadow-[0_0_22px_rgba(57,179,155,0.5)] hover:before:opacity-100 active:scale-[0.98] sm:w-auto">
             <span className="relative z-10 flex items-center gap-2">
               Get Started

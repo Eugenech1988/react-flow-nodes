@@ -5,16 +5,18 @@ interface ISectionHeadingProps {
   isMain?: boolean;
   className?: string;
   titleClassName?: string;
+  gradientDirection?: 'left' | 'right';
 }
 
 export function SectionHeading({
-  title,
-  description,
-  align = 'center',
-  isMain = false,
-  className = '',
-  titleClassName = '',
-}: ISectionHeadingProps) {
+                                 title,
+                                 description,
+                                 align = 'center',
+                                 isMain = false,
+                                 className = '',
+                                 titleClassName = '',
+                                 gradientDirection = 'right',
+                               }: ISectionHeadingProps) {
   const isCenter = align === 'center';
 
   const Tag = isMain ? 'h1' : 'h2';
@@ -27,6 +29,11 @@ export function SectionHeading({
     ? 'text-base sm:text-lg md:text-xl mt-6'
     : 'text-sm sm:text-base md:text-lg mt-4';
 
+  const gradientClasses =
+    gradientDirection === 'left'
+      ? 'bg-linear-to-l from-[#5eead4] via-[#2dd4bf] to-[#0d9488]'
+      : 'bg-linear-to-r from-[#5eead4] via-[#2dd4bf] to-[#0d9488]';
+
   return (
     <div
       className={`flex w-full flex-col ${
@@ -38,7 +45,7 @@ export function SectionHeading({
           isCenter ? 'mx-auto' : ''
         } ${titleClassName}`}
       >
-        <span className="bg-linear-to-r from-[#5eead4] via-[#2dd4bf] to-[#0d9488] bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(45,212,191,0.2)]">
+        <span className={`${gradientClasses} bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(45,212,191,0.2)]`}>
           {title}
         </span>
       </Tag>
