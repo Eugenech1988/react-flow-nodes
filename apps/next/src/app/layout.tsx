@@ -6,46 +6,45 @@ import { Footer } from '@/widgets/footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
-  subsets: ['latin']
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
-  subsets: ['latin']
+  subsets: ['latin'],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || process.env.BASE_URL || 'https://pipelinestudios.com';
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || process.env.BASE_URL || 'https://pipelinestudios.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: 'Pipeline Studio',
-    template: '%s | Pipeline Studio'
+    template: '%s | Pipeline Studio',
   },
   description: 'An event-driven orchestration engine running at the edge.',
   alternates: {
-    canonical: '/'
+    canonical: '/',
   },
   icons: {
     icon: [
-      {url: '/favicon.ico', sizes: 'any'},
-      {url: '/favicon.svg', type: 'image/svg+xml'}
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
-    apple: [
-      {url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png'}
-    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
     other: [
       {
         rel: 'android-chrome',
         url: '/android-chrome-192x192.png',
-        sizes: '192x192'
+        sizes: '192x192',
       },
       {
         rel: 'android-chrome',
         url: '/android-chrome-512x512.png',
-        sizes: '512x512'
-      }
-    ]
+        sizes: '512x512',
+      },
+    ],
   },
   openGraph: {
     title: 'Pipeline Studio',
@@ -57,28 +56,28 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Pipeline Studio Preview'
-      }
+        alt: 'Pipeline Studio Preview',
+      },
     ],
     locale: 'en_US',
-    type: 'website'
+    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Pipeline Studio',
     description: 'An event-driven orchestration engine running at the edge.',
-    images: ['/og-image.jpg']
-  }
+    images: ['/og-image.jpg'],
+  },
 };
 
-export default function RootLayout({children}: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-    <body className="flex min-h-full flex-col">
-    <Header/>
-    {children}
-    <Footer/>
-    </body>
+      <body className="flex min-h-full flex-col">
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

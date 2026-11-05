@@ -51,28 +51,24 @@ const sizeStyles: Record<ButtonSize, { button: string; icon: string }> = {
 };
 
 export const AppButton = ({
-                            text,
-                            variant = 'primary',
-                            size = 'md',
-                            icon: Icon,
-                            iconClassName,
-                            isPending = false,
-                            pendingText,
-                            isDisabled = false,
-                            type = 'button',
-                            onClick,
-                            className,
-                            isLink = false,
-                            linkTo = '#',
-                          }: IAppButtonProps) => {
+  text,
+  variant = 'primary',
+  size = 'md',
+  icon: Icon,
+  iconClassName,
+  isPending = false,
+  pendingText,
+  isDisabled = false,
+  type = 'button',
+  onClick,
+  className,
+  isLink = false,
+  linkTo = '#',
+}: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
   const currentSize = sizeStyles[size];
 
-  const sharedClasses = cn(
-    variantStyles[variant],
-    currentSize.button,
-    className,
-  );
+  const sharedClasses = cn(variantStyles[variant], currentSize.button, className);
 
   const content = (
     <span className="inline-flex items-center justify-center gap-2">

@@ -17,18 +17,18 @@ export const Header = () => {
           {/* Логотип */}
           <Link
             href="/"
-            className="group flex items-center gap-2.5 text-white font-semibold text-lg tracking-tight"
+            className="group flex items-center gap-2.5 text-lg font-semibold tracking-tight text-white"
           >
-            <div className="h-6 w-11 flex items-center justify-center text-teal-400 transition-transform duration-300 group-hover:scale-110">
+            <div className="flex h-6 w-11 items-center justify-center text-teal-400 transition-transform duration-300 group-hover:scale-110">
               <PipelineLogo className="h-full w-full stroke-current" />
             </div>
-            <span className="bg-linear-to-r from-white via-neutral-100 to-[#39b39b] bg-clip-text text-transparent font-medium transition-colors duration-300">
+            <span className="bg-linear-to-r from-white via-neutral-100 to-[#39b39b] bg-clip-text font-medium text-transparent transition-colors duration-300">
               pipeline studio
             </span>
           </Link>
 
           {/* Десктопная навигация */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden items-center gap-1 md:flex">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -41,16 +41,14 @@ export const Header = () => {
           </nav>
 
           {/* Десктопные кнопки справа */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden items-center gap-4 md:flex">
             <Link
               href="/login"
               className="text-sm font-medium text-neutral-300 transition-colors hover:text-white"
             >
               Sign in
             </Link>
-            <Button
-              className="relative overflow-hidden rounded-md bg-white px-4 py-1.5 text-sm font-semibold text-neutral-950 transition-all duration-300 hover:bg-white hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(57,179,155,0.4)]"
-            >
+            <Button className="relative overflow-hidden rounded-md bg-white px-4 py-1.5 text-sm font-semibold text-neutral-950 transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-[0_0_20px_rgba(57,179,155,0.4)]">
               <Link href="/start">Get started</Link>
             </Button>
           </div>
@@ -67,14 +65,14 @@ export const Header = () => {
         </div>
 
         <div
-          className={`grid transition-[grid-template-rows,opacity,margin-top] duration-300 ease-in-out rounded-xl border border-white/5 bg-black/40 backdrop-blur-lg md:hidden ${
+          className={`grid rounded-xl border border-white/5 bg-black/40 backdrop-blur-lg transition-[grid-template-rows,opacity,margin-top] duration-300 ease-in-out md:hidden ${
             isOpen
-              ? 'grid-rows-[1fr] opacity-100 mt-4 pointer-events-auto'
-              : 'grid-rows-[0fr] opacity-0 mt-0 pointer-events-none'
+              ? 'pointer-events-auto mt-4 grid-rows-[1fr] opacity-100'
+              : 'pointer-events-none mt-0 grid-rows-[0fr] opacity-0'
           }`}
         >
           <div className="overflow-hidden">
-            <div className="p-4 flex flex-col gap-2">
+            <div className="flex flex-col gap-2 p-4">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
@@ -94,9 +92,7 @@ export const Header = () => {
                 >
                   Sign in
                 </Link>
-                <Button
-                  className="rounded-xl bg-white py-2.5 text-center text-sm font-semibold text-neutral-950 transition-all duration-300 hover:bg-neutral-100"
-                >
+                <Button className="rounded-xl bg-white py-2.5 text-center text-sm font-semibold text-neutral-950 transition-all duration-300 hover:bg-neutral-100">
                   <Link href="/start" onClick={() => setIsOpen(false)}>
                     Get started
                   </Link>
