@@ -1,0 +1,31 @@
+export const CtaPlaque = () => {
+  return (
+    <div className="relative flex w-full flex-col overflow-hidden rounded-3xl border-2 border-[#2dd4bf]/50 bg-linear-to-r from-[#0d2422] via-[#0a1615] to-[#0a1615] p-6 shadow-[inset_0_1px_0_rgba(45,212,191,0.15),0_12px_40px_rgba(0,0,0,0.7)] sm:p-8">
+      <span className="absolute top-3 left-3 h-2 w-2 rounded-full bg-linear-to-br from-[#5eead4] to-[#2dd4bf] shadow-[inset_0_0_3px_rgba(0,0,0,0.6)]" />
+      <span className="absolute top-3 right-3 h-2 w-2 rounded-full bg-linear-to-br from-[#5eead4] to-[#2dd4bf] shadow-[inset_0_0_3px_rgba(0,0,0,0.6)]" />
+      <span className="absolute bottom-3 left-3 h-2 w-2 rounded-full bg-linear-to-br from-[#5eead4] to-[#2dd4bf] shadow-[inset_0_0_3px_rgba(0,0,0,0.6)]" />
+      <span className="absolute right-3 bottom-3 h-2 w-2 rounded-full bg-linear-to-br from-[#5eead4] to-[#2dd4bf] shadow-[inset_0_0_3px_rgba(0,0,0,0.6)]" />
+
+      <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[1fr_auto]">
+        <div>
+          <div className="mb-2 font-mono text-[10px] tracking-[0.3em] text-[#2dd4bf]/70 uppercase">
+            Assembly Instructions
+          </div>
+          <h3 className="text-xl font-bold text-[#d1faf5] sm:text-2xl">
+            Ready to fire up your first pipeline?
+          </h3>
+          <p className="mt-2 text-sm text-[#8db8b4] sm:text-base">
+            Combine inputs, actions, and custom webhooks inside a secure browser-based engine room.
+          </p>
+        </div>
+        <a
+          href="#"
+          className="group inline-flex items-center justify-center gap-2 justify-self-start rounded-xl border border-[#2dd4bf]/50 bg-linear-to-b from-[#123332] to-[#06100f] px-6 py-3 font-mono text-xs font-bold tracking-[0.15em] text-[#5eead4] uppercase shadow-[inset_0_1px_0_rgba(45,212,191,0.3),0_4px_12px_rgba(0,0,0,0.5)] transition-all hover:border-[#5eead4] hover:shadow-[inset_0_1px_0_rgba(45,212,191,0.5),0_0_20px_rgba(45,212,191,0.35)] md:justify-self-end"
+        >
+          Open Studio
+          <span className="transition-transform group-hover:translate-x-1">➔</span>
+        </a>
+      </div>
+    </div>
+  );
+};
