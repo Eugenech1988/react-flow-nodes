@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.adapter';
 import { join } from 'node:path';
 import { MailService } from './mail.service';
+import { MailController } from './mail.controller';
 import { existsSync } from 'node:fs';
 
 @Module({
@@ -45,5 +46,6 @@ import { existsSync } from 'node:fs';
   ],
   providers: [MailService],
   exports: [MailService],
+  controllers: [MailController],
 })
 export class MailModule {}
