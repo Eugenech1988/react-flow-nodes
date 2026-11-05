@@ -6,7 +6,6 @@ import { NAV_LINKS } from '@/widgets/header/model';
 import PipelineLogo from '@/assets/logo.svg';
 import { AppButton } from '@/shared/ui';
 import { Menu, X } from 'lucide-react';
-import { Corner } from '@/shared/ui';
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,11 +15,6 @@ export const Header = () => {
       <div className="relative w-full rounded-2xl border border-white/10 bg-white/6 px-5 py-2.5 shadow-[0_8px_32px_0_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md after:absolute after:inset-0 after:-z-10 after:rounded-2xl after:bg-linear-to-b after:from-white/5 after:to-transparent after:opacity-50 sm:px-8 md:px-10">
         <span className="pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-teal-300/30 to-transparent md:inset-x-5" />
         <span className="pointer-events-none absolute inset-x-3 bottom-0 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent md:inset-x-5" />
-
-        <Corner type="tl" className="top-2 left-2 md:top-2.5 md:left-2.5" />
-        <Corner type="tr" className="top-2 right-2 md:top-2.5 md:right-2.5" />
-        <Corner type="bl" className="bottom-2 left-2 md:bottom-2.5 md:left-2.5" />
-        <Corner type="br" className="right-2 bottom-2 md:right-2.5 md:bottom-2.5" />
 
         <div className="flex items-center justify-between gap-2">
           <Link
@@ -78,7 +72,7 @@ export const Header = () => {
         <div
           className={`grid rounded-2xl border border-white/5 bg-black/40 backdrop-blur-lg transition-all duration-300 ease-in-out md:hidden ${
             isOpen
-              ? 'pointer-events-auto visible mt-2 mb-4 grid-rows-[1fr] opacity-100'
+              ? 'pointer-events-auto visible my-2 grid-rows-[1fr] opacity-100'
               : 'pointer-events-none invisible mt-0 grid-rows-[0fr] opacity-0'
           }`}
         >

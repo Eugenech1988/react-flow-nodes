@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import PipelineLogo from '@/assets/logo.svg';
 import { FOOTER_COLUMNS, SOCIALS } from './model';
-import { InfoBadge, Corner } from '@/shared/ui';
+import { InfoBadge } from '@/shared/ui';
+import { Cog } from 'lucide-react';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -15,10 +16,11 @@ export const Footer = () => {
           <span className="pointer-events-none absolute inset-x-4 top-0 h-px bg-linear-to-r from-transparent via-teal-300/30 to-transparent md:inset-x-6" />
           <span className="pointer-events-none absolute inset-x-4 bottom-0 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent md:inset-x-6" />
 
-          <Corner type="tl" className="top-2 left-2 md:top-3 md:left-3" />
-          <Corner type="tr" className="top-2 right-2 md:top-3 md:right-3" />
-          <Corner type="bl" className="bottom-2 left-2 md:bottom-3 md:left-3" />
-          <Corner type="br" className="right-2 bottom-2 md:right-3 md:bottom-3" />
+          {/* Декоративные шестеренки по углам */}
+          <Cog className="absolute top-3 left-3 h-4 w-4 text-teal-400/30 md:top-5 md:left-5" />
+          <Cog className="absolute top-3 right-3 h-4 w-4 text-teal-400/30 md:top-5 md:right-5" />
+          <Cog className="absolute bottom-3 left-3 h-4 w-4 text-teal-400/30 md:bottom-5 md:left-5" />
+          <Cog className="absolute right-3 bottom-3 h-4 w-4 text-teal-400/30 md:right-5 md:bottom-5" />
 
           <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-10 md:mb-12 md:grid-cols-6 md:gap-8">
             <div className="col-span-2 flex flex-col justify-between">
