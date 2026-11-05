@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
-  transpilePackages: ['@pipeline/contracts', '@pipeline/ui'],
+  transpilePackages: ['@pipeline/contracts', '@pipeline/ui', '@pipeline/contracts'],
   experimental: {
     agentFeedback: true,
   },

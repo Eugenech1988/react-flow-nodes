@@ -4,11 +4,11 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    tsconfigPaths: true, // Встроенная поддержка путей из tsconfig.json
+    tsconfigPaths: true,
   },
   test: {
     environment: 'jsdom',
-    setupFiles: ['./src/vitest.setup.ts'],
+    setupFiles: ['./src/setupTests.ts'],
     globals: true,
   },
 });
