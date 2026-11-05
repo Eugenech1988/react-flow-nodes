@@ -1,5 +1,5 @@
-import { HeroSection } from '@/widgets/hero-section';
-import { FeaturesSection } from '@/widgets/features-section';
+import { HeroSection } from '@/widgets';
+import { FeaturesSection } from '@/widgets';
 
 const Hero = () => {
   return (

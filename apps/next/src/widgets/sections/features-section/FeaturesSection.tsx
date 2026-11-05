@@ -10,6 +10,7 @@ import {
   type Variants,
 } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
+import { SectionHeading } from '@/shared/ui';
 import { FEATURES, SLIDE_VARIANTS } from './model';
 
 const totalSteps = FEATURES.length + 1;
@@ -44,7 +45,6 @@ function FeaturePlaque({ title, badge, description, Icon, number }: PlaqueProps)
           </div>
         </div>
 
-        {/* Steampunk Hex Badge */}
         <div className="relative shrink-0 bg-[#2dd4bf]/40 p-px shadow-[0_4px_12px_rgba(0,0,0,0.5)] [clip-path:polygon(8px_0,calc(100%-8px)_0,100%_50%,calc(100%-8px)_100%,8px_100%,0_50%)]">
           <div className="relative flex items-center justify-center gap-2 bg-[#0a1615] px-6 py-1.5 font-mono text-[10px] tracking-[0.15em] text-[#5eead4] uppercase [clip-path:polygon(8px_0,calc(100%-8px)_0,100%_50%,calc(100%-8px)_100%,8px_100%,0_50%)]">
             <span className="absolute top-1/2 left-2 h-1 w-1 -translate-y-1/2 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_0_1px_rgba(0,0,0,0.8)]" />
@@ -132,22 +132,15 @@ export function FeaturesSection() {
       className="relative bg-[#040a09]"
       style={{ height: `${(totalSteps + 1) * 100}vh` }}
     >
-      <div className="sticky top-0 flex h-dvh w-full flex-col overflow-hidden border-t border-[#2dd4bf]/20 text-[#d1faf5]">
+      <div className="sticky top-0 flex h-dvh w-full flex-col overflow-hidden border-t border-[#2dd4bf]/20 pt-32 text-[#d1faf5]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.05]" />
         <div className="pointer-events-none absolute top-0 left-1/2 h-175 w-175 -translate-x-1/2 rounded-full bg-[#2dd4bf]/[0.07] blur-3xl" />
 
         <div className="relative z-10 mx-auto flex h-full w-full max-w-4xl flex-col px-6">
-          <div className="mx-auto w-full max-w-2xl pt-28 text-center sm:pt-36">
-            <h2 className="text-3xl font-extrabold tracking-tight text-[#d1faf5] sm:text-4xl md:text-5xl">
-              <span className="bg-linear-to-r from-[#5eead4] via-[#2dd4bf] to-[#0d9488] bg-clip-text text-transparent">
-                Powering
-              </span>{' '}
-              Your Workflows
-            </h2>
-            <p className="mx-auto mt-3 text-xs leading-relaxed text-[#8db8b4] sm:mt-4 sm:text-sm md:text-base">
-              Six precision-engineered mechanisms, machined for the modern automation workshop.
-            </p>
-          </div>
+          <SectionHeading
+            title="Powering Your Workflows"
+            description="Six precision-engineered mechanisms, machined for the modern automation workshop."
+          />
 
           <div className="relative flex min-h-0 w-full flex-1 items-center justify-center py-6">
             <div className="relative h-full w-full max-w-3xl">
