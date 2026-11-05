@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Badge } from '@/shared/ui';
 import PipelineLogo from '@/assets/logo.svg';
 import { FOOTER_COLUMNS, SOCIALS } from './model';
 
@@ -9,8 +10,8 @@ export const Footer = () => {
     <footer className="relative overflow-hidden border-t border-slate-900 bg-slate-950">
       <div className="pointer-events-none absolute bottom-0 left-1/2 h-75 w-150 -translate-x-1/2 rounded-full bg-teal-500/5 blur-3xl" />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-6 py-16">
-        <div className="mb-16 grid grid-cols-2 gap-12 md:grid-cols-5 md:gap-8">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 pt-16 pb-12">
+        <div className="mb-8 grid grid-cols-2 gap-12 md:grid-cols-5 md:gap-8">
           <div className="col-span-2 flex flex-col justify-between">
             <div>
               <Link
@@ -74,10 +75,7 @@ export const Footer = () => {
             &copy; {CURRENT_YEAR} Pipelines Studio Inc. All rights reserved.
           </p>
 
-          <div className="flex items-center gap-2 rounded-full border border-teal-500/10 bg-teal-500/5 px-3 py-1 text-teal-400">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-teal-400" />
-            <span>All names are fictional</span>
-          </div>
+          <Badge>All names are fictional</Badge>
         </div>
       </div>
     </footer>
