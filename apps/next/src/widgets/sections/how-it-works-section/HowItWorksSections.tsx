@@ -49,14 +49,14 @@ const steps = [
   },
 ];
 
-export function HowItWorksSection() {
+export const HowItWorksSection = () => {
   const [activeStep, setActiveStep] = useState(0);
   const ActiveIcon = steps[activeStep].icon;
 
   return (
     <section className="relative overflow-hidden border-t border-[#2dd4bf]/10 bg-[#040a09] pt-28 pb-16 text-[#d1faf5] sm:pt-36 sm:pb-24">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
-      <div className="pointer-events-none absolute top-0 left-1/2 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-[#2dd4bf]/[0.05] blur-3xl" />
+      <div className="pointer-events-none absolute top-0 left-1/2 h-150 w-200 -translate-x-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
@@ -143,7 +143,7 @@ export function HowItWorksSection() {
             <span className="absolute right-3 bottom-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:right-4 sm:bottom-4 sm:h-2 sm:w-2" />
 
             <div className="relative flex w-full flex-col overflow-hidden rounded-[1.4rem] border border-slate-800 bg-slate-950/90">
-              <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,rgba(45,212,191,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(45,212,191,0.05)_1px,transparent_1px)] bg-[size:2rem_2rem]" />
+              <div className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(to_right,rgba(45,212,191,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(45,212,191,0.05)_1px,transparent_1px)] bg-size-[2rem_2rem]" />
 
               <div className="relative z-10 flex items-center justify-between border-b border-slate-800 bg-[#0d1f1e] px-4 py-3 sm:px-6">
                 <div className="flex items-center gap-2 text-sm font-semibold text-[#d1faf5] sm:text-base">
@@ -155,7 +155,7 @@ export function HowItWorksSection() {
               </div>
 
               <div className="relative z-10 flex flex-1 overflow-hidden">
-                <div className="flex w-[68px] shrink-0 flex-col items-center border-r border-slate-800/80 bg-[#0a1210]/80 py-4 sm:w-20 sm:py-6">
+                <div className="flex w-17 shrink-0 flex-col items-center border-r border-slate-800/80 bg-[#0a1210]/80 py-4 sm:w-20 sm:py-6">
                   <div className="flex flex-col gap-4 sm:gap-5">
                     {steps.map((step, index) => {
                       const isActive = index === activeStep;
@@ -240,4 +240,4 @@ export function HowItWorksSection() {
       </div>
     </section>
   );
-}
+};

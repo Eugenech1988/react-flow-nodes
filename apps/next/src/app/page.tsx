@@ -1,4 +1,10 @@
-import { HeroSection, FeaturesSection, TrustedBySection, HowItWorksSection } from '@/widgets';
+import {
+  HeroSection,
+  FeaturesSection,
+  TrustedBySection,
+  HowItWorksSection,
+  UseCasesSection,
+} from '@/widgets';
 
 const Hero = () => {
   return (
@@ -7,6 +13,7 @@ const Hero = () => {
       <FeaturesSection />
       <TrustedBySection />
       <HowItWorksSection />
+      <UseCasesSection />
     </>
   );
 };
