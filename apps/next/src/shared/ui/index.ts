@@ -1,2 +1,3 @@
 export * from './AppButton';
-export * from './Badge';
+export * from './InfoBadge';
+export * from './SectionHeading';
