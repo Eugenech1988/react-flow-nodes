@@ -1,8 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  transpilePackages: ['@pipeline/contracts', '@pipeline/ui', '@pipeline/contracts'],
+  transpilePackages: ['@pipeline/contracts', '@pipeline/ui'],
   experimental: {
     agentFeedback: true,
   },
@@ -14,6 +13,19 @@ const nextConfig: NextConfig = {
       '*.css': {
         loaders: ['@tailwindcss/turbopack'],
         as: '*.css',
+      },
+      '*.svg': {
+        loaders: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              icon: true,
+              svgo: true,
+              titleProp: true,
+            },
+          },
+        ],
+        as: '*.js',
       },
     },
   },
