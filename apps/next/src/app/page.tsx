@@ -1,6 +1,4 @@
-import { HeroSection } from '@/widgets';
-import { FeaturesSection } from '@/widgets';
-import { TrustedBySection } from '@/widgets/sections/TrustedBySection';
+import { HeroSection, FeaturesSection, TrustedBySection, HowItWorksSection } from '@/widgets';
 
 const Hero = () => {
   return (
@@ -8,6 +6,7 @@ const Hero = () => {
       <HeroSection />
       <FeaturesSection />
       <TrustedBySection />
+      <HowItWorksSection />
     </>
   );
 };
