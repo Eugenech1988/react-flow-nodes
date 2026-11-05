@@ -9,14 +9,14 @@ interface ISectionHeadingProps {
 }
 
 export function SectionHeading({
-                                 title,
-                                 description,
-                                 align = 'center',
-                                 isMain = false,
-                                 className = '',
-                                 titleClassName = '',
-                                 gradientDirection = 'right',
-                               }: ISectionHeadingProps) {
+  title,
+  description,
+  align = 'center',
+  isMain = false,
+  className = '',
+  titleClassName = '',
+  gradientDirection = 'right',
+}: ISectionHeadingProps) {
   const isCenter = align === 'center';
 
   const Tag = isMain ? 'h1' : 'h2';
@@ -45,7 +45,9 @@ export function SectionHeading({
           isCenter ? 'mx-auto' : ''
         } ${titleClassName}`}
       >
-        <span className={`${gradientClasses} bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(45,212,191,0.2)]`}>
+        <span
+          className={`${gradientClasses} bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(45,212,191,0.2)]`}
+        >
           {title}
         </span>
       </Tag>
