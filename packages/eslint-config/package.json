@@ -3,9 +3,14 @@
   "version": "0.0.0",
   "type": "module",
   "private": true,
+  "scripts": {
+    "lint": "eslint ."
+  },
   "exports": {
     "./base": "./base.js",
     "./node": "./node.js",
+    "./next": "./next.js",
+    "./astro": "./astro.js",
     "./react-internal": "./react-internal.js"
   },
   "devDependencies": {

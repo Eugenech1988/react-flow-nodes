@@ -19,14 +19,14 @@ export const ImportExportToolbar = ({
     <div className="absolute top-4 right-4 z-10 flex gap-2">
       <button
         onClick={onExport}
-        className="flex h-8.5 cursor-pointer items-center gap-1.5 rounded-(--radius) border border-border bg-card px-3 py-1.5 text-xs font-medium text-card-foreground shadow-md transition-colors hover:bg-accent"
+        className="border-border bg-card text-card-foreground hover:bg-accent flex h-8.5 cursor-pointer items-center gap-1.5 rounded-(--radius) border px-3 py-1.5 text-xs font-medium shadow-md transition-colors"
       >
         <Download size={16} />
         Export
       </button>
       <button
         onClick={() => fileInputRef.current?.click()}
-        className="flex h-8.5 cursor-pointer items-center gap-1.5 rounded-(--radius) border border-border bg-card px-3 py-1.5 text-xs font-medium text-card-foreground shadow-md transition-colors hover:bg-accent"
+        className="border-border bg-card text-card-foreground hover:bg-accent flex h-8.5 cursor-pointer items-center gap-1.5 rounded-(--radius) border px-3 py-1.5 text-xs font-medium shadow-md transition-colors"
       >
         <Upload size={16} />
         Import

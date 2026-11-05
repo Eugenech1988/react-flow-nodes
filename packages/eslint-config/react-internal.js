@@ -4,9 +4,11 @@ import globals from "globals";
 import { config as baseConfig } from "./base.js";
 
 /**
- * A custom ESLint configuration for libraries that use React.
+ * ESLint config for React libraries and apps (Vite/SPA).
+ * Used by: packages/ui, apps/react
  *
- * @type {import("eslint").Linter.Config[]} */
+ * @type {import("eslint").Linter.Config[]}
+ */
 export const config = [
   ...baseConfig,
   pluginReact.configs.flat.recommended,

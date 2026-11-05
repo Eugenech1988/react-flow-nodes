@@ -9,7 +9,9 @@ vi.mock('react-router-dom', async () => {
     ...actual,
     useLocation: () => ({ pathname: '/' }),
     useNavigate: () => vi.fn(),
-    Link: ({ children, to }: { children: React.ReactNode; to: string }) => <a href={to}>{children}</a>,
+    Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
+      <a href={to}>{children}</a>
+    ),
   };
 });
 
@@ -22,7 +24,9 @@ vi.mock('@/features/user-dropdown', () => ({
 }));
 
 vi.mock('./components/WorkflowExecutionControl', () => ({
-  WorkflowExecutionControl: () => <div data-testid="workflow-control">WorkflowExecutionControl</div>,
+  WorkflowExecutionControl: () => (
+    <div data-testid="workflow-control">WorkflowExecutionControl</div>
+  ),
 }));
 
 vi.mock('@/widgets', () => ({

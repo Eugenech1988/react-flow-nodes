@@ -15,10 +15,13 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch --preserveWatchOutput",
+    "lint": "eslint .",
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
+    "@pipeline/eslint-config": "workspace:*",
     "@pipeline/typescript-config": "workspace:*",
+    "eslint": "^9.39.5",
     "typescript": "5.9.2"
   },
   "dependencies": {

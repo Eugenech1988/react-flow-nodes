@@ -16,7 +16,7 @@ export const AutoLayoutButton = () => {
     <button
       onClick={handleLayout}
       aria-label="Auto Layout"
-      className="absolute top-4 left-23 z-10 flex h-8.5 w-9 cursor-pointer items-center justify-center rounded-(--radius) border border-border bg-card text-card-foreground shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] transition-all duration-200 select-none hover:bg-accent hover:text-accent-foreground"
+      className="border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground absolute top-4 left-23 z-10 flex h-8.5 w-9 cursor-pointer items-center justify-center rounded-(--radius) border shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] transition-all duration-200 select-none"
     >
       <SquareCenterlineDashedVertical size={20} />
     </button>

@@ -1,7 +1,8 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  transpilePackages: ['@pipeline/contracts', '@pipeline/ui'],
   experimental: {
     agentFeedback: true,
   },
@@ -10,9 +11,9 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   turbopack: {
     rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
+      '*.css': {
+        loaders: ['@tailwindcss/turbopack'],
+        as: '*.css',
       },
     },
   },

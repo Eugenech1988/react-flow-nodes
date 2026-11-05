@@ -2,6 +2,9 @@
   "name": "@pipeline/typescript-config",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "lint": "echo 'No lintable sources in typescript-config'"
+  },
   "exports": {
     "./base": "./base.json",
     "./react": "./react.json",

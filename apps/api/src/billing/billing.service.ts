@@ -97,7 +97,7 @@ export class BillingService {
     }
 
     if (event.type === 'checkout.session.completed') {
-      const session = event.data.object as Stripe.Checkout.Session;
+      const session = event.data.object;
       await this.processSuccessfulCheckout(session);
     }
 

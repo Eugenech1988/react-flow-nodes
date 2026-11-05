@@ -31,24 +31,24 @@ vi.mock('@xyflow/react', () => ({
 
 vi.mock('@pipeline/ui', () => ({
   Input: ({
-            value,
-            onChange,
-          }: {
+    value,
+    onChange,
+  }: {
     value: string | number;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   }) => <input data-testid="input" value={value} onChange={onChange} />,
   Textarea: ({
-               value,
-               onChange,
-             }: {
+    value,
+    onChange,
+  }: {
     value: string;
     onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   }) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
   Select: ({
-             value,
-             onValueChange,
-             children,
-           }: {
+    value,
+    onValueChange,
+    children,
+  }: {
     value: string;
     onValueChange: (value: string) => void;
     children?: React.ReactNode;
@@ -64,9 +64,9 @@ vi.mock('@pipeline/ui', () => ({
     <option value={value}>{children}</option>
   ),
   AutosizeTextarea: ({
-                       value,
-                       onChange,
-                     }: {
+    value,
+    onChange,
+  }: {
     value: string;
     onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   }) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
