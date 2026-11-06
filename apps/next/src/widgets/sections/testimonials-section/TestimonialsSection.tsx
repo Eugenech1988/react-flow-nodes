@@ -14,7 +14,10 @@ export const TestimonialsSection = () => {
   const { t } = useT('marketing');
 
   return (
-    <section id="testimonials" className="relative overflow-hidden border-t border-[#2dd4bf]/10 bg-[#040a09] py-16 text-[#d1faf5] sm:py-24">
+    <section
+      id="testimonials"
+      className="relative overflow-hidden border-t border-[#2dd4bf]/10 bg-[#040a09] py-16 text-[#d1faf5] sm:py-24"
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl" />
 
@@ -23,6 +26,7 @@ export const TestimonialsSection = () => {
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
+          gradientDirection='left'
           title={t('testimonials.heading.title')}
           description={t('testimonials.heading.description')}
           isMain={false}

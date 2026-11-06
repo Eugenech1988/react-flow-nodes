@@ -28,12 +28,16 @@ export const HowItWorksSection = () => {
   };
 
   return (
-    <section id="how-it-works" className="relative overflow-hidden border-t border-[#2dd4bf]/10 bg-[#040a09] py-16 text-[#d1faf5] sm:py-24">
+    <section
+      id="how-it-works"
+      className="relative overflow-hidden border-t border-[#2dd4bf]/10 bg-[#040a09] py-16 text-[#d1faf5] sm:py-24"
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
       <div className="pointer-events-none absolute top-0 left-1/2 h-150 w-200 -translate-x-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
+          gradientDirection='left'
           title={t('howItWorks.heading.title')}
           description={t('howItWorks.heading.description')}
           isMain={false}
@@ -147,6 +151,7 @@ export const HowItWorksSection = () => {
                       return (
                         <button
                           key={step.id}
+                          aria-label={step.id}
                           onClick={() => handleStepClick(index)}
                           className={`relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-300 ${
                             isActive
@@ -208,9 +213,9 @@ export const HowItWorksSection = () => {
                           <ActiveIcon className="h-8 w-8 text-[#5eead4] drop-shadow-[0_0_15px_#2dd4bf] sm:h-10 sm:w-10" />
                         </div>
 
-                        <h4 className="text-lg font-bold text-[#d1faf5] sm:text-xl md:text-2xl">
+                        <h3 className="text-lg font-bold text-[#d1faf5] sm:text-xl md:text-2xl">
                           {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.title`)}
-                        </h4>
+                        </h3>
 
                         <p className="mt-3 text-xs leading-relaxed text-slate-400 sm:text-sm md:text-base">
                           {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.description`)}

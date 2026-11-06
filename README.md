@@ -15,13 +15,13 @@
 - [Linting & Formatting](#linting--formatting)
 - [Building for Production](#building-for-production)
 - [Packages](#packages)
-    - [UI Components](#ui-components)
-    - [Contracts](#contracts)
-    - [ESLint & TypeScript Configs](#eslint--typescript-configs)
+  - [UI Components](#ui-components)
+  - [Contracts](#contracts)
+  - [ESLint & TypeScript Configs](#eslint--typescript-configs)
 - [Applications](#applications)
-    - [React (pipelines-app)](#react-pipelines-app)
-    - [Next.js Marketing Portal (pipelines-next)](#nextjs-marketing-portal-pipelines-next)
-    - [NestJS API (pipeline-api)](#nestjs-api-pipeline-api)
+  - [React (pipelines-app)](#react-pipelines-app)
+  - [Next.js Marketing Portal (pipelines-next)](#nextjs-marketing-portal-pipelines-next)
+  - [NestJS API (pipeline-api)](#nestjs-api-pipeline-api)
 - [Deep Dive: API Architecture](#deep-dive-api-architecture)
 - [Deep Dive: React Architecture & Data Flow](#deep-dive-react-architecture--data-flow)
 - [Contributing](#contributing)
@@ -43,6 +43,7 @@ The project follows **Feature‑Sliced Design (FSD)** in both the React app and 
 ---
 
 ## Monorepo Structure
+
 ```text
 .
 ├─ apps/                     # Individual applications
@@ -59,6 +60,7 @@ The project follows **Feature‑Sliced Design (FSD)** in both the React app and 
 ├─ bun.lockb                 # Bun lockfile
 └─ README.md                 # This file
 ```
+
 All workspaces share the @/* alias for internal imports (e.g., import { Foo } from '@/features/foo').
 
 ### Quick start
@@ -90,6 +92,7 @@ Docker with Docker Compose is required. Run this command from the repository roo
 ```bash
 docker compose up --build
 ```
+
 The applications are available at:
 
 Next.js Portal: http://localhost:3000
@@ -106,32 +109,34 @@ The API loads defaults from apps/api/.env.example and overrides them with apps/a
 
 ### Development Commands
 
-| Command | Description |
-| :--- | :--- |
-| `bun install` | Install dependencies for the entire workspace |
-| `bun run dev` | Start all Turbo dev tasks in parallel |
-| `bun --filter pipelines-app run dev` | Run only the React UI |
-| `bun --filter pipelines-next run dev` | Run only the Next.js Marketing Portal |
-| `bun --filter @pipeline/api run dev` | Run only the NestJS API |
-| `bun run lint` | Run ESLint across all packages/apps |
-| `bun run check-types` | Type-checking via `tsc` for the whole repo |
-| `bun run format:check` | Verify Prettier formatting |
-| `bun run format` | Auto-format all files |
-| `bun run build` | Build all apps/packages for production |
-| `bun --filter pipelines-app run test` | Run Vitest suite for the React app |
-| `bun --filter @pipeline/api run test` | Run Jest unit tests for the API |
-| `bun --filter @pipeline/api run test:e2e` | Run Jest E2E tests for the API |
+| Command                                   | Description                                   |
+| :---------------------------------------- | :-------------------------------------------- |
+| `bun install`                             | Install dependencies for the entire workspace |
+| `bun run dev`                             | Start all Turbo dev tasks in parallel         |
+| `bun --filter pipelines-app run dev`      | Run only the React UI                         |
+| `bun --filter pipelines-next run dev`     | Run only the Next.js Marketing Portal         |
+| `bun --filter @pipeline/api run dev`      | Run only the NestJS API                       |
+| `bun run lint`                            | Run ESLint across all packages/apps           |
+| `bun run check-types`                     | Type-checking via `tsc` for the whole repo    |
+| `bun run format:check`                    | Verify Prettier formatting                    |
+| `bun run format`                          | Auto-format all files                         |
+| `bun run build`                           | Build all apps/packages for production        |
+| `bun --filter pipelines-app run test`     | Run Vitest suite for the React app            |
+| `bun --filter @pipeline/api run test`     | Run Jest unit tests for the API               |
+| `bun --filter @pipeline/api run test:e2e` | Run Jest E2E tests for the API                |
 
 ### Testing
 
 React: Vitest + React Testing Library (*.test.{ts,tsx}) located next to the component.
 
-API: Jest (*.spec.ts) for services/controllers and test/*.e2e-spec.ts for end‑to‑end tests.
+API: Jest (_.spec.ts) for services/controllers and test/_.e2e-spec.ts for end‑to‑end tests.
 
 All tests can be executed via the commands above or through the Turbo pipeline bun run test.
 
 ### Linting & Formatting
+
 The repository uses a shared ESLint config (packages/eslint-config) and Prettier. The recommended workflow is:
+
 ```bash
 # Lint
 bun run lint
@@ -142,13 +147,16 @@ bun run check-types
 # Format check (CI will fail on mismatches)
 bun run format:check
 ```
+
 If you need to automatically fix formatting, run bun run format.
 
 ### Building for Production
+
 ```bash
 # Build every app and package
 bun run build
 ```
+
 The output directories are:
 
 - apps/react/dist/
@@ -178,13 +186,17 @@ Deploy the compiled assets according to your hosting strategy (e.g., Vercel for 
 Import via import { Button } from '@pipeline/ui'.
 
 #### Contracts (@pipeline/contracts)
+
 Contains shared Zod schemas, DTOs, and TypeScript types used by both the API and the React/Next.js clients to guarantee end‑to‑end type safety. Core contracts live in packages/contracts/src/ (e.g., database-nodes.ts).
 
 #### ESLint & TypeScript Configs
+
 Centralized configurations live in packages/eslint-config and packages/typescript-config. They are referenced through the workspace tsconfig.json files.
 
 ### Applications
+
 #### React App (pipelines-app)
+
 - Stack: React 19, Vite 8, React Compiler, Tailwind v4, Zustand, Framer Motion, Radix UI, React Hook Form + Zod, TanStack Query v5, tRPC v11.
 
 - Structure: Feature‑Sliced Design under src/ (app, pages, widgets, features, entities, shared).
@@ -192,6 +204,7 @@ Centralized configurations live in packages/eslint-config and packages/typescrip
 - Entry point: src/main.tsx.
 
 #### Next.js Marketing Portal (pipelines-next)
+
 - Stack: Next.js 16 (App Router), React 19, Tailwind v4, Framer Motion, custom i18n (useT/getT).
 
 - Structure: FSD-like organization under src/ (app/, widgets/, features/, shared/).
@@ -199,6 +212,7 @@ Centralized configurations live in packages/eslint-config and packages/typescrip
 - Purpose: Serves as the public-facing marketing portal, portfolio, and landing pages.
 
 #### NestJS API (pipeline-api)
+
 - Stack: NestJS 11, Prisma 7, PostgreSQL, tRPC v11, Inngest 4, Passport (OAuth + JWT), Argon2, Nodemailer, Google AI SDK.
 
 #### Key directories:
@@ -212,6 +226,7 @@ Centralized configurations live in packages/eslint-config and packages/typescrip
 - prisma/ – Prisma schema (schema.prisma) and migrations.
 
 ### Deep Dive: API Architecture
+
 - Entry Point – src/main.ts bootstraps NestJS, registers the tRPC module, and connects Prisma.
 
 - tRPC Integration – The TrpcModule registers the router built from sub‑routers (pipeline, node, user, etc.). The router is exported via src/trpc/app-router.ts and re‑exported in the package root for the client to consume.
@@ -227,6 +242,7 @@ Centralized configurations live in packages/eslint-config and packages/typescrip
 - Testing – Unit tests mock Prisma via @prisma/client/runtime and use TestingModule to instantiate services. E2E tests spin up the Nest application and make real HTTP/tRPC calls.
 
 #### Deep Dive: React Architecture & Data Flow
+
 - Feature‑Sliced Design – Each feature lives under src/features/<feature>/ and contains: components/, hooks/, store/, types/.
 
 - tRPC Client – Initialized once in src/app/trpc.tsx.
@@ -240,9 +256,11 @@ Centralized configurations live in packages/eslint-config and packages/typescrip
 - Routing – src/app/router.tsx defines routes with react-router-dom. Lazy‑load feature bundles via React.lazy and Suspense.
 
 ### Deep Dive: Next.js Marketing Portal
+
 The apps/next workspace is not just a landing page; it is a comprehensive marketing portal and portfolio. It is built using Next.js 15 (App Router) and React 19, serving as a showcase of advanced UI/UX engineering and scalable frontend architecture.
 
 #### Tech Stack
+
 - Framework: Next.js 16 (App Router, Server Components)
 
 - Styling: Tailwind CSS v4, Framer Motion (complex layout and scroll animations)
@@ -254,6 +272,7 @@ The apps/next workspace is not just a landing page; it is a comprehensive market
 - Fonts: Roboto, Roboto Mono (via next/font/google)
 
 ### Contributing
+
 Fork the repository.
 
 Create a feature branch (git checkout -b feat/awesome-feature).
@@ -267,5 +286,5 @@ Write tests for any new behavior.
 Open a Pull Request describing the change, linking any related issue, and include screenshots for UI changes.
 
 ### License
-MIT © 2026 Eugene.
 
+MIT © 2026 Eugene.

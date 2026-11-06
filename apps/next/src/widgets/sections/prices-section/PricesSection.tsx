@@ -10,17 +10,15 @@ export const PricingSection = () => {
   const { t } = useT('marketing');
 
   return (
-    <section id="pricing" className="relative overflow-hidden border-t border-slate-800 bg-slate-950 py-20 text-slate-100 sm:py-24">
+    <section
+      id="pricing"
+      className="relative overflow-hidden border-t border-slate-800 bg-slate-950 py-20 text-slate-100 sm:py-24"
+    >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#2dd4bf_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[#2dd4bf]/[0.05] blur-[100px]" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col items-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#2dd4bf]/30 bg-[#2dd4bf]/10 px-3 py-1 font-mono text-[10px] font-bold tracking-widest text-[#2dd4bf] uppercase shadow-[inset_0_1px_0_rgba(45,212,191,0.2)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#2dd4bf] shadow-[0_0_5px_#2dd4bf]" />
-            {t('pricing.badge')}
-          </div>
-
           <SectionHeading
             title={t('pricing.heading.title')}
             description={t('pricing.heading.description')}

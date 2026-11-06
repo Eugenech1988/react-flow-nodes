@@ -1,4 +1,3 @@
-export * from './AppButton';
-export * from './InfoBadge';
-export * from './SectionHeading';
-export * from './Corner';
+export * from './app-button';
+export * from './info-badge';
+export * from './section-heading';

@@ -92,6 +92,7 @@ export function FeaturesSection() {
 
         <div className="relative z-10 mx-auto flex h-full w-full max-w-4xl flex-col px-6">
           <SectionHeading
+            gradientDirection='left'
             title={t('features.heading.title')}
             description={t('features.heading.description')}
           />

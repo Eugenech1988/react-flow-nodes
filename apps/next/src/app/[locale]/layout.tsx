@@ -54,7 +54,11 @@ export async function generateMetadata({ params }: Pick<LayoutProps, 'params'>):
     description,
     alternates: {
       canonical: `/${locale}`,
-      languages: Object.fromEntries(i18nConfig.supportedLngs.map((l) => [l, `/${l}`])),
+      languages: {
+        'en': '/en',
+        'uk': '/ua',
+        'x-default': '/en',
+      },
     },
     icons: {
       icon: [
@@ -111,9 +115,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   return (
     <html lang={locale} className={`${roboto.variable} ${robotoMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <I18nProvider lng={locale}>
-          {children}
-        </I18nProvider>
+        <I18nProvider lng={locale}>{children}</I18nProvider>
       </body>
     </html>
   );

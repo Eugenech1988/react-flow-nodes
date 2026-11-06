@@ -12,3 +12,4 @@ export * from './components/tabs';
 export * from './components/switch';
 export * from './components/skeleton';
 export * from './components/table';
+export * from './components/label';

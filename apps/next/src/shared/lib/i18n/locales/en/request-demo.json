@@ -1,0 +1,22 @@
+{
+  "title": "Request a Demo",
+  "description": "See how Pipeline Studio can automate your infrastructure. Fill out the coordinates below to establish a connection.",
+  "form": {
+    "name": "Operator Name",
+    "email": "Comm-Link (Email)",
+    "company": "Organization",
+    "message": "Mission Parameters (Optional)",
+    "placeholderName": "John Doe",
+    "placeholderEmail": "john@company.com",
+    "placeholderCompany": "Acme Corp",
+    "placeholderMessage": "Tell us about the pipelines you want to automate...",
+    "submit": "Transmit Request",
+    "submitting": "Transmitting...",
+    "success": "Connection Established. We will contact you shortly.",
+    "errors": {
+      "name": "Name must be at least 2 characters.",
+      "email": "Please enter a valid comm-link (email).",
+      "company": "Organization name is required."
+    }
+  }
+}

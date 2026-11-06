@@ -6,13 +6,5 @@
   "tabWidth": 2,
   "arrowParens": "always",
   "endOfLine": "lf",
-  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-next"],
-  "overrides": [
-    {
-      "files": "*.astro",
-      "options": {
-        "parser": "astro"
-      }
-    }
-  ]
+  "plugins": ["prettier-plugin-tailwindcss"]
 }

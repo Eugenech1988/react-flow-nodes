@@ -54,12 +54,12 @@ export function NotFoundClient({ locale }: { locale: string }) {
               <div className="absolute -top-1 -right-1 h-4 w-4 animate-pulse rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]" />
             </motion.div>
 
-            <div className="mb-4 flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-1 font-mono text-xs uppercase tracking-widest text-red-400">
+            <div className="mb-4 flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-1 font-mono text-xs tracking-widest text-red-400 uppercase">
               <AlertTriangle className="h-3 w-3" />
               {t('notFound.systemAlert')}
             </div>
 
-            <h1 className="font-mono text-6xl font-black text-transparent bg-clip-text bg-linear-to-b from-red-500 to-red-900 sm:text-8xl">
+            <h1 className="bg-linear-to-b from-red-500 to-red-900 bg-clip-text font-mono text-6xl font-black text-transparent sm:text-8xl">
               404
             </h1>
 
@@ -71,30 +71,19 @@ export function NotFoundClient({ locale }: { locale: string }) {
               {t('notFound.description')}
             </p>
 
-            <div className="mt-8 font-mono text-xs text-red-500/50">
-              {t('notFound.errorCode')}
-            </div>
+            <div className="mt-8 font-mono text-xs text-red-500/50">{t('notFound.errorCode')}</div>
           </div>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="flex flex-col items-center gap-4 sm:flex-row">
-          <AppButton
-            isLink
-            linkTo={`/${locale}`}
-            variant="primary"
-            size="lg"
-            icon={ArrowLeft}
-          >
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col items-center gap-4 sm:flex-row"
+        >
+          <AppButton isLink linkTo={`/${locale}`} variant="primary" size="lg" icon={ArrowLeft}>
             {t('notFound.action')}
           </AppButton>
 
-          <AppButton
-            isLink
-            linkTo={`/${locale}/contact`}
-            variant="danger"
-            size="lg"
-            icon={Wrench}
-          >
+          <AppButton isLink linkTo={`/${locale}/contact`} variant="danger" size="lg" icon={Wrench}>
             {t('notFound.report')}
           </AppButton>
         </motion.div>
