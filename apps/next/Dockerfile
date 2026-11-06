@@ -10,8 +10,7 @@ FROM base AS builder
 RUN apk add --no-cache libc6-compat
 
 COPY --from=pruner /app/out/json/ .
-COPY --from=pruner /app/out/bun.lockb ./bun.lockb
-RUN bun install --frozen-lockfile
+RUN bun install
 
 COPY --from=pruner /app/out/full/ .
 RUN bun x turbo run build --filter=pipelines-next...
@@ -32,7 +31,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/next/.next/static ./apps/nex
 COPY --from=builder --chown=nextjs:nodejs /app/apps/next/public ./apps/next/public
 
 USER nextjs
-
 EXPOSE 4321
 
 CMD ["bun", "apps/next/server.js"]

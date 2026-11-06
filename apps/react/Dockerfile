@@ -8,8 +8,7 @@ COPY apps/next/package.json ./apps/next/package.json
 COPY apps/api/package.json ./apps/api/package.json
 COPY packages ./packages
 
-RUN bun install --frozen-lockfile
-
+RUN bun install
 RUN bun run --filter @pipeline/contracts build
 
 COPY apps/react ./apps/react
