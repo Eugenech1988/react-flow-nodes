@@ -14,7 +14,7 @@ export const UseCasesSection = () => {
   const { t } = useT('marketing');
 
   return (
-    <section className="relative overflow-hidden border-t border-slate-800 bg-slate-950 py-24 text-slate-100">
+    <section id="use-cases" className="relative overflow-hidden border-t border-slate-800 bg-slate-950 py-24 text-slate-100">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#2dd4bf_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
 
       <Network className="pointer-events-none absolute top-20 -left-20 h-96 w-96 text-slate-800/20" />

@@ -5,10 +5,10 @@
   },
   "header": {
     "nav": {
-      "platform": "Platform",
-      "solutions": "Solutions",
-      "templates": "Templates",
-      "docs": "Docs",
+      "features": "Features",
+      "how-it-works": "How It Works",
+      "use-cases": "Use Cases",
+      "testimonials": "Testimonials",
       "pricing": "Pricing"
     },
     "signIn": "Sign in",
@@ -60,5 +60,13 @@
         }
       }
     }
+  },
+  "notFound": {
+    "systemAlert": "System Alert",
+    "title": "Sector Not Found",
+    "description": "The coordinates you entered do not match any active modules. The pipeline may have been rerouted, dismantled, or never existed.",
+    "errorCode": "ERROR CODE: 404",
+    "action": "Return to Command Center",
+    "report": "Report a Glitch"
   }
 }

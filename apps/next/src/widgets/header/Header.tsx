@@ -16,24 +16,30 @@ export const Header = () => {
 
   return (
     <header className="fixed top-4 left-1/2 z-50 w-[95%] max-w-7xl -translate-x-1/2 transition-all duration-300">
-      <div className="relative w-full rounded-2xl border border-white/10 bg-white/6 px-5 py-2.5 shadow-[0_8px_32px_0_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md after:absolute after:inset-0 after:-z-10 after:rounded-2xl after:bg-linear-to-b after:from-white/5 after:to-transparent after:opacity-50 sm:px-8 md:px-10">
+      <div className="relative w-full rounded-2xl border border-white/10 bg-white/6 px-5 py-2.5 shadow-[0_8px_32px_0_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md after:absolute after:inset-0 after:-z-10 after:rounded-2xl after:bg-linear-to-b after:from-white/5 after:to-transparent after:opacity-50 sm:px-8 xl:px-10">
         <span className="pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-teal-300/30 to-transparent md:inset-x-5" />
         <span className="pointer-events-none absolute inset-x-3 bottom-0 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent md:inset-x-5" />
 
         <div className="flex items-center justify-between gap-2">
           <Link
             href={`/${lng}`}
-            className="group flex min-w-0 flex-1 items-center gap-2.5 text-lg font-semibold tracking-tight text-white md:flex-none md:gap-3"
+            onClick={(e) => {
+              if (window.location.pathname === `/${lng}`) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            className="group flex min-w-0 flex-1 items-center gap-2.5 text-lg font-semibold tracking-tight text-white xl:flex-none xl:gap-3"
           >
             <div className="flex h-6 w-9 shrink-0 items-center justify-center text-teal-400 transition-transform duration-300 group-hover:scale-110 md:w-11">
               <PipelineLogo className="h-full w-full stroke-current drop-shadow-[0_0_8px_rgba(57,179,155,0.4)]" />
             </div>
-            <span className="truncate bg-linear-to-r from-white via-neutral-100 to-[#39b39b] bg-clip-text text-sm font-medium tracking-widest whitespace-nowrap text-transparent uppercase transition-colors duration-300 sm:text-base md:text-lg md:tracking-[0.15em]">
+            <span className="truncate bg-linear-to-r from-white via-neutral-100 to-[#39b39b] bg-clip-text text-sm font-medium tracking-widest whitespace-nowrap text-transparent uppercase transition-colors duration-300 sm:text-base xl:text-lg xl:tracking-[0.15em]">
               pipeline studio
             </span>
           </Link>
 
-          <nav className="relative hidden items-center gap-1 md:flex">
+          <nav className="relative hidden items-center gap-1 xl:flex">
             <span className="pointer-events-none absolute -top-1 right-2 left-2 h-px bg-linear-to-r from-transparent via-teal-400/30 to-transparent" />
             {NAV_LINKS.map((link) => (
               <AppButton key={link.id} isLink linkTo={`/${lng}${link.href}`} variant="nav">
@@ -43,7 +49,7 @@ export const Header = () => {
             <span className="pointer-events-none absolute right-2 -bottom-1 left-2 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent" />
           </nav>
 
-          <div className="hidden items-center gap-4 md:flex">
+          <div className="hidden items-center gap-4 xl:flex">
             <Suspense
               fallback={<div className="h-9.5 w-22.5 animate-pulse rounded-xl bg-[#0a1210]" />}
             >
@@ -53,7 +59,7 @@ export const Header = () => {
 
             <AppButton
               isLink
-              linkTo={`/${lng}/login`}
+              linkTo={`http://localhost:5173/login`}
               variant="nav"
               className="text-sm font-medium text-neutral-300 hover:text-white"
             >
@@ -61,9 +67,9 @@ export const Header = () => {
             </AppButton>
             <AppButton
               isLink
-              linkTo={`/${lng}/start`}
+              linkTo={`http://localhost:5173/login`}
               size="sm"
-              className="relative overflow-hidden rounded-xl bg-white font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-[0_0_20px_rgba(57,179,155,0.4)]"
+              className="relative overflow-hidden rounded-xl bg-white font-semibold text-slate-950 transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-[0_0_20px_rgba(57,179,155,0.4)]"
             >
               {t('header.getStarted')}
             </AppButton>
@@ -75,13 +81,13 @@ export const Header = () => {
             icon={isOpen ? X : Menu}
             iconClassName="h-5 w-5"
             onClick={() => setIsOpen(!isOpen)}
-            className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 p-0 text-white hover:bg-white/5 hover:text-white md:hidden"
+            className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 p-0 text-white hover:bg-white/5 hover:text-white xl:hidden"
             aria-label={t('header.toggleMenu')}
           />
         </div>
 
         <div
-          className={`grid rounded-2xl border border-white/5 bg-black/40 backdrop-blur-lg transition-all duration-300 ease-in-out md:hidden ${
+          className={`grid rounded-2xl border border-white/5 bg-black/40 backdrop-blur-lg transition-all duration-300 ease-in-out xl:hidden ${
             isOpen
               ? 'pointer-events-auto visible my-2 grid-rows-[1fr] opacity-100'
               : 'pointer-events-none invisible mt-0 grid-rows-[0fr] opacity-0'
@@ -135,7 +141,7 @@ export const Header = () => {
                   linkTo={`/${lng}/start`}
                   onClick={() => setIsOpen(false)}
                   size="sm"
-                  className="mx-auto h-auto w-[90%] rounded-xl bg-white py-2.5 text-center text-sm font-semibold hover:bg-neutral-100"
+                  className="mx-auto h-auto w-[90%] rounded-xl bg-white py-2.5 text-center text-sm font-semibold text-slate-950 hover:bg-neutral-100"
                 >
                   {t('header.getStarted')}
                 </AppButton>

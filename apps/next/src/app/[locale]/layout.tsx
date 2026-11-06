@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Roboto, Roboto_Mono } from 'next/font/google';
 import { I18nProvider } from '@/providers';
-import { Header, Footer } from '@/widgets';
 import i18nConfig from '@/shared/lib/i18n/config';
 import { generateI18nStaticParams, getT } from '@/shared/lib/i18n/server';
 import '../globals.css';
@@ -113,9 +112,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
     <html lang={locale} className={`${roboto.variable} ${robotoMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <I18nProvider lng={locale}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          {children}
         </I18nProvider>
       </body>
     </html>
