@@ -55,8 +55,8 @@ export async function generateMetadata({ params }: Pick<LayoutProps, 'params'>):
     alternates: {
       canonical: `/${locale}`,
       languages: {
-        'en': '/en',
-        'uk': '/ua',
+        en: '/en',
+        uk: '/ua',
         'x-default': '/en',
       },
     },

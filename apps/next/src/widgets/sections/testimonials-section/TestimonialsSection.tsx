@@ -26,7 +26,7 @@ export const TestimonialsSection = () => {
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
-          gradientDirection='left'
+          gradientDirection="left"
           title={t('testimonials.heading.title')}
           description={t('testimonials.heading.description')}
           isMain={false}
