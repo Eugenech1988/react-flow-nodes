@@ -50,12 +50,5 @@ services:
     depends_on:
       - api
 
-  astro:
-    build:
-      context: .
-      dockerfile: apps/astro/Dockerfile
-    ports:
-      - "4321:4321"
-
 volumes:
   postgres-data:

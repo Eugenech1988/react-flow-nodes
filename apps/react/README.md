@@ -175,7 +175,7 @@ The project includes:
 - [x] Copy / Paste nodes
 - [x] Keyboard shortcuts
 - [x] Import / Export
-- [ ] Auto Save
+- [x] Auto Save
 - [ ] Collaborative editing
 - [ ] Playwright E2E
 - [ ] Custom Edge types
