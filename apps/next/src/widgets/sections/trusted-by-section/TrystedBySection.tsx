@@ -2,21 +2,15 @@
 
 import { useRef, useState } from 'react';
 import { motion, useAnimationFrame, useMotionValue, useReducedMotion } from 'framer-motion';
-import { Cpu, Database, Flame, Globe, Terminal, Wind, Gauge, Activity, Disc } from 'lucide-react';
 import { SectionHeading } from '@/shared/ui';
-
-const companies = [
-  { name: 'Synapse', icon: Cpu },
-  { name: 'PrismDB', icon: Database },
-  { name: 'Aether', icon: Flame },
-  { name: 'Orbit', icon: Globe },
-  { name: 'Shell', icon: Terminal },
-  { name: 'Gale', icon: Wind },
-];
+import { COMPANIES } from '@/widgets/sections/trusted-by-section/model';
+import { useT } from '@/shared/lib/i18n/client';
+import { Activity, Disc, Gauge } from 'lucide-react';
 
 export function TrustedBySection() {
+  const { t } = useT('marketing');
   const prefersReducedMotion = useReducedMotion();
-  const duplicatedCompanies = [...companies, ...companies];
+  const duplicatedCompanies = [...COMPANIES, ...COMPANIES];
 
   const x = useMotionValue(0);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -65,8 +59,8 @@ export function TrustedBySection() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
         <SectionHeading
-          title="Trusted by modern engineering teams"
-          description="Powering the world's most demanding automation pipelines."
+          title={t('trustedBy.heading.title')}
+          description={t('trustedBy.heading.description')}
           isMain={false}
         />
 

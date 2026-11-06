@@ -56,5 +56,79 @@
       "description": "Combine inputs, actions, and custom webhooks inside a secure browser-based engine room.",
       "button": "Open Studio"
     }
+  },
+  "howItWorks": {
+    "heading": {
+      "title": "How It Works",
+      "description": "Go from a blank canvas to a production-ready, event-driven API in five mechanical steps. No complex infra hosting required."
+    },
+    "steps": {
+      "design": {
+        "title": "Drag and Connect Nodes",
+        "subtitle": "Design Phase",
+        "description": "Select from over 100+ pre-built triggers, actions, and logical operators. Drag them onto the zero-lag canvas and route your data by connecting matching output-to-input ports."
+      },
+      "validate": {
+        "title": "Configure Payloads",
+        "subtitle": "Validation Phase",
+        "description": "Click on any node to open its properties. Map incoming JSON fields, write custom mapping expressions with autocomplete support, and let our strict schema engine validate your connections."
+      },
+      "deploy": {
+        "title": "Deploy and Run",
+        "subtitle": "Production Phase",
+        "description": "Hit Deploy to publish your workspace. Your workflow immediately compiles into a highly optimized, stateful execution pipeline running on global edge nodes."
+      },
+      "monitor": {
+        "title": "Monitor Pipeline Health",
+        "subtitle": "Telemetry Phase",
+        "description": "Watch real-time pressure gauges and throughput metrics. Our built-in observability suite catches bottlenecks before they cause a system failure."
+      },
+      "scale": {
+        "title": "Scale Infrastructure",
+        "subtitle": "Expansion Phase",
+        "description": "Allocate more compute to your boilers. The system automatically provisions additional edge workers to handle traffic spikes without breaking a sweat."
+      }
+    },
+    "cta": "Start Building Free"
+  },
+  "trustedBy": {
+    "heading": {
+      "title": "Trusted by modern engineering teams",
+      "description": "Powering the world's most demanding automation pipelines."
+    }
+  },
+  "useCases": {
+    "heading": {
+      "title": "Designed for Modern Workloads",
+      "description": "Explore how engineering teams leverage our visual editor to orchestrate critical business events and automate infrastructure."
+    },
+    "list": {
+      "01": {
+        "title": "LLM & Agentic Orchestration",
+        "category": "AI & Inference",
+        "description": "Chain multi-step prompts, validate schema boundaries between models, and integrate custom vector database tools via standard API nodes.",
+        "metric": "Latency: < 15ms"
+      },
+      "02": {
+        "title": "Notification Dispatcher",
+        "category": "Messaging",
+        "description": "Route real-time alerts dynamically across Slack, email, and Webhooks based on user action payloads and custom conditional rules.",
+        "metric": "Volume: 1.2M/day"
+      },
+      "03": {
+        "title": "Lightweight ETL Pipelines",
+        "category": "Data Processing",
+        "description": "Extract payloads from incoming webhooks, transform fields in real-time, and securely batch load clean datasets straight to Postgres.",
+        "metric": "Type: Event-driven"
+      },
+      "04": {
+        "title": "Auto-Mitigation Workflows",
+        "category": "SecOps",
+        "description": "Trigger security logic when an anomaly is detected. Block IP addresses on Cloudflare and rotate API tokens instantly without human delay.",
+        "metric": "SLA: 100% Guaranteed"
+      }
+    },
+    "secure": "SECURE",
+    "openDossier": "Open Dossier"
   }
 }

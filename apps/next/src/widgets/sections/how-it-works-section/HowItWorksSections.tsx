@@ -5,9 +5,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Gauge, Activity, Loader2 } from 'lucide-react';
 import { SectionHeading } from '@/shared/ui';
 import Link from 'next/link';
+import { useT } from '@/shared/lib/i18n/client';
 import { HOW_IT_WORKS_STEPS } from '@/widgets/sections/how-it-works-section/model';
 
 export const HowItWorksSection = () => {
+  const { t } = useT('marketing');
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -33,8 +35,8 @@ export const HowItWorksSection = () => {
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
-          title="How It Works"
-          description="Go from a blank canvas to a production-ready, event-driven API in five mechanical steps. No complex infra hosting required."
+          title={t('howItWorks.heading.title')}
+          description={t('howItWorks.heading.description')}
           isMain={false}
         />
 
@@ -81,10 +83,10 @@ export const HowItWorksSection = () => {
                               : 'text-slate-400 group-hover:text-slate-300'
                           }`}
                         >
-                          {step.title}
+                          {t(`howItWorks.steps.${step.id}.title`)}
                         </h3>
                         <span className="font-mono text-xs tracking-widest text-[#2dd4bf]/70 uppercase">
-                          {step.subtitle}
+                          {t(`howItWorks.steps.${step.id}.subtitle`)}
                         </span>
                       </div>
 
@@ -97,7 +99,7 @@ export const HowItWorksSection = () => {
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
                             className="mt-2 overflow-hidden text-sm leading-relaxed text-slate-400 md:text-base"
                           >
-                            {step.description}
+                            {t(`howItWorks.steps.${step.id}.description`)}
                           </motion.p>
                         )}
                       </AnimatePresence>
@@ -115,17 +117,16 @@ export const HowItWorksSection = () => {
             <span className="absolute bottom-3 left-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:bottom-4 sm:left-4 sm:h-2 sm:w-2" />
             <span className="absolute right-3 bottom-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:right-4 sm:bottom-4 sm:h-2 sm:w-2" />
 
-            <div className="relative flex min-h-[380px] w-full flex-col overflow-hidden rounded-[1.4rem] border border-slate-800 bg-slate-950/90 lg:h-full lg:flex-1">
+            <div className="relative flex min-h-95 w-full flex-col overflow-hidden rounded-[1.4rem] border border-slate-800 bg-slate-950/90 lg:h-full lg:flex-1">
 
-              {/* Шапка монитора */}
               <div className="relative z-10 flex items-center justify-between border-b border-slate-800 bg-[#0d1f1e] px-4 py-3 sm:px-6">
                 <div className="flex items-center gap-2 font-mono text-[10px] text-[#2dd4bf]/80 sm:text-xs">
                   <Activity className="h-4 w-4" />
                   <span className="hidden sm:inline">
-                    SYS.WORKSPACE // {HOW_IT_WORKS_STEPS[activeStep].subtitle.toUpperCase()}
+                    SYS.WORKSPACE // {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.subtitle`).toUpperCase()}
                   </span>
                   <span className="sm:hidden">
-                    SYS.WORKSPACE // {HOW_IT_WORKS_STEPS[activeStep].subtitle.slice(0, 3).toUpperCase()}
+                    SYS.WORKSPACE // {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.subtitle`).slice(0, 3).toUpperCase()}
                   </span>
                 </div>
                 <div className="flex gap-1.5">
@@ -166,7 +167,7 @@ export const HowItWorksSection = () => {
                 </div>
 
                 <div className="relative flex flex-1 items-center justify-center overflow-hidden p-6 sm:p-8">
-                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_1px,transparent_1.5px)] bg-[size:16px_16px]" />
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(4,10,9,0.85)_100%)]" />
 
                   <AnimatePresence mode="wait">
@@ -207,11 +208,11 @@ export const HowItWorksSection = () => {
                         </div>
 
                         <h4 className="text-lg font-bold text-[#d1faf5] sm:text-xl md:text-2xl">
-                          {HOW_IT_WORKS_STEPS[activeStep].title}
+                          {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.title`)}
                         </h4>
 
                         <p className="mt-3 text-xs leading-relaxed text-slate-400 sm:text-sm md:text-base">
-                          {HOW_IT_WORKS_STEPS[activeStep].description}
+                          {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.description`)}
                         </p>
                       </motion.div>
                     )}
@@ -249,7 +250,7 @@ export const HowItWorksSection = () => {
             href="/start"
             className="group inline-flex items-center justify-center gap-2 rounded-xl border border-teal-900/40 bg-linear-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-bold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_4px_14px_rgba(57,179,155,0.25)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_22px_rgba(57,179,155,0.5)] active:scale-[0.98] sm:px-8 sm:py-4 sm:text-base"
           >
-            Start Building Free
+            {t('howItWorks.cta')}
             <ArrowRight className="h-4 w-4 text-white transition-transform group-hover:translate-x-1 sm:h-5 sm:w-5" />
           </Link>
         </div>
