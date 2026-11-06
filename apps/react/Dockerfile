@@ -4,11 +4,12 @@ WORKDIR /workspace
 
 COPY package.json bun.lock turbo.json ./
 COPY apps/react/package.json ./apps/react/package.json
-COPY apps/astro/package.json ./apps/astro/package.json
+COPY apps/next/package.json ./apps/next/package.json
 COPY apps/api/package.json ./apps/api/package.json
 COPY packages ./packages
 
 RUN bun install --frozen-lockfile
+
 RUN bun run --filter @pipeline/contracts build
 
 COPY apps/react ./apps/react

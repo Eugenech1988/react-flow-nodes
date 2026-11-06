@@ -28,8 +28,8 @@ services:
       NODE_ENV: development
       PORT: 3000
       DATABASE_URL: postgresql://pipeline:pipeline@postgres:5432/pipeline?schema=public
-      FRONTEND_URL: http://localhost:5173
-      CLIENT_URL: http://localhost:5173
+      FRONTEND_URL: http://localhost:5173,http://localhost:4321
+      CLIENT_URL: http://localhost:5173,http://localhost:4321
       CSRF_SECRET: local-development-csrf-secret
     ports:
       - "3000:3000"
@@ -47,6 +47,20 @@ services:
       VITE_API_URL: http://localhost:3000
     ports:
       - "5173:5173"
+    depends_on:
+      - api
+
+  next:
+    build:
+      context: .
+      dockerfile: apps/next/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+      INTERNAL_API_URL: http://api:3000
+    ports:
+      - "4321:4321"
     depends_on:
       - api
 
