@@ -1,12 +1,16 @@
 import Link from 'next/link';
 import PipelineLogo from '@/assets/logo.svg';
-import { FOOTER_COLUMNS, SOCIALS } from './model';
 import { InfoBadge } from '@/shared/ui';
+import { getT } from '@/shared/lib/i18n/server';
 import { Cog } from 'lucide-react';
+import { FOOTER_COLUMNS, SOCIALS } from './model';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-export const Footer = () => {
+
+export const Footer = async () => {
+  const { t, lng } = await getT('common');
+
   return (
     <footer className="relative w-full overflow-hidden pt-8 pb-6 md:pt-12">
       <div className="pointer-events-none absolute bottom-0 left-1/2 h-75 w-150 -translate-x-1/2 rounded-full bg-teal-500/5 blur-3xl" />
@@ -16,7 +20,6 @@ export const Footer = () => {
           <span className="pointer-events-none absolute inset-x-4 top-0 h-px bg-linear-to-r from-transparent via-teal-300/30 to-transparent md:inset-x-6" />
           <span className="pointer-events-none absolute inset-x-4 bottom-0 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent md:inset-x-6" />
 
-          {/* Декоративные шестеренки по углам */}
           <Cog className="absolute top-3 left-3 h-4 w-4 text-teal-400/30 md:top-5 md:left-5" />
           <Cog className="absolute top-3 right-3 h-4 w-4 text-teal-400/30 md:top-5 md:right-5" />
           <Cog className="absolute bottom-3 left-3 h-4 w-4 text-teal-400/30 md:bottom-5 md:left-5" />
@@ -26,7 +29,7 @@ export const Footer = () => {
             <div className="col-span-2 flex flex-col justify-between">
               <div>
                 <Link
-                  href="/"
+                  href={`/${lng}`}
                   className="group flex items-center gap-2.5 text-lg font-semibold tracking-tight text-white md:gap-3"
                 >
                   <div className="flex h-6 w-9 shrink-0 items-center justify-center text-teal-400 transition-transform duration-300 group-hover:scale-110 md:w-11">
@@ -36,21 +39,21 @@ export const Footer = () => {
                     pipeline studio
                   </span>
                 </Link>
-                <p className="mt-4 max-w-xs text-xs leading-relaxed text-neutral-400 md:mt-5">
-                  An event-driven orchestration engine running at the edge. Connect services,
-                  validate data payloads, and scale workflows instantly.
+                <p className="mt-4 max-w-xs text-sm leading-relaxed text-neutral-400 md:mt-5">
+                  {t('footer.description')}
                 </p>
               </div>
 
               <div className="mt-6 flex flex-wrap items-center gap-3 md:mt-8">
-                {SOCIALS.map((social, index) => {
+                {SOCIALS.map((social) => {
                   const Icon = social.icon;
                   return (
                     <a
-                      key={index}
+                      key={social.id}
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={t(`footer.socials.${social.id}`)}
                       className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-2 text-neutral-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.35)] transition-all duration-300 hover:border-teal-500/30 hover:bg-white/10 hover:text-teal-400 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_0_15px_rgba(57,179,155,0.2)]"
                     >
                       <Icon className="h-4 w-4" />
@@ -61,19 +64,19 @@ export const Footer = () => {
             </div>
 
             {FOOTER_COLUMNS.map((column) => (
-              <div key={column.title} className="col-span-1">
-                <h4 className="relative mb-5 font-mono text-[11px] font-bold tracking-[0.15em] text-neutral-200 uppercase md:mb-6 md:text-xs">
-                  {column.title}
+              <div key={column.id} className="col-span-1">
+                <h4 className="relative mb-5 text-[11px] font-bold tracking-[0.15em] text-neutral-200 uppercase md:mb-6 md:text-xs">
+                  {t(`footer.columns.${column.id}.title`)}
                   <span className="absolute -bottom-2 left-0 h-px w-6 bg-teal-400/50 shadow-[0_0_6px_rgba(57,179,155,0.5)]" />
                 </h4>
                 <ul className="space-y-3 md:space-y-3.5">
                   {column.links.map((link) => (
-                    <li key={link.label}>
+                    <li key={link.id}>
                       <Link
                         href={link.href}
-                        className="relative inline-block text-xs text-neutral-400 transition-colors duration-300 after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-teal-400/80 after:shadow-[0_0_6px_rgba(57,179,155,0.8)] after:transition-all hover:text-white hover:after:w-full"
+                        className="relative inline-block text-sm text-neutral-400 transition-colors duration-300 after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-teal-400/80 after:shadow-[0_0_6px_rgba(57,179,155,0.8)] after:transition-all hover:text-white hover:after:w-full"
                       >
-                        {link.label}
+                        {t(`footer.columns.${column.id}.links.${link.id}`)}
                       </Link>
                     </li>
                   ))}
@@ -90,10 +93,10 @@ export const Footer = () => {
             </div>
 
             <p className="w-full text-center leading-relaxed text-neutral-500 sm:text-left">
-              &copy; {CURRENT_YEAR} Pipelines Studio Inc. All rights reserved.
+              {t('footer.copyright', { year: CURRENT_YEAR })}
             </p>
 
-            <InfoBadge text="All names are fictional" />
+            <InfoBadge text={t('footer.badge')} />
           </div>
         </div>
       </div>

@@ -1,6 +1,64 @@
 {
   "languages": {
-    "en": "English",
-    "uk": "Українська"
+    "en": "EN",
+    "uk": "UA"
+  },
+  "header": {
+    "nav": {
+      "platform": "Platform",
+      "solutions": "Solutions",
+      "templates": "Templates",
+      "docs": "Docs",
+      "pricing": "Pricing"
+    },
+    "signIn": "Sign in",
+    "getStarted": "Get started",
+    "toggleMenu": "Toggle menu"
+  },
+  "footer": {
+    "description": "An event-driven orchestration engine running at the edge. Connect services, validate data payloads, and scale workflows instantly.",
+    "copyright": "© {{year}} Pipelines Studio Inc. All rights reserved.",
+    "badge": "All names are fictional",
+    "socials": {
+      "github": "GitHub",
+      "twitter": "X (Twitter)"
+    },
+    "columns": {
+      "product": {
+        "title": "Product",
+        "links": {
+          "features": "Features",
+          "useCases": "Use Cases",
+          "howItWorks": "How It Works",
+          "pricing": "Pricing"
+        }
+      },
+      "resources": {
+        "title": "Resources",
+        "links": {
+          "documentation": "Documentation",
+          "apiReference": "API Reference",
+          "guides": "Guides",
+          "systemStatus": "System Status"
+        }
+      },
+      "company": {
+        "title": "Company",
+        "links": {
+          "about": "About Us",
+          "blog": "Blog",
+          "careers": "Careers",
+          "contact": "Contact"
+        }
+      },
+      "legal": {
+        "title": "Legal",
+        "links": {
+          "privacy": "Privacy Policy",
+          "terms": "Terms of Service",
+          "security": "Security"
+        }
+      }
+    }
   }
 }

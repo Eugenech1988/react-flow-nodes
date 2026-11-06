@@ -1,9 +1,14 @@
 export type TFooterLink = {
-  label: string;
+  id: string;
   href: string;
 };
 
 export type TFooterColumn = {
-  title: string;
+  id: string;
   links: TFooterLink[];
+};
+
+export type TSocial = {
+  id: string;
+  href: string;
 };

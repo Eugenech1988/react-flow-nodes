@@ -1,4 +1,4 @@
 export type TNavLink = {
-  text: string;
+  id: string;
   href: string;
 };

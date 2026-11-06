@@ -28,7 +28,7 @@ export const InfoBadge = ({ text, className }: IInfoBadgeProps) => {
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-60" />
           <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-teal-400 shadow-[0_0_6px_rgba(57,179,155,1)]" />
         </span>
-        <span className="font-mono text-[10px] font-bold tracking-[0.15em] text-teal-300/90 uppercase drop-shadow-[0_0_4px_rgba(57,179,155,0.4)]">
+        <span className="text-[10px] font-bold tracking-[0.15em] text-teal-300/90 uppercase drop-shadow-[0_0_4px_rgba(57,179,155,0.4)]">
           {text}
         </span>
         <span className="relative flex h-1.5 w-1.5 items-center justify-center">

@@ -1,0 +1,64 @@
+{
+  "languages": {
+    "en": "EN",
+    "uk": "UA"
+  },
+  "header": {
+    "nav": {
+      "platform": "Платформа",
+      "solutions": "Рішення",
+      "templates": "Шаблони",
+      "docs": "Документація",
+      "pricing": "Тарифи"
+    },
+    "signIn": "Увійти",
+    "getStarted": "Почати",
+    "toggleMenu": "Перемкнути меню"
+  },
+  "footer": {
+    "description": "Подієвий рушій оркестрації, що працює на межі мережі. Підключайте сервіси, перевіряйте дані та миттєво масштабуйте воркфлоу.",
+    "copyright": "© {{year}} Pipelines Studio Inc. Усі права захищено.",
+    "badge": "Усі назви вигадані",
+    "socials": {
+      "github": "GitHub",
+      "twitter": "X (Twitter)"
+    },
+    "columns": {
+      "product": {
+        "title": "Продукт",
+        "links": {
+          "features": "Можливості",
+          "useCases": "Сценарії використання",
+          "howItWorks": "Як це працює",
+          "pricing": "Тарифи"
+        }
+      },
+      "resources": {
+        "title": "Ресурси",
+        "links": {
+          "documentation": "Документація",
+          "apiReference": "Довідник API",
+          "guides": "Посібники",
+          "systemStatus": "Статус системи"
+        }
+      },
+      "company": {
+        "title": "Компанія",
+        "links": {
+          "about": "Про нас",
+          "blog": "Блог",
+          "careers": "Кар’єра",
+          "contact": "Контакти"
+        }
+      },
+      "legal": {
+        "title": "Правова інформація",
+        "links": {
+          "privacy": "Політика конфіденційності",
+          "terms": "Умови використання",
+          "security": "Безпека"
+        }
+      }
+    }
+  }
+}
