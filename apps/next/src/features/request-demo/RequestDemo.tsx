@@ -28,10 +28,11 @@ import {
 } from '@pipeline/ui';
 
 const formVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
   visible: {
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: { type: 'spring', stiffness: 80, damping: 20, staggerChildren: 0.1 },
   },
 };
@@ -98,7 +99,7 @@ export const RequestDemoModal = ({ children }: RequestDemoModalProps) => {
       <DialogTrigger render={children as React.ReactElement} />
 
       <DialogContent
-        className="max-w-2xl border-none bg-transparent p-0 shadow-none sm:max-w-3xl [&>button]:hidden"
+        className="max-w-2xl border-none bg-transparent p-0 shadow-none sm:max-w-3xl [&>button]:hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200"
       >
         <DialogTitle className="sr-only">{t('title')}</DialogTitle>
         <DialogDescription className="sr-only">{t('description')}</DialogDescription>
@@ -117,7 +118,7 @@ export const RequestDemoModal = ({ children }: RequestDemoModalProps) => {
           <div className="relative flex flex-col overflow-hidden rounded-[1.4rem] border border-slate-800 bg-[#06100f] p-6 sm:p-8">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(45,212,191,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(45,212,191,0.03)_1px,transparent_1px)] bg-size-[2rem_2rem]" />
 
-            <DialogClose className="absolute top-4 right-4 z-20 rounded-full p-1.5 text-slate-400 transition-colors hover:bg-white/5 hover:text-white">
+            <DialogClose className="absolute cursor-pointer top-4 right-4 z-20 rounded-full p-1.5 text-slate-400 transition-colors hover:bg-white/5 hover:text-white">
               <X className="h-5 w-5" />
               <span className="sr-only">Close</span>
             </DialogClose>
@@ -230,4 +231,4 @@ export const RequestDemoModal = ({ children }: RequestDemoModalProps) => {
       </DialogContent>
     </Dialog>
   );
-}
+};
