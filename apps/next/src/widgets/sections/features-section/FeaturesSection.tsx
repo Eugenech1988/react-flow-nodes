@@ -10,12 +10,14 @@ import {
   type Variants,
 } from 'framer-motion';
 import { SectionHeading } from '@/shared/ui';
+import { useT } from '@/shared/lib/i18n/client';
 import { FeaturePlaque, CtaPlaque } from './components';
 import { FEATURES, SLIDE_VARIANTS } from './model';
 
 const totalSteps = FEATURES.length + 1;
 
 export function FeaturesSection() {
+  const { t } = useT('features');
   const wrapperRef = useRef<HTMLDivElement>(null);
   const prevIndexRef = useRef(0);
   const [index, setIndex] = useState(0);
@@ -52,10 +54,10 @@ export function FeaturesSection() {
 
   const slideVariantsResolved: Variants = prefersReducedMotion
     ? {
-        enter: { opacity: 0 },
-        center: { opacity: 1 },
-        exit: { opacity: 0 },
-      }
+      enter: { opacity: 0 },
+      center: { opacity: 1 },
+      exit: { opacity: 0 },
+    }
     : SLIDE_VARIANTS;
 
   return (
@@ -70,8 +72,8 @@ export function FeaturesSection() {
 
         <div className="relative z-10 mx-auto flex h-full w-full max-w-4xl flex-col px-6">
           <SectionHeading
-            title="Powering Your Workflows"
-            description="Six precision-engineered mechanisms, machined for the modern automation workshop."
+            title={t('heading.title')}
+            description={t('heading.description')}
           />
 
           <div className="relative flex min-h-0 w-full flex-1 items-center justify-center py-6">
@@ -93,9 +95,9 @@ export function FeaturesSection() {
                 >
                   {index < FEATURES.length ? (
                     <FeaturePlaque
-                      title={FEATURES[index].title}
-                      badge={FEATURES[index].badge}
-                      description={FEATURES[index].description}
+                      title={t(`list.${FEATURES[index].id}.title`)}
+                      badge={t(`list.${FEATURES[index].id}.badge`)}
+                      description={t(`list.${FEATURES[index].id}.description`)}
                       Icon={FEATURES[index].icon}
                       number={String(index + 1).padStart(2, '0')}
                     />
@@ -112,11 +114,10 @@ export function FeaturesSection() {
               {Array.from({ length: totalSteps }).map((_, i) => {
                 const isActive = i === index;
                 const isPassed = i < index;
-                const isLast = i === FEATURES.length;
 
                 return (
                   <div
-                    key={isLast ? 'cta-step' : FEATURES[i].title}
+                    key={`step-${i}`} // <-- ИСПРАВЛЕНО: Надежный ключ
                     className="flex flex-1 items-center gap-1.5 sm:gap-2"
                   >
                     <motion.button

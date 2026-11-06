@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import PipelineLogo from '@/assets/logo.svg';
 import { AppButton } from '@/shared/ui';
@@ -48,11 +48,10 @@ export const Header = () => {
             <span className="pointer-events-none absolute right-2 -bottom-1 left-2 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent" />
           </nav>
 
-          {/* DESKTOP RIGHT ACTIONS */}
           <div className="hidden items-center gap-4 md:flex">
-            {/* Переключатель языков на десктопе */}
-            <LanguageSwitcher />
-
+            <Suspense fallback={<div className="h-9.5 w-22.5 animate-pulse rounded-xl bg-[#0a1210]" />}>
+              <LanguageSwitcher />
+            </Suspense>
             <div className="h-6 w-px bg-white/10" />
 
             <AppButton
@@ -84,7 +83,6 @@ export const Header = () => {
           />
         </div>
 
-        {/* MOBILE MENU */}
         <div
           className={`grid rounded-2xl border border-white/5 bg-black/40 backdrop-blur-lg transition-all duration-300 ease-in-out md:hidden ${
             isOpen
@@ -117,7 +115,9 @@ export const Header = () => {
 
               <div className="flex flex-col gap-3 pt-1 pb-1">
                 <div className="px-3">
-                  <LanguageSwitcher isMobile />
+                  <Suspense fallback={<div className="h-9.5 w-full animate-pulse rounded-xl bg-[#0a1210]" />}>
+                    <LanguageSwitcher isMobile />
+                  </Suspense>
                 </div>
 
                 <AppButton

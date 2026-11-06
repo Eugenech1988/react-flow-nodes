@@ -4,7 +4,7 @@ const i18nConfig: I18nConfig = {
   supportedLngs: ['en', 'ua'],
   fallbackLng: 'en',
   defaultNS: 'common',
-  ns: ['common', 'marketing'],
+  ns: ['common', 'marketing', 'features'],
   localeParamName: 'locale',
   resourceLoader: (language, namespace) =>
     import(`./locales/${language}/${namespace}.json`),
