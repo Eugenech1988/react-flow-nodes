@@ -4,20 +4,18 @@ import {
   TrustedBySection,
   HowItWorksSection,
   UseCasesSection,
+  PricingSection,
 } from '@/widgets';
 
-type PageProps = { params: Promise<{ locale: string }> };
-
-export default async function Page({ params }: PageProps) {
-  const { locale } = await params;
-
+export default async function Home() {
   return (
     <>
-      <HeroSection lng={locale} />
+      <HeroSection />
       <FeaturesSection />
       <TrustedBySection />
       <HowItWorksSection />
       <UseCasesSection />
+      <PricingSection />
     </>
   );
 }

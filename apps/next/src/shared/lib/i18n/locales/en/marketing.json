@@ -130,5 +130,65 @@
     },
     "secure": "SECURE",
     "openDossier": "Open Case"
+  },
+  "pricing": {
+    "badge": "Pricing Plans",
+    "heading": {
+      "title": "Simple, Fair Pricing",
+      "description": "No hidden servers. No infrastructure overhead. Choose a plan that scales instantly with your business demands."
+    },
+    "popular": "Most Popular",
+    "tiers": {
+      "hobby": {
+        "name": "Hobby",
+        "price": "$0",
+        "period": "",
+        "description": "Perfect for personal projects, side hustles, and experimenting with visual workflows.",
+        "cta": "Start for Free",
+        "features": [
+          "Up to 3 active workflows",
+          "1,000 executions per month",
+          "Standard edge routing (500ms SLA)",
+          "Community support via Discord",
+          "1-day execution history retention"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$49",
+        "period": "/mo",
+        "description": "For production-grade applications needing high performance, scale, and advanced features.",
+        "cta": "Upgrade to Pro",
+        "features": [
+          "Unlimited active workflows",
+          "50,000 executions included",
+          "Ultra-low latency routing (< 15ms SLA)",
+          "Priority Slack & Email support (24h)",
+          "30-day execution history retention",
+          "Custom webhooks and API payloads",
+          "Advanced error handling & retries"
+        ]
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "Custom",
+        "period": "",
+        "description": "Tailored infrastructure, dedicated runners, and strict security compliance for teams.",
+        "cta": "Contact Sales",
+        "features": [
+          "Unlimited executions and workflows",
+          "Dedicated, isolated edge instances",
+          "99.99% uptime SLA guarantee",
+          "Dedicated Account Manager (24/7/365)",
+          "Unlimited history retention",
+          "SSO / SAML authentication",
+          "Custom security event logging"
+        ]
+      }
+    },
+    "footer": {
+      "question": "Have questions about high-volume usage?",
+      "link": "Chat with our engineers"
+    }
   }
 }
