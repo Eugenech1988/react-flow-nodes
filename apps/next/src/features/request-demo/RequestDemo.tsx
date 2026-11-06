@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, type ReactNode } from 'react';
-import { motion, type Variants } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -99,7 +99,7 @@ export const RequestDemoModal = ({ children }: RequestDemoModalProps) => {
       <DialogTrigger render={children as React.ReactElement} />
 
       <DialogContent
-        className="max-w-2xl border-none bg-transparent p-0 shadow-none sm:max-w-3xl [&>button]:hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200"
+        className="w-[95vw] max-w-2xl max-h-[90dvh] overflow-y-auto border-none bg-transparent p-0 shadow-none sm:max-w-3xl [&>button]:hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200"
       >
         <DialogTitle className="sr-only">{t('title')}</DialogTitle>
         <DialogDescription className="sr-only">{t('description')}</DialogDescription>
@@ -115,17 +115,17 @@ export const RequestDemoModal = ({ children }: RequestDemoModalProps) => {
           <span className="absolute bottom-3 left-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:bottom-4 sm:left-4 sm:h-2 sm:w-2" />
           <span className="absolute right-3 bottom-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:right-4 sm:bottom-4 sm:h-2 sm:w-2" />
 
-          <div className="relative flex flex-col overflow-hidden rounded-[1.4rem] border border-slate-800 bg-[#06100f] p-6 sm:p-8">
+          <div className="relative flex flex-col overflow-hidden rounded-[1.4rem] border border-slate-800 bg-[#06100f] p-4 sm:p-8">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(45,212,191,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(45,212,191,0.03)_1px,transparent_1px)] bg-size-[2rem_2rem]" />
 
-            <DialogClose className="absolute cursor-pointer top-4 right-4 z-20 rounded-full p-1.5 text-slate-400 transition-colors hover:bg-white/5 hover:text-white">
+            <DialogClose className="absolute top-4 right-4 z-20 rounded-full p-1.5 text-slate-400 transition-colors hover:bg-white/5 hover:text-white sm:top-6 sm:right-6">
               <X className="h-5 w-5" />
               <span className="sr-only">Close</span>
             </DialogClose>
 
-            <div className="relative z-10 mb-6 flex items-center gap-3 border-b border-slate-800/80 pb-4">
-              <Terminal className="h-5 w-5 text-[#2dd4bf]" />
-              <span className="font-mono text-xs uppercase tracking-widest text-[#2dd4bf]/70">
+            <div className="relative z-10 mb-6 flex items-start gap-3 border-b border-slate-800/80 pb-4 pr-10 sm:items-center">
+              <Terminal className="mt-0.5 h-5 w-5 shrink-0 text-[#2dd4bf] sm:mt-0" />
+              <span className="font-mono text-[10px] leading-tight uppercase tracking-widest text-[#2dd4bf]/70 sm:text-xs">
                 Connection Setup // SECURE CHANNEL
               </span>
             </div>
@@ -142,8 +142,8 @@ export const RequestDemoModal = ({ children }: RequestDemoModalProps) => {
                 <h3 className="text-xl font-bold text-[#d1faf5]">{t('form.success')}</h3>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="relative z-10 flex flex-col gap-5">
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <form onSubmit={handleSubmit(onSubmit)} className="relative z-10 flex flex-col gap-4 sm:gap-5">
+                <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
                   <motion.div variants={inputVariants} className="flex flex-col gap-2">
                     <AppLabel htmlFor="name">{t('form.name')}</AppLabel>
                     <div className="relative">
@@ -220,6 +220,7 @@ export const RequestDemoModal = ({ children }: RequestDemoModalProps) => {
                     isDisabled={isSubmitting}
                     isPending={isSubmitting}
                     pendingText={t('form.submitting')}
+                    className="w-full sm:w-auto"
                   >
                     {t('form.submit')}
                   </AppButton>
