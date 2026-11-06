@@ -22,7 +22,7 @@ export function SectionHeading({
   const Tag = isMain ? 'h1' : 'h2';
 
   const titleSizeClasses = isMain
-    ? 'text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] leading-[1.05]'
+    ? 'text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] leading-[1.05]'
     : 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.1]';
 
   const descSizeClasses = isMain
