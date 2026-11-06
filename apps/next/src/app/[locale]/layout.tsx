@@ -1,21 +1,22 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Roboto, Roboto_Mono } from 'next/font/google';
 import { I18nProvider } from '@/providers';
 import { Header, Footer } from '@/widgets';
 import i18nConfig from '@/shared/lib/i18n/config';
 import { generateI18nStaticParams, getT } from '@/shared/lib/i18n/server';
 import '../globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const roboto = Roboto({
+  weight: ['400', '500', '700', '900'],
+  variable: '--font-roboto',
+  subsets: ['latin', 'cyrillic'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+const robotoMono = Roboto_Mono({
+  variable: '--font-roboto-mono',
+  subsets: ['latin', 'cyrillic'],
 });
 
 const SITE_URL =
@@ -109,10 +110,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   if (!i18nConfig.supportedLngs.includes(locale)) notFound();
 
   return (
-    <html
-      lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang={locale} className={`${roboto.variable} ${robotoMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <I18nProvider lng={locale}>
           <Header />

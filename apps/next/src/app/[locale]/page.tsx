@@ -5,6 +5,7 @@ import {
   HowItWorksSection,
   UseCasesSection,
   PricingSection,
+  TestimonialsSection,
 } from '@/widgets';
 
 export default async function Home() {
@@ -15,6 +16,7 @@ export default async function Home() {
       <TrustedBySection />
       <HowItWorksSection />
       <UseCasesSection />
+      <TestimonialsSection />
       <PricingSection />
     </>
   );

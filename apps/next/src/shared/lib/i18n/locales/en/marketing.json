@@ -190,5 +190,32 @@
       "question": "Have questions about high-volume usage?",
       "link": "Chat with our engineers"
     }
+  },
+  "testimonials": {
+    "heading": {
+      "title": "Field Logs from Operators",
+      "description": "Read how engineering teams pressurize their pipelines and scale their infrastructure using our engine room."
+    },
+    "list": {
+      "1": {
+        "quote": "Pipeline Studio completely eliminated our boilerplate. We wired up a complex ETL pipeline in 15 minutes instead of 3 days. The visual canvas is a game changer.",
+        "author": "Sarah Chen",
+        "role": "Lead Data Engineer",
+        "company": "PrismDB"
+      },
+      "2": {
+        "quote": "Zero-lag is an understatement. Navigating graphs with thousands of nodes feels like gliding. Pipeline Studio's strict schema validation saved us from so many production incidents.",
+        "author": "Marcus Thorne",
+        "role": "CTO",
+        "company": "Aether"
+      },
+      "3": {
+        "quote": "We deployed our entire notification dispatcher using Pipeline Studio. The edge execution means our users get alerts with sub-15ms latency, and we don't manage any servers.",
+        "author": "Elena Rodriguez",
+        "role": "Backend Architect",
+        "company": "Synapse"
+      }
+    },
+    "cta": "Submit Your Log"
   }
 }

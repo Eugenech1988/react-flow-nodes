@@ -17,7 +17,9 @@ export function LanguageSwitcher({ isMobile = false }: { isMobile?: boolean }) {
     segments[1] = locale;
 
     const query = searchParams.toString();
-    router.push(segments.join('/') + (query ? `?${query}` : ''));
+    const newPath = segments.join('/') + (query ? `?${query}` : '');
+
+    router.push(newPath, { scroll: false });
   };
 
   return (
