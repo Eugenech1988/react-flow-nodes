@@ -17,7 +17,9 @@ import { FEATURES, SLIDE_VARIANTS } from './model';
 const totalSteps = FEATURES.length + 1;
 
 export function FeaturesSection() {
-  const { t } = useT('features');
+  // Указываем неймспейс файла, в котором лежат переводы (например, 'marketing')
+  const { t } = useT('marketing');
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const prevIndexRef = useRef(0);
   const [index, setIndex] = useState(0);
@@ -72,8 +74,8 @@ export function FeaturesSection() {
 
         <div className="relative z-10 mx-auto flex h-full w-full max-w-4xl flex-col px-6">
           <SectionHeading
-            title={t('heading.title')}
-            description={t('heading.description')}
+            title={t('features.heading.title')}
+            description={t('features.heading.description')}
           />
 
           <div className="relative flex min-h-0 w-full flex-1 items-center justify-center py-6">
@@ -95,9 +97,9 @@ export function FeaturesSection() {
                 >
                   {index < FEATURES.length ? (
                     <FeaturePlaque
-                      title={t(`list.${FEATURES[index].id}.title`)}
-                      badge={t(`list.${FEATURES[index].id}.badge`)}
-                      description={t(`list.${FEATURES[index].id}.description`)}
+                      title={t(`features.list.${FEATURES[index].id}.title`)}
+                      badge={t(`features.list.${FEATURES[index].id}.badge`)}
+                      description={t(`features.list.${FEATURES[index].id}.description`)}
                       Icon={FEATURES[index].icon}
                       number={String(index + 1).padStart(2, '0')}
                     />
@@ -117,7 +119,7 @@ export function FeaturesSection() {
 
                 return (
                   <div
-                    key={`step-${i}`} // <-- ИСПРАВЛЕНО: Надежный ключ
+                    key={`step-${i}`}
                     className="flex flex-1 items-center gap-1.5 sm:gap-2"
                   >
                     <motion.button

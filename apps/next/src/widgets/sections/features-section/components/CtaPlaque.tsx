@@ -3,7 +3,8 @@
 import { useT } from '@/shared/lib/i18n/client';
 
 export const CtaPlaque = () => {
-  const { t } = useT('features');
+  // Указываем тот же неймспейс 'marketing'
+  const { t } = useT('marketing');
 
   return (
     <div className="relative flex w-full flex-col overflow-hidden rounded-3xl border-2 border-[#2dd4bf]/50 bg-linear-to-r from-[#0d2422] via-[#0a1615] to-[#0a1615] p-6 shadow-[inset_0_1px_0_rgba(45,212,191,0.15),0_12px_40px_rgba(0,0,0,0.7)] sm:p-8">
@@ -15,20 +16,20 @@ export const CtaPlaque = () => {
       <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[1fr_auto]">
         <div>
           <div className="mb-2 font-mono text-[10px] tracking-[0.3em] text-[#2dd4bf]/70 uppercase">
-            {t('cta.subtitle')}
+            {t('features.cta.subtitle')}
           </div>
           <h3 className="text-xl font-bold text-[#d1faf5] sm:text-2xl">
-            {t('cta.title')}
+            {t('features.cta.title')}
           </h3>
           <p className="mt-2 text-sm text-[#8db8b4] sm:text-base">
-            {t('cta.description')}
+            {t('features.cta.description')}
           </p>
         </div>
         <a
           href="#"
           className="group inline-flex items-center justify-center gap-2 justify-self-start rounded-xl border border-[#2dd4bf]/50 bg-linear-to-b from-[#123332] to-[#06100f] px-6 py-3 font-mono text-xs font-bold tracking-[0.15em] text-[#5eead4] uppercase shadow-[inset_0_1px_0_rgba(45,212,191,0.3),0_4px_12px_rgba(0,0,0,0.5)] transition-all hover:border-[#5eead4] hover:shadow-[inset_0_1px_0_rgba(45,212,191,0.5),0_0_20px_rgba(45,212,191,0.35)] md:justify-self-end"
         >
-          {t('cta.button')}
+          {t('features.cta.button')}
           <span className="transition-transform group-hover:translate-x-1">➔</span>
         </a>
       </div>
