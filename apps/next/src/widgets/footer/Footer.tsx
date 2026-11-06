@@ -7,7 +7,6 @@ import { FOOTER_COLUMNS, SOCIALS } from './model';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-
 export const Footer = async () => {
   const { t, lng } = await getT('common');
 

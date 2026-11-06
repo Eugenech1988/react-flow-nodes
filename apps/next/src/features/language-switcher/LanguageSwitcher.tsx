@@ -26,8 +26,8 @@ export function LanguageSwitcher({ isMobile = false }: { isMobile?: boolean }) {
         isMobile ? 'w-full justify-center' : ''
       }`}
     >
-      <span className="absolute left-1.5 top-1.5 h-1 w-1 rounded-full bg-slate-600 shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]" />
-      <span className="absolute bottom-1.5 right-1.5 h-1 w-1 rounded-full bg-slate-600 shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]" />
+      <span className="absolute top-1.5 left-1.5 h-1 w-1 rounded-full bg-slate-600 shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]" />
+      <span className="absolute right-1.5 bottom-1.5 h-1 w-1 rounded-full bg-slate-600 shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]" />
 
       {i18nConfig.supportedLngs.map((lng) => {
         const isActive = i18n.language === lng;

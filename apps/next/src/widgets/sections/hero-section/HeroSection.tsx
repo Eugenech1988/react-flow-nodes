@@ -20,11 +20,7 @@ export const HeroSection = async ({ lng }: { lng: string }) => {
         />
 
         <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
-          <AppButton
-            variant="primary"
-            size="lg"
-            className="w-full sm:w-auto"
-          >
+          <AppButton variant="primary" size="lg" className="w-full sm:w-auto">
             {t('hero.cta.primary')}
             <ArrowRight className="h-5 w-5 text-white transition-transform group-hover:translate-x-1" />
           </AppButton>

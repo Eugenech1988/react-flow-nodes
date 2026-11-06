@@ -37,9 +37,7 @@ export function generateStaticParams() {
   return generateI18nStaticParams<'locale'>();
 }
 
-export async function generateMetadata({
-                                         params,
-                                       }: Pick<LayoutProps, 'params'>): Promise<Metadata> {
+export async function generateMetadata({ params }: Pick<LayoutProps, 'params'>): Promise<Metadata> {
   const { locale } = await params;
 
   if (!i18nConfig.supportedLngs.includes(locale)) notFound();
@@ -56,9 +54,7 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: `/${locale}`,
-      languages: Object.fromEntries(
-        i18nConfig.supportedLngs.map((l) => [l, `/${l}`]),
-      ),
+      languages: Object.fromEntries(i18nConfig.supportedLngs.map((l) => [l, `/${l}`])),
     },
     icons: {
       icon: [
@@ -117,13 +113,13 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-    <body className="flex min-h-full flex-col">
-    <I18nProvider lng={locale}>
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </I18nProvider>
-    </body>
+      <body className="flex min-h-full flex-col">
+        <I18nProvider lng={locale}>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </I18nProvider>
+      </body>
     </html>
   );
 }

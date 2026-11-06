@@ -101,7 +101,7 @@ export const UseCasesSection = () => {
                     isLink
                     linkTo="#"
                     variant="ghost"
-                    className="group/link relative h-auto inline-flex items-center justify-center rounded border border-slate-700 bg-slate-800/50 px-4 py-1.5 font-mono text-[10px] font-bold tracking-widest text-slate-300 uppercase transition-all hover:border-[#2dd4bf]/50 hover:bg-[#2dd4bf]/10 hover:text-[#2dd4bf]"
+                    className="group/link relative inline-flex h-auto items-center justify-center rounded border border-slate-700 bg-slate-800/50 px-4 py-1.5 font-mono text-[10px] font-bold tracking-widest text-slate-300 uppercase transition-all hover:border-[#2dd4bf]/50 hover:bg-[#2dd4bf]/10 hover:text-[#2dd4bf]"
                   >
                     {t('useCases.openDossier')}
                   </AppButton>

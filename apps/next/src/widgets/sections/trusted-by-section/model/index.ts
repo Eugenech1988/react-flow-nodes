@@ -1,1 +1,1 @@
-export * from './constnants'
+export * from './constnants';

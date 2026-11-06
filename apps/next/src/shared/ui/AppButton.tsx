@@ -6,17 +6,13 @@ import { Button } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
 
 export type ButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'danger'
-  | 'regular'
-  | 'ghost'
-  | 'teal'
-  | 'nav';
+  'primary' | 'secondary' | 'danger' | 'regular' | 'ghost' | 'teal' | 'nav';
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
-export interface IAppButtonProps
-  extends Omit<ComponentPropsWithoutRef<'button'>, 'onChange' | 'onSelect'> {
+export interface IAppButtonProps extends Omit<
+  ComponentPropsWithoutRef<'button'>,
+  'onChange' | 'onSelect'
+> {
   text?: string;
   children?: ReactNode;
   variant?: ButtonVariant;
@@ -66,23 +62,23 @@ const sizeStyles: Record<ButtonSize, { button: string; icon: string }> = {
 };
 
 export const AppButton = ({
-                            text,
-                            children,
-                            variant = 'primary',
-                            size = 'md',
-                            icon: Icon,
-                            iconClassName,
-                            isPending = false,
-                            pendingText,
-                            isDisabled = false,
-                            type = 'button',
-                            onClick,
-                            className,
-                            isLink = false,
-                            linkTo = '#',
-                            external,
-                            ...props
-                          }: IAppButtonProps) => {
+  text,
+  children,
+  variant = 'primary',
+  size = 'md',
+  icon: Icon,
+  iconClassName,
+  isPending = false,
+  pendingText,
+  isDisabled = false,
+  type = 'button',
+  onClick,
+  className,
+  isLink = false,
+  linkTo = '#',
+  external,
+  ...props
+}: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
   const currentSize = variant === 'nav' ? { button: '', icon: 'w-4 h-4' } : sizeStyles[size];
 

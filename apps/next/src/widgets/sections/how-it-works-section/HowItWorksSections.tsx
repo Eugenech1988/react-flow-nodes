@@ -119,10 +119,16 @@ export const HowItWorksSection = () => {
                 <div className="flex items-center gap-2 font-mono text-[10px] text-[#2dd4bf]/80 sm:text-xs">
                   <Activity className="h-4 w-4" />
                   <span className="hidden sm:inline">
-                    SYS.WORKSPACE // {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.subtitle`).toUpperCase()}
+                    SYS.WORKSPACE //{' '}
+                    {t(
+                      `howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.subtitle`,
+                    ).toUpperCase()}
                   </span>
                   <span className="sm:hidden">
-                    SYS.WORKSPACE // {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.subtitle`).slice(0, 3).toUpperCase()}
+                    SYS.WORKSPACE //{' '}
+                    {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.subtitle`)
+                      .slice(0, 3)
+                      .toUpperCase()}
                   </span>
                 </div>
                 <div className="flex gap-1.5">

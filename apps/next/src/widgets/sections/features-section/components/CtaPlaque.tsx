@@ -33,7 +33,6 @@ export const CtaPlaque = () => {
           className="group inline-flex h-auto items-center justify-center gap-2 justify-self-start rounded-xl border border-[#2dd4bf]/50 bg-linear-to-b from-[#123332] to-[#06100f] px-6 py-3 font-mono text-xs font-bold tracking-[0.15em] text-[#5eead4] uppercase shadow-[inset_0_1px_0_rgba(45,212,191,0.3),0_4px_12px_rgba(0,0,0,0.5)] transition-all hover:border-[#5eead4] hover:bg-transparent hover:shadow-[inset_0_1px_0_rgba(45,212,191,0.5),0_0_20px_rgba(45,212,191,0.35)] md:justify-self-end"
         >
           {t('features.cta.button')}
-          <span className="transition-transform group-hover:translate-x-1">➔</span>
         </AppButton>
       </div>
     </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import {
   AnimatePresence,
   motion,
@@ -17,14 +17,22 @@ import { FEATURES, SLIDE_VARIANTS } from './model';
 const totalSteps = FEATURES.length + 1;
 
 export function FeaturesSection() {
-  // Указываем неймспейс файла, в котором лежат переводы (например, 'marketing')
   const { t } = useT('marketing');
-
   const wrapperRef = useRef<HTMLDivElement>(null);
   const prevIndexRef = useRef(0);
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const prefersReducedMotion = useReducedMotion();
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 1024px)');
+    setIsDesktop(media.matches);
+
+    const listener = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    media.addEventListener('change', listener);
+    return () => media.removeEventListener('change', listener);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
@@ -32,6 +40,8 @@ export function FeaturesSection() {
   });
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    if (!isDesktop) return;
+
     const next = Math.min(totalSteps - 1, Math.max(0, Math.floor(v * totalSteps + 0.001)));
     if (next !== prevIndexRef.current) {
       setDirection(next > prevIndexRef.current ? 1 : -1);
@@ -41,6 +51,13 @@ export function FeaturesSection() {
   });
 
   const scrollToStep = (stepIndex: number) => {
+    if (!isDesktop) {
+      if (stepIndex === index) return;
+      setDirection(stepIndex > index ? 1 : -1);
+      setIndex(stepIndex);
+      return;
+    }
+
     const el = wrapperRef.current;
     if (!el) return;
 
@@ -56,19 +73,20 @@ export function FeaturesSection() {
 
   const slideVariantsResolved: Variants = prefersReducedMotion
     ? {
-      enter: { opacity: 0 },
-      center: { opacity: 1 },
-      exit: { opacity: 0 },
-    }
+        enter: { opacity: 0 },
+        center: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
     : SLIDE_VARIANTS;
 
   return (
     <section
       ref={wrapperRef}
-      className="relative bg-[#040a09]"
-      style={{ height: `${totalSteps * 150}vh` }}
+      className="relative w-full bg-[#040a09] lg:h-(--scroll-height)"
+      style={{ '--scroll-height': `${totalSteps * 150}vh` } as React.CSSProperties}
     >
-      <div className="sticky top-0 flex h-dvh w-full flex-col overflow-hidden border-t border-[#2dd4bf]/20 pt-32 text-[#d1faf5]">
+      {/* Добавили lg:pt-32, чтобы освободить место под фиксированную шапку */}
+      <div className="relative flex min-h-dvh w-full flex-col overflow-hidden border-t border-[#2dd4bf]/20 pt-24 pb-16 text-[#d1faf5] lg:sticky lg:top-0 lg:h-dvh lg:justify-center lg:pt-32 lg:pb-0">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.05]" />
         <div className="pointer-events-none absolute top-0 left-1/2 h-175 w-175 -translate-x-1/2 rounded-full bg-[#2dd4bf]/[0.07] blur-3xl" />
 
@@ -78,8 +96,8 @@ export function FeaturesSection() {
             description={t('features.heading.description')}
           />
 
-          <div className="relative flex min-h-0 w-full flex-1 items-center justify-center py-6">
-            <div className="relative h-full w-full max-w-3xl">
+          <div className="relative grid w-full flex-1 place-items-center py-8 lg:py-6">
+            <div className="relative grid min-h-95 w-full max-w-3xl place-items-center">
               <AnimatePresence mode="sync" initial={false} custom={direction}>
                 <motion.div
                   key={index}
@@ -93,7 +111,7 @@ export function FeaturesSection() {
                     ease: [0.22, 1, 0.36, 1],
                     opacity: { duration: prefersReducedMotion ? 0.2 : 0.35 },
                   }}
-                  className="absolute inset-0 flex items-center justify-center"
+                  className="col-start-1 row-start-1 flex w-full items-center justify-center"
                 >
                   {index < FEATURES.length ? (
                     <FeaturePlaque
@@ -111,17 +129,14 @@ export function FeaturesSection() {
             </div>
           </div>
 
-          <div className="mx-auto w-full max-w-2xl pb-10 sm:pb-12">
+          <div className="mx-auto w-full max-w-2xl pb-4 sm:pb-12">
             <div className="flex items-center justify-between gap-1.5 sm:gap-2">
               {Array.from({ length: totalSteps }).map((_, i) => {
                 const isActive = i === index;
                 const isPassed = i < index;
 
                 return (
-                  <div
-                    key={`step-${i}`}
-                    className="flex flex-1 items-center gap-1.5 sm:gap-2"
-                  >
+                  <div key={`step-${i}`} className="flex flex-1 items-center gap-1.5 sm:gap-2">
                     <motion.button
                       type="button"
                       onClick={() => scrollToStep(i)}

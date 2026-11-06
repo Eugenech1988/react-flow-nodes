@@ -6,8 +6,7 @@ const i18nConfig: I18nConfig = {
   defaultNS: 'common',
   ns: ['common', 'marketing'],
   localeParamName: 'locale',
-  resourceLoader: (language, namespace) =>
-    import(`./locales/${language}/${namespace}.json`),
+  resourceLoader: (language, namespace) => import(`./locales/${language}/${namespace}.json`),
 };
 
 export default i18nConfig;

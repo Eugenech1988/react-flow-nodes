@@ -36,12 +36,7 @@ export const Header = () => {
           <nav className="relative hidden items-center gap-1 md:flex">
             <span className="pointer-events-none absolute -top-1 right-2 left-2 h-px bg-linear-to-r from-transparent via-teal-400/30 to-transparent" />
             {NAV_LINKS.map((link) => (
-              <AppButton
-                key={link.id}
-                isLink
-                linkTo={`/${lng}${link.href}`}
-                variant="nav"
-              >
+              <AppButton key={link.id} isLink linkTo={`/${lng}${link.href}`} variant="nav">
                 {t(`header.nav.${link.id}`)}
               </AppButton>
             ))}
@@ -49,7 +44,9 @@ export const Header = () => {
           </nav>
 
           <div className="hidden items-center gap-4 md:flex">
-            <Suspense fallback={<div className="h-9.5 w-22.5 animate-pulse rounded-xl bg-[#0a1210]" />}>
+            <Suspense
+              fallback={<div className="h-9.5 w-22.5 animate-pulse rounded-xl bg-[#0a1210]" />}
+            >
               <LanguageSwitcher />
             </Suspense>
             <div className="h-6 w-px bg-white/10" />
@@ -115,7 +112,11 @@ export const Header = () => {
 
               <div className="flex flex-col gap-3 pt-1 pb-1">
                 <div className="px-3">
-                  <Suspense fallback={<div className="h-9.5 w-full animate-pulse rounded-xl bg-[#0a1210]" />}>
+                  <Suspense
+                    fallback={
+                      <div className="h-9.5 w-full animate-pulse rounded-xl bg-[#0a1210]" />
+                    }
+                  >
                     <LanguageSwitcher isMobile />
                   </Suspense>
                 </div>
