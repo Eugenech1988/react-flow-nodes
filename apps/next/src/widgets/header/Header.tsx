@@ -66,7 +66,7 @@ export const Header = () => {
               isLink
               linkTo={`/${lng}/start`}
               size="sm"
-              className="relative overflow-hidden rounded-xl bg-white font-semibold text-neutral-950 transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-[0_0_20px_rgba(57,179,155,0.4)]"
+              className="relative overflow-hidden rounded-xl bg-white font-semibold transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-[0_0_20px_rgba(57,179,155,0.4)]"
             >
               {t('header.getStarted')}
             </AppButton>
@@ -134,7 +134,7 @@ export const Header = () => {
                   linkTo={`/${lng}/start`}
                   onClick={() => setIsOpen(false)}
                   size="sm"
-                  className="mx-auto h-auto w-[90%] rounded-xl bg-white py-2.5 text-center text-sm font-semibold text-neutral-950 hover:bg-neutral-100"
+                  className="mx-auto h-auto w-[90%] rounded-xl bg-white py-2.5 text-center text-sm font-semibold hover:bg-neutral-100"
                 >
                   {t('header.getStarted')}
                 </AppButton>

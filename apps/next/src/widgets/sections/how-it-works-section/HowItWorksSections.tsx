@@ -3,8 +3,7 @@
 import { useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Gauge, Activity, Loader2 } from 'lucide-react';
-import { SectionHeading } from '@/shared/ui';
-import Link from 'next/link';
+import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { HOW_IT_WORKS_STEPS } from '@/widgets/sections/how-it-works-section/model';
 
@@ -41,7 +40,6 @@ export const HowItWorksSection = () => {
         />
 
         <div className="mt-12 grid grid-cols-1 items-stretch gap-8 sm:mt-20 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
-
           <div className="relative hidden lg:flex lg:flex-col">
             <div className="flex flex-col gap-2">
               {HOW_IT_WORKS_STEPS.map((step, index) => {
@@ -111,14 +109,12 @@ export const HowItWorksSection = () => {
           </div>
 
           <div className="relative flex w-full flex-col rounded-3xl border border-[#2dd4bf]/30 bg-[#0a1210]/60 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:p-2 lg:h-full">
-
             <span className="absolute top-3 left-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:top-4 sm:left-4 sm:h-2 sm:w-2" />
             <span className="absolute top-3 right-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:top-4 sm:right-4 sm:h-2 sm:w-2" />
             <span className="absolute bottom-3 left-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:bottom-4 sm:left-4 sm:h-2 sm:w-2" />
             <span className="absolute right-3 bottom-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:right-4 sm:bottom-4 sm:h-2 sm:w-2" />
 
             <div className="relative flex min-h-95 w-full flex-col overflow-hidden rounded-[1.4rem] border border-slate-800 bg-slate-950/90 lg:h-full lg:flex-1">
-
               <div className="relative z-10 flex items-center justify-between border-b border-slate-800 bg-[#0d1f1e] px-4 py-3 sm:px-6">
                 <div className="flex items-center gap-2 font-mono text-[10px] text-[#2dd4bf]/80 sm:text-xs">
                   <Activity className="h-4 w-4" />
@@ -137,7 +133,6 @@ export const HowItWorksSection = () => {
               </div>
 
               <div className="relative flex flex-1 overflow-hidden">
-
                 <div className="flex w-16 shrink-0 flex-col items-center justify-center border-r border-slate-800/80 bg-[#0a1210]/80 py-4 lg:hidden">
                   <div className="flex flex-col gap-4">
                     {HOW_IT_WORKS_STEPS.map((step, index) => {
@@ -246,13 +241,16 @@ export const HowItWorksSection = () => {
         </div>
 
         <div className="mt-12 text-center sm:mt-20">
-          <Link
-            href="/start"
-            className="group inline-flex items-center justify-center gap-2 rounded-xl border border-teal-900/40 bg-linear-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-bold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_4px_14px_rgba(57,179,155,0.25)] transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_22px_rgba(57,179,155,0.5)] active:scale-[0.98] sm:px-8 sm:py-4 sm:text-base"
+          <AppButton
+            isLink
+            linkTo="/start"
+            variant="primary"
+            size="lg"
+            icon={ArrowRight}
+            className="mx-auto"
           >
             {t('howItWorks.cta')}
-            <ArrowRight className="h-4 w-4 text-white transition-transform group-hover:translate-x-1 sm:h-5 sm:w-5" />
-          </Link>
+          </AppButton>
         </div>
       </div>
     </section>

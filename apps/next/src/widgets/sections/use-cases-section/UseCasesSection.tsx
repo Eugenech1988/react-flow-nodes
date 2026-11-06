@@ -2,8 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Lock, Network, Factory, Activity } from 'lucide-react';
-import { SectionHeading } from '@/shared/ui';
-import Link from 'next/link';
+import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import {
   UC_CARD_VARIANTS,
@@ -98,12 +97,14 @@ export const UseCasesSection = () => {
                     {t(`useCases.list.${item.id}.metric`)}
                   </div>
 
-                  <Link
-                    href="#"
-                    className="group/link relative inline-flex items-center justify-center rounded border border-slate-700 bg-slate-800/50 px-4 py-1.5 font-mono text-[10px] font-bold tracking-widest text-slate-300 uppercase transition-all hover:border-[#2dd4bf]/50 hover:bg-[#2dd4bf]/10 hover:text-[#2dd4bf]"
+                  <AppButton
+                    isLink
+                    linkTo="#"
+                    variant="ghost"
+                    className="group/link relative h-auto inline-flex items-center justify-center rounded border border-slate-700 bg-slate-800/50 px-4 py-1.5 font-mono text-[10px] font-bold tracking-widest text-slate-300 uppercase transition-all hover:border-[#2dd4bf]/50 hover:bg-[#2dd4bf]/10 hover:text-[#2dd4bf]"
                   >
                     {t('useCases.openDossier')}
-                  </Link>
+                  </AppButton>
                 </div>
               </motion.div>
             );

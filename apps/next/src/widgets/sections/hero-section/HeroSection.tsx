@@ -1,6 +1,5 @@
-import { SectionHeading } from '@/shared/ui';
+import { SectionHeading, AppButton } from '@/shared/ui';
 import { ArrowRight, Play, Activity, Gauge, Cpu } from 'lucide-react';
-import Link from 'next/link';
 import { getT } from '@/shared/lib/i18n/server';
 
 export const HeroSection = async ({ lng }: { lng: string }) => {
@@ -21,23 +20,25 @@ export const HeroSection = async ({ lng }: { lng: string }) => {
         />
 
         <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
-          <button
-            type="button"
-            className="group relative flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl border border-teal-900/40 bg-linear-to-r from-teal-500 to-teal-600 px-8 py-3.5 font-bold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_4px_14px_rgba(57,179,155,0.25)] transition-all duration-300 before:absolute before:inset-0 before:bg-linear-to-r before:from-teal-400 before:to-teal-500 before:opacity-0 hover:scale-[1.02] hover:shadow-[0_0_22px_rgba(57,179,155,0.5)] hover:before:opacity-100 active:scale-[0.98] sm:w-auto sm:py-4"
+          <AppButton
+            variant="primary"
+            size="lg"
+            className="w-full sm:w-auto"
           >
-            <span className="relative z-10 flex items-center gap-2">
-              {t('hero.cta.primary')}
-              <ArrowRight className="h-5 w-5 text-white transition-transform group-hover:translate-x-1" />
-            </span>
-          </button>
+            {t('hero.cta.primary')}
+            <ArrowRight className="h-5 w-5 text-white transition-transform group-hover:translate-x-1" />
+          </AppButton>
 
-          <Link
-            href={`/${lng}/request-demo`}
-            className="group relative flex w-full cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl border border-white/10 bg-white/5 px-8 py-3.5 font-semibold text-neutral-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-300 hover:border-teal-500/30 hover:bg-white/10 hover:text-white hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_0_15px_rgba(57,179,155,0.2)] sm:w-auto sm:py-4"
+          <AppButton
+            isLink
+            linkTo={`/${lng}/request-demo`}
+            variant="ghost"
+            size="lg"
+            className="w-full cursor-pointer rounded-xl border border-white/10 bg-white/5 font-semibold text-neutral-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-300 hover:border-teal-500/30 hover:bg-white/10 hover:text-white hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_0_15px_rgba(57,179,155,0.2)] sm:w-auto"
           >
             <Play className="h-4 w-4 fill-current text-teal-400 drop-shadow-[0_0_4px_rgba(57,179,155,0.6)]" />
             {t('hero.cta.demo')}
-          </Link>
+          </AppButton>
         </div>
 
         <div className="relative mt-8 w-full max-w-5xl rounded-2xl border border-[#2dd4bf]/30 bg-[#0a1210]/60 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:mt-16 sm:rounded-3xl sm:p-2">
@@ -62,7 +63,6 @@ export const HeroSection = async ({ lng }: { lng: string }) => {
 
             <div className="relative flex flex-1 items-center justify-center overflow-hidden">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
-
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(4,10,9,0.85)_100%)]" />
 
               <div className="relative z-10 h-full w-full">
