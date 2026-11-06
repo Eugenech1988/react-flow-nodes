@@ -23,14 +23,12 @@ export class MailService {
     await this.mailerService.sendMail({
       to: adminEmail,
       replyTo: dto.email,
-      subject: `New Demo Request from ${dto.firstName} ${dto.lastName} (${dto.company || 'N/A'})`,
+      subject: `New Demo Request from ${dto.name} (${dto.company || 'N/A'})`,
       template: 'demo-request',
       context: {
-        firstName: dto.firstName,
-        lastName: dto.lastName,
+        name: dto.name,
         email: dto.email,
         company: dto.company || 'Not specified',
-        volume: dto.volume || 'Not specified',
         message: dto.message || 'No description provided',
       },
     });
