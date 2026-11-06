@@ -1,11 +1,7 @@
 'use client';
 
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
-  BrainCircuit,
-  Send,
-  Workflow,
-  ShieldBan,
   Lock,
   Network,
   Factory,
@@ -13,79 +9,13 @@ import {
 } from 'lucide-react';
 import { SectionHeading } from '@/shared/ui';
 import Link from 'next/link';
-
-const useCases = [
-  {
-    id: '01',
-    title: 'LLM & Agentic Orchestration',
-    category: 'AI & Inference',
-    description:
-      'Chain multi-step prompts, validate schema boundaries between models, and integrate custom vector database tools via standard API nodes.',
-    icon: BrainCircuit,
-    metric: 'Latency: < 15ms',
-    rotation: '-rotate-1',
-    offset: 'md:-mt-4',
-  },
-  {
-    id: '02',
-    title: 'Notification Dispatcher',
-    category: 'Messaging',
-    description:
-      'Route real-time alerts dynamically across Slack, email, and Webhooks based on user action payloads and custom conditional rules.',
-    icon: Send,
-    metric: 'Volume: 1.2M/day',
-    rotation: 'rotate-2',
-    offset: 'md:mt-20',
-  },
-  {
-    id: '03',
-    title: 'Lightweight ETL Pipelines',
-    category: 'Data Processing',
-    description:
-      'Extract payloads from incoming webhooks, transform fields in real-time, and securely batch load clean datasets straight to Postgres.',
-    icon: Workflow,
-    metric: 'Type: Event-driven',
-    rotation: 'rotate-1',
-    offset: 'md:-mt-8',
-  },
-  {
-    id: '04',
-    title: 'Auto-Mitigation Workflows',
-    category: 'SecOps',
-    description:
-      'Trigger security logic when an anomaly is detected. Block IP addresses on Cloudflare and rotate API tokens instantly without human delay.',
-    icon: ShieldBan,
-    metric: 'SLA: 100% Guaranteed',
-    rotation: '-rotate-2',
-    offset: 'md:mt-16',
-  },
-];
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 60, scale: 0.95 },
-  visible: (custom: { rot: string }) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    rotate: custom.rot.includes('-') ? -1.5 : 1.5,
-    transition: { type: 'spring', stiffness: 70, damping: 15 },
-  }),
-};
+import { UC_CARD_VARIANTS, UC_CONTAINER_VARIANTS, USE_CASES} from '@/widgets/sections/use-cases-section/model';
 
 export const UseCasesSection = () => {
   return (
     <section className="relative overflow-hidden border-t border-slate-800 bg-slate-950 py-24 text-slate-100">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#2dd4bf_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
 
-      {/* Новые фоновые иконки секции */}
       <Network className="pointer-events-none absolute top-20 -left-20 h-96 w-96 text-slate-800/20" />
       <Factory className="pointer-events-none absolute -right-16 bottom-20 h-80 w-80 text-slate-800/20" />
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/[0.03] blur-3xl" />
@@ -100,20 +30,20 @@ export const UseCasesSection = () => {
         />
 
         <motion.div
-          variants={containerVariants}
+          variants={UC_CONTAINER_VARIANTS}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
           className="mt-20 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-12"
           style={{ perspective: 1200 }}
         >
-          {useCases.map((item) => {
+          {USE_CASES.map((item) => {
             const Icon = item.icon;
             return (
               <motion.div
                 key={item.id}
                 custom={{ rot: item.rotation }}
-                variants={cardVariants}
+                variants={UC_CARD_VARIANTS}
                 whileHover={{ rotate: 0, y: -8, transition: { duration: 0.2 } }}
                 className={`group relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-800 bg-slate-900/90 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all duration-300 hover:border-[#2dd4bf]/50 hover:bg-slate-800/90 hover:shadow-[0_15px_40px_rgba(45,212,191,0.15)] sm:p-8 ${item.rotation} ${item.offset}`}
               >
@@ -122,7 +52,6 @@ export const UseCasesSection = () => {
                 <span className="absolute bottom-2 left-2 h-1.5 w-1.5 rounded-full bg-slate-600 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
                 <span className="absolute right-2 bottom-2 h-1.5 w-1.5 rounded-full bg-slate-600 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
 
-                {/* Огромная фоновая иконка конкретного юзкейса */}
                 <Icon className="pointer-events-none absolute -right-8 -bottom-8 h-56 w-56 text-slate-700/20 transition-all duration-500 group-hover:scale-110 group-hover:text-[#2dd4bf]/10" />
 
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(45,212,191,0.05),transparent_50%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />

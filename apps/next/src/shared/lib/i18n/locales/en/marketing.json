@@ -1,0 +1,16 @@
+{
+  "hero": {
+    "title": "Visualize complex logic with drag-and-drop simplicity",
+    "description": "A powerful canvas for building interactive nodes and connections. Design complex workflows, manage application data, and automate processes on the fly.",
+    "cta": {
+      "primary": "Get Started",
+      "demo": "Request Demo"
+    },
+    "canvas": {
+      "awaiting": "Awaiting Engine Data...",
+      "status": "SYSTEM ONLINE",
+      "nodes": "NODES: {{count}}",
+      "edges": "EDGES: {{count}}"
+    }
+  }
+}

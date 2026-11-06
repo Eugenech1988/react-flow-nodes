@@ -1,15 +1,21 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
+import i18nConfig from '@/shared/lib/i18n/config';
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || process.env.BASE_URL || 'https://pipelinestudios.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || process.env.BASE_URL || 'https://pipelinestudios.com';
+  const paths = [''];
 
-  const routes = ['', '/login', '/start', '/solutions', '/pricing', '/docs'].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1.0 : 0.8,
-  }));
-
-  return [...routes];
+  return paths.flatMap((path) =>
+    i18nConfig.supportedLngs.map((lng) => ({
+      url: `${SITE_URL}/${lng}${path}`,
+      lastModified: new Date(),
+      alternates: {
+        languages: Object.fromEntries(
+          i18nConfig.supportedLngs.map((l) => [l, `${SITE_URL}/${l}${path}`]),
+        ),
+      },
+    })),
+  );
 }

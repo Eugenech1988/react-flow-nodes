@@ -6,16 +6,18 @@ import {
   UseCasesSection,
 } from '@/widgets';
 
-const Hero = () => {
+type PageProps = { params: Promise<{ locale: string }> };
+
+export default async function Page({ params }: PageProps) {
+  const { locale } = await params;
+
   return (
     <>
-      <HeroSection />
+      <HeroSection lng={locale} />
       <FeaturesSection />
       <TrustedBySection />
       <HowItWorksSection />
       <UseCasesSection />
     </>
   );
-};
-
-export default Hero;
+}

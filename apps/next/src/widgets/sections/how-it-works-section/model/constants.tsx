@@ -1,7 +1,6 @@
 import { Network, Sliders, Play, Activity, Flame } from 'lucide-react';
-import type { THowItWorksSteps } from './types';
 
-export const HOW_IT_WORKS_STEPS: THowItWorksSteps[] = [
+export const HOW_IT_WORKS_STEPS = [
   {
     id: 'design',
     title: 'Drag and Connect Nodes',
