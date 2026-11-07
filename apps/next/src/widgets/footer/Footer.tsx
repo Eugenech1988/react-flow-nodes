@@ -228,6 +228,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
 
             <InfoBadge
               text={t('footer.badge')}
+              theme={theme}
               className={cn({
                 'border-[#4a5c52]/50 bg-[#0a0e0d] text-[#8a9488] shadow-none':
                 isSteampunk,
