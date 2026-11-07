@@ -59,13 +59,13 @@ export const Header = () => {
 
             <AppButton
               isLink
-              linkTo="http://localhost:5173/login"
+              linkTo="http://localhost:5173"
               variant="nav"
               className="text-sm font-medium text-neutral-300 hover:text-white"
             >
               {t('header.signIn')}
             </AppButton>
-            <AppButton isLink newTab={false} linkTo="http://localhost:5173/login" size="sm">
+            <AppButton isLink newTab={false} linkTo="http://localhost:5173" size="sm">
               {t('header.getStarted')}
             </AppButton>
           </div>
@@ -120,7 +120,7 @@ export const Header = () => {
 
                 <AppButton
                   isLink
-                  linkTo={`http://localhost:5173/login`}
+                  linkTo={`http://localhost:5173`}
                   onClick={() => setIsOpen(false)}
                   variant="nav"
                   className="h-auto w-full text-center text-sm font-medium text-neutral-300 hover:text-white"
