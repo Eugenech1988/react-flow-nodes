@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, Variants } from 'framer-motion';
-import { Cog, Zap, ShieldCheck, Terminal, ChevronRight, Settings2, Database } from 'lucide-react';
+import { Cog, Zap, ShieldCheck, Terminal, Settings2, Database } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
@@ -26,23 +26,23 @@ const slideInRight: Variants = {
   visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 80 } },
 };
 
+const values = [
+  { id: '1', icon: Cog },
+  { id: '2', icon: Zap },
+  { id: '3', icon: ShieldCheck },
+];
+
+const crew = [
+  { id: '1', initials: 'ED', avatar: 'https://i.pravatar.cc/150?u=eugene' },
+  { id: '2', initials: 'JS', avatar: 'https://i.pravatar.cc/150?u=jane' },
+  { id: '3', initials: 'MT', avatar: 'https://i.pravatar.cc/150?u=marcus' },
+  { id: '4', initials: 'ER', avatar: 'https://i.pravatar.cc/150?u=elena' },
+  { id: '5', initials: 'VV', avatar: 'https://i.pravatar.cc/150?u=viktor' },
+  { id: '6', initials: 'SC', avatar: 'https://i.pravatar.cc/150?u=sarah' },
+];
+
 export default function AboutPage() {
   const { t } = useT('about');
-
-  const values = [
-    { id: '1', icon: Cog },
-    { id: '2', icon: Zap },
-    { id: '3', icon: ShieldCheck },
-  ];
-
-  const crew = [
-    { id: '1', initials: 'ED' },
-    { id: '2', initials: 'JS' },
-    { id: '3', initials: 'MT' },
-    { id: '4', initials: 'ER' },
-    { id: '5', initials: 'VV' },
-    { id: '6', initials: 'SC' },
-  ];
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#040a09] text-[#d1faf5]">
@@ -224,12 +224,18 @@ export default function AboutPage() {
               <span className="absolute top-3 left-3 h-1.5 w-1.5 rounded-full bg-slate-700 transition-colors group-hover:bg-[#2dd4bf]" />
               <span className="absolute right-3 bottom-3 h-1.5 w-1.5 rounded-full bg-slate-700 transition-colors group-hover:bg-[#2dd4bf]" />
 
-              <div className="relative mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-[#2dd4bf]/30 bg-[#040a09] shadow-[inset_0_0_20px_rgba(0,0,0,0.9)] transition-transform duration-500 group-hover:scale-105 group-hover:border-[#2dd4bf] group-hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] sm:mb-6 sm:h-24 sm:w-24 md:h-28 md:w-28">
-                <div className="absolute inset-2 animate-[spin_10s_linear_infinite] rounded-full border border-dashed border-[#2dd4bf]/20" />
-                <span className="font-mono text-xl font-bold text-[#5eead4] drop-shadow-[0_0_10px_rgba(45,212,191,0.5)] sm:text-2xl md:text-3xl">
-                  {member.initials}
-                </span>
+              <div className="relative mb-4 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-2 border-[#2dd4bf]/30 bg-[#040a09] shadow-[inset_0_0_20px_rgba(0,0,0,0.9)] transition-transform duration-500 group-hover:scale-105 group-hover:border-[#2dd4bf] group-hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] sm:mb-6 sm:h-24 sm:w-24 md:h-28 md:w-28">
+                <div className="absolute inset-1.5 z-20 animate-[spin_10s_linear_infinite] rounded-full border border-dashed border-[#2dd4bf]/30 sm:inset-2" />
+                {/* Аватар с эффектом старой фотографии */}
+                <img
+                  src={member.avatar}
+                  alt={t(`crew.list.${member.id}.name`)}
+                  className="relative z-10 h-full w-full rounded-full object-cover opacity-80 mix-blend-luminosity grayscale transition-all duration-500 group-hover:opacity-100 group-hover:mix-blend-normal group-hover:grayscale-0"
+                />
+                {/* Внутреннее свечение поверх фото */}
+                <div className="pointer-events-none absolute inset-0 z-20 rounded-full shadow-[inset_0_0_20px_rgba(45,212,191,0.4)]" />
               </div>
+
               <h4 className="text-base font-bold text-slate-100 sm:text-lg">
                 {t(`crew.list.${member.id}.name`)}
               </h4>
@@ -262,7 +268,7 @@ export default function AboutPage() {
 
           <div className="relative z-10 flex justify-center">
             <InquiryModal type="contact">
-              <AppButton variant="primary" size="lg" icon={ChevronRight} iconClassName="order-last">
+              <AppButton variant="primary" size="lg">
                 {t('cta.button')}
               </AppButton>
             </InquiryModal>

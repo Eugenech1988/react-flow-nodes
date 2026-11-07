@@ -1,7 +1,7 @@
 'use client';
 
 import { AppButton } from '@/shared/ui';
-import { ArrowRight, Play } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
 
@@ -15,10 +15,9 @@ export const HeroActions = () => {
         linkTo="http://localhost:5173"
         variant="primary"
         size="lg"
-        className="group w-full font-bold sm:w-auto"
+        className="group]: w-full font-bold sm:w-auto"
       >
         {t('hero.cta.primary')}
-        <ArrowRight className="h-5 w-5" />
       </AppButton>
 
       <InquiryModal type="demo">
