@@ -11,7 +11,7 @@ import { useT } from '@/shared/lib/i18n/client';
 import { AppButton } from '@/shared/ui';
 import { AppInput, AppLabel, AppTextarea } from '@/shared/ui/form-controls';
 
-export type InquiryType = 'demo' | 'review' | 'contact';
+export type InquiryType = 'demo' | 'review' | 'contact' | 'glitch';
 
 export const demoRequestInputSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),

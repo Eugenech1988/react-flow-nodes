@@ -4,6 +4,7 @@ import { motion, Variants } from 'framer-motion';
 import { AlertTriangle, ArrowLeft, Wrench, ShieldAlert } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { AppButton } from '@/shared/ui';
+import { InquiryModal } from '@/features';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0, scale: 0.95 },
@@ -83,9 +84,11 @@ export function NotFoundClient({ locale }: { locale: string }) {
             {t('notFound.action')}
           </AppButton>
 
-          <AppButton isLink linkTo={`/${locale}/contact`} variant="danger" size="lg" icon={Wrench}>
-            {t('notFound.report')}
-          </AppButton>
+          <InquiryModal type="glitch">
+            <AppButton variant="danger" size="lg" icon={Wrench}>
+              {t('notFound.report')}
+            </AppButton>
+          </InquiryModal>
         </motion.div>
       </motion.div>
     </div>

@@ -10,9 +10,14 @@
     "header": "Comm-Link // SUPPORT CHANNEL"
   },
   "review": {
-    "title": "Leave a Review",
-    "description": "Share your experience with Pipeline Studio.",
-    "header": "Terminal Log // OPERATOR REVIEW"
+    "title": "Log an Entry",
+    "description": "Record your findings or experience in the system journal.",
+    "header": "Terminal Log // OPERATOR ENTRY"
+  },
+  "glitch": {
+    "title": "Report a Glitch",
+    "description": "Encountered an anomaly? Let our engineers know so we can fix it.",
+    "header": "System Alert // GLITCH REPORT"
   },
   "form": {
     "name": "Operator Name",
@@ -41,10 +46,16 @@
         "placeholderMessage": "How can our engineers assist you?"
       },
       "review": {
-        "submit": "Submit Review",
-        "submitting": "Submitting...",
-        "success": "Thank you! Your review has been logged.",
-        "placeholderMessage": "Tell us about your experience with the engine room..."
+        "submit": "Commit to Log",
+        "submitting": "Committing...",
+        "success": "Entry successfully recorded in the system journal.",
+        "placeholderMessage": "Record your observations or feedback regarding the engine room..."
+      },
+      "glitch": {
+        "submit": "Report Anomaly",
+        "submitting": "Reporting...",
+        "success": "Anomaly logged. Our team is on it.",
+        "placeholderMessage": "Describe the glitch or unexpected behavior you encountered..."
       }
     }
   }
