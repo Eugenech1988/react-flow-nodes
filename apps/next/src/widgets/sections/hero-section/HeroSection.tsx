@@ -1,7 +1,7 @@
 import { SectionHeading } from '@/shared/ui';
-import { Activity, Gauge, Cpu } from 'lucide-react';
+import { Activity, Gauge } from 'lucide-react';
 import { getT } from '@/shared/lib/i18n/server';
-import { HeroActions } from './components';
+import { ClientFlowCanvas, HeroActions } from './components';
 
 export const HeroSection = async () => {
   const { t } = await getT('marketing');
@@ -42,20 +42,10 @@ export const HeroSection = async () => {
               </div>
             </div>
 
-            <div className="relative flex flex-1 items-center justify-center overflow-hidden">
+            <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-[#040a09]">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(4,10,9,0.85)_100%)]" />
 
-              <div className="relative z-10 h-full w-full">
-                <div className="flex h-full w-full items-center justify-center">
-                  <div className="flex flex-col items-center gap-2 text-[#2dd4bf]/30 sm:gap-4">
-                    <Cpu className="h-8 w-8 animate-pulse sm:h-16 sm:w-16" />
-                    <span className="font-mono text-[8px] tracking-widest uppercase sm:text-xs">
-                      {t('hero.canvas.awaiting')}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <ClientFlowCanvas />
             </div>
 
             <div className="relative z-10 flex items-center justify-between border-t border-slate-800 bg-[#0d1f1e] px-2 py-1.5 sm:px-6 sm:py-3">
@@ -66,21 +56,21 @@ export const HeroSection = async () => {
               <div className="flex items-center gap-2 sm:gap-4">
                 <div className="flex items-center gap-1 sm:gap-2">
                   <span className="font-mono text-[7px] text-slate-500 sm:text-[10px]">
-                    {t('hero.canvas.nodes', { count: 12 })}
+                    {t('hero.canvas.nodes', { count: 3 })}
                   </span>
                   <div className="hidden h-1.5 w-16 overflow-hidden rounded-full bg-slate-800 sm:block">
-                    <div className="h-full w-[40%] bg-slate-600" />
+                    <div className="h-full w-[40%] bg-[#2dd4bf]" />
                   </div>
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2">
                   <span className="font-mono text-[7px] text-slate-500 sm:text-[10px]">
-                    {t('hero.canvas.edges', { count: 15 })}
+                    {t('hero.canvas.edges', { count: 2 })}
                   </span>
                   <div className="hidden h-1.5 w-16 overflow-hidden rounded-full bg-slate-800 sm:block">
-                    <div className="h-full w-[60%] bg-slate-600" />
+                    <div className="h-full w-[60%] bg-[#2dd4bf]" />
                   </div>
                 </div>
-                <Gauge className="hidden h-4 w-4 text-slate-600 sm:block" />
+                <Gauge className="hidden h-4 w-4 text-[#2dd4bf] sm:block" />
               </div>
             </div>
           </div>
