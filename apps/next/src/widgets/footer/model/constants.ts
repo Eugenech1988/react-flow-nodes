@@ -6,14 +6,14 @@ export const SOCIALS: (TSocial & { icon: LucideIcon })[] = [
   { id: 'twitter', icon: X, href: 'https://twitter.com' },
 ];
 
-export const FOOTER_COLUMNS: TFooterColumn[] = [
+export const getFooterColumns = (lng: string): TFooterColumn[] => [
   {
     id: 'product',
     links: [
-      { id: 'features', href: '#features' },
-      { id: 'useCases', href: '#use-cases' },
-      { id: 'howItWorks', href: '#how-it-works' },
-      { id: 'pricing', href: '#pricing' },
+      { id: 'features', href: `#features` },
+      { id: 'useCases', href: `#use-cases` },
+      { id: 'howItWorks', href: `#how-it-works` },
+      { id: 'pricing', href: `#pricing` },
     ],
   },
   {
@@ -28,7 +28,7 @@ export const FOOTER_COLUMNS: TFooterColumn[] = [
   {
     id: 'company',
     links: [
-      { id: 'about', href: '#' },
+      { id: 'about', href: `/${lng}/about` },
       { id: 'blog', href: '#' },
       { id: 'careers', href: '#' },
       { id: 'contact', href: '#' },

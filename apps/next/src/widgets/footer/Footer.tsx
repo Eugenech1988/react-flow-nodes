@@ -3,12 +3,14 @@ import PipelineLogo from '@/assets/logo.svg';
 import { InfoBadge } from '@/shared/ui';
 import { getT } from '@/shared/lib/i18n/server';
 import { Cog } from 'lucide-react';
-import { FOOTER_COLUMNS, SOCIALS } from './model';
+import { getFooterColumns, SOCIALS } from './model';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
 export const Footer = async () => {
   const { t, lng } = await getT('common');
+
+  const FOOTER_COLUMNS = getFooterColumns(lng);
 
   return (
     <footer className="relative w-full overflow-hidden pt-8 pb-6 md:pt-12">

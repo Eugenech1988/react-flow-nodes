@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "title": "Inside the Engine Room",
+    "description": "We are a team of engineers and designers building the visual infrastructure of tomorrow."
+  },
+  "mission": {
+    "title": "Our Mission",
+    "description": "Pipeline Studio was forged from a simple frustration: building reliable, event-driven backends takes too much time and boilerplate. We believe that complex logic should be designed, not coded line-by-line. Our mission is to give every engineering team a visual engine room to pressurize their workflows, monitor their health, and scale effortlessly."
+  },
+  "values": {
+    "title": "Operating Principles",
+    "description": "The core directives that keep our systems running and our team aligned.",
+    "list": {
+      "1": {
+        "title": "Precision Engineering",
+        "description": "Every pixel and every node is machined for performance. Zero-lag, strict schemas, and deterministic execution."
+      },
+      "2": {
+        "title": "Open Architecture",
+        "description": "We don't lock you in. Our pipelines compile to standard APIs and integrate with the tools you already trust."
+      },
+      "3": {
+        "title": "Relentless Reliability",
+        "description": "Systems fail. We design for recovery. Built-in retries, robust monitoring, and edge-deployed resilience."
+      }
+    }
+  },
+  "crew": {
+    "title": "The Operators",
+    "description": "Meet the crew turning the valves behind Pipeline Studio.",
+    "list": {
+      "1": { "name": "Eugene Doe", "role": "Chief Architect" },
+      "2": { "name": "Jane Smith", "role": "Systems Engineer" },
+      "3": { "name": "Marcus Thorne", "role": "UI/UX Alchemist" },
+      "4": { "name": "Elena R.", "role": "Edge Network Lead" },
+      "5": { "name": "Viktor Vance", "role": "Growth Mechanic" },
+      "6": { "name": "Sarah Chen", "role": "Support Overseer" }
+    }
+  },
+  "cta": {
+    "title": "Ready to join the crew?",
+    "description": "We are always looking for brilliant minds to help us build the future of automation.",
+    "button": "Contact Us"
+  }
+}
