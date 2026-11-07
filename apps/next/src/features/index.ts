@@ -1,2 +1,2 @@
 export * from './language-switcher';
-export * from './request-demo';
+export * from './inquiry-modal';

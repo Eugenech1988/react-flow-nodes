@@ -1,0 +1,49 @@
+{
+  "demo": {
+    "title": "Request a Demo",
+    "description": "See how Pipeline Studio can automate your infrastructure.",
+    "header": "Connection Setup // DEMO CHANNEL"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "description": "Reach out to our engineering team.",
+    "header": "Comm-Link // SUPPORT CHANNEL"
+  },
+  "feedback": {
+    "title": "Send Feedback",
+    "description": "Help us improve the engine room.",
+    "header": "Data Log // FEEDBACK"
+  },
+  "form": {
+    "name": "Operator Name",
+    "email": "Comm-Link (Email)",
+    "company": "Organization",
+    "message": "Mission Parameters (Optional)",
+    "placeholderName": "John Doe",
+    "placeholderEmail": "john@company.com",
+    "placeholderCompany": "Acme Corp",
+    "placeholderMessage": "Tell us about the pipelines you want to automate...",
+    "errors": {
+      "name": "Name must be at least 2 characters.",
+      "email": "Please enter a valid email address.",
+      "company": "Organization name is required."
+    },
+    "modes": {
+      "demo": {
+        "submit": "Transmit Request",
+        "submitting": "Transmitting...",
+        "success": "Connection Established. We will contact you shortly."
+      },
+      "contact": {
+        "submit": "Send Message",
+        "submitting": "Sending...",
+        "success": "Message received. Our engineers will be in touch."
+      },
+      "feedback": {
+        "submit": "Submit Feedback",
+        "submitting": "Submitting...",
+        "success": "Thank you! Your feedback has been logged."
+      }
+    }
+  }
+}

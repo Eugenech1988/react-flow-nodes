@@ -69,7 +69,6 @@ export const Header = () => {
               isLink
               linkTo={`http://localhost:5173/login`}
               size="sm"
-              className="relative overflow-hidden rounded-xl bg-white font-semibold text-slate-950 transition-all duration-300 hover:scale-[1.02] hover:bg-white hover:shadow-[0_0_20px_rgba(57,179,155,0.4)]"
             >
               {t('header.getStarted')}
             </AppButton>
@@ -117,7 +116,6 @@ export const Header = () => {
               </div>
 
               <div className="flex flex-col gap-3 pt-1 pb-1">
-                <div className="px-3">
                   <Suspense
                     fallback={
                       <div className="h-9.5 w-full animate-pulse rounded-xl bg-[#0a1210]" />
@@ -125,7 +123,6 @@ export const Header = () => {
                   >
                     <LanguageSwitcher isMobile />
                   </Suspense>
-                </div>
 
                 <AppButton
                   isLink
@@ -141,7 +138,7 @@ export const Header = () => {
                   linkTo={`/${lng}/start`}
                   onClick={() => setIsOpen(false)}
                   size="sm"
-                  className="mx-auto h-auto w-[90%] rounded-xl bg-white py-2.5 text-center text-sm font-semibold text-slate-950 hover:bg-neutral-100"
+                  className="mx-auto h-auto w-full rounded-xl bg-white py-2.5 text-center text-sm font-semibold hover:bg-neutral-100"
                 >
                   {t('header.getStarted')}
                 </AppButton>
