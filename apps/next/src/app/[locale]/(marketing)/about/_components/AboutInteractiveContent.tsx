@@ -48,10 +48,11 @@ export function AboutInteractiveContent() {
   return (
     <>
       <section className="relative z-10 mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 md:py-16">
-        <div className="relative rounded-3xl border border-[#2dd4bf]/20 bg-[#0a1210]/80 p-6 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-md [clip-path:polygon(0_0,100%_0,100%_calc(100%-30px),calc(100%-30px)_100%,0_100%)] sm:p-8 md:p-10">
+        <div className="relative rounded-3xl bg-white/5 border border-white/10 p-6 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-md sm:p-8 md:p-10">
           <span className="absolute top-4 left-4 h-2 w-2 rounded-full bg-slate-600" />
           <span className="absolute top-4 right-4 h-2 w-2 rounded-full bg-slate-600" />
           <span className="absolute bottom-4 left-4 h-2 w-2 rounded-full bg-slate-600" />
+          <span className="absolute bottom-4 right-4 h-2 w-2 rounded-full bg-slate-600" />
 
           <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-[1fr_1.5fr] lg:gap-12">
             <m.div
@@ -168,7 +169,7 @@ export function AboutInteractiveContent() {
               key={member.id}
               variants={itemVariants}
               whileHover={{ y: -8, rotate: -1 }}
-              className="group relative flex flex-col items-center justify-center overflow-hidden bg-[#0a1210] p-6 shadow-[0_15px_30px_rgba(0,0,0,0.6)] transition-all duration-300 [clip-path:polygon(16px_0,100%_0,100%_calc(100%-16px),calc(100%-16px)_100%,0_100%,0_16px)] hover:bg-[#0d1f1e] sm:p-8 md:p-10"
+              className="group relative flex flex-col items-center justify-center overflow-hidden bg-[#0a1210] p-6 shadow-[0_15px_30px_rgba(0,0,0,0.6)] transition-all duration-300 hover:bg-[#0d1f1e] sm:p-8 md:p-10"
             >
               <div className="relative mb-4 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-2 border-[#2dd4bf]/30 bg-[#040a09] sm:mb-6 sm:h-24 sm:w-24 md:h-28 md:w-28">
                 <Image
