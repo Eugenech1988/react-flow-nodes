@@ -83,7 +83,7 @@ export function CareersCTA() {
             </div>
           </div>
 
-          <div className="flex h-8 items-end justify-center gap-[2px] pb-2 opacity-30">
+          <div className="flex h-8 items-end justify-center gap-0.5 pb-2 opacity-30">
             {Array.from({ length: 40 }).map((_, i) => (
               <div
                 key={i}
