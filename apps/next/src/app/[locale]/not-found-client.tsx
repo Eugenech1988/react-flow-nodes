@@ -26,7 +26,7 @@ export function NotFoundClient({ locale }: { locale: string }) {
   return (
     <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-[#040a09] text-[#d1faf5]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/[0.05] blur-[100px]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/5 blur-[100px]" />
 
       <motion.div
         variants={containerVariants}
@@ -78,17 +78,31 @@ export function NotFoundClient({ locale }: { locale: string }) {
 
         <motion.div
           variants={itemVariants}
-          className="flex flex-col items-center gap-4 sm:flex-row"
+          className="flex w-full flex-col items-stretch gap-3 px-2 sm:w-auto sm:flex-row sm:items-center sm:gap-4 sm:px-0"
         >
-          <AppButton isLink linkTo={`/${locale}`} variant="primary" size="lg" icon={ArrowLeft}>
+          <AppButton
+            isLink
+            linkTo={`/${locale}`}
+            variant="primary"
+            size="lg"
+            icon={ArrowLeft}
+            className="w-full justify-center px-4 py-2.5 text-sm sm:w-auto sm:px-6 sm:py-3 sm:text-base"
+          >
             {t('notFound.action')}
           </AppButton>
 
-          <InquiryModal type="glitch">
-            <AppButton variant="danger" size="lg" icon={Wrench}>
-              {t('notFound.report')}
-            </AppButton>
-          </InquiryModal>
+          <div className="w-full sm:w-auto">
+            <InquiryModal type="glitch">
+              <AppButton
+                variant="danger"
+                size="lg"
+                icon={Wrench}
+                className="w-full justify-center px-4 py-2.5 text-sm sm:w-auto sm:px-6 sm:py-3 sm:text-base"
+              >
+                {t('notFound.report')}
+              </AppButton>
+            </InquiryModal>
+          </div>
         </motion.div>
       </motion.div>
     </div>

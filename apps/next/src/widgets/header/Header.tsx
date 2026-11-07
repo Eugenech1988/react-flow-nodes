@@ -120,7 +120,7 @@ export const Header = () => {
 
                 <AppButton
                   isLink
-                  linkTo={`/${lng}/login`}
+                  linkTo={`http://localhost:5173/login`}
                   onClick={() => setIsOpen(false)}
                   variant="nav"
                   className="h-auto w-full text-center text-sm font-medium text-neutral-300 hover:text-white"
@@ -129,7 +129,7 @@ export const Header = () => {
                 </AppButton>
                 <AppButton
                   isLink
-                  linkTo={`/${lng}/start`}
+                  linkTo={`http://localhost:5173/`}
                   onClick={() => setIsOpen(false)}
                   size="sm"
                   className="mx-auto h-auto w-full rounded-xl bg-white py-2.5 text-center text-sm font-semibold hover:bg-neutral-100"
