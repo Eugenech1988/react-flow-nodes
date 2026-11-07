@@ -9,10 +9,18 @@ import { Menu, X } from 'lucide-react';
 import { NAV_LINKS } from './model';
 import { LanguageSwitcher } from '@/features';
 
-export const Header = () => {
+interface THeaderProps {
+  theme?: 'default' | 'steampunk';
+}
+
+export const Header = ({theme = 'default'}: THeaderProps) => {
   const { t, i18n } = useT('common');
   const lng = i18n.language;
   const [isOpen, setIsOpen] = useState(false);
+
+  const isSteampunk = theme === 'steampunk';
+
+  const btnVariant = isSteampunk ? 'steampunk' : 'primary';
 
   return (
     <header className="fixed top-4 left-1/2 z-50 w-[95%] max-w-7xl -translate-x-1/2 transition-all duration-300">
@@ -65,7 +73,7 @@ export const Header = () => {
             >
               {t('header.signIn')}
             </AppButton>
-            <AppButton isLink newTab={false} linkTo="http://localhost:5173" size="sm">
+            <AppButton isLink variant={btnVariant} newTab={false} linkTo="http://localhost:5173" size="sm">
               {t('header.getStarted')}
             </AppButton>
           </div>
@@ -132,7 +140,8 @@ export const Header = () => {
                   linkTo={`http://localhost:5173/`}
                   onClick={() => setIsOpen(false)}
                   size="sm"
-                  className="mx-auto h-auto w-full rounded-xl bg-white py-2.5 text-center text-sm font-semibold hover:bg-neutral-100"
+                  variant={btnVariant}
+                  className='rouded-2xl!'
                 >
                   {t('header.getStarted')}
                 </AppButton>
