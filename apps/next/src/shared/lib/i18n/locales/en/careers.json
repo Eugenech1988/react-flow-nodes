@@ -9,9 +9,9 @@
   },
   "stats": {
     "list": {
-      "1": { "value": "42",   "label": "Engineers" },
-      "2": { "value": "12",   "label": "Countries" },
-      "3": { "value": "68",   "label": "Projects" },
+      "1": { "value": "42", "label": "Engineers" },
+      "2": { "value": "12", "label": "Countries" },
+      "3": { "value": "68", "label": "Projects" },
       "4": { "value": "2019", "label": "Founded" }
     }
   },

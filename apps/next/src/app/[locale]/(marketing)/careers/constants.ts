@@ -1,9 +1,25 @@
 import type { Variants } from 'framer-motion';
 import {
-  Globe, GraduationCap, Heart, Clock, Coffee, Cpu,
-  Feather, Compass, Users, FlaskConical, Rocket,
-  Code2, Cog, Layers, Palette, Briefcase,
-  Database, ShieldCheck, TrendingUp, PenTool,
+  Globe,
+  GraduationCap,
+  Heart,
+  Clock,
+  Coffee,
+  Cpu,
+  Feather,
+  Compass,
+  Users,
+  FlaskConical,
+  Rocket,
+  Code2,
+  Cog,
+  Layers,
+  Palette,
+  Briefcase,
+  Database,
+  ShieldCheck,
+  TrendingUp,
+  PenTool,
 } from 'lucide-react';
 
 export const CAREERS_STATS = [
@@ -24,16 +40,16 @@ export const DEPARTMENTS = [
 export type Department = (typeof DEPARTMENTS)[number]['id'];
 
 export const JOBS = [
-  { id: 'senior-frontend',   dept: 'engineering', icon: Code2 },
-  { id: 'backend-engineer',  dept: 'engineering', icon: Cpu },
-  { id: 'product-designer',  dept: 'design',      icon: Palette },
-  { id: 'ml-researcher',     dept: 'research',    icon: FlaskConical },
-  { id: 'devops-engineer',   dept: 'engineering', icon: Cog },
-  { id: 'talent-partner',    dept: 'operations',  icon: Briefcase },
-  { id: 'data-engineer',     dept: 'engineering', icon: Database },
-  { id: 'ux-writer',         dept: 'design',      icon: PenTool },
+  { id: 'senior-frontend', dept: 'engineering', icon: Code2 },
+  { id: 'backend-engineer', dept: 'engineering', icon: Cpu },
+  { id: 'product-designer', dept: 'design', icon: Palette },
+  { id: 'ml-researcher', dept: 'research', icon: FlaskConical },
+  { id: 'devops-engineer', dept: 'engineering', icon: Cog },
+  { id: 'talent-partner', dept: 'operations', icon: Briefcase },
+  { id: 'data-engineer', dept: 'engineering', icon: Database },
+  { id: 'ux-writer', dept: 'design', icon: PenTool },
   { id: 'security-engineer', dept: 'engineering', icon: ShieldCheck },
-  { id: 'growth-manager',    dept: 'operations',  icon: TrendingUp },
+  { id: 'growth-manager', dept: 'operations', icon: TrendingUp },
 ] as const;
 
 export const PERKS = [
@@ -46,19 +62,26 @@ export const PERKS = [
 ];
 
 export const PROCESS_STEPS = [
-  { id: 'apply',     icon: Feather },
-  { id: 'screen',    icon: Compass },
+  { id: 'apply', icon: Feather },
+  { id: 'screen', icon: Compass },
   { id: 'interview', icon: Users },
-  { id: 'craft',     icon: FlaskConical },
-  { id: 'offer',     icon: Rocket },
+  { id: 'craft', icon: FlaskConical },
+  { id: 'offer', icon: Rocket },
 ];
 
 export const CAREERS_CONTAINER: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
 export const CAREERS_CARD: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 80, damping: 20 } },
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
 };

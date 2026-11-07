@@ -58,7 +58,10 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   if (!i18nConfig.supportedLngs.includes(locale)) notFound();
 
   return (
-    <html lang={locale} className={`${roboto.variable} ${caveat.variable} ${specialElite.variable} ${robotoMono.variable} h-full antialiased`}>
+    <html
+      lang={locale}
+      className={`${roboto.variable} ${caveat.variable} ${specialElite.variable} ${robotoMono.variable} h-full antialiased`}
+    >
       <body className="flex min-h-full flex-col">
         <I18nProvider lng={locale}>
           <MotionProvider>{children}</MotionProvider>

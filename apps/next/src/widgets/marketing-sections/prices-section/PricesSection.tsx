@@ -6,11 +6,7 @@ import { Check, HelpCircle } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
-import {
-  PRICING_TIERS,
-  PRICING_CONTAINER_VARIANTS,
-  PRICING_CARD_VARIANTS,
-} from './constants';
+import { PRICING_TIERS, PRICING_CONTAINER_VARIANTS, PRICING_CARD_VARIANTS } from './constants';
 
 export const PricingSection = () => {
   const { t } = useT('marketing');
@@ -106,9 +102,7 @@ export const PricingSection = () => {
                         <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#2dd4bf]/30 bg-[#2dd4bf]/10 text-[#5eead4]">
                           <Check className="h-2.5 w-2.5" strokeWidth={3} />
                         </div>
-                        <span className="text-sm leading-snug text-slate-300">
-                          {feature}
-                        </span>
+                        <span className="text-sm leading-snug text-slate-300">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -162,11 +156,7 @@ export const PricingSection = () => {
           </span>
         </m.div>
 
-        <InquiryModal
-          type="contact"
-          isOpen={isInquiryOpen}
-          onOpenChange={setIsInquiryOpen}
-        />
+        <InquiryModal type="contact" isOpen={isInquiryOpen} onOpenChange={setIsInquiryOpen} />
       </div>
     </section>
   );

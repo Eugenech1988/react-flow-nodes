@@ -61,14 +61,23 @@ export function CareersGauge() {
         <div className="absolute inset-2.5 rounded-full border border-[#2f3d36] bg-[#0a0e0d] shadow-[inset_0_0_20px_rgba(0,0,0,0.95),inset_0_0_8px_rgba(111,162,140,0.08)]" />
 
         <svg className="absolute inset-2.5" viewBox="0 0 100 100" aria-hidden>
-          <path d="M 15 65 A 40 40 0 0 1 85 65" fill="none" stroke="#6fa28c" strokeWidth="2.5" opacity="0.35" />
+          <path
+            d="M 15 65 A 40 40 0 0 1 85 65"
+            fill="none"
+            stroke="#6fa28c"
+            strokeWidth="2.5"
+            opacity="0.35"
+          />
         </svg>
 
         <svg className="absolute inset-2.5" viewBox="0 0 100 100" aria-hidden>
           {TICKS.map((tk) => (
             <line
               key={tk.i}
-              x1={tk.x1} y1={tk.y1} x2={tk.x2} y2={tk.y2}
+              x1={tk.x1}
+              y1={tk.y1}
+              x2={tk.x2}
+              y2={tk.y2}
               stroke={tk.isMajor ? '#9cc4b0' : '#4a6d5e'}
               strokeWidth={tk.isMajor ? 1.4 : 0.7}
               opacity={tk.isMajor ? 0.9 : 0.6}
@@ -76,10 +85,7 @@ export function CareersGauge() {
           ))}
         </svg>
 
-        <m.div
-          className="absolute inset-0"
-          style={{ rotate: needleAngle }}
-        >
+        <m.div className="absolute inset-0" style={{ rotate: needleAngle }}>
           <div
             className="absolute top-[14%] left-1/2 h-[36%] w-0.5 -translate-x-1/2 rounded-full bg-linear-to-t from-[#6fa28c] to-[#d4cfc0]"
             style={{ boxShadow: '0 0 4px rgba(156,196,176,0.55)' }}

@@ -6,7 +6,15 @@ import { Button } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
 
 export type ButtonVariant =
-  'primary' | 'secondary' | 'danger' | 'regular' | 'ghost' | 'teal' | 'nav';
+  | 'primary'
+  | 'secondary'
+  | 'danger'
+  | 'regular'
+  | 'ghost'
+  | 'teal'
+  | 'nav'
+  | 'steampunk'
+  | 'steampunk-outline';
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
@@ -51,6 +59,12 @@ const variantStyles: Record<ButtonVariant, string> = {
     'relative text-foreground border border-border bg-card shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_1px_2px_rgba(0,0,0,0.08)] focus-visible:ring-ring/50 transition-colors active:scale-[0.98]',
   ghost:
     'text-muted-foreground hover:text-foreground hover:bg-transparent border border-transparent bg-transparent shadow-none focus-visible:ring-zinc-400/30 transition-colors active:scale-[0.98] dark:focus-visible:ring-zinc-700/40',
+
+  // Стили для терминала (монитора)
+  steampunk:
+    'group relative overflow-hidden !rounded-sm border border-[#4a6d5e] bg-[#0d1f1e] font-typewriter text-xs uppercase tracking-widest text-[#9cc4b0] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_2px_0_#2f3d36] transition-all duration-150 ease-out hover:border-[#6fa28c] hover:bg-[#141a16] hover:text-[#e8f4ee] hover:shadow-[inset_0_0_10px_rgba(111,162,140,0.3),0_0_8px_rgba(111,162,140,0.2)] active:translate-y-[2px] active:shadow-none',
+  'steampunk-outline':
+    'relative overflow-hidden !rounded-sm border border-[#2f3d36] bg-[#0a0e0d] font-typewriter text-xs uppercase tracking-widest text-[#8a9488] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_2px_0_#1a2420] transition-all duration-150 ease-out hover:border-[#4a6d5e] hover:bg-[#141a16] hover:text-[#9cc4b0] active:translate-y-[2px] active:shadow-none',
 };
 
 const sizeStyles: Record<ButtonSize, { button: string; icon: string }> = {

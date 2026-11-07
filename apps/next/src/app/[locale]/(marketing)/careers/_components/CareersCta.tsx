@@ -16,84 +16,91 @@ export function CareersCTA() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="relative rotate-1"
-        style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.7))' }}
+        className="relative"
       >
-        <div className="absolute -top-3 -left-6 z-20 h-8 w-24 -rotate-45 bg-[#d4cfc0]/40 backdrop-blur-sm shadow-sm mix-blend-overlay" />
-        <div className="absolute -right-6 -bottom-3 z-20 h-8 w-24 -rotate-45 bg-[#d4cfc0]/40 backdrop-blur-sm shadow-sm mix-blend-overlay" />
+        <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(194,90,90,0.15),transparent_65%)] blur-2xl" />
 
-        <div className="relative overflow-hidden rounded-sm border-2 border-[#8a7a5c]/50 bg-[#e8dcc8] text-[#2a2218]">
+        <div className="relative overflow-hidden rounded-2xl border-2 border-[#4a5c52] bg-linear-to-b from-[#1a2420] to-[#0f1512] p-3 shadow-[inset_0_1px_0_rgba(156,196,176,0.15),0_20px_50px_rgba(0,0,0,0.8)] sm:rounded-3xl sm:p-4">
+          {(['top-3 left-3', 'top-3 right-3', 'bottom-3 left-3', 'bottom-3 right-3'] as const).map(
+            (pos) => (
+              <span
+                key={pos}
+                className={`absolute ${pos} z-20 h-2 w-2 rounded-full bg-[#3a4842] shadow-[inset_0_1px_1px_rgba(156,196,176,0.25),inset_0_-1px_1px_rgba(0,0,0,0.8)]`}
+              />
+            ),
+          )}
 
-          <div className="h-4 w-full bg-[repeating-linear-gradient(-45deg,#c25a5a,#c25a5a_10px,#e8dcc8_10px,#e8dcc8_20px)] opacity-80" />
+          <div className="relative flex flex-col overflow-hidden rounded-xl border border-[#2f3d36] bg-[#0a0e0d] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_rgba(111,162,140,0.1)]">
+            <div className="h-2 w-full bg-[repeating-linear-gradient(-45deg,#8a2e2e,#8a2e2e_10px,#0a0e0d_10px,#0a0e0d_20px)] opacity-80" />
 
-          <div className="flex items-center justify-between border-b-2 border-[#2a2218]/20 px-4 py-3 sm:px-8">
-            <div className="flex items-center gap-2 font-typewriter text-[10px] font-bold tracking-widest text-[#2a2218]/70 uppercase sm:text-xs">
-              <Siren className="h-4 w-4 animate-pulse text-[#c25a5a]" />
-              <span>FIELD MEMO // URGENT</span>
+            <div className="pointer-events-none absolute inset-0 z-20 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_2px,rgba(111,162,140,0.03)_2px,rgba(111,162,140,0.03)_3px)]" />
+            <div className="pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.6)_100%)]" />
+
+            <div className="relative z-10 flex items-center justify-between border-b border-[#2f3d36] bg-[#0f1512]/80 px-4 py-3 sm:px-6">
+              <div className="flex items-center gap-2 font-mono text-[10px] font-bold tracking-widest text-[#c25a5a] uppercase sm:text-xs">
+                <Siren className="h-4 w-4 animate-pulse" />
+                <span>System Alert // Priority Red</span>
+              </div>
+              <div className="hidden font-mono text-[10px] text-[#4a5c52] sm:block">
+                REF: #4092-A
+              </div>
             </div>
-            <div className="hidden font-typewriter text-[10px] text-[#2a2218]/50 sm:block">
-              REF: #4092-A
-            </div>
-          </div>
 
-          <div className="relative px-6 py-8 sm:px-12 sm:py-10">
-            <div className="absolute top-8 right-4 z-10 -rotate-12 rounded border-4 border-[#c25a5a]/60 px-3 py-1 font-typewriter text-lg font-bold tracking-widest text-[#c25a5a]/60 opacity-80 mix-blend-multiply sm:top-12 sm:right-12 sm:text-2xl">
-              CLASSIFIED
-            </div>
-
-            <div className="relative z-0 flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-10">
-              <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-[#2a2218]/30 bg-[#2a2218]/5 sm:h-32 sm:w-32">
-                <ShieldAlert className="h-12 w-12 text-[#2a2218]/70 sm:h-16 sm:w-16" strokeWidth={1.5} />
+            <div className="relative z-10 px-6 py-10 sm:px-12 sm:py-14">
+              <div className="font-typewriter absolute top-6 right-6 z-0 -rotate-12 rounded border-2 border-[#c25a5a]/30 px-3 py-1 text-lg font-bold tracking-widest text-[#c25a5a]/30 sm:top-10 sm:right-12 sm:text-2xl">
+                CLASSIFIED
               </div>
 
-              <div className="flex-1 text-center sm:text-left">
-                <h2 className="font-typewriter text-xl font-bold uppercase tracking-tight text-[#2a2218] sm:text-2xl md:text-3xl">
-                  {t('cta.title')}
-                </h2>
+              <div className="relative z-10 flex flex-col items-center gap-8 sm:flex-row sm:items-start sm:gap-12">
+                <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-[#c25a5a]/30 bg-[#c25a5a]/5 shadow-[inset_0_0_20px_rgba(194,90,90,0.15)] sm:h-32 sm:w-32">
+                  <div className="absolute inset-2 animate-[spin_10s_linear_infinite] rounded-full border border-dashed border-[#c25a5a]/20" />
+                  <ShieldAlert
+                    className="h-10 w-10 text-[#c25a5a]/80 sm:h-14 sm:w-14"
+                    strokeWidth={1.5}
+                  />
+                </div>
 
-                <div className="mt-4 border-l-4 border-[#c25a5a]/40 pl-4 sm:pl-5">
-                  <p className="font-typewriter text-sm leading-relaxed text-[#4a3f2e] sm:text-base">
-                    {t('cta.description')}
-                  </p>
+                <div className="flex-1 text-center sm:text-left">
+                  <h2 className="font-typewriter text-2xl font-bold tracking-tight text-[#d4cfc0] uppercase sm:text-3xl md:text-4xl">
+                    {t('cta.title')}
+                  </h2>
+
+                  <div className="mt-4 border-l-2 border-[#c25a5a]/50 pl-4 sm:pl-5">
+                    <p className="font-typewriter text-sm leading-relaxed text-[#8a9488] sm:text-base">
+                      {t('cta.description')}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 border-t-2 border-dashed border-[#2a2218]/20 pt-8 sm:flex-row">
-              <InquiryModal type="contact">
+              <div className="my-8 h-px w-full bg-[repeating-linear-gradient(90deg,#2f3d36,#2f3d36_4px,transparent_4px,transparent_8px)]" />
+
+              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <InquiryModal type="contact">
+                  <AppButton variant="steampunk" size="lg" icon={Mail} className="w-full sm:w-auto">
+                    {t('cta.primary')}
+                  </AppButton>
+                </InquiryModal>
+
                 <AppButton
-                  variant="ghost"
+                  isLink
+                  linkTo="mailto:careers@example.com"
+                  variant="steampunk-outline"
                   size="lg"
-                  icon={Mail}
-                  className="w-full rounded-none border-2 border-[#2a2218] bg-[#2a2218] font-typewriter text-xs uppercase tracking-widest text-[#e8dcc8] transition-transform hover:-translate-y-1 hover:bg-[#1a1510] sm:w-auto"
+                  className="w-full sm:w-auto"
                 >
-                  {t('cta.primary')}
+                  {t('cta.email')}
                 </AppButton>
-              </InquiryModal>
-
-              <AppButton
-                isLink
-                linkTo="mailto:careers@example.com"
-                variant="ghost"
-                size="lg"
-                className="w-full rounded-none border-2 border-[#2a2218]/50 bg-transparent font-typewriter text-xs uppercase tracking-widest text-[#2a2218] transition-transform hover:-translate-y-1 hover:border-[#2a2218] hover:bg-[#2a2218]/5 sm:w-auto"
-              >
-                {t('cta.email')}
-              </AppButton>
+              </div>
             </div>
-          </div>
 
-          <div className="flex h-8 items-end justify-center gap-0.5 pb-2 opacity-30">
-            {Array.from({ length: 40 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-[#2a2218]"
-                style={{
-                  width: `${(i % 3) + 1}px`,
-                  height: `${(i % 5) * 2 + 4}px`
-                }}
-              />
-            ))}
+            <div className="relative z-10 flex items-center justify-between border-t border-[#2f3d36] bg-[#0f1512]/80 px-4 py-2 font-mono text-[10px] tracking-widest text-[#4a5c52] uppercase">
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#c25a5a] shadow-[0_0_5px_#c25a5a]" />
+                Awaiting Input
+              </span>
+              <span>SYS.READY</span>
+            </div>
           </div>
         </div>
       </m.div>

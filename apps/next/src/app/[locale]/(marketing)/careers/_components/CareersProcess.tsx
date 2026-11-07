@@ -46,7 +46,6 @@ export function CareersProcess() {
               </div>
 
               <div className="relative overflow-hidden bg-[#f5f0e0] bg-[repeating-linear-gradient(transparent,transparent_27px,rgba(111,162,140,0.22)_27px,rgba(111,162,140,0.22)_28px)]">
-
                 <div className="absolute top-4 left-3 h-3 w-3 rounded-full bg-[#0a0e0d] shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
                 <div className="absolute top-1/2 left-3 h-3 w-3 -translate-y-1/2 rounded-full bg-[#0a0e0d] shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
                 <div className="absolute bottom-4 left-3 h-3 w-3 rounded-full bg-[#0a0e0d] shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
@@ -72,7 +71,13 @@ export function CareersProcess() {
                   </p>
 
                   <svg className="mt-3 h-2 w-32 text-[#1a2530]/40" viewBox="0 0 120 8" aria-hidden>
-                    <path d="M 2 5 Q 30 2, 60 5 T 118 4" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                    <path
+                      d="M 2 5 Q 30 2, 60 5 T 118 4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                    />
                   </svg>
                 </div>
 

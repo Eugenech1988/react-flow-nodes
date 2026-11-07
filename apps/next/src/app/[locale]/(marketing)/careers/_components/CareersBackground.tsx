@@ -44,7 +44,7 @@ export function CareersBackground() {
         ))}
       </div>
 
-      <div className="absolute top-0 bottom-0 right-3 flex w-1 flex-col justify-evenly">
+      <div className="absolute top-0 right-3 bottom-0 flex w-1 flex-col justify-evenly">
         {Array.from({ length: 15 }).map((_, i) => (
           <span
             key={`r-${i}`}

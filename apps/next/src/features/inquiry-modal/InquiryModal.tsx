@@ -14,11 +14,11 @@ interface InquiryModalProps {
 }
 
 export const InquiryModal = ({
-                               children,
-                               type = 'demo',
-                               isOpen: controlledIsOpen,
-                               onOpenChange,
-                             }: InquiryModalProps) => {
+  children,
+  type = 'demo',
+  isOpen: controlledIsOpen,
+  onOpenChange,
+}: InquiryModalProps) => {
   const { t } = useT('inquiry');
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
