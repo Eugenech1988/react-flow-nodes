@@ -10,10 +10,10 @@ export const FOOTER_COLUMNS: TFooterColumn[] = [
   {
     id: 'product',
     links: [
-      { id: 'features', href: '#' },
-      { id: 'useCases', href: '#' },
-      { id: 'howItWorks', href: '#' },
-      { id: 'pricing', href: '#' },
+      { id: 'features', href: '#features' },
+      { id: 'useCases', href: '#use-cases' },
+      { id: 'howItWorks', href: '#how-it-works' },
+      { id: 'pricing', href: '#pricing' },
     ],
   },
   {
