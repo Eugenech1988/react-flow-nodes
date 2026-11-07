@@ -7,6 +7,21 @@
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./button": "./src/components/button.tsx",
+    "./badge": "./src/components/badge.tsx",
+    "./dialog": "./src/components/dialog.tsx",
+    "./select": "./src/components/select.tsx",
+    "./input": "./src/components/input.tsx",
+    "./textarea": "./src/components/textarea.tsx",
+    "./sonner": "./src/components/sonner.tsx",
+    "./card": "./src/components/card.tsx",
+    "./dropdown-menu": "./src/components/dropdown-menu.tsx",
+    "./alert": "./src/components/alert.tsx",
+    "./tabs": "./src/components/tabs.tsx",
+    "./switch": "./src/components/switch.tsx",
+    "./skeleton": "./src/components/skeleton.tsx",
+    "./table": "./src/components/table.tsx",
+    "./label": "./src/components/label.tsx",
     "./globals.css": "./src/globals.css"
   },
   "scripts": {

@@ -1,9 +1,9 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { motion, useAnimationFrame, useMotionValue, useReducedMotion } from 'framer-motion';
+import { m, useAnimationFrame, useMotionValue, useReducedMotion } from 'framer-motion';
 import { SectionHeading } from '@/shared/ui';
-import { COMPANIES } from '@/widgets/sections/trusted-by-section/model';
+import { COMPANIES } from './constants';
 import { useT } from '@/shared/lib/i18n/client';
 import { Activity, Disc, Gauge } from 'lucide-react';
 
@@ -44,12 +44,12 @@ export function TrustedBySection() {
 
       {!prefersReducedMotion && (
         <>
-          <motion.div
+          <m.div
             animate={{ y: [0, -30, 0], opacity: [0.1, 0.3, 0.1], scale: [1, 1.2, 1] }}
             transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
             className="pointer-events-none absolute bottom-0 left-10 h-64 w-64 rounded-full bg-[#2dd4bf]/20 blur-[80px]"
           />
-          <motion.div
+          <m.div
             animate={{ y: [0, -40, 0], opacity: [0.1, 0.2, 0.1], scale: [1, 1.3, 1] }}
             transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut', delay: 2 }}
             className="pointer-events-none absolute top-1/4 right-10 h-72 w-72 rounded-full bg-[#2dd4bf]/10 blur-[100px]"
@@ -75,7 +75,7 @@ export function TrustedBySection() {
             <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 bg-[#2dd4bf]/40 shadow-[0_0_15px_#2dd4bf]" />
 
             {!prefersReducedMotion && (
-              <motion.div
+              <m.div
                 animate={{ left: ['-20%', '120%'] }}
                 transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
                 className="absolute inset-y-0 z-10 w-48 bg-linear-to-r from-transparent via-[#5eead4]/20 to-transparent"
@@ -88,11 +88,7 @@ export function TrustedBySection() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            <motion.div
-              ref={trackRef}
-              style={{ x }}
-              className="flex w-max items-center gap-12 px-6"
-            >
+            <m.div ref={trackRef} style={{ x }} className="flex w-max items-center gap-12 px-6">
               {duplicatedCompanies.map((company, index) => {
                 const Icon = company.icon;
                 return (
@@ -112,7 +108,7 @@ export function TrustedBySection() {
                   </div>
                 );
               })}
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </div>

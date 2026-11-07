@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import {
   HeroSection,
   FeaturesSection,
@@ -6,9 +7,20 @@ import {
   UseCasesSection,
   PricingSection,
   TestimonialsSection,
-} from '@/widgets';
+} from '@/widgets/sections';
+import { getPageMetadata } from '@/shared/lib/seo/metadata';
 
-export default async function Home() {
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  return getPageMetadata(locale, 'marketing');
+}
+
+export default function Home() {
   return (
     <>
       <HeroSection />

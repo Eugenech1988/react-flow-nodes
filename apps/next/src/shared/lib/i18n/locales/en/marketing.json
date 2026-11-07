@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "Visual Workflow Automation",
+    "description": "Design event-driven workflows on a drag-and-drop canvas. Connect nodes, validate schemas, and deploy to the edge with one click."
+  },
   "hero": {
     "title": "Visualize complex logic with drag-and-drop simplicity",
     "description": "A powerful canvas for building interactive nodes and connections. Design complex workflows, manage application data, and automate processes on the fly.",

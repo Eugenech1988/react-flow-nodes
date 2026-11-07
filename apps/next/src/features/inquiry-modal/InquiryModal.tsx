@@ -1,10 +1,19 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
+import dynamic from 'next/dynamic';
 import { Terminal, Star, HelpCircle, Bug } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { AppModal } from '@/shared/ui';
-import { InquiryForm, type InquiryType } from '@/entities/inquiry';
+import type { InquiryType } from '@/entities/inquiry';
+
+const InquiryForm = dynamic(
+  () => import('@/entities/inquiry').then((mod) => mod.InquiryForm),
+  {
+    loading: () => <div className="h-64 w-full animate-pulse rounded-xl bg-slate-900/50" />,
+    ssr: false,
+  },
+);
 
 interface InquiryModalProps {
   children?: ReactNode;
@@ -38,7 +47,7 @@ export const InquiryModal = ({ children, type = 'demo' }: InquiryModalProps) => 
         </>
       }
     >
-      <InquiryForm type={type} />
+      {isOpen ? <InquiryForm type={type} /> : null}
     </AppModal>
   );
 };

@@ -1,1 +1,1 @@
-export * from './TrystedBySection';
+export * from './TrustedBySection';

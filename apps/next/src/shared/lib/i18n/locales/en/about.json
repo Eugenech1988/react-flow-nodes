@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "About Us",
+    "description": "Meet the engineers and designers behind Pipeline Studio, building the visual infrastructure for event-driven automation."
+  },
   "hero": {
     "title": "Inside the Engine Room",
     "description": "We are a team of engineers and designers building the visual infrastructure of tomorrow."

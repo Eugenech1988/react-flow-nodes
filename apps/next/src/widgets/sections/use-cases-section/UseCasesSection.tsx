@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Lock, Network, Factory, Activity } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
@@ -8,7 +8,7 @@ import {
   UC_CARD_VARIANTS,
   UC_CONTAINER_VARIANTS,
   USE_CASES,
-} from '@/widgets/sections/use-cases-section/model';
+} from './constants';
 
 export const UseCasesSection = () => {
   const { t } = useT('marketing');
@@ -33,7 +33,7 @@ export const UseCasesSection = () => {
           isMain={false}
         />
 
-        <motion.div
+        <m.div
           variants={UC_CONTAINER_VARIANTS}
           initial="hidden"
           whileInView="visible"
@@ -44,7 +44,7 @@ export const UseCasesSection = () => {
           {USE_CASES.map((item) => {
             const Icon = item.icon;
             return (
-              <motion.div
+              <m.div
                 key={item.id}
                 custom={{ rot: item.rotation }}
                 variants={UC_CARD_VARIANTS}
@@ -109,10 +109,10 @@ export const UseCasesSection = () => {
                     {t('useCases.openDossier')}
                   </AppButton>
                 </div>
-              </motion.div>
+              </m.div>
             );
           })}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

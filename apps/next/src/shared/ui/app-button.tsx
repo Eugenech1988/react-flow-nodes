@@ -82,6 +82,7 @@ export const AppButton = ({
 }: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
   const currentSize = variant === 'nav' ? { button: '', icon: 'w-4 h-4' } : sizeStyles[size];
+  const effectiveAriaLabel = ariaLabel || nativeAriaLabel;
 
   const sharedClasses = cn(
     'inline-flex cursor-pointer items-center justify-center gap-2 font-medium transition-all outline-none focus-visible:ring-2 disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed shrink-0 box-border',
@@ -115,14 +116,9 @@ export const AppButton = ({
     </span>
   );
 
-  const {
-    onClick: _onClick,
-    className: _className,
-    ...safeProps
-  } = props as ComponentProps<typeof Button> & {
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
-    className?: string;
-  };
+  const safeProps = { ...props } as Record<string, unknown>;
+  delete safeProps.onClick;
+  delete safeProps.className;
 
   if (isLink && linkTo && !disabled) {
     // Открываем в новой вкладке ТОЛЬКО если явно передали newTab={true}
@@ -130,12 +126,13 @@ export const AppButton = ({
 
     return (
       <Button
+        aria-label={effectiveAriaLabel}
         render={(buttonProps) => {
-          const { ref: _ref, ...linkProps } = buttonProps;
-
+          const { ref: ignoredRef, ...linkProps } = buttonProps as Record<string, unknown>;
+          void ignoredRef;
           return (
             <a
-              {...linkProps}
+              {...(linkProps as ComponentProps<'a'>)}
               href={linkTo}
               target={finalTarget}
               rel={newTab ? 'noopener noreferrer' : undefined}
@@ -155,6 +152,7 @@ export const AppButton = ({
     <Button
       type={type}
       disabled={disabled}
+      aria-label={effectiveAriaLabel}
       className={sharedClasses}
       onClick={onClick}
       {...safeProps}

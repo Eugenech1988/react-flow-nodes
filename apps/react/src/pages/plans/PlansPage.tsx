@@ -31,7 +31,8 @@ export const PlansPage = () => {
       variants={PAGE_VARIANTS}
       initial="initial"
       animate="animate"
-      className="mx-auto max-w-6xl h-full max-h-screen overflow-y-auto space-y-8 px-4 py-6 md:px-6"    >
+      className="mx-auto h-full max-h-screen max-w-6xl space-y-8 overflow-y-auto px-4 py-6 md:px-6"
+    >
       <div>
         <Link
           to="/settings/billing"

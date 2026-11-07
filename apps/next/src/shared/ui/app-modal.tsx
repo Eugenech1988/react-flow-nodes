@@ -1,7 +1,6 @@
 'use client';
 
-import { type ReactNode } from 'react';
-import { motion, Variants } from 'framer-motion';
+import type { ReactElement, ReactNode } from 'react';
 import { X } from 'lucide-react';
 import {
   Dialog,
@@ -13,16 +12,6 @@ import {
 } from '@pipeline/ui';
 import { cn } from '@/shared/lib';
 
-const modalVariants: Variants = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: 'spring', stiffness: 80, damping: 20 },
-  },
-};
-
 interface AppModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -31,7 +20,7 @@ interface AppModalProps {
   description: string;
   headerTitle?: ReactNode;
   className?: string;
-  trigger?: ReactNode; // <--- Добавили пропс для кнопки
+  trigger?: ReactNode;
 }
 
 export const AppModal = ({
@@ -46,26 +35,18 @@ export const AppModal = ({
 }: AppModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      {/* Рендерим триггер ВНУТРИ Dialog */}
-      {trigger && <DialogTrigger render={trigger as React.ReactElement} />}
+      {trigger && <DialogTrigger render={trigger as ReactElement} />}
 
       <DialogContent
         className={cn(
           'max-h-[90dvh] w-[95vw] max-w-2xl overflow-y-auto border-none bg-transparent p-0 shadow-none sm:max-w-3xl [&>button]:hidden',
-          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200',
           className,
         )}
       >
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">{description}</DialogDescription>
 
-        <motion.div
-          variants={modalVariants}
-          initial="hidden"
-          animate="visible"
-          className="relative w-full overflow-hidden rounded-3xl border border-[#2dd4bf]/30 bg-[#0a1210]/95 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-2"
-        >
-          {/* ... заклепки ... */}
+        <div className="animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-4 relative w-full overflow-hidden rounded-3xl border border-[#2dd4bf]/30 bg-[#0a1210]/95 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl duration-300 sm:p-2">
           <div className="relative flex flex-col overflow-hidden rounded-[1.4rem] border border-slate-800 bg-[#06100f] p-4 sm:p-8">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(45,212,191,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(45,212,191,0.03)_1px,transparent_1px)] bg-size-[2rem_2rem]" />
 
@@ -81,7 +62,7 @@ export const AppModal = ({
 
             <div className="relative z-10">{children}</div>
           </div>
-        </motion.div>
+        </div>
       </DialogContent>
     </Dialog>
   );

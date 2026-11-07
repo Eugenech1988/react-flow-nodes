@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from 'react';
 import {
   AnimatePresence,
-  motion,
+  m,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -12,7 +12,7 @@ import {
 import { SectionHeading } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { FeaturePlaque, CtaPlaque } from './components';
-import { FEATURES, SLIDE_VARIANTS } from './model';
+import { FEATURES, SLIDE_VARIANTS } from './constants';
 
 const totalSteps = FEATURES.length + 1;
 
@@ -100,7 +100,7 @@ export function FeaturesSection() {
           <div className="relative grid w-full flex-1 place-items-center py-8 lg:py-6">
             <div className="relative grid min-h-95 w-full max-w-3xl place-items-center">
               <AnimatePresence mode="sync" initial={false} custom={direction}>
-                <motion.div
+                <m.div
                   key={index}
                   custom={direction}
                   variants={slideVariantsResolved}
@@ -125,7 +125,7 @@ export function FeaturesSection() {
                   ) : (
                     <CtaPlaque />
                   )}
-                </motion.div>
+                </m.div>
               </AnimatePresence>
             </div>
           </div>
@@ -138,7 +138,7 @@ export function FeaturesSection() {
 
                 return (
                   <div key={`step-${i}`} className="flex flex-1 items-center gap-1.5 sm:gap-2">
-                    <motion.button
+                    <m.button
                       type="button"
                       onClick={() => scrollToStep(i)}
                       animate={{
@@ -175,10 +175,10 @@ export function FeaturesSection() {
                       aria-label={`Go to step ${i + 1}`}
                     >
                       {String(i + 1).padStart(2, '0')}
-                    </motion.button>
+                    </m.button>
                     {i < totalSteps - 1 && (
                       <div className="relative h-px flex-1 overflow-hidden bg-[#2dd4bf]/15">
-                        <motion.div
+                        <m.div
                           initial={false}
                           animate={{ width: isPassed ? '100%' : '0%' }}
                           transition={{ duration: 0.4, ease: 'easeOut' }}

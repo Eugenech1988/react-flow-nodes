@@ -1,15 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, Variants } from 'framer-motion';
+import { m, Variants } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { User, Mail, Building2, Send, CheckCircle2 } from 'lucide-react';
 
 import { useT } from '@/shared/lib/i18n/client';
-import { AppButton } from '@/shared/ui';
-import { AppInput, AppLabel, AppTextarea } from '@/shared/ui/form-controls';
+import { AppButton, AppInput, AppLabel, AppTextarea } from '@/shared/ui';
 
 export type InquiryType = 'demo' | 'review' | 'contact' | 'glitch';
 
@@ -59,7 +58,7 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
 
   if (isSuccess) {
     return (
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         className="relative z-10 flex flex-col items-center justify-center py-12 text-center"
@@ -68,14 +67,14 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
           <CheckCircle2 className="h-10 w-10 text-[#2dd4bf]" />
         </div>
         <h3 className="text-xl font-bold text-[#d1faf5]">{t(`form.modes.${type}.success`)}</h3>
-      </motion.div>
+      </m.div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative z-10 flex flex-col gap-4 sm:gap-5">
       <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
-        <motion.div variants={inputVariants} className="flex flex-col gap-2">
+        <m.div variants={inputVariants} className="flex flex-col gap-2">
           <AppLabel htmlFor="name">{t('form.name')}</AppLabel>
           <div className="relative">
             <User
@@ -90,9 +89,9 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
             />
           </div>
           {errors.name && <p className="font-mono text-xs text-red-400">{errors.name.message}</p>}
-        </motion.div>
+        </m.div>
 
-        <motion.div variants={inputVariants} className="flex flex-col gap-2">
+        <m.div variants={inputVariants} className="flex flex-col gap-2">
           <AppLabel htmlFor="email">{t('form.email')}</AppLabel>
           <div className="relative">
             <Mail
@@ -108,10 +107,10 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
             />
           </div>
           {errors.email && <p className="font-mono text-xs text-red-400">{errors.email.message}</p>}
-        </motion.div>
+        </m.div>
       </div>
 
-      <motion.div variants={inputVariants} className="flex flex-col gap-2">
+      <m.div variants={inputVariants} className="flex flex-col gap-2">
         <AppLabel htmlFor="company">{t('form.company')}</AppLabel>
         <div className="relative">
           <Building2
@@ -128,9 +127,9 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
         {errors.company && (
           <p className="font-mono text-xs text-red-400">{errors.company.message}</p>
         )}
-      </motion.div>
+      </m.div>
 
-      <motion.div variants={inputVariants} className="flex flex-col gap-2">
+      <m.div variants={inputVariants} className="flex flex-col gap-2">
         <AppLabel htmlFor="message">{t('form.message')}</AppLabel>
         <AppTextarea
           id="message"
@@ -142,9 +141,9 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
         {errors.message && (
           <p className="font-mono text-xs text-red-400">{errors.message.message}</p>
         )}
-      </motion.div>
+      </m.div>
 
-      <motion.div variants={inputVariants} className="mt-2 flex justify-end">
+      <m.div variants={inputVariants} className="mt-2 flex justify-end">
         <AppButton
           type="submit"
           variant="primary"
@@ -157,7 +156,7 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
         >
           {t(`form.modes.${type}.submit`)}
         </AppButton>
-      </motion.div>
+      </m.div>
     </form>
   );
 };

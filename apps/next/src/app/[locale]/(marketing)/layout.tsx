@@ -1,4 +1,5 @@
-import { Header, Footer } from '@/widgets';
+import { Header } from '@/widgets/header';
+import { Footer } from '@/widgets/footer';
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (

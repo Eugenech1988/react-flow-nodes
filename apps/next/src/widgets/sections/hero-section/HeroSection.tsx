@@ -1,7 +1,7 @@
 import { SectionHeading } from '@/shared/ui';
 import { Activity, Gauge } from 'lucide-react';
 import { getT } from '@/shared/lib/i18n/server';
-import { ClientFlowCanvas, HeroActions } from './components';
+import { HeroActions, LazyHeroCanvas } from './components';
 
 export const HeroSection = async () => {
   const { t } = await getT('marketing');
@@ -45,7 +45,7 @@ export const HeroSection = async () => {
             <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-[#040a09]">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
 
-              <ClientFlowCanvas />
+              <LazyHeroCanvas />
             </div>
 
             <div className="relative z-10 flex items-center justify-between border-t border-slate-800 bg-[#0d1f1e] px-2 py-1.5 sm:px-6 sm:py-3">

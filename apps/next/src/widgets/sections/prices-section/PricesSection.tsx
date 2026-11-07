@@ -1,11 +1,11 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Check, HelpCircle } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
-import { PRICING_TIERS, PRICING_CONTAINER_VARIANTS, PRICING_CARD_VARIANTS } from './model';
+import { PRICING_TIERS, PRICING_CONTAINER_VARIANTS, PRICING_CARD_VARIANTS } from './constants';
 
 export const PricingSection = () => {
   const { t } = useT('marketing');
@@ -27,7 +27,7 @@ export const PricingSection = () => {
           />
         </div>
 
-        <motion.div
+        <m.div
           variants={PRICING_CONTAINER_VARIANTS}
           initial="hidden"
           whileInView="visible"
@@ -51,7 +51,7 @@ export const PricingSection = () => {
             }`;
 
             return (
-              <motion.div
+              <m.div
                 key={tier.id}
                 variants={PRICING_CARD_VARIANTS}
                 className={`relative flex h-full flex-col justify-between overflow-hidden rounded-3xl p-6 backdrop-blur-md transition-all duration-300 sm:p-8 ${
@@ -120,12 +120,12 @@ export const PricingSection = () => {
                     {buttonContent}
                   </AppButton>
                 )}
-              </motion.div>
+              </m.div>
             );
           })}
-        </motion.div>
+        </m.div>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -144,7 +144,7 @@ export const PricingSection = () => {
               </button>
             </InquiryModal>
           </span>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

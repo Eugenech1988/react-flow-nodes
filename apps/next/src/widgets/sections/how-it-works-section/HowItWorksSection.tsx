@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { Gauge, Activity, Loader2 } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-import { HOW_IT_WORKS_STEPS } from '@/widgets/sections/how-it-works-section/model';
+import { HOW_IT_WORKS_STEPS } from './constants';
 
 export const HowItWorksSection = () => {
   const { t } = useT('marketing');
@@ -60,7 +60,7 @@ export const HowItWorksSection = () => {
                   >
                     <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 bg-[#0a1210] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] md:h-14 md:w-14">
                       {isActive && (
-                        <motion.div
+                        <m.div
                           layoutId="active-pipe-glow"
                           className="absolute -inset-1 rounded-full border border-[#2dd4bf] bg-[#2dd4bf]/20 shadow-[0_0_20px_rgba(45,212,191,0.4)]"
                           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -94,7 +94,7 @@ export const HowItWorksSection = () => {
 
                       <AnimatePresence initial={false}>
                         {isActive && (
-                          <motion.p
+                          <m.p
                             initial={{ height: 0, opacity: 0, y: -10 }}
                             animate={{ height: 'auto', opacity: 1, y: 0 }}
                             exit={{ height: 0, opacity: 0, y: -10 }}
@@ -102,7 +102,7 @@ export const HowItWorksSection = () => {
                             className="mt-2 overflow-hidden text-sm leading-relaxed text-slate-400 md:text-base"
                           >
                             {t(`howItWorks.steps.${step.id}.description`)}
-                          </motion.p>
+                          </m.p>
                         )}
                       </AnimatePresence>
                     </div>
@@ -178,7 +178,7 @@ export const HowItWorksSection = () => {
 
                   <AnimatePresence mode="wait">
                     {isLoading ? (
-                      <motion.div
+                      <m.div
                         key="loading"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -188,7 +188,7 @@ export const HowItWorksSection = () => {
                       >
                         <Loader2 className="h-10 w-10 animate-spin text-[#2dd4bf] drop-shadow-[0_0_10px_#2dd4bf]" />
                         <div className="mt-6 h-1.5 w-48 overflow-hidden rounded-full bg-slate-800">
-                          <motion.div
+                          <m.div
                             initial={{ width: '0%' }}
                             animate={{ width: '100%' }}
                             transition={{ duration: 0.6, ease: 'linear' }}
@@ -198,9 +198,9 @@ export const HowItWorksSection = () => {
                         <span className="mt-4 font-mono text-xs tracking-widest text-[#2dd4bf]/70 uppercase">
                           Initializing Module...
                         </span>
-                      </motion.div>
+                      </m.div>
                     ) : (
-                      <motion.div
+                      <m.div
                         key={activeStep}
                         initial={{ opacity: 0, scale: 0.95, filter: 'blur(5px)' }}
                         animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
@@ -220,7 +220,7 @@ export const HowItWorksSection = () => {
                         <p className="mt-3 text-xs leading-relaxed text-slate-400 sm:text-sm md:text-base">
                           {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.description`)}
                         </p>
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                 </div>
@@ -237,7 +237,7 @@ export const HowItWorksSection = () => {
                     <div key={i} className="flex w-10 flex-col items-center sm:w-14">
                       <Gauge className="h-3.5 w-3.5 text-slate-500 sm:h-4 sm:w-4" />
                       <div className="mt-1 h-1 w-full rounded-full bg-slate-800">
-                        <motion.div
+                        <m.div
                           animate={{ width: ['20%', '80%', '20%'] }}
                           transition={{ repeat: Infinity, duration: 3 + i, ease: 'easeInOut' }}
                           className="h-full rounded-full bg-slate-600"

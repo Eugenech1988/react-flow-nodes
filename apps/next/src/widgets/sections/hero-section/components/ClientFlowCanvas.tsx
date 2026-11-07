@@ -15,7 +15,7 @@ import {
   useEdgesState,
 } from '@xyflow/react';
 import { Cpu, Database, ShieldCheck, type LucideIcon } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 
 type CustomNodeData = {
   label: string;
@@ -71,14 +71,12 @@ const initialEdges: Edge[] = [
     id: 'e1-2',
     source: '1',
     target: '2',
-    animated: true,
     style: { stroke: '#2dd4bf', strokeWidth: 2 },
   },
   {
     id: 'e2-3',
     source: '2',
     target: '3',
-    animated: true,
     style: { stroke: '#2dd4bf', strokeWidth: 2 },
   },
 ];
@@ -89,7 +87,7 @@ const CustomNode = ({ data }: NodeProps<CustomNodeType>) => {
   const hasSource = data.hasSource ?? true;
 
   return (
-    <div className="relative flex cursor-grab items-center gap-3 rounded-xl border border-[#2dd4bf]/40 bg-[#0a1210]/90 px-4 py-3 shadow-[0_0_20px_rgba(45,212,191,0.15)] backdrop-blur-md">
+    <div className="relative flex cursor-grab items-center gap-3 rounded-xl border border-[#2dd4bf]/40 bg-[#0a1210]/90 px-4 py-3 shadow-[0_0_20px_rgba(45,212,191,0.15)]">
       {hasTarget && (
         <Handle
           type="target"
@@ -152,7 +150,7 @@ export const ClientFlowCanvas = () => {
         </div>
       )}
 
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: isLoading ? 0 : 1, scale: isLoading ? 0.98 : 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -176,7 +174,7 @@ export const ClientFlowCanvas = () => {
         >
           <Background color="#2dd4bf" gap={32} size={1} style={{ opacity: 0.1 }} />
         </ReactFlow>
-      </motion.div>
+      </m.div>
     </div>
   );
 };

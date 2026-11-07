@@ -1,2 +1,2 @@
 export * from './HeroActions';
-export * from './ClientFlowCanvas';
+export * from './LazyClientFlowCanvas';

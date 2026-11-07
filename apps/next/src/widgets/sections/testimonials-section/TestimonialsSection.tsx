@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Quote, Star, Activity, ShieldCheck } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
@@ -9,7 +9,7 @@ import {
   TESTIMONIALS_DATA,
   TESTIMONIALS_VARIANTS,
   CONTAINER_VARIANTS,
-} from '@/widgets/sections/testimonials-section/model';
+} from './constants';
 
 export const TestimonialsSection = () => {
   const { t } = useT('marketing');
@@ -33,7 +33,7 @@ export const TestimonialsSection = () => {
           isMain={false}
         />
 
-        <motion.div
+        <m.div
           variants={CONTAINER_VARIANTS}
           initial="hidden"
           whileInView="visible"
@@ -41,7 +41,7 @@ export const TestimonialsSection = () => {
           className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8"
         >
           {TESTIMONIALS_DATA.map((item) => (
-            <motion.div
+            <m.div
               key={item.id}
               variants={TESTIMONIALS_VARIANTS}
               whileHover={{ y: -6, rotate: 0, transition: { duration: 0.2 } }}
@@ -65,7 +65,7 @@ export const TestimonialsSection = () => {
                 </div>
 
                 <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
-                  "{t(`testimonials.list.${item.id}.quote`)}"
+                  &ldquo;{t(`testimonials.list.${item.id}.quote`)}&rdquo;
                 </p>
               </div>
 
@@ -82,16 +82,16 @@ export const TestimonialsSection = () => {
                   </div>
                   <div className="mt-0.5 font-mono text-[10px] tracking-widest text-[#2dd4bf]/70 uppercase">
                     {t(`testimonials.list.${item.id}.role`)}{' '}
-                    <span className="text-slate-600">//</span>{' '}
+                    <span className="text-slate-600">{'//'}</span>{' '}
                     {t(`testimonials.list.${item.id}.company`)}
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
 
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -107,7 +107,7 @@ export const TestimonialsSection = () => {
               {t('testimonials.cta')}
             </AppButton>
           </InquiryModal>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );
