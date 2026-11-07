@@ -32,7 +32,7 @@ export const InquiryModal = ({ children, type = 'demo' }: InquiryModalProps) => 
       headerTitle={
         <>
           <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#2dd4bf] sm:mt-0" />
-          <span className="font-mono text-[10px] leading-tight uppercase tracking-widest text-[#2dd4bf]/70 sm:text-xs">
+          <span className="font-mono text-[10px] leading-tight tracking-widest text-[#2dd4bf]/70 uppercase sm:text-xs">
             {t(`${type}.header`)}
           </span>
         </>
