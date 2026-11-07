@@ -1,8 +1,7 @@
-import type { TFeature } from './types';
 import { CloudLightning, MousePointer, Network, ShieldCheck, Users, Zap } from 'lucide-react';
 import type { Variants } from 'framer-motion';
 
-export const FEATURES: TFeature[] = [
+export const FEATURES = [
   { id: 'visual-editor', icon: Network },
   { id: 'event-triggers', icon: Zap },
   { id: 'zero-lag', icon: MousePointer },

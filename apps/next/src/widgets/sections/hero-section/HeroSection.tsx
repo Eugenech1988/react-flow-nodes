@@ -3,8 +3,8 @@ import { Activity, Gauge, Cpu } from 'lucide-react';
 import { getT } from '@/shared/lib/i18n/server';
 import { HeroActions } from './components';
 
-export const HeroSection = async ({ lng }: { lng: string }) => {
-  const { t } = await getT('marketing', { lng });
+export const HeroSection = async () => {
+  const { t } = await getT('marketing');
 
   return (
     <div className="relative flex min-h-dvh flex-col justify-center overflow-hidden bg-slate-950 text-slate-100">

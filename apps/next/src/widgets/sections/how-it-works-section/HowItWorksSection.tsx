@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Gauge, Activity, Loader2 } from 'lucide-react';
+import { Gauge, Activity, Loader2 } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { HOW_IT_WORKS_STEPS } from '@/widgets/sections/how-it-works-section/model';
@@ -254,10 +254,9 @@ export const HowItWorksSection = () => {
         <div className="mt-12 text-center sm:mt-20">
           <AppButton
             isLink
-            linkTo="/start"
+            linkTo="http://localhost:5173"
             variant="primary"
             size="lg"
-            icon={ArrowRight}
             className="mx-auto"
           >
             {t('howItWorks.cta')}
