@@ -1,15 +1,11 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { m, Variants } from 'framer-motion';
 import Image from 'next/image';
 import { Cog, Zap, ShieldCheck, Terminal } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-
-const InquiryModal = dynamic(() => import('@/features').then((mod) => mod.InquiryModal), {
-  ssr: false,
-});
+import { InquiryModal } from '@/features';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

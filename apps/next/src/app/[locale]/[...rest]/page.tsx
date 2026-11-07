@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { NotFoundClient } from '../not-found-client';
 
 type PageProps = {
@@ -14,8 +15,15 @@ export function generateStaticParams() {
   return [{ rest: ['not-found'] }];
 }
 
-export default async function RootNotFound({ params }: PageProps) {
+async function LocaleAwareNotFound({ params }: Pick<PageProps, 'params'>) {
   const { locale } = await params;
-
   return <NotFoundClient locale={locale} />;
+}
+
+export default function RootNotFound({ params }: PageProps) {
+  return (
+    <Suspense fallback={null}>
+      <LocaleAwareNotFound params={params} />
+    </Suspense>
+  );
 }

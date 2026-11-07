@@ -138,7 +138,7 @@ export const PricingSection = () => {
             <InquiryModal type="contact">
               <button
                 type="button"
-                className="text-[#2dd4bf] underline decoration-[#2dd4bf]/30 underline-offset-4 transition-colors hover:text-[#5eead4]"
+                className="cursor-pointer text-[#2dd4bf] underline decoration-[#2dd4bf]/30 underline-offset-4 transition-colors hover:text-[#5eead4]"
               >
                 {t('pricing.footer.link')}
               </button>
