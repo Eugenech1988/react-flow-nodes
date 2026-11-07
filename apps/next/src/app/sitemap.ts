@@ -1,19 +1,22 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 
-export default function robots(): MetadataRoute.Robots {
-  const rawBaseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || process.env.BASE_URL || 'https://pipelinestudios.com';
+const baseUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.BASE_URL ||
+  'https://pipelinestudios.com'
+).replace(/\/+$/, '');
 
-  const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl.slice(0, -1) : rawBaseUrl;
-
-  return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/private/', '/api/'],
-      },
-    ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-  };
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    {
+      url: `${baseUrl}/en`,
+      changeFrequency: 'weekly',
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/ua`,
+      changeFrequency: 'weekly',
+      priority: 1,
+    },
+  ];
 }
