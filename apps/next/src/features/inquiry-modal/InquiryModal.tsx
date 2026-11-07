@@ -7,13 +7,10 @@ import { useT } from '@/shared/lib/i18n/client';
 import { AppModal } from '@/shared/ui';
 import type { InquiryType } from '@/entities/inquiry';
 
-const InquiryForm = dynamic(
-  () => import('@/entities/inquiry').then((mod) => mod.InquiryForm),
-  {
-    loading: () => <div className="h-64 w-full animate-pulse rounded-xl bg-slate-900/50" />,
-    ssr: false,
-  },
-);
+const InquiryForm = dynamic(() => import('@/entities/inquiry').then((mod) => mod.InquiryForm), {
+  loading: () => <div className="h-64 w-full animate-pulse rounded-xl bg-slate-900/50" />,
+  ssr: false,
+});
 
 interface InquiryModalProps {
   children?: ReactNode;

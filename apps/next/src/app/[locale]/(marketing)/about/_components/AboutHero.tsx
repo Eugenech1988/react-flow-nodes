@@ -2,7 +2,7 @@ import { SectionHeading } from '@/shared/ui';
 import { getT } from '@/shared/lib/i18n/server';
 
 export async function AboutHero() {
-  const { t }  = await getT('about');
+  const { t } = await getT('about');
 
   return (
     <section className="relative z-10 px-4 pt-28 pb-4 text-center sm:px-6 sm:pt-36 sm:pb-8 md:pt-40">

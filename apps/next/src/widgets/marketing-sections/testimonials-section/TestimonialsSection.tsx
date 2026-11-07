@@ -5,11 +5,7 @@ import { Quote, Star, Activity, ShieldCheck } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
-import {
-  TESTIMONIALS_DATA,
-  TESTIMONIALS_VARIANTS,
-  CONTAINER_VARIANTS,
-} from './constants';
+import { TESTIMONIALS_DATA, TESTIMONIALS_VARIANTS, CONTAINER_VARIANTS } from './constants';
 
 export const TestimonialsSection = () => {
   const { t } = useT('marketing');

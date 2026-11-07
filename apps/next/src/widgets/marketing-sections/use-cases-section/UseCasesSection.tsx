@@ -4,11 +4,7 @@ import { m } from 'framer-motion';
 import { Lock, Network, Factory, Activity } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-import {
-  UC_CARD_VARIANTS,
-  UC_CONTAINER_VARIANTS,
-  USE_CASES,
-} from './constants';
+import { UC_CARD_VARIANTS, UC_CONTAINER_VARIANTS, USE_CASES } from './constants';
 
 export const UseCasesSection = () => {
   const { t } = useT('marketing');

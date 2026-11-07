@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "title": "Careers",
+    "description": "Join Pipeline Studio — a remote-first team of engineers and designers building visual infrastructure for event-driven automation."
+  },
+  "hero": {
+    "badge": "We are hiring",
+    "title": "Build the future of visual development",
+    "description": "We are a small, senior team of engineers, designers and product people shipping a next-generation platform for visual workflows. If you love hard problems and clean interfaces — you will feel at home here.",
+    "stats": {
+      "openRoles": "6 open roles",
+      "remote": "Remote-first"
+    }
+  },
+  "perks": {
+    "title": "Why you will love it here",
+    "description": "We optimize for deep work, ownership and low process overhead. No pointless meetings, no politics.",
+    "items": {
+      "remote": {
+        "title": "Remote-first",
+        "description": "Work from anywhere in a compatible time zone. We have been fully remote since day one."
+      },
+      "health": {
+        "title": "Health & wellness",
+        "description": "Full medical, dental and vision coverage for you and your family, plus a monthly wellness stipend."
+      },
+      "equipment": {
+        "title": "Top-tier equipment",
+        "description": "MacBook Pro, display, peripherals and a home-office budget — your setup, your call."
+      },
+      "learning": {
+        "title": "Learning budget",
+        "description": "$2,000 per year for courses, books, conferences and anything that makes you better at your craft."
+      },
+      "vacation": {
+        "title": "Unlimited PTO",
+        "description": "Minimum 20 days per year, no cap. We mean it — rest is part of the job."
+      },
+      "equity": {
+        "title": "Meaningful equity",
+        "description": "Every full-time hire gets a real ownership stake in the company with a 10-year exercise window."
+      }
+    }
+  },
+  "positions": {
+    "title": "Open positions",
+    "description": "We hire for slope, not intercept. If you are close to a role but not a perfect match — apply anyway.",
+    "apply": "Apply",
+    "empty": "No open roles in this department right now. Check back soon or send us a spontaneous application.",
+    "departments": {
+      "all": "All",
+      "engineering": "Engineering",
+      "design": "Design",
+      "product": "Product",
+      "marketing": "Marketing",
+      "operations": "Operations"
+    },
+    "locations": {
+      "remote": "Remote",
+      "hybrid": "Hybrid",
+      "onsite": "On-site"
+    },
+    "types": {
+      "full-time": "Full-time",
+      "contract": "Contract"
+    }
+  },
+  "process": {
+    "title": "Our hiring process",
+    "description": "Transparent, fast and respectful of your time. The whole loop usually takes 2–3 weeks.",
+    "steps": {
+      "apply": {
+        "title": "Application",
+        "description": "Send us your resume, GitHub or portfolio. We read every application ourselves — no ATS filters."
+      },
+      "screening": {
+        "title": "Intro call",
+        "description": "30 minutes with the hiring manager to talk about the role, your experience and your questions."
+      },
+      "interview": {
+        "title": "Technical interview",
+        "description": "A practical, paid take-home or a live pairing session — whichever fits the role better."
+      },
+      "offer": {
+        "title": "Offer",
+        "description": "Reference checks, a call with the founders and a written offer. We move fast once we decide."
+      }
+    }
+  },
+  "cta": {
+    "title": "Don't see the right role?",
+    "description": "Send us a spontaneous application — tell us what you would build here and why. We read every message.",
+    "button": "careers@pipelinestudios.com"
+  }
+}

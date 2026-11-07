@@ -7,10 +7,9 @@ import { Cog, Zap, ShieldCheck, Terminal } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 
-const InquiryModal = dynamic(
-  () => import('@/features').then((mod) => mod.InquiryModal),
-  { ssr: false }
-);
+const InquiryModal = dynamic(() => import('@/features').then((mod) => mod.InquiryModal), {
+  ssr: false,
+});
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

@@ -5,11 +5,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@pipeline/contracts', '@pipeline/ui', '@xyflow/react'],
   experimental: {
     agentFeedback: true,
-    optimizePackageImports: [
-      'lucide-react',
-      '@base-ui/react',
-      '@pipeline/ui',
-    ],
+    optimizePackageImports: ['lucide-react', '@base-ui/react', '@pipeline/ui'],
   },
   outputFileTracingRoot: path.join(__dirname, '../../'),
   cacheComponents: true,

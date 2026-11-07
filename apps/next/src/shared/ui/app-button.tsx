@@ -121,7 +121,6 @@ export const AppButton = ({
   delete safeProps.className;
 
   if (isLink && linkTo && !disabled) {
-    // Открываем в новой вкладке ТОЛЬКО если явно передали newTab={true}
     const finalTarget = newTab ? '_blank' : undefined;
 
     return (

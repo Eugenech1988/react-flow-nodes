@@ -74,11 +74,16 @@ export function buildMetadata({
   };
 }
 
-export async function getRootMetadata(locale: string): Promise<Metadata> {
+async function getMarketingDescription(locale: string): Promise<string> {
   'use cache';
   cacheLife('days');
 
   const { t } = await getT('marketing', { lng: locale });
+  return t('meta.description');
+}
+
+export async function getRootMetadata(locale: string): Promise<Metadata> {
+  const description = await getMarketingDescription(locale);
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -105,7 +110,7 @@ export async function getRootMetadata(locale: string): Promise<Metadata> {
         },
       ],
     },
-    ...buildMetadata({ locale, description: t('meta.description') }),
+    ...buildMetadata({ locale, description }),
   };
 }
 
