@@ -57,9 +57,6 @@ export function CareersProcess() {
                     <span className="font-caveat text-xl text-[#8a7a5c]/70">
                       {String(i + 1).padStart(2, '0')}.
                     </span>
-                    <span className="font-mono text-[9px] tracking-[0.2em] text-[#8a7a5c]/70 uppercase">
-                      {t('process.heading.badge')}
-                    </span>
                   </div>
 
                   <h3 className="font-caveat text-3xl leading-tight font-bold text-[#1a2530] sm:text-4xl">

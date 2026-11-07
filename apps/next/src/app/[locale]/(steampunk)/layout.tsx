@@ -6,7 +6,7 @@ export default function MarketingLayout({children}: { children: React.ReactNode 
     <>
       <Header theme="steampunk"/>
       <main className="flex-1">{children}</main>
-      <Footer/>
+      <Footer theme="steampunk"/>
     </>
   );
 }
