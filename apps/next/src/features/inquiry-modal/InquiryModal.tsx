@@ -9,11 +9,29 @@ import { InquiryForm, type InquiryType } from '@/entities/inquiry';
 interface InquiryModalProps {
   children?: ReactNode;
   type?: InquiryType;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export const InquiryModal = ({ children, type = 'demo' }: InquiryModalProps) => {
+export const InquiryModal = ({
+                               children,
+                               type = 'demo',
+                               isOpen: controlledIsOpen,
+                               onOpenChange,
+                             }: InquiryModalProps) => {
   const { t } = useT('inquiry');
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+
+  const isControlled = controlledIsOpen !== undefined;
+  const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
+
+  const handleOpenChange = (open: boolean) => {
+    if (!isControlled) {
+      setInternalIsOpen(open);
+    }
+
+    onOpenChange?.(open);
+  };
 
   const Icon = {
     demo: Terminal,
@@ -25,7 +43,7 @@ export const InquiryModal = ({ children, type = 'demo' }: InquiryModalProps) => 
   return (
     <AppModal
       isOpen={isOpen}
-      onOpenChange={setIsOpen}
+      onOpenChange={handleOpenChange}
       title={t(`${type}.title`)}
       description={t(`${type}.description`)}
       trigger={children}
@@ -38,7 +56,7 @@ export const InquiryModal = ({ children, type = 'demo' }: InquiryModalProps) => 
         </>
       }
     >
-      {isOpen ? <InquiryForm type={type} /> : null}
+      {isOpen && <InquiryForm type={type} />}
     </AppModal>
   );
 };

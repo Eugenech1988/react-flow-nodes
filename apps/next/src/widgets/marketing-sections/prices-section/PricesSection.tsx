@@ -1,14 +1,20 @@
 'use client';
 
+import { useState } from 'react';
 import { m } from 'framer-motion';
 import { Check, HelpCircle } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
-import { PRICING_TIERS, PRICING_CONTAINER_VARIANTS, PRICING_CARD_VARIANTS } from './constants';
+import {
+  PRICING_TIERS,
+  PRICING_CONTAINER_VARIANTS,
+  PRICING_CARD_VARIANTS,
+} from './constants';
 
 export const PricingSection = () => {
   const { t } = useT('marketing');
+  const [isInquiryOpen, setIsInquiryOpen] = useState(false);
 
   return (
     <section
@@ -76,16 +82,19 @@ export const PricingSection = () => {
                     <h3 className="text-xl font-bold text-[#d1faf5]">
                       {t(`pricing.tiers.${tier.id}.name`)}
                     </h3>
+
                     <div className="mt-4 flex items-baseline gap-1">
                       <span className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
                         {t(`pricing.tiers.${tier.id}.price`)}
                       </span>
+
                       {t(`pricing.tiers.${tier.id}.period`) && (
                         <span className="font-mono text-sm text-[#2dd4bf]/70">
                           {t(`pricing.tiers.${tier.id}.period`)}
                         </span>
                       )}
                     </div>
+
                     <p className="mt-4 min-h-12 text-sm leading-relaxed text-slate-400">
                       {t(`pricing.tiers.${tier.id}.description`)}
                     </p>
@@ -97,18 +106,24 @@ export const PricingSection = () => {
                         <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#2dd4bf]/30 bg-[#2dd4bf]/10 text-[#5eead4]">
                           <Check className="h-2.5 w-2.5" strokeWidth={3} />
                         </div>
-                        <span className="text-sm leading-snug text-slate-300">{feature}</span>
+                        <span className="text-sm leading-snug text-slate-300">
+                          {feature}
+                        </span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
                 {isEnterprise ? (
-                  <InquiryModal type="contact">
-                    <AppButton variant="ghost" size="lg" className={buttonClassName}>
-                      {buttonContent}
-                    </AppButton>
-                  </InquiryModal>
+                  <AppButton
+                    type="button"
+                    variant="ghost"
+                    size="lg"
+                    className={buttonClassName}
+                    onClick={() => setIsInquiryOpen(true)}
+                  >
+                    {buttonContent}
+                  </AppButton>
                 ) : (
                   <AppButton
                     isLink
@@ -133,6 +148,7 @@ export const PricingSection = () => {
           className="mt-16 flex flex-col items-center justify-center gap-2 text-center font-mono text-xs text-slate-500 sm:flex-row"
         >
           <HelpCircle className="h-4 w-4 text-[#2dd4bf]" />
+
           <span>
             {t('pricing.footer.question')}{' '}
             <InquiryModal type="contact">
@@ -145,6 +161,12 @@ export const PricingSection = () => {
             </InquiryModal>
           </span>
         </m.div>
+
+        <InquiryModal
+          type="contact"
+          isOpen={isInquiryOpen}
+          onOpenChange={setIsInquiryOpen}
+        />
       </div>
     </section>
   );
