@@ -7,7 +7,7 @@ import {
   UseCasesSection,
   PricingSection,
   TestimonialsSection,
-} from '@/widgets/sections';
+} from '@/widgets/marketing-sections';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
 
 type PageProps = {

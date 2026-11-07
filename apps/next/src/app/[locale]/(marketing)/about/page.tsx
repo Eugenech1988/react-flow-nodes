@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
-import { AboutClient } from './about-client';
+import { AboutBackground, AboutHero, AboutInteractiveContent } from './_components';
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -13,5 +13,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default function AboutPage() {
-  return <AboutClient />;
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-[#040a09] text-[#d1faf5]">
+      <AboutBackground />
+      <AboutHero />
+      <AboutInteractiveContent />
+    </div>
+  );
 }

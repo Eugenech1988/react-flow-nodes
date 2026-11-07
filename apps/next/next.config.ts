@@ -7,16 +7,22 @@ const nextConfig: NextConfig = {
     agentFeedback: true,
     optimizePackageImports: [
       'lucide-react',
-      'framer-motion',
       '@base-ui/react',
       '@pipeline/ui',
-      '@xyflow/react',
     ],
   },
   outputFileTracingRoot: path.join(__dirname, '../../'),
   cacheComponents: true,
   partialPrefetching: true,
   reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+      },
+    ],
+  },
   async headers() {
     return [
       {
