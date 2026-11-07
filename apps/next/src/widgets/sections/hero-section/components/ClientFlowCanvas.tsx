@@ -7,15 +7,27 @@ import {
   Background,
   Handle,
   Position,
-  Node,
-  Edge,
+  type Node,
+  type Edge,
+  type NodeProps,
+  type NodeTypes,
   useNodesState,
   useEdgesState,
 } from '@xyflow/react';
-import { Cpu, Database, ShieldCheck } from 'lucide-react';
+import { Cpu, Database, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const initialNodes: Node[] = [
+type CustomNodeData = {
+  label: string;
+  icon: LucideIcon;
+  status: string;
+  hasTarget?: boolean;
+  hasSource?: boolean;
+};
+
+type CustomNodeType = Node<CustomNodeData, 'custom'>;
+
+const initialNodes: CustomNodeType[] = [
   {
     id: '1',
     type: 'custom',
@@ -71,11 +83,7 @@ const initialEdges: Edge[] = [
   },
 ];
 
-const CustomNode = ({
-  data,
-}: {
-  data: { label: string; icon: any; status: string; hasTarget?: boolean; hasSource?: boolean };
-}) => {
+const CustomNode = ({ data }: NodeProps<CustomNodeType>) => {
   const Icon = data.icon;
   const hasTarget = data.hasTarget ?? true;
   const hasSource = data.hasSource ?? true;
@@ -116,11 +124,11 @@ const CustomNode = ({
 
 const nodeTypes = {
   custom: CustomNode,
-};
+} as NodeTypes;
 
 export const ClientFlowCanvas = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<CustomNodeType>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -131,7 +139,7 @@ export const ClientFlowCanvas = () => {
     }, 600);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [setNodes, setEdges]);
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">
