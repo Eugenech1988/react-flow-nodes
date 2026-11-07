@@ -123,7 +123,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-20 md:py-24">
+      <section className="relative z-10 mx-auto max-w-4xl px-4 pb-12 sm:px-6 sm:pt-12 sm:pb-20 md:pb-24">
         <SectionHeading
           title={t('values.title')}
           description={t('values.description')}
@@ -187,7 +187,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="relative z-10 mx-auto max-w-6xl px-4 pt-12 pb-6 sm:px-6 sm:pt-20 sm:pb-0 md:pt-24 md:pb-12">
+      <section className="relative z-10 mx-auto max-w-6xl px-4 pb-6 sm:px-6 sm:pb-0 md:pb-12">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(45,212,191,0.03)_0%,transparent_70%)]" />
 
         <SectionHeading
