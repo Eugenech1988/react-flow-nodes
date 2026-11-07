@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,7 +11,7 @@ import { useT } from '@/shared/lib/i18n/client';
 import { AppButton } from '@/shared/ui';
 import { AppInput, AppLabel, AppTextarea } from '@/shared/ui/form-controls';
 
-export type InquiryType = 'demo' | 'feedback' | 'contact';
+export type InquiryType = 'demo' | 'review' | 'contact';
 
 export const demoRequestInputSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -29,15 +29,11 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
   const { t } = useT('inquiry');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const localizedSchema = useMemo(
-    () =>
-      demoRequestInputSchema.extend({
-        name: demoRequestInputSchema.shape.name.min(2, { message: t('form.errors.name') }),
-        email: demoRequestInputSchema.shape.email.email({ message: t('form.errors.email') }),
-        company: demoRequestInputSchema.shape.company.min(2, { message: t('form.errors.company') }),
-      }),
-    [t]
-  );
+  const localizedSchema = demoRequestInputSchema.extend({
+    name: demoRequestInputSchema.shape.name.min(2, { message: t('form.errors.name') }),
+    email: demoRequestInputSchema.shape.email.email({ message: t('form.errors.email') }),
+    company: demoRequestInputSchema.shape.company.min(2, { message: t('form.errors.company') }),
+  });
 
   type FormValues = z.infer<typeof localizedSchema>;
 
@@ -82,7 +78,9 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
         <motion.div variants={inputVariants} className="flex flex-col gap-2">
           <AppLabel htmlFor="name">{t('form.name')}</AppLabel>
           <div className="relative">
-            <User className={`absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 ${errors.name ? 'text-red-400' : 'text-slate-500'}`} />
+            <User
+              className={`absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 ${errors.name ? 'text-red-400' : 'text-slate-500'}`}
+            />
             <AppInput
               id="name"
               placeholder={t('form.placeholderName')}
@@ -91,15 +89,15 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
               {...register('name')}
             />
           </div>
-          {errors.name && (
-            <p className="font-mono text-xs text-red-400">{errors.name.message}</p>
-          )}
+          {errors.name && <p className="font-mono text-xs text-red-400">{errors.name.message}</p>}
         </motion.div>
 
         <motion.div variants={inputVariants} className="flex flex-col gap-2">
           <AppLabel htmlFor="email">{t('form.email')}</AppLabel>
           <div className="relative">
-            <Mail className={`absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 ${errors.email ? 'text-red-400' : 'text-slate-500'}`} />
+            <Mail
+              className={`absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 ${errors.email ? 'text-red-400' : 'text-slate-500'}`}
+            />
             <AppInput
               id="email"
               type="email"
@@ -109,16 +107,16 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
               {...register('email')}
             />
           </div>
-          {errors.email && (
-            <p className="font-mono text-xs text-red-400">{errors.email.message}</p>
-          )}
+          {errors.email && <p className="font-mono text-xs text-red-400">{errors.email.message}</p>}
         </motion.div>
       </div>
 
       <motion.div variants={inputVariants} className="flex flex-col gap-2">
         <AppLabel htmlFor="company">{t('form.company')}</AppLabel>
         <div className="relative">
-          <Building2 className={`absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 ${errors.company ? 'text-red-400' : 'text-slate-500'}`} />
+          <Building2
+            className={`absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 ${errors.company ? 'text-red-400' : 'text-slate-500'}`}
+          />
           <AppInput
             id="company"
             placeholder={t('form.placeholderCompany')}
@@ -137,7 +135,7 @@ export const InquiryForm = ({ type = 'demo' }: { type?: InquiryType }) => {
         <AppTextarea
           id="message"
           rows={3}
-          placeholder={t('form.placeholderMessage')}
+          placeholder={t(`form.modes.${type}.placeholderMessage`)}
           error={!!errors.message}
           {...register('message')}
         />

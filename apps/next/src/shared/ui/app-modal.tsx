@@ -3,7 +3,14 @@
 import { type ReactNode } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { X } from 'lucide-react';
-import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription, DialogClose } from '@pipeline/ui';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from '@pipeline/ui';
 import { cn } from '@/shared/lib';
 
 const modalVariants: Variants = {
@@ -28,15 +35,15 @@ interface AppModalProps {
 }
 
 export const AppModal = ({
-                           isOpen,
-                           onOpenChange,
-                           children,
-                           title,
-                           description,
-                           headerTitle,
-                           className,
-                           trigger,
-                         }: AppModalProps) => {
+  isOpen,
+  onOpenChange,
+  children,
+  title,
+  description,
+  headerTitle,
+  className,
+  trigger,
+}: AppModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       {/* Рендерим триггер ВНУТРИ Dialog */}
@@ -44,7 +51,7 @@ export const AppModal = ({
 
       <DialogContent
         className={cn(
-          'w-[95vw] max-w-2xl max-h-[90dvh] overflow-y-auto border-none bg-transparent p-0 shadow-none sm:max-w-3xl [&>button]:hidden',
+          'max-h-[90dvh] w-[95vw] max-w-2xl overflow-y-auto border-none bg-transparent p-0 shadow-none sm:max-w-3xl [&>button]:hidden',
           'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-200',
           className,
         )}
@@ -67,7 +74,7 @@ export const AppModal = ({
             </DialogClose>
 
             {headerTitle && (
-              <div className="relative z-10 mb-6 flex items-start gap-3 border-b border-slate-800/80 pb-4 pr-10 sm:items-center">
+              <div className="relative z-10 mb-6 flex items-start gap-3 border-b border-slate-800/80 pr-10 pb-4 sm:items-center">
                 {headerTitle}
               </div>
             )}

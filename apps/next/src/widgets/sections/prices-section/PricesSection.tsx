@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Check, HelpCircle } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
+import { InquiryModal } from '@/features';
 import { PRICING_TIERS, PRICING_CONTAINER_VARIANTS, PRICING_CARD_VARIANTS } from './model';
 
 export const PricingSection = () => {
@@ -15,7 +16,7 @@ export const PricingSection = () => {
       className="relative overflow-hidden border-t border-slate-800 bg-slate-950 py-20 text-slate-100 sm:py-24"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#2dd4bf_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[#2dd4bf]/[0.05] blur-[100px]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/3 rounded-full bg-[#2dd4bf]/5 blur-[100px]" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col items-center">
@@ -35,9 +36,19 @@ export const PricingSection = () => {
         >
           {PRICING_TIERS.map((tier) => {
             const isPopular = tier.popular;
+            const isEnterprise = tier.id === 'enterprise';
+
             const features = t(`pricing.tiers.${tier.id}.features`, {
               returnObjects: true,
             }) as string[];
+
+            const buttonContent = t(`pricing.tiers.${tier.id}.cta`);
+
+            const buttonClassName = `w-full ${
+              !isPopular
+                ? 'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white'
+                : ''
+            }`;
 
             return (
               <motion.div
@@ -75,7 +86,7 @@ export const PricingSection = () => {
                         </span>
                       )}
                     </div>
-                    <p className="mt-4 min-h-[48px] text-sm leading-relaxed text-slate-400">
+                    <p className="mt-4 min-h-12 text-sm leading-relaxed text-slate-400">
                       {t(`pricing.tiers.${tier.id}.description`)}
                     </p>
                   </div>
@@ -92,19 +103,23 @@ export const PricingSection = () => {
                   </ul>
                 </div>
 
-                <AppButton
-                  isLink
-                  linkTo={tier.href}
-                  variant={isPopular ? 'primary' : 'ghost'}
-                  size="lg"
-                  className={`w-full ${
-                    !isPopular
-                      ? 'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white'
-                      : ''
-                  }`}
-                >
-                  {t(`pricing.tiers.${tier.id}.cta`)}
-                </AppButton>
+                {isEnterprise ? (
+                  <InquiryModal type="contact">
+                    <AppButton variant="ghost" size="lg" className={buttonClassName}>
+                      {buttonContent}
+                    </AppButton>
+                  </InquiryModal>
+                ) : (
+                  <AppButton
+                    isLink
+                    linkTo={tier.href || '#'}
+                    variant={isPopular ? 'primary' : 'ghost'}
+                    size="lg"
+                    className={buttonClassName}
+                  >
+                    {buttonContent}
+                  </AppButton>
+                )}
               </motion.div>
             );
           })}
@@ -120,12 +135,14 @@ export const PricingSection = () => {
           <HelpCircle className="h-4 w-4 text-[#2dd4bf]" />
           <span>
             {t('pricing.footer.question')}{' '}
-            <a
-              href="#contact"
-              className="text-[#2dd4bf] underline decoration-[#2dd4bf]/30 underline-offset-4 transition-colors hover:text-[#5eead4]"
-            >
-              {t('pricing.footer.link')}
-            </a>
+            <InquiryModal type="contact">
+              <button
+                type="button"
+                className="text-[#2dd4bf] underline decoration-[#2dd4bf]/30 underline-offset-4 transition-colors hover:text-[#5eead4]"
+              >
+                {t('pricing.footer.link')}
+              </button>
+            </InquiryModal>
           </span>
         </motion.div>
       </div>

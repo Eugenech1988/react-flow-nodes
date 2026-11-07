@@ -34,7 +34,7 @@ export interface IAppButtonProps extends Omit<
   isDisabled?: boolean;
   isLink?: boolean;
   linkTo?: string;
-  external?: boolean;
+  newTab?: boolean;
   ariaLabel?: string;
 }
 
@@ -54,22 +54,10 @@ const variantStyles: Record<ButtonVariant, string> = {
 };
 
 const sizeStyles: Record<ButtonSize, { button: string; icon: string }> = {
-  xs: {
-    button: 'px-3 py-1 text-xs rounded-xl min-h-8',
-    icon: 'w-3.5 h-3.5',
-  },
-  sm: {
-    button: 'px-3.5 py-1.5 text-xs rounded-xl min-h-9',
-    icon: 'w-4 h-4',
-  },
-  md: {
-    button: 'px-4 py-2 text-sm rounded-xl min-h-10',
-    icon: 'w-4 h-4',
-  },
-  lg: {
-    button: 'px-8 py-4 text-sm rounded-xl min-h-12',
-    icon: 'w-5 h-5',
-  },
+  xs: { button: 'px-3 py-1 text-xs rounded-xl min-h-8', icon: 'w-3.5 h-3.5' },
+  sm: { button: 'px-3.5 py-1.5 text-xs rounded-xl min-h-9', icon: 'w-4 h-4' },
+  md: { button: 'px-4 py-2 text-sm rounded-xl min-h-10', icon: 'w-4 h-4' },
+  lg: { button: 'px-8 py-4 text-sm rounded-xl min-h-12', icon: 'w-5 h-5' },
 };
 
 export const AppButton = ({
@@ -87,13 +75,12 @@ export const AppButton = ({
   className,
   isLink = false,
   linkTo = '#',
-  external,
+  newTab,
   ariaLabel,
   'aria-label': nativeAriaLabel,
   ...props
 }: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
-
   const currentSize = variant === 'nav' ? { button: '', icon: 'w-4 h-4' } : sizeStyles[size];
 
   const sharedClasses = cn(
@@ -128,7 +115,6 @@ export const AppButton = ({
     </span>
   );
 
-  // Извлекаем только безопасные DOM-атрибуты, которые совместимы с базовым UI
   const {
     onClick: _onClick,
     className: _className,
@@ -139,7 +125,8 @@ export const AppButton = ({
   };
 
   if (isLink && linkTo && !disabled) {
-    const isExternal = external ?? (linkTo.startsWith('http://') || linkTo.startsWith('https://'));
+    // Открываем в новой вкладке ТОЛЬКО если явно передали newTab={true}
+    const finalTarget = newTab ? '_blank' : undefined;
 
     return (
       <Button
@@ -150,8 +137,8 @@ export const AppButton = ({
             <a
               {...linkProps}
               href={linkTo}
-              target={isExternal ? '_blank' : undefined}
-              rel={isExternal ? 'noopener noreferrer' : undefined}
+              target={finalTarget}
+              rel={newTab ? 'noopener noreferrer' : undefined}
             >
               {content}
             </a>

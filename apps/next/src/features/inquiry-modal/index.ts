@@ -1,1 +1,1 @@
-export * from './InquiryModal'
+export * from './InquiryModal';

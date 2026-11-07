@@ -1,6 +1,5 @@
 'use client';
 
-import { useParams } from 'next/navigation';
 import { AppButton } from '@/shared/ui';
 import { ArrowRight, Play } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
@@ -8,14 +7,12 @@ import { InquiryModal } from '@/features';
 
 export const HeroActions = () => {
   const { t } = useT('marketing');
-  const params = useParams();
-  const lng = params.locale;
 
   return (
     <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
       <AppButton
         isLink
-        linkTo={`/${lng}/start`}
+        linkTo={``}
         variant="primary"
         size="lg"
         className="group w-full font-bold sm:w-auto"

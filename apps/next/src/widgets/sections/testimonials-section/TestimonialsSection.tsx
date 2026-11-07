@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Quote, Star, Activity, ShieldCheck } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
+import { InquiryModal } from '@/features';
 import {
   TESTIMONIALS_DATA,
   TESTIMONIALS_VARIANTS,
@@ -21,8 +22,8 @@ export const TestimonialsSection = () => {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl" />
 
-      <Activity className="pointer-events-none absolute top-20 -left-20 h-96 w-96 text-[#2dd4bf]/[0.02]" />
-      <ShieldCheck className="pointer-events-none absolute -right-20 bottom-20 h-96 w-96 text-[#2dd4bf]/[0.02]" />
+      <Activity className="pointer-events-none absolute top-20 -left-20 h-96 w-96 text-[#2dd4bf]/2" />
+      <ShieldCheck className="pointer-events-none absolute -right-20 bottom-20 h-96 w-96 text-[#2dd4bf]/2" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
@@ -97,13 +98,15 @@ export const TestimonialsSection = () => {
           transition={{ delay: 0.6 }}
           className="mt-16 flex justify-center"
         >
-          <AppButton
-            variant="ghost"
-            size="lg"
-            className="border border-[#2dd4bf]/30 bg-[#0a1210] font-mono text-xs tracking-widest text-[#2dd4bf] uppercase hover:border-[#2dd4bf]/60 hover:bg-[#2dd4bf]/10 hover:text-[#5eead4]"
-          >
-            {t('testimonials.cta')}
-          </AppButton>
+          <InquiryModal type="review">
+            <AppButton
+              variant="ghost"
+              size="lg"
+              className="border border-[#2dd4bf]/30 bg-[#0a1210] font-mono text-xs tracking-widest text-[#2dd4bf] uppercase hover:border-[#2dd4bf]/60 hover:bg-[#2dd4bf]/10 hover:text-[#5eead4]"
+            >
+              {t('testimonials.cta')}
+            </AppButton>
+          </InquiryModal>
         </motion.div>
       </div>
     </section>
