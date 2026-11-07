@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Roboto, Roboto_Mono } from 'next/font/google';
+import { Roboto, Roboto_Mono, Caveat, Special_Elite } from 'next/font/google';
 import { I18nProvider, MotionProvider } from '@/providers';
 import i18nConfig from '@/shared/lib/i18n/config';
 import { generateI18nStaticParams } from '@/shared/lib/i18n/server';
@@ -18,6 +18,20 @@ const roboto = Roboto({
 const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
   subsets: ['latin', 'cyrillic'],
+  display: 'swap',
+});
+
+const caveat = Caveat({
+  weight: ['400', '700'],
+  variable: '--font-caveat',
+  subsets: ['latin', 'cyrillic'],
+  display: 'swap',
+});
+
+const specialElite = Special_Elite({
+  weight: '400',
+  variable: '--font-typewriter',
+  subsets: ['latin'],
   display: 'swap',
 });
 
@@ -44,7 +58,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   if (!i18nConfig.supportedLngs.includes(locale)) notFound();
 
   return (
-    <html lang={locale} className={`${roboto.variable} ${robotoMono.variable} h-full antialiased`}>
+    <html lang={locale} className={`${roboto.variable} ${caveat.variable} ${specialElite.variable} ${robotoMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <I18nProvider lng={locale}>
           <MotionProvider>{children}</MotionProvider>

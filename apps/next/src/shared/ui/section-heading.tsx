@@ -6,17 +6,24 @@ interface ISectionHeadingProps {
   className?: string;
   titleClassName?: string;
   gradientDirection?: 'left' | 'right';
+  gradientColors?: string;
+  titleColor?: string;
+  descriptionColor?: string;
 }
 
 export function SectionHeading({
-  title,
-  description,
-  align = 'center',
-  isMain = false,
-  className = '',
-  titleClassName = '',
-  gradientDirection = 'right',
-}: ISectionHeadingProps) {
+                                 title,
+                                 description,
+                                 align = 'center',
+                                 isMain = false,
+                                 className = '',
+                                 titleClassName = '',
+                                 gradientDirection = 'right',
+                                 // Дефолтные значения (для остального сайта - teal)
+                                 gradientColors = 'from-[#5eead4] via-[#2dd4bf] to-[#0d9488]',
+                                 titleColor = 'text-[#d1faf5]',
+                                 descriptionColor = 'text-[#8db8b4]',
+                               }: ISectionHeadingProps) {
   const isCenter = align === 'center';
 
   const Tag = isMain ? 'h1' : 'h2';
@@ -29,10 +36,7 @@ export function SectionHeading({
     ? 'text-base sm:text-lg md:text-xl mt-6'
     : 'text-sm sm:text-base md:text-lg mt-4';
 
-  const gradientClasses =
-    gradientDirection === 'left'
-      ? 'bg-linear-to-l from-[#5eead4] via-[#2dd4bf] to-[#0d9488]'
-      : 'bg-linear-to-r from-[#5eead4] via-[#2dd4bf] to-[#0d9488]';
+  const directionClass = gradientDirection === 'left' ? 'bg-linear-to-l' : 'bg-linear-to-r';
 
   return (
     <div
@@ -41,12 +45,12 @@ export function SectionHeading({
       } ${className}`}
     >
       <Tag
-        className={`font-extrabold tracking-tight text-[#d1faf5] ${titleSizeClasses} ${
+        className={`font-extrabold tracking-tight ${titleColor} ${titleSizeClasses} ${
           isCenter ? 'mx-auto' : ''
         } ${titleClassName}`}
       >
         <span
-          className={`${gradientClasses} bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(45,212,191,0.2)]`}
+          className={`${directionClass} ${gradientColors} bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(111,162,140,0.2)]`}
         >
           {title}
         </span>
@@ -54,7 +58,7 @@ export function SectionHeading({
 
       {description && (
         <p
-          className={`leading-relaxed text-[#8db8b4] ${descSizeClasses} ${
+          className={`leading-relaxed ${descriptionColor} ${descSizeClasses} ${
             isCenter ? 'mx-auto max-w-2xl' : 'max-w-2xl'
           }`}
         >
