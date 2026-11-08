@@ -1,16 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import { Activity, Gauge, RadioTower, Radio } from 'lucide-react';
 import { AppButton, MonitorFrame, Reveal } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-import { InquiryModal } from '@/features';
 
 const SIGNAL_BARS = [40, 60, 80, 100, 70];
 
 export const CtaSection = () => {
-  const { t } = useT('about');
-  const [isContactOpen, setIsContactOpen] = useState(false);
+  const { t, i18n } = useT('about');
+  const lng = i18n.language;
 
   return (
     <>
@@ -115,11 +113,12 @@ export const CtaSection = () => {
                 </div>
 
                 <AppButton
+                  isLink
+                  linkTo={`/${lng}/careers`}
                   variant="primary"
                   size="lg"
                   icon={Radio}
                   className="w-full max-w-xs"
-                  onClick={() => setIsContactOpen(true)}
                 >
                   {t('cta.button')}
                 </AppButton>
@@ -129,7 +128,6 @@ export const CtaSection = () => {
         </MonitorFrame>
       </Reveal>
 
-      <InquiryModal type="contact" isOpen={isContactOpen} onOpenChange={setIsContactOpen} />
     </>
   );
 };
