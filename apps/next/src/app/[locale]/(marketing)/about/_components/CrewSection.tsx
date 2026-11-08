@@ -21,7 +21,7 @@ export const CrewSection = () => {
         {CREW.map((member, index) => (
           <div
             key={member.id}
-            className={`group relative overflow-hidden rounded-2xl border border-[#2dd4bf]/15 bg-[#0b1715]/40 p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-[#2dd4bf]/40 hover:bg-[#0b1715]/80 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] ${
+            className={`group relative overflow-hidden rounded-2xl border border-[#2dd4bf]/15 bg-[#0b1715]/40 p-5 backdrop-blur-sm transition-all duration-300 hover:border-[#2dd4bf]/40 hover:bg-[#0b1715]/80 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] ${
               inView
                 ? 'animate-in fade-in slide-in-from-bottom-5 duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none'
                 : 'opacity-0'
@@ -77,7 +77,7 @@ export const CrewSection = () => {
                 </span>
               </div>
 
-              <div className="flex h-6 items-end gap-[2px] opacity-40 transition-opacity group-hover:opacity-100">
+              <div className="flex h-6 items-end gap-0.5 opacity-40 transition-opacity group-hover:opacity-100">
                 {BARCODE.map((w, i) => (
                   <div
                     key={i}

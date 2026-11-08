@@ -2,7 +2,7 @@
 
 import { SectionHeading } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-import { FeaturePlaque, CtaPlaque } from './components';
+import { FeaturePlaque, CtaPlaque, BackgroundArtifacts } from './components';
 import { SLIDES, TOTAL_STEPS } from './model';
 import { useFeaturesScroll } from './hooks';
 
@@ -20,6 +20,9 @@ export function FeaturesSection() {
       <div className="relative flex min-h-dvh w-full flex-col overflow-hidden border-t border-[#2dd4bf]/20 pt-24 pb-16 text-[#d1faf5] lg:sticky lg:top-0 lg:h-dvh lg:justify-center lg:pt-32 lg:pb-0">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.05]" />
         <div className="pointer-events-none absolute top-0 left-1/2 h-175 w-175 -translate-x-1/2 rounded-full bg-[#2dd4bf]/[0.07] blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 left-1/2 h-100 w-150 -translate-x-1/2 rounded-full bg-[#2dd4bf]/4 blur-3xl" />
+
+        <BackgroundArtifacts />
 
         <div className="relative z-10 mx-auto flex h-full w-full max-w-4xl flex-col px-6">
           <SectionHeading

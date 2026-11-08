@@ -150,7 +150,7 @@ export const ClientFlowCanvas = () => {
       )}
 
       <div
-        className={`h-full w-full transition-all duration-[600ms] ease-out ${
+        className={`h-full w-full transition-all duration-600 ease-out ${
           isLoading ? 'pointer-events-none scale-[0.98] opacity-0' : 'scale-100 opacity-100'
         }`}
       >

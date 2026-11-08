@@ -1,39 +1,14 @@
 'use client';
 
 import { useT } from '@/shared/lib/i18n/client';
+import { JOBS, MAX_VACANCIES, RIVETS, TICKS } from '../constants';
 
-const round4 = (n: number) => Math.round(n * 10000) / 10000;
-
-const TICKS = Array.from({ length: 21 }).map((_, i) => {
-  const angle = ((i * 9 - 180) * Math.PI) / 180;
-  const isMajor = i % 5 === 0;
-  const inner = isMajor ? 34 : 38;
-  return {
-    i,
-    isMajor,
-    x1: round4(50 + Math.cos(angle) * inner),
-    y1: round4(50 + Math.sin(angle) * inner),
-    x2: round4(50 + Math.cos(angle) * 44),
-    y2: round4(50 + Math.sin(angle) * 44),
-  };
-});
-
-const RIVETS = [45, 135, 225, 315].map((deg) => {
-  const rad = ((deg - 90) * Math.PI) / 180;
-  return {
-    deg,
-    top: round4(50 + Math.sin(rad) * 50),
-    left: round4(50 + Math.cos(rad) * 50),
-  };
-});
-
-export function CareersGauge() {
+export const CareersGauge = () => {
   const { t } = useT('careers');
 
-  const raw = t('hero.badge.value');
-  const value = Number.parseInt(raw, 10) || 0;
-  const max = Math.max(20, Math.ceil(value / 5) * 5);
-  const targetAngle = -135 + (value / max) * 270;
+  const value = JOBS.length;
+  const ratio = Math.min(1, value / MAX_VACANCIES);
+  const targetAngle = -135 + ratio * 270;
   const isReady = value > 0;
 
   return (
@@ -107,4 +82,4 @@ export function CareersGauge() {
       </span>
     </div>
   );
-}
+};

@@ -19,6 +19,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/:locale',
+        destination: '/:locale/home',
+      },
+    ];
+  },
   async headers() {
     return [
       {

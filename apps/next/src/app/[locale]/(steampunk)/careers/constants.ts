@@ -20,6 +20,7 @@ import {
   TrendingUp,
   PenTool,
 } from 'lucide-react';
+import { round4 } from '@/shared/lib';
 
 export const CAREERS_STATS = [
   { id: '1', icon: Code2 },
@@ -67,3 +68,28 @@ export const PROCESS_STEPS = [
   { id: 'craft', icon: FlaskConical },
   { id: 'offer', icon: Rocket },
 ];
+
+export const MAX_VACANCIES = 50;
+
+export const TICKS = Array.from({ length: 21 }).map((_, i) => {
+  const angle = ((i * 9 - 180) * Math.PI) / 180;
+  const isMajor = i % 5 === 0;
+  const inner = isMajor ? 34 : 38;
+  return {
+    i,
+    isMajor,
+    x1: round4(50 + Math.cos(angle) * inner),
+    y1: round4(50 + Math.sin(angle) * inner),
+    x2: round4(50 + Math.cos(angle) * 44),
+    y2: round4(50 + Math.sin(angle) * 44),
+  };
+});
+
+export const RIVETS = [45, 135, 225, 315].map((deg) => {
+  const rad = ((deg - 90) * Math.PI) / 180;
+  return {
+    deg,
+    top: round4(50 + Math.sin(rad) * 50),
+    left: round4(50 + Math.cos(rad) * 50),
+  };
+});
