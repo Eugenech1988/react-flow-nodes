@@ -2,25 +2,14 @@
 
 import { Cog, Code2, Settings2 } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
-import { useInView } from '@/shared/hooks';
+import { Reveal } from '@/shared/ui';
 
 export const MissionSection = () => {
   const { t } = useT('about');
-  const { ref: sectionRef, inView } = useInView<HTMLElement>();
 
   return (
-    <section
-      ref={sectionRef}
-      className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20"
-    >
-      <div
-        className={
-          inView
-            ? 'animate-in fade-in slide-in-from-left-6 lg:slide-in-from-left-16 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none'
-            : 'opacity-0'
-        }
-        style={{ animationFillMode: 'both' }}
-      >
+    <section className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+      <Reveal animation="fade-left">
         <div className="mb-7 flex items-center justify-center gap-3 lg:justify-start">
           <span className="h-px w-10 bg-[#2dd4bf]/60" />
           <span className="font-mono text-[10px] tracking-[0.3em] text-[#2dd4bf]/80 uppercase">
@@ -45,15 +34,12 @@ export const MissionSection = () => {
             Engineering with purpose
           </span>
         </div>
-      </div>
+      </Reveal>
 
-      <div
-        className={`relative mx-auto mt-10 w-full max-w-[16rem] sm:max-w-[22rem] lg:mt-0 lg:max-w-[26rem] ${
-          inView
-            ? 'animate-in fade-in slide-in-from-right-6 lg:slide-in-from-right-16 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none'
-            : 'opacity-0'
-        }`}
-        style={{ animationFillMode: 'both', animationDelay: inView ? '150ms' : '0ms' }}
+      <Reveal
+        animation="fade-right"
+        delay={150}
+        className="relative mx-auto mt-10 w-full max-w-[16rem] sm:max-w-[22rem] lg:mt-0 lg:max-w-[26rem]"
       >
         <div className="relative flex aspect-square w-full items-center justify-center">
           <div className="absolute h-[88%] w-[88%] rounded-full border border-[#2dd4bf]/15" />
@@ -98,7 +84,7 @@ export const MissionSection = () => {
             System operational
           </div>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 };

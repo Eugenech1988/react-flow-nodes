@@ -1,9 +1,9 @@
 'use client';
 
-import { SectionHeading } from '@/shared/ui';
+import { SectionHeading, Rivets } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { FeaturePlaque, CtaPlaque, BackgroundArtifacts } from './components';
-import { SLIDES, TOTAL_STEPS } from './model';
+import { SLIDES, TOTAL_STEPS } from './constants';
 import { useFeaturesScroll } from './hooks';
 
 export function FeaturesSection() {
@@ -23,6 +23,8 @@ export function FeaturesSection() {
         <div className="pointer-events-none absolute bottom-0 left-1/2 h-100 w-150 -translate-x-1/2 rounded-full bg-[#2dd4bf]/4 blur-3xl" />
 
         <BackgroundArtifacts />
+
+        <Rivets className="bg-[#2dd4bf]/30 sm:h-2.5 sm:w-2.5" />
 
         <div className="relative z-10 mx-auto flex h-full w-full max-w-4xl flex-col px-6">
           <SectionHeading

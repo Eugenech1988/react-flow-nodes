@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { TOTAL_STEPS } from '../model';
+import { TOTAL_STEPS } from '../constants';
 
 const computeIndex = (el: HTMLElement): number => {
   const scrollableHeight = el.offsetHeight - window.innerHeight;

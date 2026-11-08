@@ -1,17 +1,14 @@
 'use client';
 
 import { useT } from '@/shared/lib/i18n/client';
-import { AppButton } from '@/shared/ui';
+import { AppButton, Rivets } from '@/shared/ui';
 
 export const CtaPlaque = () => {
   const { t } = useT('marketing');
 
   return (
     <div className="relative flex w-full flex-col overflow-hidden rounded-3xl border-2 border-[#2dd4bf]/50 bg-linear-to-r from-[#0d2422] via-[#0a1615] to-[#0a1615] p-6 shadow-[inset_0_1px_0_rgba(45,212,191,0.15),0_12px_40px_rgba(0,0,0,0.7)] sm:p-8">
-      <span className="absolute top-3 left-3 h-2 w-2 rounded-full bg-linear-to-br from-[#5eead4] to-[#2dd4bf] shadow-[inset_0_0_3px_rgba(0,0,0,0.6)]" />
-      <span className="absolute top-3 right-3 h-2 w-2 rounded-full bg-linear-to-br from-[#5eead4] to-[#2dd4bf] shadow-[inset_0_0_3px_rgba(0,0,0,0.6)]" />
-      <span className="absolute bottom-3 left-3 h-2 w-2 rounded-full bg-linear-to-br from-[#5eead4] to-[#2dd4bf] shadow-[inset_0_0_3px_rgba(0,0,0,0.6)]" />
-      <span className="absolute right-3 bottom-3 h-2 w-2 rounded-full bg-linear-to-br from-[#5eead4] to-[#2dd4bf] shadow-[inset_0_0_3px_rgba(0,0,0,0.6)]" />
+      <Rivets className="bg-[#5eead4]/60 sm:h-2.5 sm:w-2.5" />
 
       <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[1fr_auto]">
         <div>

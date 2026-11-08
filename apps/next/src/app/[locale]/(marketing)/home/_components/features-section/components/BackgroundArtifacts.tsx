@@ -1,4 +1,4 @@
-import { GLITCH_BARS_H, GLITCH_BARS_V, CROSSHAIRS, SIGNAL_DOTS } from '../model';
+import { GLITCH_BARS_H, GLITCH_BARS_V, CROSSHAIRS, SIGNAL_DOTS } from '../constants';
 
 export const BackgroundArtifacts = () => (
   <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">

@@ -1,26 +1,25 @@
 'use client';
 
 import { Quote, Star, Activity, ShieldCheck } from 'lucide-react';
-import { SectionHeading, AppButton } from '@/shared/ui';
+import {
+  Section,
+  SectionDecorator,
+  TechCard,
+  Reveal,
+  SectionHeading,
+  AppButton,
+} from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
-import { useInView } from '@/shared/hooks';
 import { TESTIMONIALS_DATA } from './constants';
 
 export const TestimonialsSection = () => {
   const { t } = useT('marketing');
-  const { ref: sectionRef, inView } = useInView<HTMLDivElement>();
 
   return (
-    <section
-      id="testimonials"
-      className="relative overflow-hidden border-t border-[#2dd4bf]/10 bg-[#040a09] py-16 text-[#d1faf5] sm:py-24"
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl" />
-
-      <Activity className="pointer-events-none absolute top-20 -left-20 h-96 w-96 text-[#2dd4bf]/2" />
-      <ShieldCheck className="pointer-events-none absolute -right-20 bottom-20 h-96 w-96 text-[#2dd4bf]/2" />
+    <Section id="testimonials">
+      <SectionDecorator icon={Activity} position="top-left" opacity={0.02} />
+      <SectionDecorator icon={ShieldCheck} position="bottom-right" opacity={0.02} />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
@@ -30,33 +29,10 @@ export const TestimonialsSection = () => {
           isMain={false}
         />
 
-        <div
-          ref={sectionRef}
-          className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8"
-        >
+        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {TESTIMONIALS_DATA.map((item, index) => (
-            <div
-              key={item.id}
-              // Внешний div отвечает за анимацию появления
-              className={`relative ${
-                inView
-                  ? 'animate-in fade-in slide-in-from-bottom-8 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]'
-                  : 'opacity-0'
-              }`}
-              style={{
-                animationDelay: inView ? `${index * 150}ms` : '0ms',
-                animationFillMode: 'both',
-              }}
-            >
-              {/* Внутренний div отвечает за hover-эффекты и поворот */}
-              <div
-                className={`group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-[#2dd4bf]/20 bg-[#0d1f1e]/80 p-6 shadow-[inset_0_1px_0_rgba(45,212,191,0.1),0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:rotate-0 hover:border-[#2dd4bf]/50 hover:shadow-[0_15px_40px_rgba(45,212,191,0.15)] sm:p-8 ${item.rotation}`}
-              >
-                <span className="absolute top-2 left-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
-                <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
-                <span className="absolute bottom-2 left-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
-                <span className="absolute right-2 bottom-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
-
+            <Reveal key={item.id} delay={index * 150}>
+              <TechCard className={`h-full justify-between p-6 sm:p-8 ${item.rotation}`}>
                 <Quote className="absolute -top-4 -right-4 h-24 w-24 text-[#2dd4bf]/5 transition-transform duration-500 group-hover:scale-110 group-hover:text-[#2dd4bf]/10" />
 
                 <div className="relative z-10">
@@ -68,7 +44,6 @@ export const TestimonialsSection = () => {
                       />
                     ))}
                   </div>
-
                   <p className="text-sm leading-relaxed text-slate-300 sm:text-base">
                     &ldquo;{t(`testimonials.list.${item.id}.quote`)}&rdquo;
                   </p>
@@ -92,19 +67,12 @@ export const TestimonialsSection = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </TechCard>
+            </Reveal>
           ))}
         </div>
 
-        <div
-          className={`mt-16 flex justify-center ${
-            inView
-              ? 'animate-in fade-in duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]'
-              : 'opacity-0'
-          }`}
-          style={{ animationFillMode: 'both' }}
-        >
+        <Reveal delay={400} className="mt-16 flex justify-center">
           <InquiryModal type="review">
             <AppButton
               variant="ghost"
@@ -114,8 +82,8 @@ export const TestimonialsSection = () => {
               {t('testimonials.cta')}
             </AppButton>
           </InquiryModal>
-        </div>
+        </Reveal>
       </div>
-    </section>
+    </Section>
   );
 };
