@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from '@pipeline/ui';
+} from '@pipeline/ui/dialog';
 import { cn } from '@/shared/lib';
 
 interface AppModalProps {

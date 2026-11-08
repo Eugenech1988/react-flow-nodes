@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Roboto, Roboto_Mono, Caveat, Special_Elite } from 'next/font/google';
-import { I18nProvider, MotionProvider } from '@/providers';
+import { I18nProvider } from '@/providers';
 import i18nConfig from '@/shared/lib/i18n/config';
 import { generateI18nStaticParams } from '@/shared/lib/i18n/server';
 import { getRootMetadata } from '@/shared/lib/seo/metadata';
@@ -63,9 +63,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       className={`${roboto.variable} ${caveat.variable} ${specialElite.variable} ${robotoMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <I18nProvider lng={locale}>
-          <MotionProvider>{children}</MotionProvider>
-        </I18nProvider>
+        <I18nProvider lng={locale}>{children}</I18nProvider>
       </body>
     </html>
   );

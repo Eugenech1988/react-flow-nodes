@@ -3,7 +3,7 @@
 import { Mail, ShieldAlert, Siren } from 'lucide-react';
 import { AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-import { CareersInquiryModal } from '@/features';
+import { InquiryModal } from '@/features';
 import { useInView } from '@/shared/hooks';
 
 export function CareersCTA() {
@@ -79,11 +79,11 @@ export function CareersCTA() {
               <div className="my-8 h-px w-full bg-[repeating-linear-gradient(90deg,#2f3d36,#2f3d36_4px,transparent_4px,transparent_8px)]" />
 
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <CareersInquiryModal type="contact">
+                <InquiryModal theme='steampunk' type="contact">
                   <AppButton variant="steampunk" size="lg" icon={Mail} className="w-full sm:w-auto">
                     {t('cta.primary')}
                   </AppButton>
-                </CareersInquiryModal>
+                </InquiryModal>
 
                 <AppButton
                   isLink

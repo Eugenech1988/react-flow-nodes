@@ -21,7 +21,6 @@ export const InfoBadge = ({ text, className, theme = 'default' }: IInfoBadgeProp
         className,
       )}
     >
-      {/* Радиальный фон */}
       <span
         className={cn('pointer-events-none absolute inset-0', {
           'bg-[radial-gradient(circle_at_50%_120%,rgba(57,179,155,0.15),transparent_60%)]':
@@ -31,7 +30,6 @@ export const InfoBadge = ({ text, className, theme = 'default' }: IInfoBadgeProp
         })}
       />
 
-      {/* Верхняя и нижняя линии */}
       <span
         className={cn(
           'pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent to-transparent',
@@ -51,7 +49,6 @@ export const InfoBadge = ({ text, className, theme = 'default' }: IInfoBadgeProp
         )}
       />
 
-      {/* Винтики (4 шт) */}
       {[
         'top-1.25 left-1.25',
         'top-1.25 right-1.25',
@@ -72,7 +69,6 @@ export const InfoBadge = ({ text, className, theme = 'default' }: IInfoBadgeProp
         />
       ))}
 
-      {/* Текст и пульсирующие точки */}
       <div className="relative z-20 flex items-center gap-3 px-1">
         <span className="relative flex h-1.5 w-1.5 items-center justify-center">
           <span

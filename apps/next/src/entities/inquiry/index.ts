@@ -1,1 +1,1 @@
-export * from './InquiryForm';
+export type { TInquiryType, TInquiryTheme } from './types'

@@ -1,62 +1,66 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
-import { Terminal, Star, HelpCircle, Bug } from 'lucide-react';
-import { useT } from '@/shared/lib/i18n/client';
-import { AppModal } from '@/shared/ui';
-import { InquiryForm, type InquiryType } from '@/entities/inquiry';
+import { useState, type ElementType, type ReactNode } from 'react';
+import dynamic from 'next/dynamic';
+import type { TInquiryType, TInquiryTheme } from '@/entities/inquiry';
 
-interface InquiryModalProps {
+const loadDialog = () => import('./InquiryDialog');
+
+const InquiryDialog = dynamic(() => loadDialog().then((mod) => mod.InquiryDialog), {
+  ssr: false,
+});
+
+interface IInquiryModalProps {
   children?: ReactNode;
-  type?: InquiryType;
+  type?: TInquiryType;
+  theme?: TInquiryTheme;
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  submitIcon?: ElementType;
 }
 
 export const InquiryModal = ({
-  children,
-  type = 'demo',
-  isOpen: controlledIsOpen,
-  onOpenChange,
-}: InquiryModalProps) => {
-  const { t } = useT('inquiry');
+                               children,
+                               type = 'demo',
+                               theme = 'default',
+                               isOpen: controlledIsOpen,
+                               onOpenChange,
+                               submitIcon,
+                             }: IInquiryModalProps) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const [wasOpened, setWasOpened] = useState(false);
 
   const isControlled = controlledIsOpen !== undefined;
   const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
 
   const handleOpenChange = (open: boolean) => {
-    if (!isControlled) {
-      setInternalIsOpen(open);
-    }
-
+    if (open) setWasOpened(true);
+    if (!isControlled) setInternalIsOpen(open);
     onOpenChange?.(open);
   };
 
-  const Icon = {
-    demo: Terminal,
-    review: Star,
-    contact: HelpCircle,
-    glitch: Bug,
-  }[type];
-
   return (
-    <AppModal
-      isOpen={isOpen}
-      onOpenChange={handleOpenChange}
-      title={t(`${type}.title`)}
-      description={t(`${type}.description`)}
-      trigger={children}
-      headerTitle={
-        <>
-          <Icon className="mt-0.5 h-5 w-5 shrink-0 text-[#2dd4bf] sm:mt-0" />
-          <span className="font-mono text-[10px] leading-tight tracking-widest text-[#2dd4bf]/70 uppercase sm:text-xs">
-            {t(`${type}.header`)}
-          </span>
-        </>
-      }
-    >
-      {isOpen && <InquiryForm type={type} />}
-    </AppModal>
+    <>
+      {children && (
+        <span
+          className="contents"
+          onClick={() => handleOpenChange(true)}
+          onPointerEnter={loadDialog}
+          onFocus={loadDialog}
+        >
+          {children}
+        </span>
+      )}
+
+      {(wasOpened || isOpen) && (
+        <InquiryDialog
+          type={type}
+          theme={theme}
+          isOpen={isOpen}
+          onOpenChange={handleOpenChange}
+          submitIcon={submitIcon}
+        />
+      )}
+    </>
   );
 };

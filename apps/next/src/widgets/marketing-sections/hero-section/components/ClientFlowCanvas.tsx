@@ -15,7 +15,6 @@ import {
   useEdgesState,
 } from '@xyflow/react';
 import { Cpu, Database, ShieldCheck, type LucideIcon } from 'lucide-react';
-import { m } from 'framer-motion';
 
 type CustomNodeData = {
   label: string;
@@ -150,11 +149,10 @@ export const ClientFlowCanvas = () => {
         </div>
       )}
 
-      <m.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: isLoading ? 0 : 1, scale: isLoading ? 0.98 : 1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="h-full w-full"
+      <div
+        className={`h-full w-full transition-all duration-[600ms] ease-out ${
+          isLoading ? 'pointer-events-none scale-[0.98] opacity-0' : 'scale-100 opacity-100'
+        }`}
       >
         <ReactFlow
           nodes={nodes}
@@ -174,7 +172,7 @@ export const ClientFlowCanvas = () => {
         >
           <Background color="#2dd4bf" gap={32} size={1} style={{ opacity: 0.1 }} />
         </ReactFlow>
-      </m.div>
+      </div>
     </div>
   );
 };
