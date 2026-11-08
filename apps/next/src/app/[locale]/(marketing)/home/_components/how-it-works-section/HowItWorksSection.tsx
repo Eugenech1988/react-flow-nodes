@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Gauge, Activity, Loader2 } from 'lucide-react';
+import { Gauge, Activity, Loader2, ShieldCheck } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { HOW_IT_WORKS_STEPS } from './constants';
@@ -38,7 +38,10 @@ export const HowItWorksSection = () => {
       className="relative overflow-hidden border-t border-[#2dd4bf]/10 bg-[#040a09] py-16 text-[#d1faf5] sm:py-24"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
-      <div className="pointer-events-none absolute top-0 left-1/2 h-150 w-200 -translate-x-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl" />
+
+      <Activity className="pointer-events-none absolute top-20 -left-20 h-96 w-96 text-[#2dd4bf]/2" />
+      <ShieldCheck className="pointer-events-none absolute -right-20 bottom-20 h-96 w-96 text-[#2dd4bf]/2" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
@@ -49,7 +52,6 @@ export const HowItWorksSection = () => {
         />
 
         <div className="mt-12 grid grid-cols-1 items-stretch gap-8 sm:mt-20 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
-          {/* Desktop accordion */}
           <div className="relative hidden lg:flex lg:flex-col">
             <div className="flex flex-col gap-2">
               {HOW_IT_WORKS_STEPS.map((step, index) => {
@@ -117,7 +119,6 @@ export const HowItWorksSection = () => {
             </div>
           </div>
 
-          {/* Display monitor */}
           <div className="relative flex w-full flex-col rounded-3xl border border-[#2dd4bf]/30 bg-[#0a1210]/60 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:p-2 lg:h-full">
             <span className="absolute top-3 left-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:top-4 sm:left-4 sm:h-2 sm:w-2" />
             <span className="absolute top-3 right-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:top-4 sm:right-4 sm:h-2 sm:w-2" />
@@ -182,7 +183,6 @@ export const HowItWorksSection = () => {
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(4,10,9,0.85)_100%)]" />
 
-                  {/* LOADER — всегда в DOM, скрывается через opacity */}
                   <div
                     className={`absolute inset-0 z-20 flex flex-col items-center justify-center px-6 text-center transition-opacity duration-200 ${
                       isLoading ? 'opacity-100' : 'pointer-events-none opacity-0'
@@ -204,7 +204,6 @@ export const HowItWorksSection = () => {
                     </span>
                   </div>
 
-                  {/* CONTENT — все шаги в DOM, виден только активный */}
                   {HOW_IT_WORKS_STEPS.map((step, index) => {
                     const Icon = step.icon;
                     const visible = index === activeStep && !isLoading;

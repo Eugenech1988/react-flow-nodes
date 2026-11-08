@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, HelpCircle } from 'lucide-react';
+import { Check, HelpCircle, Network, Factory } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
@@ -16,10 +16,13 @@ export const PricingSection = () => {
   return (
     <section
       id="pricing"
-      className="relative overflow-hidden border-t border-slate-800 bg-slate-950 py-20 text-slate-100 sm:py-24"
+      className="relative overflow-hidden border-t border-slate-800 bg-slate-950 py-24 text-slate-100"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#2dd4bf_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/3 rounded-full bg-[#2dd4bf]/5 blur-[100px]" />
+
+      <Network className="pointer-events-none absolute top-20 -left-20 h-96 w-96 text-slate-800/20" />
+      <Factory className="pointer-events-none absolute -right-16 bottom-20 h-80 w-80 text-slate-800/20" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/3 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col items-center">
