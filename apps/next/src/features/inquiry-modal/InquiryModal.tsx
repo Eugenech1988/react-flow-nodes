@@ -20,13 +20,13 @@ interface IInquiryModalProps {
 }
 
 export const InquiryModal = ({
-                               children,
-                               type = 'demo',
-                               theme = 'default',
-                               isOpen: controlledIsOpen,
-                               onOpenChange,
-                               submitIcon,
-                             }: IInquiryModalProps) => {
+  children,
+  type = 'demo',
+  theme = 'default',
+  isOpen: controlledIsOpen,
+  onOpenChange,
+  submitIcon,
+}: IInquiryModalProps) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [wasOpened, setWasOpened] = useState(false);
 

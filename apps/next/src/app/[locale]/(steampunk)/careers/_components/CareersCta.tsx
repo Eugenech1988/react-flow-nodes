@@ -79,7 +79,7 @@ export function CareersCTA() {
               <div className="my-8 h-px w-full bg-[repeating-linear-gradient(90deg,#2f3d36,#2f3d36_4px,transparent_4px,transparent_8px)]" />
 
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <InquiryModal theme='steampunk' type="contact">
+                <InquiryModal theme="steampunk" type="contact">
                   <AppButton variant="steampunk" size="lg" icon={Mail} className="w-full sm:w-auto">
                     {t('cta.primary')}
                   </AppButton>

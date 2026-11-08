@@ -25,10 +25,10 @@ interface IInquiryFormProps {
 }
 
 export const InquiryForm = ({
-                              type = 'demo',
-                              submitVariant = 'primary',
-                              submitIcon = Send,
-                            }: IInquiryFormProps) => {
+  type = 'demo',
+  submitVariant = 'primary',
+  submitIcon = Send,
+}: IInquiryFormProps) => {
   const { t } = useT('inquiry');
   const [isSuccess, setIsSuccess] = useState(false);
 

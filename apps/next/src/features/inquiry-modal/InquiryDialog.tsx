@@ -32,12 +32,12 @@ const icons = {
 const rivets = ['top-3 left-3', 'top-3 right-3', 'bottom-3 left-3', 'bottom-3 right-3'] as const;
 
 export const InquiryDialog = ({
-                                type,
-                                theme,
-                                isOpen,
-                                onOpenChange,
-                                submitIcon,
-                              }: IInquiryDialogProps) => {
+  type,
+  theme,
+  isOpen,
+  onOpenChange,
+  submitIcon,
+}: IInquiryDialogProps) => {
   const { t } = useT('inquiry');
   const Icon = icons[type];
 

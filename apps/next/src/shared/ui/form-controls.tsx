@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
-import { Input } from '@pipeline/ui/input'
-import { Textarea } from '@pipeline/ui/textarea'
-import { Label } from '@pipeline/ui/label'
+import { Input } from '@pipeline/ui/input';
+import { Textarea } from '@pipeline/ui/textarea';
+import { Label } from '@pipeline/ui/label';
 import { cn } from '@/shared/lib';
 
 export const AppLabel = ({ className, ...props }: ComponentProps<typeof Label>) => (

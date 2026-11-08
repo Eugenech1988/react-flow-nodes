@@ -1,1 +1,1 @@
-export type { TInquiryType, TInquiryTheme } from './types'
+export type { TInquiryType, TInquiryTheme } from './types';
