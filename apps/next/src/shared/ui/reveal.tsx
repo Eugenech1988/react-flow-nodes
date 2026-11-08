@@ -17,6 +17,7 @@ export const Reveal = ({ children, delay = 0, className, animation = 'fade-up' }
   const animationClass = {
     'fade-up': 'slide-in-from-bottom-8',
     'fade-left': 'slide-in-from-left-8',
+    'fade-right': 'slid-in-from-right-8',
     zoom: 'zoom-in-95 slide-in-from-bottom-4',
   }[animation];
 

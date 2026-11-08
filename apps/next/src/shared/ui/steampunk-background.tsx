@@ -1,4 +1,4 @@
-export function CareersBackground() {
+export function SteampunkBackground() {
   return (
     <div className="pointer-events-none fixed inset-0 z-0">
       <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent_0,transparent_32px,rgba(111,162,140,0.03)_32px,rgba(111,162,140,0.03)_33px)]" />

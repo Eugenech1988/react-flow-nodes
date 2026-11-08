@@ -1,5 +1,4 @@
 export * from './CareersHero';
-export * from './CareersBackground';
 export * from './CareersGauge';
 export * from './CareersStats';
 export * from './CareersConsole';
