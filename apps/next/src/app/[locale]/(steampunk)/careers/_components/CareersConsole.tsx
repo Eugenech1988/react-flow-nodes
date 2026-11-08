@@ -80,8 +80,12 @@ export function CareersConsole() {
                         : 'border-[#3a4842] bg-linear-to-b from-[#232e28] to-[#141a16] text-[#8a9488] shadow-[inset_0_1px_0_rgba(156,196,176,0.08),inset_0_-1px_2px_rgba(0,0,0,0.5)] hover:border-[#6fa28c]/50 hover:text-[#9cc4b0]'
                     }`}
                   >
-                    <span className={`absolute top-0.5 left-0.5 h-1 w-1 rounded-full ${isActive ? 'bg-[#d4cfc0]/40' : 'bg-[#4a5c52]'}`} />
-                    <span className={`absolute right-0.5 bottom-0.5 h-1 w-1 rounded-full ${isActive ? 'bg-[#d4cfc0]/40' : 'bg-[#4a5c52]'}`} />
+                    <span
+                      className={`absolute top-0.5 left-0.5 h-1 w-1 rounded-full ${isActive ? 'bg-[#d4cfc0]/40' : 'bg-[#4a5c52]'}`}
+                    />
+                    <span
+                      className={`absolute right-0.5 bottom-0.5 h-1 w-1 rounded-full ${isActive ? 'bg-[#d4cfc0]/40' : 'bg-[#4a5c52]'}`}
+                    />
                     <span className="relative z-10">{t(`openings.filters.${dept.id}`)}</span>
                     {isActive && (
                       <span className="absolute top-1/2 right-1.5 h-1 w-1 -translate-y-1/2 animate-pulse rounded-full bg-[#9cc4b0] shadow-[0_0_5px_#9cc4b0]" />

@@ -12,7 +12,10 @@ interface IChamferedCardProps {
 
 export const ChamferedCard = ({ children, className }: IChamferedCardProps) => (
   <div className={className}>
-    <div className="bg-linear-to-b from-[#4a5c52] via-[#2f3d36] to-[#1a2420] p-px" style={{ clipPath: CHAMFER_OUTER }}>
+    <div
+      className="bg-linear-to-b from-[#4a5c52] via-[#2f3d36] to-[#1a2420] p-px"
+      style={{ clipPath: CHAMFER_OUTER }}
+    >
       <div
         className="relative flex flex-col items-center justify-center overflow-hidden bg-linear-to-b from-[#141a16] to-[#0a0e0d] px-4 py-6 sm:py-7"
         style={{ clipPath: CHAMFER_INNER }}

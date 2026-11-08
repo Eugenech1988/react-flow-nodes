@@ -127,7 +127,6 @@ export const CtaSection = () => {
           </div>
         </MonitorFrame>
       </Reveal>
-
     </>
   );
 };

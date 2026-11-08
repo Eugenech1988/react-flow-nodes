@@ -39,7 +39,7 @@ export function TrustedBySection() {
           </div>
 
           <div className="group relative z-20 flex w-full overflow-hidden mask-[linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] py-4">
-            <div className="flex w-max animate-[marquee_30s_linear_infinite] items-center gap-12 px-6 group-hover:paused motion-reduce:animate-none">
+            <div className="group-hover:paused flex w-max animate-[marquee_30s_linear_infinite] items-center gap-12 px-6 motion-reduce:animate-none">
               {duplicatedCompanies.map((company, index) => {
                 const Icon = company.icon;
                 return (

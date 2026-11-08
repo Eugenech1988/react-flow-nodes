@@ -17,17 +17,17 @@ interface IMonitorFrameProps {
 }
 
 export const MonitorFrame = ({
-                               children,
-                               headerTitle,
-                               headerIcon: Icon = Activity,
-                               headerClassName,
-                               footer,
-                               footerClassName,
-                               className,
-                               innerClassName,
-                               toolbar,
-                               theme = 'default',
-                             }: IMonitorFrameProps) => {
+  children,
+  headerTitle,
+  headerIcon: Icon = Activity,
+  headerClassName,
+  footer,
+  footerClassName,
+  className,
+  innerClassName,
+  toolbar,
+  theme = 'default',
+}: IMonitorFrameProps) => {
   const isSteampunk = theme === 'steampunk';
 
   return (
@@ -63,7 +63,7 @@ export const MonitorFrame = ({
             headerClassName,
           )}
         >
-          <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs uppercase tracking-widest">
+          <div className="flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase sm:text-xs">
             <Icon className="h-4 w-4" />
             <span>{headerTitle}</span>
           </div>
@@ -74,15 +74,13 @@ export const MonitorFrame = ({
           </div>
         </div>
 
-        <div className="relative flex flex-1 flex-col min-h-0">{children}</div>
+        <div className="relative flex min-h-0 flex-1 flex-col">{children}</div>
 
         {footer && (
           <div
             className={cn(
               'relative z-10 shrink-0 border-t px-4 py-2 sm:px-6',
-              isSteampunk
-                ? 'border-[#2f3d36] bg-[#0f1512]/80'
-                : 'border-slate-800 bg-[#0d1f1e]',
+              isSteampunk ? 'border-[#2f3d36] bg-[#0f1512]/80' : 'border-slate-800 bg-[#0d1f1e]',
               footerClassName,
             )}
           >

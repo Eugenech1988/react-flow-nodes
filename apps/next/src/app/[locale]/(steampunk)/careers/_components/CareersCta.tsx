@@ -36,7 +36,10 @@ export function CareersCTA() {
             <div className="relative z-10 flex flex-col items-center gap-8 sm:flex-row sm:items-start sm:gap-12">
               <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-[#c25a5a]/30 bg-[#c25a5a]/5 shadow-[inset_0_0_20px_rgba(194,90,90,0.15)] sm:h-32 sm:w-32">
                 <div className="absolute inset-2 animate-[spin_10s_linear_infinite] rounded-full border border-dashed border-[#c25a5a]/20" />
-                <ShieldAlert className="h-10 w-10 text-[#c25a5a]/80 sm:h-14 sm:w-14" strokeWidth={1.5} />
+                <ShieldAlert
+                  className="h-10 w-10 text-[#c25a5a]/80 sm:h-14 sm:w-14"
+                  strokeWidth={1.5}
+                />
               </div>
 
               <div className="flex-1 text-center sm:text-left">

@@ -26,11 +26,21 @@ export const StickyNoteCard = ({ title, description, number }: IStickyNoteCardPr
           <span className="font-caveat text-xl text-[#8a7a5c]/70">{number}.</span>
         </div>
 
-        <h3 className="font-caveat text-3xl leading-tight font-bold text-[#1a2530] sm:text-4xl">{title}</h3>
-        <p className="font-caveat mt-2 text-xl leading-relaxed text-[#2a3540]/85 sm:text-2xl">{description}</p>
+        <h3 className="font-caveat text-3xl leading-tight font-bold text-[#1a2530] sm:text-4xl">
+          {title}
+        </h3>
+        <p className="font-caveat mt-2 text-xl leading-relaxed text-[#2a3540]/85 sm:text-2xl">
+          {description}
+        </p>
 
         <svg className="mt-3 h-2 w-32 text-[#1a2530]/40" viewBox="0 0 120 8" aria-hidden>
-          <path d="M 2 5 Q 30 2, 60 5 T 118 4" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          <path
+            d="M 2 5 Q 30 2, 60 5 T 118 4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
         </svg>
       </div>
 
