@@ -1,16 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { m } from 'framer-motion';
 import { Check, HelpCircle } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
-import { PRICING_TIERS, PRICING_CONTAINER_VARIANTS, PRICING_CARD_VARIANTS } from './constants';
+import { PRICING_TIERS } from './constants';
+import { useInView } from '@/shared/hooks';
 
 export const PricingSection = () => {
   const { t } = useT('marketing');
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+  const { ref: sectionRef, inView } = useInView<HTMLDivElement>();
 
   return (
     <section
@@ -29,14 +30,8 @@ export const PricingSection = () => {
           />
         </div>
 
-        <m.div
-          variants={PRICING_CONTAINER_VARIANTS}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          className="mt-16 grid grid-cols-1 items-start gap-8 md:grid-cols-3"
-        >
-          {PRICING_TIERS.map((tier) => {
+        <div ref={sectionRef} className="mt-16 grid grid-cols-1 items-start gap-8 md:grid-cols-3">
+          {PRICING_TIERS.map((tier, index) => {
             const isPopular = tier.popular;
             const isEnterprise = tier.id === 'enterprise';
 
@@ -53,14 +48,19 @@ export const PricingSection = () => {
             }`;
 
             return (
-              <m.div
+              <div
                 key={tier.id}
-                variants={PRICING_CARD_VARIANTS}
-                className={`relative flex h-full flex-col justify-between overflow-hidden rounded-3xl p-6 backdrop-blur-md transition-all duration-300 sm:p-8 ${
+                className={`group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl p-6 backdrop-blur-md transition-colors sm:p-8 ${
+                  inView ? 'animate-in fade-in slide-in-from-bottom-8 ease-[cubic-bezier(0.22,1,0.36,1)] duration-700' : 'opacity-0'
+                } ${
                   isPopular
                     ? 'border-2 border-[#2dd4bf]/60 bg-linear-to-br from-[#0d1f1e] via-[#0a1615] to-[#06100f] shadow-[0_0_40px_rgba(45,212,191,0.15)] md:-translate-y-4'
                     : 'border border-slate-800 bg-slate-900/60 hover:border-[#2dd4bf]/40 hover:bg-slate-900/80'
                 }`}
+                style={{
+                  animationDelay: inView ? `${index * 150}ms` : '0ms',
+                  animationFillMode: 'both',
+                }}
               >
                 <span className="absolute top-3 left-3 h-1.5 w-1.5 rounded-full bg-slate-600 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
                 <span className="absolute top-3 right-3 h-1.5 w-1.5 rounded-full bg-slate-600 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
@@ -129,17 +129,19 @@ export const PricingSection = () => {
                     {buttonContent}
                   </AppButton>
                 )}
-              </m.div>
+              </div>
             );
           })}
-        </m.div>
+        </div>
 
-        <m.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="mt-16 flex flex-col items-center justify-center gap-2 text-center font-mono text-xs text-slate-500 sm:flex-row"
+        <div
+          className={`mt-16 flex flex-col items-center justify-center gap-2 text-center font-mono text-xs text-slate-500 sm:flex-row ${
+            inView ? 'animate-in fade-in duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]' : 'opacity-0'
+          }`}
+          style={{
+            animationDelay: inView ? '600ms' : '0ms',
+            animationFillMode: 'both',
+          }}
         >
           <HelpCircle className="h-4 w-4 text-[#2dd4bf]" />
 
@@ -154,7 +156,7 @@ export const PricingSection = () => {
               </button>
             </InquiryModal>
           </span>
-        </m.div>
+        </div>
 
         <InquiryModal type="contact" isOpen={isInquiryOpen} onOpenChange={setIsInquiryOpen} />
       </div>

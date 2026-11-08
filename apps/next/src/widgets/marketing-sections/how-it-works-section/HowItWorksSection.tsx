@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { AnimatePresence, m } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
 import { Gauge, Activity, Loader2 } from 'lucide-react';
 import { SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
@@ -11,14 +10,20 @@ export const HowItWorksSection = () => {
   const { t } = useT('marketing');
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadCount, setLoadCount] = useState(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const ActiveIcon = HOW_IT_WORKS_STEPS[activeStep].icon;
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleStepClick = (index: number) => {
     if (index === activeStep && !isLoading) return;
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setLoadCount((c) => c + 1);
     setIsLoading(true);
 
     timeoutRef.current = setTimeout(() => {
@@ -44,6 +49,7 @@ export const HowItWorksSection = () => {
         />
 
         <div className="mt-12 grid grid-cols-1 items-stretch gap-8 sm:mt-20 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
+          {/* Desktop accordion */}
           <div className="relative hidden lg:flex lg:flex-col">
             <div className="flex flex-col gap-2">
               {HOW_IT_WORKS_STEPS.map((step, index) => {
@@ -58,15 +64,16 @@ export const HowItWorksSection = () => {
                       isActive ? 'bg-[#0d1f1e]/80' : 'hover:bg-[#0d1f1e]/40'
                     }`}
                   >
-                    <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 bg-[#0a1210] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] md:h-14 md:w-14">
-                      {isActive && (
-                        <m.div
-                          layoutId="active-pipe-glow"
-                          className="absolute -inset-1 rounded-full border border-[#2dd4bf] bg-[#2dd4bf]/20 shadow-[0_0_20px_rgba(45,212,191,0.4)]"
-                          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                        />
-                      )}
-
+                    <div
+                      className={`relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 bg-[#0a1210] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] transition-colors duration-300 md:h-14 md:w-14 ${
+                        isActive ? 'border-[#2dd4bf]' : 'border-[#2dd4bf]/20'
+                      }`}
+                    >
+                      <div
+                        className={`absolute -inset-1 rounded-full border border-[#2dd4bf] bg-[#2dd4bf]/20 shadow-[0_0_20px_rgba(45,212,191,0.4)] transition-opacity duration-300 ${
+                          isActive ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      />
                       <Icon
                         className={`relative z-10 h-5 w-5 transition-colors duration-300 md:h-6 md:w-6 ${
                           isActive
@@ -92,19 +99,17 @@ export const HowItWorksSection = () => {
                         </span>
                       </div>
 
-                      <AnimatePresence initial={false}>
-                        {isActive && (
-                          <m.p
-                            initial={{ height: 0, opacity: 0, y: -10 }}
-                            animate={{ height: 'auto', opacity: 1, y: 0 }}
-                            exit={{ height: 0, opacity: 0, y: -10 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
-                            className="mt-2 overflow-hidden text-sm leading-relaxed text-slate-400 md:text-base"
-                          >
+                      <div
+                        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+                          isActive ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <p className="mt-2 text-sm leading-relaxed text-slate-400 md:text-base">
                             {t(`howItWorks.steps.${step.id}.description`)}
-                          </m.p>
-                        )}
-                      </AnimatePresence>
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </button>
                 );
@@ -112,6 +117,7 @@ export const HowItWorksSection = () => {
             </div>
           </div>
 
+          {/* Display monitor */}
           <div className="relative flex w-full flex-col rounded-3xl border border-[#2dd4bf]/30 bg-[#0a1210]/60 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:p-2 lg:h-full">
             <span className="absolute top-3 left-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:top-4 sm:left-4 sm:h-2 sm:w-2" />
             <span className="absolute top-3 right-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:top-4 sm:right-4 sm:h-2 sm:w-2" />
@@ -176,53 +182,57 @@ export const HowItWorksSection = () => {
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(4,10,9,0.85)_100%)]" />
 
-                  <AnimatePresence mode="wait">
-                    {isLoading ? (
-                      <m.div
-                        key="loading"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="relative z-10 flex w-full max-w-sm flex-col items-center justify-center text-center"
-                      >
-                        <Loader2 className="h-10 w-10 animate-spin text-[#2dd4bf] drop-shadow-[0_0_10px_#2dd4bf]" />
-                        <div className="mt-6 h-1.5 w-48 overflow-hidden rounded-full bg-slate-800">
-                          <m.div
-                            initial={{ width: '0%' }}
-                            animate={{ width: '100%' }}
-                            transition={{ duration: 0.6, ease: 'linear' }}
-                            className="h-full bg-[#2dd4bf]"
-                          />
-                        </div>
-                        <span className="mt-4 font-mono text-xs tracking-widest text-[#2dd4bf]/70 uppercase">
-                          Initializing Module...
-                        </span>
-                      </m.div>
-                    ) : (
-                      <m.div
-                        key={activeStep}
-                        initial={{ opacity: 0, scale: 0.95, filter: 'blur(5px)' }}
-                        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                        exit={{ opacity: 0, scale: 1.05, filter: 'blur(5px)' }}
-                        transition={{ duration: 0.3, ease: 'easeOut' }}
-                        className="relative z-10 flex w-full max-w-sm flex-col items-center text-center"
+                  {/* LOADER — всегда в DOM, скрывается через opacity */}
+                  <div
+                    className={`absolute inset-0 z-20 flex flex-col items-center justify-center px-6 text-center transition-opacity duration-200 ${
+                      isLoading ? 'opacity-100' : 'pointer-events-none opacity-0'
+                    }`}
+                  >
+                    <Loader2
+                      className={`h-10 w-10 text-[#2dd4bf] drop-shadow-[0_0_10px_#2dd4bf] ${
+                        isLoading ? 'animate-spin' : ''
+                      }`}
+                    />
+                    <div className="mt-6 h-1.5 w-48 overflow-hidden rounded-full bg-slate-800">
+                      <div
+                        key={loadCount}
+                        className="h-full bg-[#2dd4bf] animate-[fill-bar_0.6s_linear_forwards]"
+                      />
+                    </div>
+                    <span className="mt-4 font-mono text-xs tracking-widest text-[#2dd4bf]/70 uppercase">
+                      Initializing Module...
+                    </span>
+                  </div>
+
+                  {/* CONTENT — все шаги в DOM, виден только активный */}
+                  {HOW_IT_WORKS_STEPS.map((step, index) => {
+                    const Icon = step.icon;
+                    const visible = index === activeStep && !isLoading;
+
+                    return (
+                      <div
+                        key={step.id}
+                        className={`absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                          visible
+                            ? 'scale-100 opacity-100 blur-0'
+                            : 'pointer-events-none scale-95 opacity-0 blur-sm'
+                        }`}
                       >
                         <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-slate-700 bg-slate-900 shadow-[inset_0_4px_20px_rgba(0,0,0,0.8)] sm:h-24 sm:w-24">
                           <div className="absolute inset-1.5 animate-[spin_10s_linear_infinite] rounded-full border border-dashed border-[#2dd4bf]/30 sm:inset-2" />
-                          <ActiveIcon className="h-8 w-8 text-[#5eead4] drop-shadow-[0_0_15px_#2dd4bf] sm:h-10 sm:w-10" />
+                          <Icon className="h-8 w-8 text-[#5eead4] drop-shadow-[0_0_15px_#2dd4bf] sm:h-10 sm:w-10" />
                         </div>
 
                         <h3 className="text-lg font-bold text-[#d1faf5] sm:text-xl md:text-2xl">
-                          {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.title`)}
+                          {t(`howItWorks.steps.${step.id}.title`)}
                         </h3>
 
                         <p className="mt-3 text-xs leading-relaxed text-slate-400 sm:text-sm md:text-base">
-                          {t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.description`)}
+                          {t(`howItWorks.steps.${step.id}.description`)}
                         </p>
-                      </m.div>
-                    )}
-                  </AnimatePresence>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -237,10 +247,9 @@ export const HowItWorksSection = () => {
                     <div key={i} className="flex w-10 flex-col items-center sm:w-14">
                       <Gauge className="h-3.5 w-3.5 text-slate-500 sm:h-4 sm:w-4" />
                       <div className="mt-1 h-1 w-full rounded-full bg-slate-800">
-                        <m.div
-                          animate={{ width: ['20%', '80%', '20%'] }}
-                          transition={{ repeat: Infinity, duration: 3 + i, ease: 'easeInOut' }}
+                        <div
                           className="h-full rounded-full bg-slate-600"
+                          style={{ animation: `pulse-width ${3 + i}s ease-in-out infinite` }}
                         />
                       </div>
                     </div>
