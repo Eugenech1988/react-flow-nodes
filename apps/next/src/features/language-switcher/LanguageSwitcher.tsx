@@ -43,8 +43,12 @@ export function LanguageSwitcher({ isMobile = false, theme = 'default' }: Langua
         isMobile ? 'w-full justify-center' : ''
       }`}
     >
-      <span className={`absolute top-1.5 left-1.5 h-1 w-1 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)] ${screwClasses}`} />
-      <span className={`absolute right-1.5 bottom-1.5 h-1 w-1 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)] ${screwClasses}`} />
+      <span
+        className={`absolute top-1.5 left-1.5 h-1 w-1 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)] ${screwClasses}`}
+      />
+      <span
+        className={`absolute right-1.5 bottom-1.5 h-1 w-1 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)] ${screwClasses}`}
+      />
 
       {i18nConfig.supportedLngs.map((lng) => {
         const isActive = i18n.language === lng;

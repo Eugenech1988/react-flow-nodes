@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, m } from 'framer-motion';
 import { MapPin, Clock, ArrowUpRight, Gauge, Power, ChevronDown } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { JOBS, DEPARTMENTS, type Department } from '../constants';
@@ -112,80 +111,76 @@ export function CareersConsole() {
                 ref={scrollRef}
                 className="h-full scrollbar-thin overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#4a6d5e]/70"
               >
-                <m.div layout className="relative z-10 flex flex-col">
-                  <AnimatePresence mode="popLayout">
-                    {filtered.map((job, idx) => {
-                      const Icon = job.icon;
-                      return (
-                        <m.div
-                          key={job.id}
-                          layout
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: 20 }}
-                          transition={{ duration: 0.25, delay: idx * 0.03 }}
-                          className="group relative flex flex-col gap-3 border-b border-dashed border-[#2f3d36] px-4 py-4 transition-colors hover:bg-[#6fa28c]/5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
-                        >
-                          <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-transparent via-[#6fa28c]/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                          <div className="relative flex items-start gap-3 sm:gap-4">
-                            <div className="flex flex-col items-center">
-                              <span className="font-mono text-[9px] tracking-widest text-[#4a5c52] uppercase">
-                                {String(idx + 1).padStart(3, '0')}
+                {/*
+                  Добавляем key={activeDept}, чтобы при смене фильтра
+                  список пересоздавался и анимации запускались заново
+                */}
+                <div key={activeDept} className="relative z-10 flex flex-col">
+                  {filtered.map((job, idx) => {
+                    const Icon = job.icon;
+                    return (
+                      <div
+                        key={job.id}
+                        className="group animate-in fade-in slide-in-from-left-4 relative flex flex-col gap-3 border-b border-dashed border-[#2f3d36] px-4 py-4 transition-colors duration-300 ease-out hover:bg-[#6fa28c]/5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
+                        style={{
+                          animationDelay: `${idx * 30}ms`,
+                          animationFillMode: 'both',
+                        }}
+                      >
+                        <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-transparent via-[#6fa28c]/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                        <div className="relative flex items-start gap-3 sm:gap-4">
+                          <div className="flex flex-col items-center">
+                            <span className="font-mono text-[9px] tracking-widest text-[#4a5c52] uppercase">
+                              {String(idx + 1).padStart(3, '0')}
+                            </span>
+                            <Icon className="mt-1 h-5 w-5 text-[#6fa28c]" />
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="text-sm font-bold text-[#d4cfc0] transition-colors group-hover:text-[#9cc4b0] sm:text-base">
+                              {t(`openings.list.${job.id}.title`)}
+                            </h3>
+                            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[9px] tracking-widest text-[#8a9488] uppercase sm:text-[10px]">
+                              <span className="flex items-center gap-1">
+                                <MapPin className="h-2.5 w-2.5" />
+                                {t(`openings.list.${job.id}.location`)}
                               </span>
-                              <Icon className="mt-1 h-5 w-5 text-[#6fa28c]" />
-                            </div>
-                            <div className="min-w-0">
-                              <h3 className="text-sm font-bold text-[#d4cfc0] transition-colors group-hover:text-[#9cc4b0] sm:text-base">
-                                {t(`openings.list.${job.id}.title`)}
-                              </h3>
-                              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[9px] tracking-widest text-[#8a9488] uppercase sm:text-[10px]">
-                                <span className="flex items-center gap-1">
-                                  <MapPin className="h-2.5 w-2.5" />
-                                  {t(`openings.list.${job.id}.location`)}
-                                </span>
-                                <span className="text-[#4a5c52]">·</span>
-                                <span className="flex items-center gap-1">
-                                  <Clock className="h-2.5 w-2.5" />
-                                  {t(`openings.list.${job.id}.type`)}
-                                </span>
-                                <span className="text-[#4a5c52]">·</span>
-                                <span className="text-[#6fa28c]">
-                                  {t(`openings.list.${job.id}.level`)}
-                                </span>
-                              </div>
+                              <span className="text-[#4a5c52]">·</span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-2.5 w-2.5" />
+                                {t(`openings.list.${job.id}.type`)}
+                              </span>
+                              <span className="text-[#4a5c52]">·</span>
+                              <span className="text-[#6fa28c]">
+                                {t(`openings.list.${job.id}.level`)}
+                              </span>
                             </div>
                           </div>
-                          <button
-                            type="button"
-                            className="relative flex cursor-pointer items-center gap-2 self-start rounded border border-[#3a4842] bg-[#0f1512] px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest text-[#9cc4b0] uppercase transition-all hover:border-[#6fa28c] hover:bg-[#6fa28c]/10 sm:self-center sm:text-[10px]"
-                          >
-                            {t('openings.apply')}
-                            <ArrowUpRight className="h-3 w-3" />
-                          </button>
-                        </m.div>
-                      );
-                    })}
-                  </AnimatePresence>
-                </m.div>
+                        </div>
+                        <button
+                          type="button"
+                          className="relative flex cursor-pointer items-center gap-2 self-start rounded border border-[#3a4842] bg-[#0f1512] px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest text-[#9cc4b0] uppercase transition-all hover:border-[#6fa28c] hover:bg-[#6fa28c]/10 sm:self-center sm:text-[10px]"
+                        >
+                          {t('openings.apply')}
+                          <ArrowUpRight className="h-3 w-3" />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
-              <AnimatePresence>
-                {showScrollHint && (
-                  <m.button
-                    type="button"
-                    onClick={scrollMore}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    transition={{ duration: 0.2 }}
-                    aria-label="Scroll for more"
-                    className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 cursor-pointer items-center gap-1.5 rounded-full border border-[#4a6d5e] bg-[#0f1512]/95 px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest text-[#9cc4b0] uppercase shadow-[0_4px_12px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(156,196,176,0.15)] backdrop-blur-sm hover:border-[#9cc4b0] hover:bg-[#141a16]"
-                  >
-                    <ChevronDown className="h-3 w-3 animate-bounce" />
-                    More
-                  </m.button>
-                )}
-              </AnimatePresence>
+              {/* Scroll Hint — условный рендеринг с CSS-анимацией */}
+              {showScrollHint && (
+                <button
+                  type="button"
+                  onClick={scrollMore}
+                  aria-label="Scroll for more"
+                  className="animate-in fade-in slide-in-from-bottom-2 absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 cursor-pointer items-center gap-1.5 rounded-full border border-[#4a6d5e] bg-[#0f1512]/95 px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest text-[#9cc4b0] uppercase shadow-[0_4px_12px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(156,196,176,0.15)] backdrop-blur-sm duration-200 hover:border-[#9cc4b0] hover:bg-[#141a16]"
+                >
+                  <ChevronDown className="h-3 w-3 animate-bounce" />
+                  More
+                </button>
+              )}
             </div>
 
             <div className="relative z-10 flex shrink-0 items-center justify-between border-t border-[#2f3d36] bg-[#0f1512]/80 px-4 py-2 font-mono text-[10px] tracking-widest uppercase">

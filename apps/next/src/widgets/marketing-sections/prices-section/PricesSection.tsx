@@ -51,7 +51,9 @@ export const PricingSection = () => {
               <div
                 key={tier.id}
                 className={`group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl p-6 backdrop-blur-md transition-colors sm:p-8 ${
-                  inView ? 'animate-in fade-in slide-in-from-bottom-8 ease-[cubic-bezier(0.22,1,0.36,1)] duration-700' : 'opacity-0'
+                  inView
+                    ? 'animate-in fade-in slide-in-from-bottom-8 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]'
+                    : 'opacity-0'
                 } ${
                   isPopular
                     ? 'border-2 border-[#2dd4bf]/60 bg-linear-to-br from-[#0d1f1e] via-[#0a1615] to-[#06100f] shadow-[0_0_40px_rgba(45,212,191,0.15)] md:-translate-y-4'
@@ -136,7 +138,9 @@ export const PricingSection = () => {
 
         <div
           className={`mt-16 flex flex-col items-center justify-center gap-2 text-center font-mono text-xs text-slate-500 sm:flex-row ${
-            inView ? 'animate-in fade-in duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]' : 'opacity-0'
+            inView
+              ? 'animate-in fade-in duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]'
+              : 'opacity-0'
           }`}
           style={{
             animationDelay: inView ? '600ms' : '0ms',

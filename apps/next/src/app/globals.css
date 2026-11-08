@@ -24,6 +24,12 @@
     }
 }
 
+@property --num {
+    syntax: '<integer>';
+    initial-value: 0;
+    inherits: false;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -32,6 +38,39 @@ body {
     background: var(--background);
     color: var(--foreground);
     font-family: var(--font-roboto), Arial, sans-serif;
+}
+
+
+@keyframes gauge-needle-rotate {
+    from {
+        transform: rotate(-135deg);
+    }
+    to {
+        transform: rotate(var(--target-angle));
+    }
+}
+
+@keyframes gauge-count-up {
+    from {
+        --num: 0;
+    }
+    to {
+        --num: var(--target-value);
+    }
+}
+
+.careers-gauge .gauge-needle {
+    animation: gauge-needle-rotate 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.careers-gauge .gauge-value {
+    --num: 0;
+    counter-reset: num var(--num);
+    animation: gauge-count-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.careers-gauge .gauge-value::after {
+    content: counter(num);
 }
 
 @keyframes fill-bar {

@@ -43,7 +43,7 @@ export function FeaturesSection() {
                     key={i}
                     className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       isActive
-                        ? 'z-10 translate-y-0 scale-100 opacity-100 blur-0'
+                        ? 'blur-0 z-10 translate-y-0 scale-100 opacity-100'
                         : isPast
                           ? 'pointer-events-none z-0 -translate-y-30 scale-95 opacity-0 blur-sm'
                           : 'pointer-events-none z-0 translate-y-30 scale-95 opacity-0 blur-sm'
@@ -77,7 +77,7 @@ export function FeaturesSection() {
                     <button
                       type="button"
                       onClick={() => goToStep(i)}
-                      className={`flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 font-mono text-[9px] font-bold outline-none transition-all duration-300 ease-out hover:scale-110 active:scale-95 sm:h-8 sm:w-8 sm:text-[10px] ${
+                      className={`flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 font-mono text-[9px] font-bold transition-all duration-300 ease-out outline-none hover:scale-110 active:scale-95 sm:h-8 sm:w-8 sm:text-[10px] ${
                         isActive
                           ? 'scale-110 border-[#5eead4] bg-[#2dd4bf]/20 text-[#5eead4] shadow-[0_0_12px_rgba(45,212,191,0.5)]'
                           : isPassed

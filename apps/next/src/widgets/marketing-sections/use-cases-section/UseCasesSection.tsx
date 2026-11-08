@@ -43,7 +43,7 @@ export const UseCasesSection = () => {
                 key={item.id}
                 className={`relative ${
                   inView
-                    ? 'animate-in fade-in slide-in-from-bottom-12 zoom-in-95 ease-[cubic-bezier(0.22,1,0.36,1)] duration-700'
+                    ? 'animate-in fade-in slide-in-from-bottom-12 zoom-in-95 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]'
                     : 'opacity-0'
                 }`}
                 style={{

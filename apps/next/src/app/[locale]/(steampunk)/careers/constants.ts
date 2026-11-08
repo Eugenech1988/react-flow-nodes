@@ -1,4 +1,3 @@
-import type { Variants } from 'framer-motion';
 import {
   Globe,
   GraduationCap,
@@ -35,7 +34,7 @@ export const DEPARTMENTS = [
   { id: 'design' },
   { id: 'research' },
   { id: 'operations' },
-] as const;
+];
 
 export type Department = (typeof DEPARTMENTS)[number]['id'];
 
@@ -50,7 +49,7 @@ export const JOBS = [
   { id: 'ux-writer', dept: 'design', icon: PenTool },
   { id: 'security-engineer', dept: 'engineering', icon: ShieldCheck },
   { id: 'growth-manager', dept: 'operations', icon: TrendingUp },
-] as const;
+];
 
 export const PERKS = [
   { id: '1', icon: Globe },
@@ -68,20 +67,3 @@ export const PROCESS_STEPS = [
   { id: 'craft', icon: FlaskConical },
   { id: 'offer', icon: Rocket },
 ];
-
-export const CAREERS_CONTAINER: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
-};
-
-export const CAREERS_CARD: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};

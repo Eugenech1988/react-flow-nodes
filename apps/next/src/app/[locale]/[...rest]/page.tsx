@@ -2,25 +2,25 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { NotFoundClient } from '../not-found-client';
 
-type PageProps = {
+interface IPageProps {
   params: Promise<{ locale: string }>;
-};
+}
 
 export const metadata: Metadata = {
   title: '404',
   robots: { index: false, follow: false },
 };
 
-export function generateStaticParams() {
+export const generateStaticParams = () => {
   return [{ rest: ['not-found'] }];
-}
+};
 
-async function LocaleAwareNotFound({ params }: Pick<PageProps, 'params'>) {
+const LocaleAwareNotFound = async ({ params }: Pick<IPageProps, 'params'>) => {
   const { locale } = await params;
   return <NotFoundClient locale={locale} />;
-}
+};
 
-export default function RootNotFound({ params }: PageProps) {
+export default function RootNotFound({ params }: IPageProps) {
   return (
     <Suspense fallback={null}>
       <LocaleAwareNotFound params={params} />

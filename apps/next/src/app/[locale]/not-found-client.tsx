@@ -1,24 +1,9 @@
 'use client';
 
-import { m, Variants } from 'framer-motion';
 import { AlertTriangle, ArrowLeft, Wrench, ShieldAlert } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { AppButton } from '@/shared/ui';
 import { InquiryModal } from '@/features';
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { staggerChildren: 0.15, duration: 0.5, ease: 'easeOut' },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } },
-};
 
 export function NotFoundClient({ locale }: { locale: string }) {
   const { t } = useT('common');
@@ -28,15 +13,12 @@ export function NotFoundClient({ locale }: { locale: string }) {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/5 blur-[100px]" />
 
-      <m.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-4 text-center sm:px-6"
-      >
-        <m.div
-          variants={itemVariants}
-          className="relative mb-12 w-full overflow-hidden rounded-3xl border-2 border-red-500/30 bg-slate-950/80 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:p-2"
+      {/* Контейнер: плавное появление с масштабированием */}
+      <div className="animate-in fade-in zoom-in-95 relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-4 text-center duration-500 ease-out sm:px-6">
+        {/* Карточка: выезд снизу с задержкой 150ms */}
+        <div
+          className="animate-in fade-in slide-in-from-bottom-5 relative mb-12 w-full overflow-hidden rounded-3xl border-2 border-red-500/30 bg-slate-950/80 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-md duration-500 ease-out sm:p-2"
+          style={{ animationDelay: '150ms', animationFillMode: 'both' }}
         >
           <span className="absolute top-3 left-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:top-4 sm:left-4 sm:h-2 sm:w-2" />
           <span className="absolute top-3 right-3 h-1.5 w-1.5 rounded-full bg-slate-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)] sm:top-4 sm:right-4 sm:h-2 sm:w-2" />
@@ -46,14 +28,11 @@ export function NotFoundClient({ locale }: { locale: string }) {
           <div className="relative flex flex-col items-center overflow-hidden rounded-[1.4rem] border border-red-500/20 bg-[#0a0707] px-6 py-12 sm:px-12 sm:py-16">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(239,68,68,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(239,68,68,0.05)_1px,transparent_1px)] bg-size-[2rem_2rem]" />
 
-            <m.div
-              animate={{ scale: [1, 1.05, 1], rotate: [0, -5, 5, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-              className="relative mb-6 flex h-24 w-24 items-center justify-center rounded-full border-2 border-red-500/50 bg-red-500/10 shadow-[0_0_30px_rgba(239,68,68,0.2)]"
-            >
+            {/* Иконка: бесконечная анимация (wobble) */}
+            <div className="animate-wobble relative mb-6 flex h-24 w-24 items-center justify-center rounded-full border-2 border-red-500/50 bg-red-500/10 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
               <ShieldAlert className="h-10 w-10 text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.6)]" />
               <div className="absolute -top-1 -right-1 h-4 w-4 animate-pulse rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]" />
-            </m.div>
+            </div>
 
             <div className="mb-4 flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-1 font-mono text-xs tracking-widest text-red-400 uppercase">
               <AlertTriangle className="h-3 w-3" />
@@ -74,11 +53,12 @@ export function NotFoundClient({ locale }: { locale: string }) {
 
             <div className="mt-8 font-mono text-xs text-red-500/50">{t('notFound.errorCode')}</div>
           </div>
-        </m.div>
+        </div>
 
-        <m.div
-          variants={itemVariants}
-          className="flex w-full flex-col items-stretch gap-3 px-2 sm:w-auto sm:flex-row sm:items-center sm:gap-4 sm:px-0"
+        {/* Кнопки: выезд снизу с задержкой 300ms */}
+        <div
+          className="animate-in fade-in slide-in-from-bottom-5 flex w-full flex-col items-stretch gap-3 px-2 duration-500 ease-out sm:w-auto sm:flex-row sm:items-center sm:gap-4 sm:px-0"
+          style={{ animationDelay: '300ms', animationFillMode: 'both' }}
         >
           <AppButton
             isLink
@@ -103,8 +83,8 @@ export function NotFoundClient({ locale }: { locale: string }) {
               </AppButton>
             </InquiryModal>
           </div>
-        </m.div>
-      </m.div>
+        </div>
+      </div>
     </div>
   );
 }

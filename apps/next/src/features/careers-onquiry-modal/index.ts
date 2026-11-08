@@ -1,1 +1,1 @@
-export * from './CareersInquiryModal'
+export * from './CareersInquiryModal';

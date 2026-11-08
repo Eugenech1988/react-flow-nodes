@@ -1,4 +1,12 @@
-import { CloudLightning, MousePointer, Network, ShieldCheck, Users, Zap, type LucideIcon } from 'lucide-react';
+import {
+  CloudLightning,
+  MousePointer,
+  Network,
+  ShieldCheck,
+  Users,
+  Zap,
+  type LucideIcon,
+} from 'lucide-react';
 
 export const FEATURES = [
   { id: 'visual-editor', icon: Network },
@@ -9,9 +17,7 @@ export const FEATURES = [
   { id: 'one-click-deploy', icon: CloudLightning },
 ];
 
-export type TSlide =
-  | { kind: 'feature'; id: string; icon: LucideIcon }
-  | { kind: 'cta' };
+export type TSlide = { kind: 'feature'; id: string; icon: LucideIcon } | { kind: 'cta' };
 
 export const SLIDES: TSlide[] = [
   ...FEATURES.map((f): TSlide => ({ kind: 'feature', id: f.id, icon: f.icon })),

@@ -26,7 +26,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
           {
             'bg-teal-500/5': !isSteampunk,
             'bg-[#6fa28c]/5': isSteampunk,
-          }
+          },
         )}
       />
 
@@ -36,20 +36,20 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
             'relative w-full rounded-2xl border border-white/10 bg-white/6 px-5 py-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md after:absolute after:inset-0 after:-z-10 after:rounded-2xl after:bg-linear-to-b after:from-white/5 after:to-transparent after:opacity-50 sm:px-8 md:px-10 md:py-12',
             {
               'rounded-sm border-[#4a5c52]/50 bg-[#0a0e0d]/80 after:rounded-sm after:from-[#4a5c52]/20':
-              isSteampunk,
-            }
+                isSteampunk,
+            },
           )}
         >
           <span
             className={cn(
               'pointer-events-none absolute inset-x-4 top-0 h-px bg-linear-to-r from-transparent via-teal-300/30 to-transparent md:inset-x-6',
-              { 'via-[#6fa28c]/50': isSteampunk }
+              { 'via-[#6fa28c]/50': isSteampunk },
             )}
           />
           <span
             className={cn(
               'pointer-events-none absolute inset-x-4 bottom-0 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent md:inset-x-6',
-              { 'via-[#6fa28c]/30': isSteampunk }
+              { 'via-[#6fa28c]/30': isSteampunk },
             )}
           />
 
@@ -91,17 +91,14 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                       {
                         'text-teal-400': !isSteampunk,
                         'text-[#6fa28c]': isSteampunk,
-                      }
+                      },
                     )}
                   >
                     <PipelineLogo
-                      className={cn(
-                        'h-full w-full stroke-current',
-                        {
-                          'drop-shadow-[0_0_8px_rgba(57,179,155,0.4)]': !isSteampunk,
-                          'drop-shadow-[0_0_8px_rgba(111,162,140,0.6)]': isSteampunk,
-                        }
-                      )}
+                      className={cn('h-full w-full stroke-current', {
+                        'drop-shadow-[0_0_8px_rgba(57,179,155,0.4)]': !isSteampunk,
+                        'drop-shadow-[0_0_8px_rgba(111,162,140,0.6)]': isSteampunk,
+                      })}
                     />
                   </div>
                   <span
@@ -110,7 +107,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                       {
                         'bg-linear-to-r from-white via-neutral-100 to-[#39b39b]': !isSteampunk,
                         'bg-linear-to-r from-[#d4cfc0] via-[#d4cfc0] to-[#6fa28c]': isSteampunk,
-                      }
+                      },
                     )}
                   >
                     pipeline studio
@@ -139,9 +136,11 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                       className={cn(
                         'relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.35)] transition-all duration-300',
                         {
-                          'text-neutral-400 hover:border-teal-500/30 hover:bg-white/10 hover:text-teal-400 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_0_15px_rgba(57,179,155,0.2)]': !isSteampunk,
-                          'rounded-sm border-[#2f3d36] bg-[#0a0e0d] text-[#8a9488] shadow-none hover:border-[#6fa28c] hover:bg-[#141a16] hover:text-[#9cc4b0] hover:shadow-[0_0_15px_rgba(111,162,140,0.2)]': isSteampunk,
-                        }
+                          'text-neutral-400 hover:border-teal-500/30 hover:bg-white/10 hover:text-teal-400 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_0_15px_rgba(57,179,155,0.2)]':
+                            !isSteampunk,
+                          'rounded-sm border-[#2f3d36] bg-[#0a0e0d] text-[#8a9488] shadow-none hover:border-[#6fa28c] hover:bg-[#141a16] hover:text-[#9cc4b0] hover:shadow-[0_0_15px_rgba(111,162,140,0.2)]':
+                            isSteampunk,
+                        },
                       )}
                     >
                       <Icon className="h-4 w-4" />
@@ -159,18 +158,15 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                     {
                       'text-neutral-200': !isSteampunk,
                       'text-[#d4cfc0]': isSteampunk,
-                    }
+                    },
                   )}
                 >
                   {t(`footer.columns.${column.id}.title`)}
                   <span
-                    className={cn(
-                      'absolute -bottom-2 left-0 h-px w-6',
-                      {
-                        'bg-teal-400/50 shadow-[0_0_6px_rgba(57,179,155,0.5)]': !isSteampunk,
-                        'bg-[#6fa28c]/50 shadow-[0_0_6px_rgba(111,162,140,0.5)]': isSteampunk,
-                      }
-                    )}
+                    className={cn('absolute -bottom-2 left-0 h-px w-6', {
+                      'bg-teal-400/50 shadow-[0_0_6px_rgba(57,179,155,0.5)]': !isSteampunk,
+                      'bg-[#6fa28c]/50 shadow-[0_0_6px_rgba(111,162,140,0.5)]': isSteampunk,
+                    })}
                   />
                 </h4>
                 <ul className="space-y-3 md:space-y-3.5">
@@ -181,9 +177,11 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                         className={cn(
                           'relative inline-block text-sm transition-colors duration-300 after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:transition-all hover:after:w-full',
                           {
-                            'text-neutral-400 after:bg-teal-400/80 after:shadow-[0_0_6px_rgba(57,179,155,0.8)] hover:text-white': !isSteampunk,
-                            'text-[#8a9488] after:bg-[#6fa28c] after:shadow-[0_0_6px_rgba(111,162,140,0.8)] hover:text-[#d4cfc0]': isSteampunk,
-                          }
+                            'text-neutral-400 after:bg-teal-400/80 after:shadow-[0_0_6px_rgba(57,179,155,0.8)] hover:text-white':
+                              !isSteampunk,
+                            'text-[#8a9488] after:bg-[#6fa28c] after:shadow-[0_0_6px_rgba(111,162,140,0.8)] hover:text-[#d4cfc0]':
+                              isSteampunk,
+                          },
                         )}
                       >
                         {t(`footer.columns.${column.id}.links.${link.id}`)}
@@ -230,8 +228,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
               text={t('footer.badge')}
               theme={theme}
               className={cn({
-                'border-[#4a5c52]/50 bg-[#0a0e0d] text-[#8a9488] shadow-none':
-                isSteampunk,
+                'border-[#4a5c52]/50 bg-[#0a0e0d] text-[#8a9488] shadow-none': isSteampunk,
               })}
             />
           </div>

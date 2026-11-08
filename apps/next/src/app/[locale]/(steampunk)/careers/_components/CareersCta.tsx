@@ -1,22 +1,25 @@
 'use client';
 
-import { m } from 'framer-motion';
 import { Mail, ShieldAlert, Siren } from 'lucide-react';
 import { AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { CareersInquiryModal } from '@/features';
+import { useInView } from '@/shared/hooks';
 
 export function CareersCTA() {
   const { t } = useT('careers');
+  const { ref: sectionRef, inView } = useInView<HTMLDivElement>({ threshold: 0.1 });
 
   return (
     <section className="relative z-10 mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
-      <m.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="relative"
+      <div
+        ref={sectionRef}
+        className={`relative ${
+          inView
+            ? 'animate-in fade-in slide-in-from-bottom-8 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]'
+            : 'opacity-0'
+        }`}
+        style={{ animationFillMode: 'both' }}
       >
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(194,90,90,0.15),transparent_65%)] blur-2xl" />
 
@@ -103,7 +106,7 @@ export function CareersCTA() {
             </div>
           </div>
         </div>
-      </m.div>
+      </div>
     </section>
   );
 }

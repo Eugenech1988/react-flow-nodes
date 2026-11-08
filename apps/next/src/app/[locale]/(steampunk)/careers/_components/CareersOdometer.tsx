@@ -1,11 +1,11 @@
 'use client';
 
-import { m } from 'framer-motion';
+import { useRef, useLayoutEffect, useState } from 'react';
 
 const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const REPEATS = 3;
 
-function OdometerDigit({ value, delay }: { value: number; delay: number }) {
+function OdometerDigit({ value, isActive }: { value: number; isActive: boolean }) {
   const targetDigitIndex = REPEATS * 10 + value;
   const totalDigits = targetDigitIndex + 1;
   const targetY = -(targetDigitIndex / totalDigits) * 100;
@@ -13,16 +13,12 @@ function OdometerDigit({ value, delay }: { value: number; delay: number }) {
   return (
     <span className="relative mx-0.5 inline-flex h-[1.15em] w-[0.7em] shrink-0 items-center justify-center rounded-sm bg-[#3a4842] p-px shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
       <span className="relative flex h-full w-full overflow-hidden rounded-[3px] bg-linear-to-b from-[#0a0e0d] via-[#1a2420] to-[#0a0e0d] shadow-[inset_0_2px_6px_rgba(0,0,0,0.9),inset_0_-2px_6px_rgba(0,0,0,0.9)]">
-        <m.span
-          initial={{ y: '0%' }}
-          whileInView={{ y: `${targetY}%` }}
-          viewport={{ once: true, margin: '0px 0px -20px 0px' }}
-          transition={{
-            duration: 1.8 + delay,
-            ease: [0.16, 1, 0.3, 1],
-            delay: delay,
-          }}
+        <div
           className="absolute top-0 left-0 flex w-full flex-col items-center"
+          style={{
+            transform: `translateY(${isActive ? targetY : 0}%)`,
+            transition: 'transform 6s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
         >
           {Array.from({ length: REPEATS }).map((_, repIndex) =>
             DIGITS.map((digit) => (
@@ -44,7 +40,7 @@ function OdometerDigit({ value, delay }: { value: number; delay: number }) {
               {digit}
             </span>
           ))}
-        </m.span>
+        </div>
 
         <div className="pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-linear-to-b from-white/10 to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-black/60 to-transparent" />
@@ -55,10 +51,39 @@ function OdometerDigit({ value, delay }: { value: number; delay: number }) {
 }
 
 export function Odometer({ value }: { value: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+
+    if (rect.top < vh + 400 && rect.bottom > -400) {
+      setInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0, rootMargin: '0px 0px 400px 0px' },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const chars = String(value).split('');
 
   return (
-    <div className="flex items-center">
+    <div ref={ref} className="flex items-center">
       {chars.map((char, index) => {
         if (isNaN(parseInt(char, 10))) {
           return (
@@ -68,7 +93,7 @@ export function Odometer({ value }: { value: string }) {
           );
         }
 
-        return <OdometerDigit key={index} value={parseInt(char, 10)} delay={index * 0.15} />;
+        return <OdometerDigit key={index} value={parseInt(char, 10)} isActive={inView} />;
       })}
     </div>
   );

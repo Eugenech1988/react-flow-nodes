@@ -8,21 +8,19 @@ import { useInView } from '@/shared/hooks';
 import { TESTIMONIALS_DATA } from './constants';
 
 export const TestimonialsSection = () => {
-  const {t} = useT('marketing');
-  const {ref: sectionRef, inView} = useInView<HTMLDivElement>();
+  const { t } = useT('marketing');
+  const { ref: sectionRef, inView } = useInView<HTMLDivElement>();
 
   return (
     <section
       id="testimonials"
       className="relative overflow-hidden border-t border-[#2dd4bf]/10 bg-[#040a09] py-16 text-[#d1faf5] sm:py-24"
     >
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]"/>
-      <div
-        className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl"/>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl" />
 
-      <Activity className="pointer-events-none absolute top-20 -left-20 h-96 w-96 text-[#2dd4bf]/2"/>
-      <ShieldCheck className="pointer-events-none absolute -right-20 bottom-20 h-96 w-96 text-[#2dd4bf]/2"/>
+      <Activity className="pointer-events-none absolute top-20 -left-20 h-96 w-96 text-[#2dd4bf]/2" />
+      <ShieldCheck className="pointer-events-none absolute -right-20 bottom-20 h-96 w-96 text-[#2dd4bf]/2" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading
@@ -42,29 +40,24 @@ export const TestimonialsSection = () => {
               // Внешний div отвечает за анимацию появления
               className={`relative ${
                 inView
-                  ? 'animate-in fade-in slide-in-from-bottom-8 ease-[cubic-bezier(0.22,1,0.36,1)] duration-700'
+                  ? 'animate-in fade-in slide-in-from-bottom-8 duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]'
                   : 'opacity-0'
               }`}
               style={{
                 animationDelay: inView ? `${index * 150}ms` : '0ms',
-                animationFillMode: 'both'
+                animationFillMode: 'both',
               }}
             >
               {/* Внутренний div отвечает за hover-эффекты и поворот */}
               <div
                 className={`group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-[#2dd4bf]/20 bg-[#0d1f1e]/80 p-6 shadow-[inset_0_1px_0_rgba(45,212,191,0.1),0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1.5 hover:rotate-0 hover:border-[#2dd4bf]/50 hover:shadow-[0_15px_40px_rgba(45,212,191,0.15)] sm:p-8 ${item.rotation}`}
               >
-                <span
-                  className="absolute top-2 left-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"/>
-                <span
-                  className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"/>
-                <span
-                  className="absolute bottom-2 left-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"/>
-                <span
-                  className="absolute right-2 bottom-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]"/>
+                <span className="absolute top-2 left-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
+                <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
+                <span className="absolute bottom-2 left-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
+                <span className="absolute right-2 bottom-2 h-1.5 w-1.5 rounded-full bg-[#2dd4bf]/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]" />
 
-                <Quote
-                  className="absolute -top-4 -right-4 h-24 w-24 text-[#2dd4bf]/5 transition-transform duration-500 group-hover:scale-110 group-hover:text-[#2dd4bf]/10"/>
+                <Quote className="absolute -top-4 -right-4 h-24 w-24 text-[#2dd4bf]/5 transition-transform duration-500 group-hover:scale-110 group-hover:text-[#2dd4bf]/10" />
 
                 <div className="relative z-10">
                   <div className="mb-6 flex gap-1">
@@ -82,9 +75,8 @@ export const TestimonialsSection = () => {
                 </div>
 
                 <div className="relative z-10 mt-8 flex items-center gap-4 border-t border-slate-800/80 pt-6">
-                  <div
-                    className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#2dd4bf]/30 bg-[#0a1210] shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
-                    <div className="absolute inset-1 rounded-full border border-[#2dd4bf]/10"/>
+                  <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#2dd4bf]/30 bg-[#0a1210] shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
+                    <div className="absolute inset-1 rounded-full border border-[#2dd4bf]/10" />
                     <span className="font-mono text-sm font-bold text-[#5eead4]">
                       {item.initials}
                     </span>
@@ -111,7 +103,7 @@ export const TestimonialsSection = () => {
               ? 'animate-in fade-in duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]'
               : 'opacity-0'
           }`}
-          style={{animationFillMode: 'both'}}
+          style={{ animationFillMode: 'both' }}
         >
           <InquiryModal type="review">
             <AppButton

@@ -196,7 +196,7 @@ export const HowItWorksSection = () => {
                     <div className="mt-6 h-1.5 w-48 overflow-hidden rounded-full bg-slate-800">
                       <div
                         key={loadCount}
-                        className="h-full bg-[#2dd4bf] animate-[fill-bar_0.6s_linear_forwards]"
+                        className="h-full animate-[fill-bar_0.6s_linear_forwards] bg-[#2dd4bf]"
                       />
                     </div>
                     <span className="mt-4 font-mono text-xs tracking-widest text-[#2dd4bf]/70 uppercase">
@@ -214,7 +214,7 @@ export const HowItWorksSection = () => {
                         key={step.id}
                         className={`absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                           visible
-                            ? 'scale-100 opacity-100 blur-0'
+                            ? 'blur-0 scale-100 opacity-100'
                             : 'pointer-events-none scale-95 opacity-0 blur-sm'
                         }`}
                       >

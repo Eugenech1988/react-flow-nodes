@@ -3,4 +3,3 @@ export const PRICING_TIERS = [
   { id: 'pro', popular: true, href: 'http://localhost:5173' },
   { id: 'enterprise', popular: false, href: '#' },
 ];
-
