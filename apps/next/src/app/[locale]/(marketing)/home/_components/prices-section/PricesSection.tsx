@@ -13,6 +13,7 @@ import {
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
 import { PRICING_TIERS } from './constants';
+import { cn } from '@/shared/lib';
 
 export const PricingSection = () => {
   const { t } = useT('marketing');
@@ -36,17 +37,29 @@ export const PricingSection = () => {
           {PRICING_TIERS.map((tier, index) => {
             const isPopular = tier.popular;
             const isEnterprise = tier.id === 'enterprise';
-            const features = t(`pricing.tiers.${tier.id}.features`, {
+
+            // 👇 Безопасное извлечение массива строк
+            const featuresRaw = t(`pricing.tiers.${tier.id}.features`, {
               returnObjects: true,
-            }) as string[];
+            });
+            const features = Array.isArray(featuresRaw) ? (featuresRaw as string[]) : [];
+
             const buttonContent = t(`pricing.tiers.${tier.id}.cta`);
-            const buttonClassName = `w-full ${!isPopular ? 'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white' : ''}`;
+
+            // 👇 Использование утилиты cn для чистоты классов
+            const buttonClassName = cn(
+              'w-full',
+              !isPopular && 'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white'
+            );
 
             return (
-              <Reveal key={tier.id} delay={index * 150}>
+              <Reveal key={tier.id} delay={index * 150} className="h-full">
                 <TechCard
                   popular={isPopular}
-                  className={`h-full justify-between rounded-3xl p-6 sm:p-8 ${isPopular ? 'md:-translate-y-4' : ''}`}
+                  className={cn(
+                    'h-full justify-between rounded-3xl p-6 sm:p-8',
+                    isPopular && 'md:-translate-y-4'
+                  )}
                 >
                   {isPopular && (
                     <div className="absolute top-0 right-0 rounded-bl-2xl border-b border-l border-[#2dd4bf]/40 bg-[#2dd4bf]/15 px-4 py-1.5 font-mono text-[10px] font-bold tracking-widest text-[#5eead4] uppercase">
@@ -69,6 +82,7 @@ export const PricingSection = () => {
                           </span>
                         )}
                       </div>
+                      {/* min-h-12 отлично выравнивает блоки с описанием */}
                       <p className="mt-4 min-h-12 text-sm leading-relaxed text-slate-400">
                         {t(`pricing.tiers.${tier.id}.description`)}
                       </p>
