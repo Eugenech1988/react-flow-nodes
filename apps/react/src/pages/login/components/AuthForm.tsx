@@ -22,7 +22,12 @@ interface AuthFormProps {
 }
 
 export const AuthForm: React.FC<AuthFormProps> = ({
-                                                    mode, currentApiError, onLogin, onRegister, onSocialLogin, onForgotPassword,
+                                                    mode,
+                                                    currentApiError,
+                                                    onLogin,
+                                                    onRegister,
+                                                    onSocialLogin,
+                                                    onForgotPassword,
                                                   }) => {
   const isLogin = mode === 'login';
 
@@ -63,29 +68,26 @@ export const AuthForm: React.FC<AuthFormProps> = ({
 
       <form
         onSubmit={isLogin ? handleLoginSubmit(onLogin) : handleRegisterSubmit(onRegister)}
-        className="space-y-6"
+        className="flex flex-col gap-5"
       >
-        <div className="space-y-5">
+        <div className="space-y-4">
           {isLogin ? (
             <>
-              <LoginFields
-                register={loginRegister}
-                errors={loginErrors}
-              />
+              <LoginFields register={loginRegister} errors={loginErrors} />
 
-              <div className="flex items-center justify-between pt-1">
-                {currentApiError ? (
-                  <span className="animate-in fade-in text-xs font-medium text-red-500">
-                    {currentApiError}
-                  </span>
-                ) : (
-                  <span />
-                )}
-
+              {/* Блок с ошибкой и Forgot Password. Никаких min-h и pt */}
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  {currentApiError && (
+                    <span className="animate-in fade-in slide-in-from-left-2 block text-xs font-medium leading-relaxed text-red-500">
+                      {currentApiError}
+                    </span>
+                  )}
+                </div>
                 <button
                   type="button"
                   onClick={onForgotPassword}
-                  className="cursor-pointer text-xs font-medium text-zinc-400 transition-colors duration-200 hover:text-white focus:outline-none"
+                  className="shrink-0 cursor-pointer whitespace-nowrap text-xs font-medium text-zinc-400 transition-colors duration-300 hover:text-white focus:outline-none"
                 >
                   Forgot Password?
                 </button>
@@ -94,8 +96,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           ) : (
             <>
               <RegisterFields register={registerRegister} errors={registerErrors} />
+
               {currentApiError && (
-                <span className="block animate-in fade-in text-xs font-medium text-red-500">
+                <span className="animate-in fade-in slide-in-from-top-2 block text-xs font-medium leading-relaxed text-red-500">
                   {currentApiError}
                 </span>
               )}
@@ -103,7 +106,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           )}
         </div>
 
-        <div className="space-y-3 pt-2">
+        {/* Убран pt-4, кнопка теперь идет сразу за полями/ошибкой */}
+        <div className="space-y-3">
           <AppButton
             type="submit"
             variant="primary"
@@ -111,10 +115,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             text={isLogin ? 'Authenticate Access' : 'Create Account'}
             pendingText="Processing..."
             icon={null}
-            className="h-11 w-full rounded-md bg-teal-600 text-sm font-semibold tracking-wide text-white shadow-[0_0_20px_rgba(20,184,166,0.3)] transition-all hover:bg-teal-500"
+            className="h-11 w-full rounded-md bg-teal-600 text-sm font-semibold tracking-wide text-white shadow-[0_0_20px_rgba(20,184,166,0.3)] transition-all duration-300 hover:bg-teal-500"
           />
           {isLogin && !currentApiError && (
-            <p className="text-center text-xs text-zinc-500">
+            <p className="text-center text-xs text-zinc-500 transition-opacity duration-300">
               Use your authorized admin credentials.
             </p>
           )}

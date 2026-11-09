@@ -10,7 +10,7 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
                                                                         onGoogleClick,
                                                                         onGithubClick,
                                                                       }) => {
-  const btnClasses = "group relative h-11 w-full cursor-pointer gap-3 overflow-hidden rounded-md border border-white/10 bg-white/5 text-sm font-medium text-zinc-300 transition-all duration-300 hover:bg-white/10 hover:text-white hover:shadow-[0_4px_20px_rgba(0,0,0,0.5)] active:translate-y-0.5";
+  const btnClasses = "group flex h-11 w-full items-center justify-center gap-3 rounded-md border border-white/10 bg-white/5 text-sm font-medium text-zinc-300 transition-all duration-300 hover:bg-white/10 hover:text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]";
 
   return (
     <div className="flex flex-col gap-3">

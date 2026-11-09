@@ -1,4 +1,5 @@
 export * from './AuthModeToggle';
+export * from './AuthField';
 export * from './LoginFields';
 export * from './TwoFactorForm';
 export * from './SocialLoginButtons';

@@ -16,10 +16,22 @@ export const LoginPage: React.FC = () => {
   const tokenFromUrl = searchParams.get('token');
 
   const {
-    mode, is2faRequired, isLoading, apiError, twoFactorError, recoveryError,
-    isRecoverySuccess, isRegistrationSuccess, setRegistrationSuccess, login,
-    register: registerAction, verifyTwoFactor, requestPasswordReset, resetPassword,
-    toggleMode, resetState,
+    mode,
+    is2faRequired,
+    isLoading,
+    apiError,
+    twoFactorError,
+    recoveryError,
+    isRecoverySuccess,
+    isRegistrationSuccess,
+    setRegistrationSuccess,
+    login,
+    register: registerAction,
+    verifyTwoFactor,
+    requestPasswordReset,
+    resetPassword,
+    toggleMode,
+    resetState,
   } = useAuthStore();
 
   const trpc = useTRPC();
@@ -92,7 +104,6 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="flex min-h-screen w-full bg-[#050505] text-white antialiased">
-      {/* ЛЕВАЯ ПАНЕЛЬ */}
       <div className="relative hidden w-[60%] flex-col justify-center overflow-hidden border-r border-white/10 lg:flex">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-teal-900/40 via-[#050505] to-[#050505]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(45,212,191,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(45,212,191,0.05)_1px,transparent_1px)] bg-size-[4rem_4rem]" />
@@ -110,9 +121,8 @@ export const LoginPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex w-full flex-col justify-center overflow-y-auto px-6 py-12 sm:px-12 lg:w-[40%] xl:px-24">
+      <div className="flex w-full flex-col justify-start overflow-y-auto px-6 py-12 pt-16 sm:px-12 lg:w-[40%] xl:px-24">
         <div className="mx-auto w-full max-w-sm">
-
           <div className="mb-8 flex flex-col items-center text-center">
             <img src={Logo} alt="Pipeline Studio" className="mb-4 h-10 w-auto text-teal-400" />
             <h2 className="bg-gradient-to-r from-teal-200 via-teal-400 to-teal-600 bg-clip-text text-2xl font-semibold tracking-tight text-transparent drop-shadow-[0_0_15px_rgba(45,212,191,0.2)]">
@@ -163,9 +173,13 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <div className="mt-12 flex items-center justify-center gap-4 text-xs text-zinc-500">
-            <a href="#" className="transition-colors hover:text-white">System Terms</a>
+            <a href="#" className="transition-colors hover:text-white">
+              System Terms
+            </a>
             <span className="h-1 w-1 rounded-full bg-zinc-700" />
-            <a href="#" className="transition-colors hover:text-white">Admin Guide</a>
+            <a href="#" className="transition-colors hover:text-white">
+              Admin Guide
+            </a>
           </div>
         </div>
       </div>
