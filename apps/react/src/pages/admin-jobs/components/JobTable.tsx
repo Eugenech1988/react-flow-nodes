@@ -4,7 +4,7 @@ import {
   rowSortingFeature,
   type TableFeatures,
 } from '@tanstack/react-table';
-import { UniversalTable } from '@/shared/ui';
+import { UniversalTable, TableSkeleton } from '@/shared/ui';
 import { useJobsTable } from '../hooks/useJobsTable';
 import { JobsTableEmpty } from './JobsTableEmpty';
 import type { IJob } from '../model/types';
@@ -12,9 +12,10 @@ import type { IJob } from '../model/types';
 interface JobsTableProps {
   jobs: IJob[];
   onEdit: (id: string) => void;
+  isLoading?: boolean;
 }
 
-export function JobsTable({ jobs, onEdit }: JobsTableProps) {
+export function JobTable({ jobs, onEdit, isLoading = false }: JobsTableProps) {
   const {
     paginatedJobs,
     columns,
@@ -33,6 +34,15 @@ export function JobsTable({ jobs, onEdit }: JobsTableProps) {
     columns,
     features: tableFeatures({ rowSortingFeature }),
   });
+
+  if (isLoading) {
+    return (
+      <div className="animate-in fade-in duration-200">
+        {/* Показываем скелетон ровно на столько строк, сколько помещается на странице */}
+        <TableSkeleton rowCount={limit} columnCount={6} />
+      </div>
+    );
+  }
 
   if (jobs.length === 0) {
     return <JobsTableEmpty />;

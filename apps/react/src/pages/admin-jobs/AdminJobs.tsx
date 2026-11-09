@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Plus, AlertCircle } from 'lucide-react';
-import { AppButton, TableSkeleton } from '@/shared/ui';
+import { AppButton } from '@/shared/ui';
 import { useAdminJobs } from './hooks';
 import { JobsTable, JobForm } from './components';
 
@@ -13,7 +13,7 @@ export function AdminJobsPage() {
 
   if (isCreating || isEditing) {
     return (
-      <div className="mx-auto max-w-5xl px-4 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
         <JobForm
           jobId={isEditing ? id! : null}
           onSuccess={() => navigate('/admin/jobs')}
@@ -29,24 +29,12 @@ export function AdminJobsPage() {
 function JobsList({ onEdit }: { onEdit: (id: string) => void }) {
   const { data: jobs, isLoading, isError, error } = useAdminJobs();
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold">Job Vacancies</h1>
-        </div>
-        <TableSkeleton rowCount={5} columnCount={6} />
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className="mx-auto mt-8 max-w-2xl px-4">
         <div className="border-destructive/40 bg-destructive/5 rounded-xl border p-8 text-center">
           <AlertCircle className="text-destructive mx-auto mb-3 h-8 w-8" />
           <h3 className="text-destructive mb-1 font-bold">Failed to load jobs</h3>
-          {/* ✅ Без каста: tRPC error уже имеет .message */}
           <p className="text-destructive/80 text-sm">{error?.message || 'Unknown error'}</p>
         </div>
       </div>
@@ -71,7 +59,7 @@ function JobsList({ onEdit }: { onEdit: (id: string) => void }) {
         />
       </div>
 
-      <JobsTable jobs={jobs ?? []} onEdit={onEdit} />
+      <JobsTable jobs={jobs ?? []} onEdit={onEdit} isLoading={isLoading} />
     </div>
   );
 }

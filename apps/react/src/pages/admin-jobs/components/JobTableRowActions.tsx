@@ -8,7 +8,7 @@ interface JobsTableRowActionsProps {
   onEdit: (id: string) => void;
 }
 
-export const JobsTableRowActions = ({ job, onEdit }: JobsTableRowActionsProps) => {
+export const JobTableRowActions = ({ job, onEdit }: JobsTableRowActionsProps) => {
   const { publish, archive, remove } = useJobMutations();
 
   const isPublishing = publish.isPending && publish.variables?.id === job.id;
