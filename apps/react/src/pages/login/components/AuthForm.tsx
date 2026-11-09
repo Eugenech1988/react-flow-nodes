@@ -17,23 +17,13 @@ interface AuthFormProps {
   currentApiError?: string | null;
   onLogin: (data: TLoginInputData) => Promise<void>;
   onRegister: (data: RegisterFormInputData) => Promise<void>;
-  onSocialLogin: (
-    provider: 'google' | 'github',
-  ) => (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onSocialLogin: (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => void;
   onForgotPassword: () => void;
 }
 
 export const AuthForm: React.FC<AuthFormProps> = ({
-  mode,
-  currentApiError,
-  onLogin,
-  onRegister,
-  onSocialLogin,
-  onForgotPassword,
-}) => {
-  const isAuthError =
-    currentApiError === 'Unauthorized' || currentApiError?.toLowerCase().includes('invalid');
-
+                                                    mode, currentApiError, onLogin, onRegister, onSocialLogin, onForgotPassword,
+                                                  }) => {
   const isLogin = mode === 'login';
 
   const {
@@ -61,40 +51,33 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   const isSubmitting = isLogin ? isLoginSubmitting : isRegisterSubmitting;
 
   return (
-    <>
+    <div className="space-y-6">
       <SocialLoginButtons
         onGoogleClick={onSocialLogin('google')}
         onGithubClick={onSocialLogin('github')}
       />
 
-      <div className="relative flex w-full items-center justify-center text-xs tracking-widest text-slate-200 uppercase before:h-px before:flex-1 before:bg-slate-200 after:h-px after:flex-1 after:bg-slate-300 dark:text-slate-400 dark:before:bg-slate-700 dark:after:bg-slate-700">
-        <span className="px-3">or</span>
+      <div className="relative flex w-full items-center justify-center text-xs tracking-widest text-zinc-500 uppercase before:h-px before:flex-1 before:bg-white/10 after:h-px after:flex-1 after:bg-white/10">
+        <span className="px-3">or continue with email</span>
       </div>
 
       <form
         onSubmit={isLogin ? handleLoginSubmit(onLogin) : handleRegisterSubmit(onRegister)}
         className="space-y-6"
       >
-        {currentApiError && !isAuthError && (
-          <div className="rounded-xl border border-red-900/40 bg-red-950/30 p-3 text-center text-sm font-medium text-red-400 antialiased">
-            {currentApiError}
-          </div>
-        )}
-
-        <div className="w-full space-y-5">
+        <div className="space-y-5">
           {isLogin ? (
             <>
               <LoginFields
                 register={loginRegister}
                 errors={loginErrors}
-                error={isAuthError || !!loginErrors.email || !!loginErrors.password}
               />
 
-              <div className="flex items-center justify-between pt-1 pl-1">
-                {isAuthError ? (
-                  <p className="text-xs text-red-500 antialiased">
-                    Incorrect email address or password.
-                  </p>
+              <div className="flex items-center justify-between pt-1">
+                {currentApiError ? (
+                  <span className="animate-in fade-in text-xs font-medium text-red-500">
+                    {currentApiError}
+                  </span>
                 ) : (
                   <span />
                 )}
@@ -102,27 +85,41 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 <button
                   type="button"
                   onClick={onForgotPassword}
-                  className="ml-auto cursor-pointer text-xs font-medium text-teal-600 transition-colors duration-200 hover:underline focus:outline-none dark:text-teal-400"
+                  className="cursor-pointer text-xs font-medium text-zinc-400 transition-colors duration-200 hover:text-white focus:outline-none"
                 >
-                  Forgot password?
+                  Forgot Password?
                 </button>
               </div>
             </>
           ) : (
-            <RegisterFields register={registerRegister} errors={registerErrors} />
+            <>
+              <RegisterFields register={registerRegister} errors={registerErrors} />
+              {currentApiError && (
+                <span className="block animate-in fade-in text-xs font-medium text-red-500">
+                  {currentApiError}
+                </span>
+              )}
+            </>
           )}
         </div>
 
-        <AppButton
-          type="submit"
-          variant="primary"
-          isPending={isSubmitting}
-          text={isLogin ? 'Sign In' : 'Register'}
-          pendingText="Processing..."
-          icon={null}
-          className="h-11.5 w-full rounded-xl text-base tracking-wide shadow-[0_0_25px_rgba(20,184,166,0.3)] transition-all"
-        />
+        <div className="space-y-3 pt-2">
+          <AppButton
+            type="submit"
+            variant="primary"
+            isPending={isSubmitting}
+            text={isLogin ? 'Authenticate Access' : 'Create Account'}
+            pendingText="Processing..."
+            icon={null}
+            className="h-11 w-full rounded-md bg-teal-600 text-sm font-semibold tracking-wide text-white shadow-[0_0_20px_rgba(20,184,166,0.3)] transition-all hover:bg-teal-500"
+          />
+          {isLogin && !currentApiError && (
+            <p className="text-center text-xs text-zinc-500">
+              Use your authorized admin credentials.
+            </p>
+          )}
+        </div>
       </form>
-    </>
+    </div>
   );
 };

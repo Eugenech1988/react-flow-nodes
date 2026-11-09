@@ -6,6 +6,7 @@ import { Input } from '@pipeline/ui';
 import { AppButton, LocalAlert } from '@/shared/ui';
 import { twoFactorLoginInputSchema, type TTwoFactorLoginInputData } from '@pipeline/contracts';
 import { useAuthStore } from '../model';
+import { cn } from '@/shared/lib';
 
 interface TwoFactorFormProps {
   error?: string | null;
@@ -48,7 +49,8 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({ error, isLoading, onVeri
 
       {error && <LocalAlert hasError hasSuccess={false} alertMessage={error} />}
 
-      <div className="space-y-1.5">
+      <div className="space-y-2">
+        {/* Темный инпут с бирюзовым фокусом и моноширинным шрифтом */}
         <Input
           type="text"
           inputMode="numeric"
@@ -57,27 +59,29 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({ error, isLoading, onVeri
           autoComplete="one-time-code"
           placeholder="123456 or recovery code"
           {...register('code')}
-          className={`h-11 text-center font-mono text-2xl font-bold tracking-normal transition-all placeholder:tracking-normal focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:outline-none ${
+          className={cn(
+            'h-12 w-full rounded-lg border bg-white/5 text-center font-mono text-xl font-bold tracking-widest text-white placeholder:text-zinc-600 placeholder:tracking-normal focus-visible:outline-none focus-visible:ring-1',
             hasCodeError
-              ? 'border-rose-500 bg-rose-500/5 text-rose-600 focus-visible:border-rose-500 focus-visible:ring-rose-500/30 dark:text-rose-400'
-              : 'border-border bg-background text-foreground focus-visible:border-teal-500 focus-visible:ring-teal-500/30'
-          }`}
+              ? 'border-rose-500 focus-visible:border-rose-500 focus-visible:ring-rose-500/50'
+              : 'border-white/10 focus-visible:border-teal-500 focus-visible:ring-teal-500/50',
+          )}
         />
         {errors.code && (
-          <p className="mt-1 text-center text-xs font-medium text-rose-600 dark:text-rose-400">
+          <p className="text-center text-xs font-medium text-rose-400">
             {errors.code.message}
           </p>
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 pt-2">
         <AppButton
+          type="button"
           text="Cancel"
           variant="secondary"
           size="md"
           onClick={onBack}
           isDisabled={isLoading}
-          className="w-full text-sm"
+          className="w-full border-white/10 bg-white/5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white"
         />
         <AppButton
           type="submit"
@@ -87,15 +91,15 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({ error, isLoading, onVeri
           size="md"
           isPending={isLoading}
           isDisabled={isLoading}
-          className="w-full text-sm"
+          className="w-full bg-teal-600 text-sm hover:bg-teal-500"
         />
       </div>
 
-      <p className="pt-1 text-center text-xs text-zinc-600 dark:text-zinc-400">
+      <p className="pt-2 text-center text-xs text-zinc-500">
         Lost access to your authenticator?{' '}
         <a
           href="mailto:support@pipeline.app?subject=2FA%20recovery"
-          className="font-medium text-teal-600 hover:underline focus:outline-none dark:text-teal-400"
+          className="font-medium text-teal-400 transition-colors hover:text-teal-300 focus:outline-none"
         >
           Contact support
         </a>

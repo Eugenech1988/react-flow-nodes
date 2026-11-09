@@ -10,11 +10,13 @@ interface AuthModeToggleProps {
 export const AuthModeToggle: React.FC<AuthModeToggleProps> = ({ mode, onToggle }) => {
   return (
     <>
-      {mode === 'login' ? "Don't have an account? " : 'Already registered? '}
+      <span className="text-zinc-500">
+        {mode === 'login' ? "Don't have an account? " : 'Already registered? '}
+      </span>
       <Button
         type="button"
         onClick={onToggle}
-        className="cursor-pointer bg-transparent px-1 font-medium text-zinc-100 transition-colors hover:bg-transparent hover:text-white hover:underline focus:outline-none"
+        className="cursor-pointer bg-transparent p-0 font-medium text-teal-400 transition-colors hover:bg-transparent hover:text-teal-300 hover:underline focus:outline-none"
       >
         {mode === 'login' ? 'Sign up' : 'Sign in'}
       </Button>
