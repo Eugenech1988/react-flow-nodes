@@ -28,7 +28,8 @@ model User {
   currentPipelineId String?   @map("current_pipeline_id")
   currentPipeline   Pipeline? @relation("UserCurrentPipeline", fields: [currentPipelineId], references: [id], onDelete: SetNull)
 
-  createdJobs Job[] @relation("JobAuthor")
+  createdJobs  Job[]  @relation("JobAuthor")
+  createdPosts Post[] @relation("PostAuthor")
 
   @@unique([provider, providerId])
   @@map("users")

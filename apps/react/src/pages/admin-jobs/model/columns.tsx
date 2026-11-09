@@ -53,8 +53,8 @@ export const buildJobColumns = (
     id: 'actions',
     header: 'Actions',
     meta: {
-      headerClassName: 'justify-end',
-      cellClassName: 'justify-end',
+      headerClassName: 'justify-center',
+      cellClassName: 'justify-center',
     },
     cell: ({ row }) => <JobTableRowActions job={row.original} onEdit={onEdit} />,
   },

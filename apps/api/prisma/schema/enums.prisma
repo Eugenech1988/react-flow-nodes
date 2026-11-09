@@ -71,3 +71,9 @@ enum Role {
   CONTENT_MANAGER
   SUPER_ADMIN
 }
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
