@@ -26,28 +26,13 @@ export function JobsListPage() {
         <div>
           <div className="flex items-center gap-2">
             <Briefcase className="h-6 w-6 text-teal-600 dark:text-teal-400" />
-            <h1 className="text-foreground text-2xl font-bold tracking-tight">
-              Job Vacancies
-            </h1>
+            <h1 className="text-foreground text-2xl font-bold tracking-tight">Job Vacancies</h1>
           </div>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Manage open positions on the marketing site
-          </p>
+          <p className="text-muted-foreground mt-1 text-sm">Manage open positions on the marketing site</p>
         </div>
-        <AppButton
-          isLink
-          linkTo="/admin/jobs/new"
-          icon={Plus}
-          variant="primary"
-          text="New Vacancy"
-        />
+        <AppButton isLink linkTo="/admin/jobs/new" icon={Plus} variant="primary" text="New Vacancy" />
       </div>
-
-      <JobTable
-        jobs={jobs ?? []}
-        onEdit={(jobId) => navigate(`/admin/jobs/${jobId}`)}
-        isLoading={isLoading}
-      />
+      <JobTable jobs={jobs ?? []} onEdit={(jobId) => navigate(`/admin/jobs/${jobId}`)} isLoading={isLoading} />
     </div>
   );
 }

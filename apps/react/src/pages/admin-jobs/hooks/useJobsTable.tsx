@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type ColumnDef, type SortingState, type TableFeatures } from '@tanstack/react-table';
-import { StatusBadge } from '@/shared/ui';
+import { type SortingState } from '@tanstack/react-table';
 import { DEFAULT_PAGE_LIMIT } from '../model/constants';
-import { getEnTitle, getLocalesLabel, getStatusConfig, sortJobs } from '../model/utils';
-import type { IJob } from '../model/types';
-import { JobTableRowActions } from '../components';
+import { sortJobs, type IJob, buildJobColumns } from '../model';
 
 interface UseJobsTableParams {
   jobs: IJob[];
@@ -16,65 +13,7 @@ export const useJobsTable = ({ jobs, onEdit }: UseJobsTableParams) => {
   const [limit, setLimit] = useState<number>(DEFAULT_PAGE_LIMIT);
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = useMemo<ColumnDef<TableFeatures, IJob, unknown>[]>(
-    () => [
-      {
-        id: 'slug',
-        accessorFn: (job) => job.slug,
-        header: 'Slug',
-        cell: ({ row }) => (
-          <span className="text-muted-foreground">{row.original.slug}</span>
-        ),
-      },
-      {
-        id: 'title',
-        accessorFn: (job) => getEnTitle(job),
-        header: 'Title (EN)',
-        cell: ({ row }) => {
-          const title = getEnTitle(row.original);
-          if (title) {
-            return <span className="font-medium text-left">{title}</span>;
-          }
-          return (
-            <span className="text-xs">
-              Missing EN
-            </span>
-          );
-        },
-      },
-      {
-        id: 'department',
-        accessorFn: (job) => job.department,
-        header: 'Department',
-        cell: ({ row }) => (
-          <span className="text-muted-foreground">{row.original.department}</span>
-        ),
-      },
-      {
-        id: 'locales',
-        accessorFn: (job) => getLocalesLabel(job),
-        header: 'Locales',
-        cell: ({ row }) => (
-          <span className="text-muted-foreground">
-            {getLocalesLabel(row.original)}
-          </span>
-        ),
-      },
-      {
-        id: 'status',
-        accessorFn: (job) => job.status,
-        header: 'Status',
-        cell: ({ row }) => <StatusBadge config={getStatusConfig(row.original.status)} />,
-      },
-      {
-        id: 'actions',
-        header: 'Actions',
-        cell: ({ row }) => <JobTableRowActions job={row.original} onEdit={onEdit} />,
-      },
-    ],
-    [onEdit],
-  );
-
+  const columns = useMemo(() => buildJobColumns(onEdit), [onEdit]);
   const sortedJobs = useMemo(() => sortJobs(jobs, sorting), [jobs, sorting]);
 
   const totalPages = Math.max(Math.ceil(jobs.length / limit), 1);
@@ -99,15 +38,7 @@ export const useJobsTable = ({ jobs, onEdit }: UseJobsTableParams) => {
   };
 
   return {
-    paginatedJobs,
-    columns,
-    sorting,
-    page: safePage,
-    limit,
-    totalPages,
-    totalItems: jobs.length,
-    handleSort,
-    setPage,
-    setLimit,
+    paginatedJobs, columns, sorting, page: safePage, limit, totalPages,
+    totalItems: jobs.length, handleSort, setPage, setLimit,
   };
 };

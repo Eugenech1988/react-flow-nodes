@@ -26,7 +26,6 @@ export const uaFormSchema = z
   .superRefine((data, ctx) => {
     const hasTitle = data.title.trim().length > 0;
     const hasDescription = data.description.trim().length > 0;
-
     if (hasTitle !== hasDescription) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

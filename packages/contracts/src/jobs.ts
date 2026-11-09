@@ -1,5 +1,3 @@
-// packages/contracts/src/jobs.ts
-
 import { z } from 'zod';
 
 export const jobDepartmentSchema = z.enum(['ENGINEERING', 'DESIGN', 'RESEARCH', 'OPERATIONS']);
@@ -42,6 +40,7 @@ export const updateJobInputSchema = z.object({
   location: z.string().min(1).optional(),
   icon: z.string().nullable().optional(),
   status: jobStatusSchema.optional(),
+  translations: z.array(jobTranslationInputSchema).optional(),
 });
 
 export const upsertJobTranslationInputSchema = z.object({

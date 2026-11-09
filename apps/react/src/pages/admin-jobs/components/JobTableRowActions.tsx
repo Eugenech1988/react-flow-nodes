@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from '@pipeline/ui';
 import { useJobMutations } from '../hooks/';
+import { triggerPortalRevalidate } from '@/shared/api/revalidate';
 import type { IJob } from '../model/types';
 
 interface JobsTableRowActionsProps {
@@ -20,12 +21,16 @@ export const JobTableRowActions = ({ job, onEdit }: JobsTableRowActionsProps) =>
   const isPublishing = publish.isPending && publish.variables?.id === job.id;
   const isArchiving = archive.isPending && archive.variables?.id === job.id;
   const isRemoving = remove.isPending && remove.variables?.id === job.id;
-
   const isAnyPending = isPublishing || isArchiving || isRemoving;
+
+  const handleAction = (action: () => void) => {
+    action();
+    triggerPortalRevalidate();
+  };
 
   const handleDelete = () => {
     if (confirm(`Delete "${job.slug}"? This cannot be undone.`)) {
-      remove.mutate({ id: job.id });
+      handleAction(() => remove.mutate({ id: job.id }));
     }
   };
 
@@ -49,7 +54,7 @@ export const JobTableRowActions = ({ job, onEdit }: JobsTableRowActionsProps) =>
 
         {job.status !== 'PUBLISHED' && (
           <DropdownMenuItem
-            onClick={() => publish.mutate({ id: job.id })}
+            onClick={() => handleAction(() => publish.mutate({ id: job.id }))}
             disabled={isPublishing}
             className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-emerald-600 outline-none focus:bg-emerald-500/10 focus:text-emerald-700 dark:text-emerald-400 dark:focus:bg-emerald-500/20 dark:focus:text-emerald-300"
           >
@@ -60,7 +65,7 @@ export const JobTableRowActions = ({ job, onEdit }: JobsTableRowActionsProps) =>
 
         {job.status !== 'ARCHIVED' && (
           <DropdownMenuItem
-            onClick={() => archive.mutate({ id: job.id })}
+            onClick={() => handleAction(() => archive.mutate({ id: job.id }))}
             disabled={isArchiving}
             className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-amber-600 outline-none focus:bg-amber-500/10 focus:text-amber-700 dark:text-amber-400 dark:focus:bg-amber-500/20 dark:focus:text-amber-300"
           >

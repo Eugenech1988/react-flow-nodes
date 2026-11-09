@@ -1,11 +1,7 @@
 import type { IJob } from './types';
 import type { TJobFormOutput } from './form-schema';
 
-export const splitLines = (s: string) =>
-  s
-    .split('\n')
-    .map((l) => l.trim())
-    .filter(Boolean);
+export const splitLines = (s: string) => s.split('\n').map((l) => l.trim()).filter(Boolean);
 
 export const fillTranslation = (t?: IJob['translations'][number]) => ({
   title: t?.title ?? '',

@@ -16,24 +16,17 @@ export const getStatusConfig = (status: string): TStatusConfigItem =>
 
 export const getSortValue = (job: IJob, key: TJobSortKey): string => {
   switch (key) {
-    case 'slug':
-      return job.slug;
-    case 'title':
-      return getEnTitle(job);
-    case 'department':
-      return job.department;
-    case 'locales':
-      return job.translations.map((t) => t.locale).join(',');
-    case 'status':
-      return job.status;
-    default:
-      return '';
+    case 'slug': return job.slug;
+    case 'title': return getEnTitle(job);
+    case 'department': return job.department;
+    case 'locales': return job.translations.map((t) => t.locale).join(',');
+    case 'status': return job.status;
+    default: return '';
   }
 };
 
 export const sortJobs = (jobs: IJob[], sorting: SortingState): IJob[] => {
   if (!sorting.length) return jobs;
-
   const { id, desc } = sorting[0];
   const key = id as TJobSortKey;
 

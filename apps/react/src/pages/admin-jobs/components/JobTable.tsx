@@ -1,9 +1,4 @@
-import {
-  useTable,
-  tableFeatures,
-  rowSortingFeature,
-  type TableFeatures,
-} from '@tanstack/react-table';
+import { useTable, tableFeatures, rowSortingFeature, type TableFeatures } from '@tanstack/react-table';
 import { UniversalTable, TableSkeleton } from '@/shared/ui';
 import { useJobsTable } from '../hooks/useJobsTable';
 import { JobsTableEmpty } from './JobsTableEmpty';
@@ -17,16 +12,7 @@ interface JobsTableProps {
 
 export function JobTable({ jobs, onEdit, isLoading = false }: JobsTableProps) {
   const {
-    paginatedJobs,
-    columns,
-    sorting,
-    page,
-    limit,
-    totalPages,
-    totalItems,
-    handleSort,
-    setPage,
-    setLimit,
+    paginatedJobs, columns, sorting, page, limit, totalPages, totalItems, handleSort, setPage, setLimit,
   } = useJobsTable({ jobs, onEdit });
 
   const table = useTable<TableFeatures, IJob>({
@@ -43,9 +29,7 @@ export function JobTable({ jobs, onEdit, isLoading = false }: JobsTableProps) {
     );
   }
 
-  if (jobs.length === 0) {
-    return <JobsTableEmpty />;
-  }
+  if (jobs.length === 0) return <JobsTableEmpty />;
 
   return (
     <UniversalTable
@@ -60,7 +44,7 @@ export function JobTable({ jobs, onEdit, isLoading = false }: JobsTableProps) {
       onPageChange={setPage}
       onLimitChange={setLimit}
       itemsUnitLabel="vacancies"
-      noDataText="No vacancies on this page."
+      noDataText="No vacancies found"
     />
   );
 }

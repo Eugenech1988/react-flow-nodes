@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
+import { useTRPC } from '@/shared/api';
+import { triggerPortalRevalidate } from '@/shared/api/revalidate';
 import { LocalAlert, GlobalLoader } from '@/shared/ui';
 import { useAdminJob, useJobMutations } from '../hooks';
 import type { IJob } from '../model';
@@ -33,7 +36,10 @@ const emptyTranslation = {
 export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
   const isEditing = !!jobId;
   const { data: existingJob, isLoading } = useAdminJob(jobId);
-  const { createJob, updateJob, upsertTranslation, removeTranslation } = useJobMutations();
+  const { createJob, updateJob } = useJobMutations();
+
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
   const [activeTab, setActiveTab] = useState<TFormTab>('details');
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -80,10 +86,17 @@ export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
     setSubmitError(null);
 
     const hasUa = data.ua.title.trim().length > 0 || data.ua.description.trim().length > 0;
-    const hadUa = !!existingJob?.translations.some((t) => t.locale === 'ua');
 
     try {
+      // Формируем массив переводов. Если UA пустой — мы его НЕ отправляем.
+      // Бэкенд увидит, что UA нет в массиве, и удалит его из базы.
+      const translationsToSend = [buildTranslationPayload('en', data.en)];
+      if (hasUa) {
+        translationsToSend.push(buildTranslationPayload('ua', data.ua));
+      }
+
       if (isEditing) {
+        // ЕДИНЫЙ ЗАПРОС на сохранение
         await updateJob.mutateAsync({
           id: jobId!,
           data: {
@@ -94,27 +107,10 @@ export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
             location: data.location,
             icon: data.icon || null,
             status: data.status,
+            translations: translationsToSend, // передаем массив переводов
           },
         });
-
-        await upsertTranslation.mutateAsync({
-          jobId: jobId!,
-          data: buildTranslationPayload('en', data.en),
-        });
-
-        if (hasUa) {
-          await upsertTranslation.mutateAsync({
-            jobId: jobId!,
-            data: buildTranslationPayload('ua', data.ua),
-          });
-        } else if (hadUa) {
-          // 👇 Если перевод был, но пользователь его очистил — удаляем
-          await removeTranslation.mutateAsync({ jobId: jobId!, locale: 'ua' });
-        }
       } else {
-        const translations = [buildTranslationPayload('en', data.en)];
-        if (hasUa) translations.push(buildTranslationPayload('ua', data.ua));
-
         await createJob.mutateAsync({
           slug: data.slug,
           department: data.department,
@@ -123,9 +119,17 @@ export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
           location: data.location,
           icon: data.icon || undefined,
           status: data.status,
-          translations,
+          translations: translationsToSend,
         });
       }
+
+      // Инвалидация React Query
+      queryClient.invalidateQueries(trpc.jobs.adminList.queryFilter());
+      queryClient.invalidateQueries(trpc.jobs.adminById.queryFilter());
+
+      // Сброс кэша Next.js
+      await triggerPortalRevalidate();
+
       onSuccess();
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Failed to save job');

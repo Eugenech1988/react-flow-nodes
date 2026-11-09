@@ -1,5 +1,5 @@
 import { AppButton } from '@/shared/ui';
-import { Briefcase } from 'lucide-react'; // Можно использовать любую иконку по смыслу
+import { Briefcase } from 'lucide-react';
 
 interface JobFormHeaderProps {
   isEditing: boolean;
@@ -17,32 +17,15 @@ export function JobFormHeader({ isEditing, isSubmitting, onCancel }: JobFormHead
             {isEditing ? 'Edit Vacancy' : 'New Vacancy'}
           </h1>
         </div>
-
-        {/* Вот тут добавляем описание */}
         <p className="text-muted-foreground text-sm">
           {isEditing
             ? 'Update the details, translations, and status of this vacancy.'
             : 'Fill in the details below to create and publish a new job opening.'}
         </p>
       </div>
-
       <div className="flex shrink-0 items-center gap-3">
-        <AppButton
-          type="button"
-          variant="secondary"
-          size="md"
-          text="Cancel"
-          onClick={onCancel}
-          isDisabled={isSubmitting}
-        />
-        <AppButton
-          type="submit"
-          variant="primary"
-          size="md"
-          isPending={isSubmitting}
-          pendingText="Saving..."
-          text={isEditing ? 'Save Changes' : 'Create Vacancy'}
-        />
+        <AppButton type="button" variant="secondary" size="md" text="Cancel" onClick={onCancel} isDisabled={isSubmitting} />
+        <AppButton type="submit" variant="primary" size="md" isPending={isSubmitting} pendingText="Saving..." text={isEditing ? 'Save Changes' : 'Create Vacancy'} />
       </div>
     </div>
   );

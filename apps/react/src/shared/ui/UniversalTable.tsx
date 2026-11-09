@@ -16,6 +16,7 @@ import {
   TableRow,
 } from '@pipeline/ui';
 import { AppButton } from '@/shared/ui';
+import { cn } from '@/shared/lib';
 
 import { SortIndicator } from './SortIndicator';
 
@@ -44,20 +45,20 @@ export const UniversalTable = <
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = Record<string, unknown>,
 >({
-  table,
-  columns,
-  sorting,
-  totalItems,
-  page,
-  totalPages,
-  limit,
-  onSort,
-  onSelect,
-  onPageChange,
-  onLimitChange,
-  noDataText = 'No items found matching your filters.',
-  itemsUnitLabel = 'items',
-}: TUniversalTableProps<TFeatures, TData>) => {
+    table,
+    columns,
+    sorting,
+    totalItems,
+    page,
+    totalPages,
+    limit,
+    onSort,
+    onSelect,
+    onPageChange,
+    onLimitChange,
+    noDataText = 'No items found matching your filters.',
+    itemsUnitLabel = 'items',
+  }: TUniversalTableProps<TFeatures, TData>) => {
   const rows = table.getRowModel().rows;
 
   const showFooter = totalItems > 10 || totalPages > 1;
@@ -81,18 +82,32 @@ export const UniversalTable = <
                       : 'asc'
                     : false;
 
+                  // Извлекаем кастомные стили из meta
+                  const meta = header.column.columnDef.meta as
+                    | { headerClassName?: string; cellClassName?: string }
+                    | undefined;
+
                   return (
                     <TableHead
                       key={header.id}
-                      className={`text-muted-foreground px-4 py-2.5 text-xs font-semibold select-none ${
-                        canSort ? 'hover:text-foreground cursor-pointer' : ''
-                      } ${header.index === 0 ? 'pl-4' : ''} ${
-                        header.index === headerGroup.headers.length - 1 ? 'pr-4' : ''
-                      }`}
+                      className={cn(
+                        'text-muted-foreground px-4 py-2.5 text-xs font-semibold select-none',
+                        canSort ? 'hover:text-foreground cursor-pointer' : '',
+                        header.index === 0 ? 'pl-4' : '',
+                        header.index === headerGroup.headers.length - 1 ? 'pr-4' : '',
+                        // Применяем класс заголовка из meta
+                        meta?.headerClassName
+                      )}
                       onClick={canSort ? () => onSort(header.column.id) : undefined}
                     >
                       {header.isPlaceholder ? null : (
-                        <div className="flex w-full items-center justify-center gap-1.5">
+                        <div
+                          className={cn(
+                            'flex w-full items-center gap-1.5 justify-start',
+                            // Дублируем класс для выравнивания (если нужно justify-end)
+                            meta?.headerClassName
+                          )}
+                        >
                           <span>
                             {flexRender(header.column.columnDef.header, header.getContext())}
                           </span>
@@ -121,18 +136,34 @@ export const UniversalTable = <
                     }`}
                     onClick={() => onSelect?.(row.original)}
                   >
-                    {cells.map((cell, idx) => (
-                      <TableCell
-                        key={cell.id}
-                        className={`px-4 py-2.5 align-middle ${idx === 0 ? 'pl-4' : ''} ${
-                          idx === cells.length - 1 ? 'pr-4' : ''
-                        }`}
-                      >
-                        <div className="flex w-full items-center justify-center">
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </div>
-                      </TableCell>
-                    ))}
+                    {cells.map((cell, idx) => {
+                      const meta = cell.column.columnDef.meta as
+                        | { headerClassName?: string; cellClassName?: string }
+                        | undefined;
+
+                      return (
+                        <TableCell
+                          key={cell.id}
+                          className={cn(
+                            'px-4 py-2.5 align-middle',
+                            idx === 0 ? 'pl-4' : '',
+                            idx === cells.length - 1 ? 'pr-4' : '',
+                            // Применяем класс ячейки из meta
+                            meta?.cellClassName
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              'flex w-full items-center justify-start',
+                              // Дублируем класс для выравнивания
+                              meta?.cellClassName
+                            )}
+                          >
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </div>
+                        </TableCell>
+                      );
+                    })}
                   </TableRow>
                 );
               })

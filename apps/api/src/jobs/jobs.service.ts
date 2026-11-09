@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { JobStatus, Prisma } from '@prisma/client';
+import { JobStatus } from '@prisma/client';
 import type {
   TCreateJobInputData,
   TUpdateJobInputData,
@@ -119,21 +119,47 @@ export class JobsService {
       }
     }
 
-    const updateData: Prisma.JobUpdateInput = {
-      ...(data.slug !== undefined && { slug: data.slug }),
-      ...(data.department !== undefined && { department: data.department }),
-      ...(data.level !== undefined && { level: data.level }),
-      ...(data.type !== undefined && { type: data.type }),
-      ...(data.location !== undefined && { location: data.location }),
-      ...(data.icon !== undefined && { icon: data.icon }),
-      ...(data.status !== undefined && { status: data.status }),
-      ...(data.status === 'PUBLISHED' && { publishedAt: new Date() }),
-    };
+    const { translations, ...rootData } = data;
 
-    return this.prisma.job.update({
-      where: { id },
-      data: updateData,
-      include: { translations: true },
+    return this.prisma.$transaction(async (tx) => {
+      await tx.job.update({
+        where: { id },
+        data: {
+          ...rootData,
+          ...(rootData.status === 'PUBLISHED' && { publishedAt: new Date() }),
+        },
+      });
+
+      if (translations) {
+        const incomingLocales = translations.map((t) => t.locale);
+
+        for (const tr of translations) {
+          await tx.jobTranslation.upsert({
+            where: { jobId_locale: { jobId: id, locale: tr.locale } },
+            create: { jobId: id, ...tr },
+            update: {
+              title: tr.title,
+              description: tr.description,
+              responsibilities: tr.responsibilities,
+              requirements: tr.requirements,
+              metaTitle: tr.metaTitle,
+              metaDescription: tr.metaDescription,
+            },
+          });
+        }
+
+        await tx.jobTranslation.deleteMany({
+          where: {
+            jobId: id,
+            locale: { notIn: incomingLocales },
+          },
+        });
+      }
+
+      return tx.job.findUnique({
+        where: { id },
+        include: { translations: true },
+      });
     });
   }
 
@@ -162,19 +188,9 @@ export class JobsService {
 
   async upsertTranslation(jobId: string, data: TUpsertJobTranslationInputData) {
     await this.findOne(jobId);
-
     return this.prisma.jobTranslation.upsert({
       where: { jobId_locale: { jobId, locale: data.locale } },
-      create: {
-        jobId,
-        locale: data.locale,
-        title: data.title,
-        description: data.description,
-        responsibilities: data.responsibilities,
-        requirements: data.requirements,
-        metaTitle: data.metaTitle,
-        metaDescription: data.metaDescription,
-      },
+      create: { jobId, ...data },
       update: {
         title: data.title,
         description: data.description,

@@ -6,8 +6,7 @@ export const STATUS_CONFIG: Record<TJobStatus, TStatusConfigItem> = {
   DRAFT: {
     label: 'Draft',
     icon: AlertCircle,
-    className:
-      'bg-zinc-500/10 text-zinc-600 border-zinc-500/30 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700',
+    className: 'bg-zinc-500/10 text-zinc-600 border-zinc-500/30 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700',
   },
   PUBLISHED: {
     label: 'Published',
@@ -27,7 +26,6 @@ export const FALLBACK_STATUS: TStatusConfigItem = {
   className: 'bg-muted text-muted-foreground border-border',
 };
 
-export const PAGE_LIMIT_OPTIONS = [10, 20, 50, 100] as const;
 export const DEFAULT_PAGE_LIMIT = 10;
 
 export const DEPT_OPTIONS = [
