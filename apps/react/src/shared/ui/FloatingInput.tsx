@@ -35,7 +35,6 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
 
     return (
       <div className="w-full">
-        {/* 👇 Высота h-11 задана здесь */}
         <div className={cn('group relative flex h-11 w-full items-center', roundedClass)}>
           <Input
             {...props}
@@ -89,13 +88,14 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
 
           <fieldset
             className={cn(
-              // 👇 Возвращаем -top-1.5, чтобы рамка "разрывалась" под лейбл
-              'pointer-events-none absolute inset-0 -top-1.5 z-0 m-0 box-border min-w-0 border transition-all duration-200',
+              // 1. Изменен z-0 на z-20, чтобы рамка была над фоном автозаполнения
+              'pointer-events-none absolute inset-0 -top-1.5 z-20 m-0 box-border min-w-0 border transition-all duration-200',
               roundedClass,
               '[&_legend]:invisible [&_legend]:max-w-0 [&_legend]:p-0 [&_legend]:transition-all [&_legend]:duration-200',
               'peer-focus:[&_legend]:visible peer-focus:[&_legend]:max-w-fit peer-focus:[&_legend]:px-1',
               'peer-not-placeholder-shown:[&_legend]:visible peer-not-placeholder-shown:[&_legend]:max-w-fit peer-not-placeholder-shown:[&_legend]:px-1',
-              'autofill:[&_legend]:visible autofill:[&_legend]:max-w-fit autofill:[&_legend]:px-1',
+              // 2. Исправлен селектор autofill на peer-[:autofill]
+              'peer-[:autofill]:[&_legend]:visible peer-[:autofill]:[&_legend]:max-w-fit peer-[:autofill]:[&_legend]:px-1',
               'peer-disabled:bg-muted/30 peer-disabled:border-border/60 peer-disabled:[&_legend]:visible peer-disabled:[&_legend]:max-w-fit peer-disabled:[&_legend]:px-1',
               error
                 ? 'border-red-500! shadow-[0_0_15px_rgba(239,68,68,0.02)]'
@@ -105,7 +105,6 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
           >
             <legend
               className={cn(
-                // 👇 Убран max-w-full и truncate, чтобы не ломать правую рамку
                 'pointer-events-none invisible box-border block h-3 w-auto px-1 font-sans text-[10px] whitespace-nowrap opacity-0 transition-all duration-200 select-none',
                 hasIcon ? 'ml-9' : 'ml-2.5',
               )}
