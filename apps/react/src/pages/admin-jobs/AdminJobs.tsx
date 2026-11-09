@@ -46,7 +46,8 @@ function JobsList({ onEdit }: { onEdit: (id: string) => void }) {
         <div className="border-destructive/40 bg-destructive/5 rounded-xl border p-8 text-center">
           <AlertCircle className="text-destructive mx-auto mb-3 h-8 w-8" />
           <h3 className="text-destructive mb-1 font-bold">Failed to load jobs</h3>
-          <p className="text-destructive/80 text-sm">{(error as Error).message}</p>
+          {/* ✅ Без каста: tRPC error уже имеет .message */}
+          <p className="text-destructive/80 text-sm">{error?.message || 'Unknown error'}</p>
         </div>
       </div>
     );

@@ -1,4 +1,11 @@
-import { Camera, Cloud, CloudAlert, CloudCheck, Save } from 'lucide-react';
+import {
+  Camera,
+  Cloud,
+  CloudAlert,
+  CloudCheck,
+  Save,
+  ShieldCheck,
+} from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
@@ -12,11 +19,17 @@ export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === '/';
-  const { user } = useUser();
+  const { user, role } = useUser();
   const currentPipelineName = user?.currentPipeline?.name;
 
   const triggerSave = useStore((state) => state.triggerSave);
   const saveStatus = useStore((state) => state.saveStatus);
+
+  // Content managers manage jobs, not pipelines — hide pipeline-specific UI
+  const isContentManager = role === 'CONTENT_MANAGER';
+  const isSuperAdmin = role === 'SUPER_ADMIN';
+  const isAdmin = isContentManager || isSuperAdmin;
+  const showPipelineControls = !isAdmin && Boolean(currentPipelineName);
 
   const handleHeaderClick = () => {
     if (!isHome) {
@@ -37,7 +50,21 @@ export const Header = () => {
         <Link to="/">
           <img className="h-6 w-auto object-contain" src={logo} alt="Pipeline logo" />
         </Link>
-        {currentPipelineName && (
+
+        {isAdmin && (
+          <>
+            <div className="bg-border h-4 w-px" />
+            <span
+              title={`Signed in as ${isSuperAdmin ? 'Super Admin' : 'Content Manager'}`}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 text-[11px] font-semibold tracking-wider text-teal-600 uppercase dark:text-teal-400"
+            >
+              <ShieldCheck className="h-3 w-3" />
+              {isSuperAdmin ? 'Super Admin' : 'Content Manager'}
+            </span>
+          </>
+        )}
+
+        {showPipelineControls && (
           <>
             <div className="bg-border h-4 w-px" />
             <div className="flex items-center gap-2">
@@ -67,29 +94,34 @@ export const Header = () => {
       </div>
 
       <div className="flex w-[320px] items-center justify-end gap-3" onClick={preventNavigation}>
-        {currentPipelineName && <WorkflowExecutionControl />}
-        <ShareDialog />
+        {showPipelineControls && (
+          <>
+            <WorkflowExecutionControl />
+            <ShareDialog />
 
-        <button
-          className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40"
-          disabled={!isHome}
-          onClick={() => triggerSave(false, true)}
-          title={!isHome ? 'Saving is only available on the canvas page' : 'Save pipeline'}
-        >
-          <Save className="h-4 w-4" />
-        </button>
-        <button
-          className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40"
-          disabled={!isHome}
-          onClick={() => triggerSave(true, true)}
-          title={
-            !isHome
-              ? 'Saving is only available on the canvas page'
-              : 'Center canvas and save screenshot'
-          }
-        >
-          <Camera className="h-4 w-4" />
-        </button>
+            <button
+              className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40"
+              disabled={!isHome}
+              onClick={() => triggerSave(false, true)}
+              title={!isHome ? 'Saving is only available on the canvas page' : 'Save pipeline'}
+            >
+              <Save className="h-4 w-4" />
+            </button>
+
+            <button
+              className="text-foreground/70 hover:text-foreground hover:bg-foreground/3 hover:border-border cursor-pointer rounded-md border border-transparent p-2 transition-all disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40"
+              disabled={!isHome}
+              onClick={() => triggerSave(true, true)}
+              title={
+                !isHome
+                  ? 'Saving is only available on the canvas page'
+                  : 'Center canvas and save screenshot'
+              }
+            >
+              <Camera className="h-4 w-4" />
+            </button>
+          </>
+        )}
 
         <ThemeToggle />
 

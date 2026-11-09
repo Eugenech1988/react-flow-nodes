@@ -1,2 +1,2 @@
-export * from './useJobsTable.ts';
+export * from './useJobsTable';
 export * from './useJobs.ts';
