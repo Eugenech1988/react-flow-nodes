@@ -49,12 +49,16 @@ export const formatDuration = (durationMs: number | null | undefined): string =>
 };
 
 export const formatDate = (
-  dateInput: string | Date | null | undefined,
+  dateInput: string | number | Date | null | undefined,
   options?: { showTime?: boolean },
 ): string => {
-  if (!dateInput) return '—';
-
-  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  if (dateInput == null) return '—';
+  const date =
+    typeof dateInput === 'number'
+      ? new Date(dateInput)
+      : typeof dateInput === 'string'
+        ? new Date(dateInput)
+        : dateInput;
   if (isNaN(date.getTime())) return '—';
 
   const showTime = options?.showTime ?? true;

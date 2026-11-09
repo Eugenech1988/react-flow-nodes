@@ -6,7 +6,6 @@ import { Input } from '@pipeline/ui';
 import { AppButton, LocalAlert } from '@/shared/ui';
 import { twoFactorLoginInputSchema, type TTwoFactorLoginInputData } from '@pipeline/contracts';
 import { useAuthStore } from '../model';
-import { Link } from 'react-router-dom';
 
 interface TwoFactorFormProps {
   error?: string | null;
@@ -52,6 +51,7 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({ error, isLoading, onVeri
       <div className="space-y-1.5">
         <Input
           type="text"
+          inputMode="numeric"
           maxLength={32}
           autoFocus
           autoComplete="one-time-code"
@@ -93,12 +93,12 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({ error, isLoading, onVeri
 
       <p className="pt-1 text-center text-xs text-zinc-600 dark:text-zinc-400">
         Lost access to your authenticator?{' '}
-        <Link
-          to="/support"
+        <a
+          href="mailto:support@pipeline.app?subject=2FA%20recovery"
           className="font-medium text-teal-600 hover:underline focus:outline-none dark:text-teal-400"
         >
           Contact support
-        </Link>
+        </a>
       </p>
     </form>
   );

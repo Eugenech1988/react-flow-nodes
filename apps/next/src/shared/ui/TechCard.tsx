@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { cn } from '@/shared/lib';
-import { Rivets } from './rivets';
+import { Rivets } from './Rivets';
 
 interface ITechCardProps {
   children: ReactNode;

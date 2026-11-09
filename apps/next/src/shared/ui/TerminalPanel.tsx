@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Activity } from 'lucide-react';
-import { Rivets } from './rivets';
+import { Rivets } from './Rivets';
 import { cn } from '@/shared/lib';
 
 interface ITerminalPanelProps {

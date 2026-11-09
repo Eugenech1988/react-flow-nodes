@@ -1,6 +1,7 @@
 import type { ElementType } from 'react';
-import { Workflow, History, BoxSelect, LogOut, type LucideIcon } from 'lucide-react';
+import { Workflow, History, BoxSelect, LogOut, Briefcase, type LucideIcon } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useUser, useLogout } from '@/shared/hooks';
 import { useSidebarStore } from './model';
 import { SidebarToggle } from './components';
 
@@ -16,19 +17,37 @@ export const Sidebar = () => {
   const isOpen = useSidebarStore((state) => state.isOpen);
   const location = useLocation();
   const navigate = useNavigate();
+  const { role, isLoading } = useUser();
+  const { logout, isLoggingOut } = useLogout();
+
+  const isContentManager = role === 'CONTENT_MANAGER';
+  const isSuperAdmin = role === 'SUPER_ADMIN';
+
+  const showProductNav = !isContentManager; // SUPER_ADMIN — не CONTENT_MANAGER → true
+  const showAdminNav = isContentManager || isSuperAdmin;
 
   const mainNavItems: NavItem[] = [
-    { label: 'Studio', icon: BoxSelect, href: '/' },
-    { label: 'Pipelines', icon: Workflow, href: '/pipelines' },
-    { label: 'Executions', icon: History, href: '/executions' },
+    ...(showProductNav
+      ? [
+          { label: 'Studio', icon: BoxSelect, href: '/' },
+          { label: 'Pipelines', icon: Workflow, href: '/pipelines' },
+          { label: 'Executions', icon: History, href: '/executions' },
+        ]
+      : []),
+    ...(showAdminNav ? [{ label: 'Job Vacancies', icon: Briefcase, href: '/admin/jobs' }] : []),
   ];
 
   const bottomNavItems: NavItem[] = [
-    { label: 'Sign out', icon: LogOut, action: () => {}, isDanger: true },
+    {
+      label: isLoggingOut ? 'Signing out…' : 'Sign out',
+      icon: LogOut,
+      action: () => logout(),
+      isDanger: true,
+    },
   ];
 
   const itemClassName = (isActive?: boolean, isDanger?: boolean) =>
-    `flex h-10 w-full cursor-pointer items-center overflow-hidden rounded-lg px-[13px] text-sm font-medium select-none transition-[background-color,color] duration-200 ${
+    `flex h-10 w-full cursor-pointer items-center overflow-hidden rounded-lg px-[13px] text-sm font-medium select-none transition-[background-color,color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 ${
       isDanger
         ? 'text-destructive hover:bg-destructive/10 hover:text-destructive'
         : isActive
@@ -36,27 +55,36 @@ export const Sidebar = () => {
           : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
     }`;
 
+  const isItemActive = (href?: string) => {
+    if (!href) return false;
+    if (href === '/') return location.pathname === '/';
+    return location.pathname === href || location.pathname.startsWith(`${href}/`);
+  };
+
   const renderNavItem = (item: NavItem) => {
     const Icon = item.icon;
-    const isActive = item.href ? location.pathname === item.href : false;
+    const isActive = isItemActive(item.href);
+
+    const handleClick = () => {
+      if (item.action) {
+        item.action();
+        return;
+      }
+      if (item.href) navigate(item.href);
+    };
 
     return (
-      <div
+      <button
         key={item.label}
-        onClick={() => {
-          if (item.href) {
-            navigate(item.href);
-          }
-
-          if (item.action) {
-            item.action();
-          }
-        }}
+        type="button"
+        onClick={handleClick}
+        disabled={isLoggingOut && item.isDanger}
+        title={!isOpen ? item.label : undefined}
+        aria-current={isActive ? 'page' : undefined}
         className={itemClassName(isActive, item.isDanger)}
       >
         <div className="flex w-54 shrink-0 items-center gap-3">
           <Icon className="h-4 w-4 shrink-0" />
-
           <span
             className={`whitespace-nowrap transition-[opacity,transform] ${
               isOpen
@@ -67,9 +95,11 @@ export const Sidebar = () => {
             {item.label}
           </span>
         </div>
-      </div>
+      </button>
     );
   };
+
+  if (isLoading) return null;
 
   return (
     <aside

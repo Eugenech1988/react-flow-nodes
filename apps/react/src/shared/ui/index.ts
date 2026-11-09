@@ -6,7 +6,7 @@ export * from './LocalAlert';
 export * from './Loader.tsx';
 export * from './skeletons';
 export * from './dialog-parts';
-export * from './buttons';
+export * from './AppButton.tsx';
 export * from './Tabs';
 export * from './UniversalTable';
 export * from './SortIndicator';

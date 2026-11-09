@@ -12,24 +12,22 @@ type PageProps = {
 
 export async function generateStaticParams() {
   const locales = ['en', 'ua'];
-  return locales.flatMap((locale) =>
-    JOBS.map((job) => ({locale, id: job.id}))
-  );
+  return locales.flatMap((locale) => JOBS.map((job) => ({ locale, id: job.id })));
 }
 
-export async function generateMetadata({params}: PageProps): Promise<Metadata> {
-  const {locale, id} = await params;
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, id } = await params;
   const job = JOBS.find((j) => j.id === id);
 
   if (!job) return {};
 
-  const {t} = await getT('careers', {lng: locale});
+  const { t } = await getT('careers', { lng: locale });
 
   return getPageMetadata(locale, 'careers', `/careers/${id}`, {
-    title: t(`details.${id}.meta.title`, {defaultValue: t('details.default.meta.title')}),
+    title: t(`details.${id}.meta.title`, { defaultValue: t('details.default.meta.title') }),
     description: t(`details.${id}.meta.description`, {
-      defaultValue: t('details.default.meta.description')
-    })
+      defaultValue: t('details.default.meta.description'),
+    }),
   });
 }
 

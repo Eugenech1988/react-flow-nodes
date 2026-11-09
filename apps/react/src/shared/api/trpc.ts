@@ -16,13 +16,9 @@ function handleTokenRefresh(): Promise<boolean> {
     refreshPromise = fetch(`${apiUrl}/auth/refresh`, {
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'x-csrf-token': getCsrfToken(),
-      },
+      headers: { 'x-csrf-token': getCsrfToken() },
     })
-      .then((response) => {
-        return response.ok;
-      })
+      .then((response) => response.ok)
       .catch((error) => {
         console.error('REFRESH ERROR:', error);
         return false;
@@ -31,9 +27,43 @@ function handleTokenRefresh(): Promise<boolean> {
         refreshPromise = null;
       });
   }
-
   return refreshPromise;
 }
+
+type TAuthFailureListener = () => void;
+const authFailureListeners = new Set<TAuthFailureListener>();
+
+export const onAuthFailure = (listener: TAuthFailureListener): (() => void) => {
+  authFailureListeners.add(listener);
+  return () => {
+    authFailureListeners.delete(listener);
+  };
+};
+
+const notifyAuthFailure = () => {
+  authFailureListeners.forEach((listener) => {
+    try {
+      listener();
+    } catch (e) {
+      console.error('Auth failure listener threw:', e);
+    }
+  });
+};
+
+const SKIP_REFRESH_PROCEDURES = [
+  'auth.login',
+  'auth.register',
+  'auth.loginWith2fa',
+  'auth.logout',
+  'auth.refresh',
+  'auth.requestPasswordReset',
+  'auth.resetPassword',
+];
+
+const shouldSkipRefresh = (url: string): boolean => {
+  if (url.includes('/auth/')) return true; // REST-эндпоинты (OAuth и т.п.)
+  return SKIP_REFRESH_PROCEDURES.some((name) => url.includes(name));
+};
 
 export const trpcClient = createTRPCClient<AppRouter>({
   links: [
@@ -41,9 +71,7 @@ export const trpcClient = createTRPCClient<AppRouter>({
       url: `${apiUrl}/trpc`,
 
       headers() {
-        return {
-          'x-csrf-token': getCsrfToken(),
-        };
+        return { 'x-csrf-token': getCsrfToken() };
       },
 
       async fetch(url, options) {
@@ -58,18 +86,18 @@ export const trpcClient = createTRPCClient<AppRouter>({
 
         const response = await fetch(url, requestOptions);
 
-        if (response.status !== 401) {
-          return response;
-        }
+        if (response.status !== 401) return response;
 
-        if (url.toString().includes('/auth/')) {
+        const urlStr = url.toString();
+
+        if (shouldSkipRefresh(urlStr)) {
           return response;
         }
 
         const refreshed = await handleTokenRefresh();
 
         if (!refreshed) {
-          window.location.href = '/login';
+          notifyAuthFailure();
           return response;
         }
 

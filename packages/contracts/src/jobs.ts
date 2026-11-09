@@ -2,21 +2,11 @@
 
 import { z } from 'zod';
 
-export const jobDepartmentSchema = z.enum([
-  'ENGINEERING',
-  'DESIGN',
-  'RESEARCH',
-  'OPERATIONS',
-]);
+export const jobDepartmentSchema = z.enum(['ENGINEERING', 'DESIGN', 'RESEARCH', 'OPERATIONS']);
 
 export const jobLevelSchema = z.enum(['JUNIOR', 'MID', 'SENIOR', 'LEAD']);
 
-export const jobTypeSchema = z.enum([
-  'FULL_TIME',
-  'PART_TIME',
-  'CONTRACT',
-  'INTERNSHIP',
-]);
+export const jobTypeSchema = z.enum(['FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERNSHIP']);
 
 export const jobStatusSchema = z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']);
 
@@ -42,7 +32,10 @@ export const createJobInputSchema = z.object({
 });
 
 export const updateJobInputSchema = z.object({
-  slug: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  slug: z
+    .string()
+    .regex(/^[a-z0-9-]+$/)
+    .optional(),
   department: jobDepartmentSchema.optional(),
   level: jobLevelSchema.optional(),
   type: jobTypeSchema.optional(),

@@ -4,11 +4,7 @@ import {
   updateJobInputSchema,
   upsertJobTranslationInputSchema,
 } from '@pipeline/contracts';
-import {
-  router,
-  publicProcedure,
-  contentManagerProcedure,
-} from '@/trpc/init';
+import { router, publicProcedure, contentManagerProcedure } from '@/trpc/init';
 import type { JobsService } from './jobs.service';
 
 export function createJobsRouter(jobsService: JobsService) {

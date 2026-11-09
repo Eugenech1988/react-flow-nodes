@@ -1,4 +1,4 @@
-import { type ElementType, type ComponentPropsWithoutRef } from 'react';
+import { type ElementType, type ComponentPropsWithoutRef, type ButtonHTMLAttributes } from 'react';
 import { Link } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@pipeline/ui';
@@ -7,7 +7,10 @@ import { cn } from '@/shared/lib';
 export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'regular' | 'ghost';
 export type ButtonSize = 'xs' | 'sm' | 'md';
 
-interface AppButtonProps {
+interface IAppButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'type' | 'onClick' | 'children'
+> {
   text?: string;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -65,7 +68,7 @@ export const AppButton = ({
   className,
   isLink = false,
   linkTo = '#',
-}: AppButtonProps) => {
+}: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
   const currentSize = sizeStyles[size];
 

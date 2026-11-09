@@ -8,7 +8,7 @@ interface DialogBodyProps {
 
 export const DialogBody = ({ children, className, withBorder = false }: DialogBodyProps) => {
   return (
-    <div className={cn('mx-6 py-4', withBorder && 'border-border/60 border-t border-b', className)}>
+    <div className={cn('mx-6 py-4', withBorder && 'border-border/60 border-t', className)}>
       {children}
     </div>
   );

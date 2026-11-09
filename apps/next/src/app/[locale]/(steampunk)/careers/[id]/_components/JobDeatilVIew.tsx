@@ -43,25 +43,28 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
     defaultValue: t('details.default.description'),
   });
 
-  const respList = Array.isArray(responsibilities) && responsibilities.length > 0
-    ? responsibilities
-    : (t('details.default.responsibilities', { returnObjects: true }) as string[]);
+  const respList =
+    Array.isArray(responsibilities) && responsibilities.length > 0
+      ? responsibilities
+      : (t('details.default.responsibilities', { returnObjects: true }) as string[]);
 
-  const reqList = Array.isArray(requirements) && requirements.length > 0
-    ? requirements
-    : (t('details.default.requirements', { returnObjects: true }) as string[]);
+  const reqList =
+    Array.isArray(requirements) && requirements.length > 0
+      ? requirements
+      : (t('details.default.requirements', { returnObjects: true }) as string[]);
 
   return (
-    <div className="relative z-10 mx-auto max-w-5xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16">      <Reveal>
+    <div className="relative z-10 mx-auto max-w-5xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16">
+      {' '}
+      <Reveal>
         <Link
           href={`/${locale}/careers`}
-          className="mb-8 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-[#8a9488] transition-colors hover:text-[#9cc4b0]"
+          className="mb-8 inline-flex items-center gap-2 font-mono text-[10px] tracking-widest text-[#8a9488] uppercase transition-colors hover:text-[#9cc4b0]"
         >
           <ArrowLeft className="h-4 w-4" />
           Return to Openings
         </Link>
       </Reveal>
-
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px] lg:items-start lg:gap-12">
         <Reveal className="relative">
           <MonitorFrame
@@ -69,7 +72,7 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
             headerIcon={Activity}
             headerTitle={`SYS.DOSSIER // ${jobId.toUpperCase()}`}
             footer={
-              <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-widest uppercase text-[#8a9488]">
+              <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-widest text-[#8a9488] uppercase">
                 <span className="flex items-center gap-2">
                   <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6fa28c]" />
                   FILE DECRYPTED
@@ -84,16 +87,16 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
               <div className="relative z-10">
                 <div className="mb-6 flex flex-wrap items-center gap-3">
                   <CutoutBadge>{t(`openings.filters.${dept}`)}</CutoutBadge>
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-[#4a5c52]">
+                  <span className="font-mono text-[10px] tracking-widest text-[#4a5c52] uppercase">
                     REF: 00{jobId.length}-A
                   </span>
                 </div>
 
-                <h1 className="mb-6 text-3xl font-bold tracking-tight text-[#d4cfc0] sm:text-4xl md:text-5xl font-typewriter uppercase">
+                <h1 className="font-typewriter mb-6 text-3xl font-bold tracking-tight text-[#d4cfc0] uppercase sm:text-4xl md:text-5xl">
                   {t(`openings.list.${jobId}.title`)}
                 </h1>
 
-                <div className="mb-8 flex flex-wrap items-center gap-4 border-y border-dashed border-[#2f3d36] py-4 font-mono text-[10px] uppercase tracking-widest text-[#8a9488] sm:text-xs">
+                <div className="mb-8 flex flex-wrap items-center gap-4 border-y border-dashed border-[#2f3d36] py-4 font-mono text-[10px] tracking-widest text-[#8a9488] uppercase sm:text-xs">
                   <span className="flex items-center gap-2">
                     <MapPin className="h-3.5 w-3.5 text-[#6fa28c]" />
                     {t(`openings.list.${jobId}.location`)}
@@ -111,9 +114,9 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
                 </div>
 
                 <div className="max-w-none">
-                  <p className="text-lg text-[#d4cfc0] font-typewriter">{description}</p>
+                  <p className="font-typewriter text-lg text-[#d4cfc0]">{description}</p>
 
-                  <h2 className="mt-10 mb-4 flex items-center gap-2 border-b border-[#2f3d36] pb-2 font-typewriter text-xl font-bold uppercase tracking-widest text-[#9cc4b0]">
+                  <h2 className="font-typewriter mt-10 mb-4 flex items-center gap-2 border-b border-[#2f3d36] pb-2 text-xl font-bold tracking-widest text-[#9cc4b0] uppercase">
                     <ChevronRight className="h-5 w-5" />
                     Key Responsibilities
                   </h2>
@@ -128,7 +131,7 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
                     ))}
                   </ul>
 
-                  <h3 className="mt-10 mb-4 flex items-center gap-2 border-b border-[#2f3d36] pb-2 font-typewriter text-xl font-bold uppercase tracking-widest text-[#9cc4b0]">
+                  <h3 className="font-typewriter mt-10 mb-4 flex items-center gap-2 border-b border-[#2f3d36] pb-2 text-xl font-bold tracking-widest text-[#9cc4b0] uppercase">
                     <ChevronRight className="h-5 w-5" />
                     Requirements
                   </h3>
@@ -155,7 +158,7 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
             headerIcon={Radio}
             headerTitle="TRANSMIT.DATA"
             footer={
-              <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest text-[#6fa28c]">
+              <div className="flex items-center gap-2 font-mono text-[9px] tracking-widest text-[#6fa28c] uppercase">
                 <ShieldAlert className="h-3 w-3" />
                 SECURE CHANNEL
               </div>
@@ -166,7 +169,7 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
                 {Icon && <Icon className="h-8 w-8" />}
               </div>
 
-              <h3 className="mb-2 font-typewriter text-lg font-bold text-[#d4cfc0]">
+              <h3 className="font-typewriter mb-2 text-lg font-bold text-[#d4cfc0]">
                 Interested in this role?
               </h3>
               <p className="mb-6 font-mono text-xs leading-relaxed text-[#8a9488]">

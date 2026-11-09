@@ -1,1 +1,1 @@
-export * from './use-features-scroll';
+export * from './useFeaturesScroll';

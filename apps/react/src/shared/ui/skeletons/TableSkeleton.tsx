@@ -33,8 +33,8 @@ export function TableSkeleton({ rowCount = 5, columnCount = 4 }: TableSkeletonPr
               {Array.from({ length: columnCount }).map((_, colIndex) => (
                 <TableCell key={colIndex}>
                   <Skeleton
-                    className="h-4 w-full"
-                    style={{ width: `${Math.floor(Math.random() * 40) + 60}%` }}
+                    className="h-4"
+                    style={{ width: `${60 + ((rowIndex * 7 + colIndex * 13) % 40)}%` }}
                   />
                 </TableCell>
               ))}

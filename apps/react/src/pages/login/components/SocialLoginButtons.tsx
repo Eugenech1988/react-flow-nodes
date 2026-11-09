@@ -19,6 +19,8 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
         className="group relative h-12 w-full cursor-pointer gap-3 overflow-hidden rounded-xl bg-white/60 text-base font-medium tracking-wide text-zinc-700 backdrop-blur-md transition-all duration-300 hover:bg-white/80 hover:text-zinc-900 hover:shadow-[0_4px_20px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] active:translate-y-0.5 dark:bg-zinc-900/40 dark:text-zinc-300 dark:hover:bg-zinc-800/60 dark:hover:text-white"
       >
         <svg
+          aria-hidden="true"
+          focusable="false"
           className="h-5 w-5 shrink-0 transition-transform duration-300 group-hover:rotate-[15deg]"
           viewBox="0 0 24 24"
         >
@@ -49,6 +51,8 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
         className="group relative h-12 w-full cursor-pointer gap-3 overflow-hidden rounded-xl bg-white/60 text-base font-medium tracking-wide text-zinc-700 backdrop-blur-md transition-all duration-300 hover:bg-white/80 hover:text-zinc-900 hover:shadow-[0_4px_20px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.05)] active:translate-y-0.5 dark:bg-zinc-900/40 dark:text-zinc-300 dark:hover:bg-zinc-800/60 dark:hover:text-white"
       >
         <svg
+          aria-hidden="true"
+          focusable="false"
           className="h-5 w-5 shrink-0 fill-current text-zinc-800 transition-transform duration-300 group-hover:rotate-[-15deg] dark:text-zinc-100"
           viewBox="0 0 24 24"
         >

@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { motion } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 
@@ -20,14 +21,18 @@ export const Tabs = ({
   tabs,
   currentTab,
   onTabChange,
-  layoutId = 'activeTabIndicator',
+  layoutId,
   capitalizeLabels = false,
 }: TabsProps) => {
+  const uid = useId();
+  const resolvedLayoutId = layoutId ?? `activeTabIndicator-${uid}`;
+
   return (
     <div className="bg-muted/40 border-border/60 relative inline-flex h-11 flex-wrap items-center gap-1.5 rounded-xl border p-1.5 shadow-xs backdrop-blur-md">
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = currentTab === tab.id;
+
         return (
           <button
             key={tab.id}
@@ -41,14 +46,16 @@ export const Tabs = ({
           >
             {isActive && (
               <motion.div
-                layoutId={layoutId}
+                layoutId={resolvedLayoutId}
                 className="absolute inset-0 -z-10 rounded-lg border border-teal-500/30 bg-teal-500/10 dark:bg-teal-500/20"
                 transition={{ type: 'spring', stiffness: 350, damping: 30 }}
               />
             )}
             {Icon && (
               <Icon
-                className={`h-4 w-4 transition-colors ${isActive ? 'text-teal-600 dark:text-teal-400' : ''}`}
+                className={`h-4 w-4 transition-colors ${
+                  isActive ? 'text-teal-600 dark:text-teal-400' : ''
+                }`}
               />
             )}
             <span className={capitalizeLabels ? 'capitalize' : ''}>{tab.label}</span>

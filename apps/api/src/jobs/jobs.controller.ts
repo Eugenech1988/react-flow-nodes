@@ -6,18 +6,12 @@ export class JobsController {
   constructor(private readonly jobsService: JobsService) {}
 
   @Get()
-  findAll(
-    @Query('locale') locale?: string,
-    @Query('department') department?: string,
-  ) {
+  findAll(@Query('locale') locale?: string, @Query('department') department?: string) {
     return this.jobsService.findAll({ locale, department });
   }
 
   @Get(':slug')
-  findOne(
-    @Param('slug') slug: string,
-    @Query('locale') locale?: string,
-  ) {
+  findOne(@Param('slug') slug: string, @Query('locale') locale?: string) {
     return this.jobsService.findOneBySlug(slug, locale);
   }
 }

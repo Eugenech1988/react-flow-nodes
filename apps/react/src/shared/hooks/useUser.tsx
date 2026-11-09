@@ -17,6 +17,7 @@ export function useUser() {
   return {
     user: user ?? null,
     isAuth: !!user,
+    role: user?.role ?? null,
     isProActive: user?.subscription?.plan === 'PRO' && user?.subscription?.planStatus === 'ACTIVE',
     isLoading,
     isError,

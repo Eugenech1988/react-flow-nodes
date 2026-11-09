@@ -3,7 +3,7 @@
 import type { ElementType } from 'react';
 import { Terminal, Star, HelpCircle, Bug, X } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
-import { AppModal } from '@/shared/ui/app-modal';
+import { AppModal } from '@/shared/ui/AppModal';
 import {
   Dialog,
   DialogContent,

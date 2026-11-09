@@ -1,15 +1,4 @@
-// src/jobs/admin-jobs.controller.ts
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -39,10 +28,7 @@ export class AdminJobsController {
   }
 
   @Post()
-  create(
-    @Body() dto: TCreateJobInputData,
-    @CurrentUser() user: TUserSafe,
-  ) {
+  create(@Body() dto: TCreateJobInputData, @CurrentUser() user: TUserSafe) {
     return this.jobsService.create(dto, user.id);
   }
 
@@ -76,10 +62,7 @@ export class AdminJobsController {
   }
 
   @Delete(':id/translations/:locale')
-  removeTranslation(
-    @Param('id') id: string,
-    @Param('locale') locale: string,
-  ) {
+  removeTranslation(@Param('id') id: string, @Param('locale') locale: string) {
     return this.jobsService.removeTranslation(id, locale);
   }
 }

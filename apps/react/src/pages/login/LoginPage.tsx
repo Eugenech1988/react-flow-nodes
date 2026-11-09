@@ -8,6 +8,8 @@ import { useTRPC } from '@/shared/api';
 import { useAuthStore } from './model/authStore';
 import type { TRequestFormData, TResetFormData } from './model';
 
+type TRole = 'USER' | 'CONTENT_MANAGER' | 'SUPER_ADMIN' | string;
+
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,7 +19,6 @@ export const LoginPage: React.FC = () => {
     mode,
     is2faRequired,
     isLoading,
-    isLoading: is2faLoading,
     apiError,
     twoFactorError,
     recoveryError,
@@ -46,10 +47,21 @@ export const LoginPage: React.FC = () => {
 
   const currentApiError = apiError || twoFactorError;
 
+  const redirectByRole = (role: TRole | undefined) => {
+    resetState();
+    if (role === 'CONTENT_MANAGER' || role === 'SUPER_ADMIN') {
+      navigate('/admin/jobs', { replace: true });
+    } else {
+      navigate('/', { replace: true });
+    }
+  };
+
   const handleSuccessAuth = async () => {
     await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
-    resetState();
-    navigate('/', { replace: true });
+
+    const user = await queryClient.fetchQuery(trpc.auth.me.queryOptions());
+
+    redirectByRole((user as { role?: TRole })?.role);
   };
 
   const handleLogin = async (data: TLoginInputData) => {
@@ -69,10 +81,8 @@ export const LoginPage: React.FC = () => {
     (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
-      if (provider === 'google' || provider === 'github') {
-        const apiUrl = import.meta.env.VITE_API_URL;
-        window.location.href = `${apiUrl}/auth/${provider}`;
-      }
+      const apiUrl = import.meta.env.VITE_API_URL;
+      window.location.href = `${apiUrl}/auth/${provider}`;
     };
 
   const handleRecoveryRequest = async (data: TRequestFormData) => {
@@ -159,7 +169,7 @@ export const LoginPage: React.FC = () => {
           ) : is2faRequired ? (
             <TwoFactorForm
               error={twoFactorError ?? undefined}
-              isLoading={is2faLoading}
+              isLoading={isLoading}
               onVerify={(data) => verifyTwoFactor(data, handleSuccessAuth)}
               onBack={resetState}
             />

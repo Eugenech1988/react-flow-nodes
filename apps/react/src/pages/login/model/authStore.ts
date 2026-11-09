@@ -27,7 +27,11 @@ interface AuthState {
   setRegistrationSuccess: (success: boolean) => void;
   resetState: () => void;
   handleLoginResponse: (data: LoginResponseData) => boolean;
-  login: (email: string, password: string, onSuccess: () => Promise<void> | void) => Promise<void>;
+  login: (
+    email: string,
+    password: string,
+    onSuccess: () => Promise<void> | void,
+  ) => Promise<{ role: string } | null>;
   register: (
     email: string,
     password: string,
@@ -40,6 +44,22 @@ interface AuthState {
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (token: string, password: string, onSuccess: () => void) => Promise<void>;
 }
+
+const mapAuthError = (
+  error: unknown,
+  fallback: string,
+  matchers: Array<[RegExp, string]>,
+): string => {
+  if (!(error instanceof Error)) return fallback;
+  const msg = error.message.toLowerCase();
+  for (const [re, text] of matchers) if (re.test(msg)) return text;
+  return error.message || fallback;
+};
+
+const LOGIN_MATCHERS: Array<[RegExp, string]> = [
+  [/invalid credentials|wrong password|user not found/, 'Invalid email address or password.'],
+  [/network|failed to fetch/, 'Network error. Please check your internet connection.'],
+];
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   mode: 'login',
@@ -106,28 +126,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const response = await trpcClient.auth.login.mutate({ email, password });
       const requires2fa = get().handleLoginResponse(response);
-      if (!requires2fa) {
+      if (requires2fa) return null;
+
+      try {
         await onSuccess();
+      } catch (postAuthErr) {
+        console.error('Post-auth step failed:', postAuthErr);
       }
+
+      const user = (response as { user?: { role?: string } }).user;
+      return user ? { role: user.role ?? 'USER' } : null;
     } catch (error) {
-      let message = 'Unable to sign in. Please verify your credentials and try again.';
-      if (error instanceof Error) {
-        if (
-          error.message.toLowerCase().includes('invalid credentials') ||
-          error.message.toLowerCase().includes('wrong password') ||
-          error.message.toLowerCase().includes('user not found')
-        ) {
-          message = 'Invalid email address or password.';
-        } else if (
-          error.message.toLowerCase().includes('network') ||
-          error.message.toLowerCase().includes('failed to fetch')
-        ) {
-          message = 'Network error. Please check your internet connection.';
-        } else {
-          message = error.message;
-        }
-      }
-      set({ apiError: message });
+      set({
+        apiError: mapAuthError(
+          error,
+          'Unable to sign in. Please verify your credentials and try again.',
+          LOGIN_MATCHERS,
+        ),
+      });
+      return null;
     } finally {
       set({ isLoading: false });
     }
@@ -172,22 +189,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true, twoFactorError: null });
     try {
       await trpcClient.auth.loginWith2fa.mutate({ tempToken, code: data.code });
-      await onSuccess();
-    } catch (error) {
-      let message = 'Invalid two-factor authentication code.';
-      if (error instanceof Error) {
-        if (error.message.toLowerCase().includes('expired')) {
-          message = 'The verification code has expired. Please request a new one.';
-        } else if (
-          error.message.toLowerCase().includes('network') ||
-          error.message.toLowerCase().includes('failed to fetch')
-        ) {
-          message = 'Network error. Please check your internet connection.';
-        } else {
-          message = error.message;
-        }
+      set({ tempToken: null, is2faRequired: false, qrCodeImage: null, secretKey: null });
+      try {
+        await onSuccess();
+      } catch (e) {
+        console.error('Post-2FA step failed:', e);
       }
-      set({ twoFactorError: message });
+    } catch (error) {
+      set({
+        twoFactorError: mapAuthError(error, 'Invalid two-factor authentication code.', [
+          [/expired/, 'The verification code has expired. Please request a new one.'],
+          [/network|failed to fetch/, 'Network error. Please check your internet connection.'],
+        ]),
+      });
     } finally {
       set({ isLoading: false });
     }

@@ -25,7 +25,7 @@ import { JobsModule } from '@/jobs/jobs.module';
     AiModule,
     DatabaseNodesModule,
     ExecutionsModule,
-    JobsModule
+    JobsModule,
   ],
 })
 export class AppModule {}

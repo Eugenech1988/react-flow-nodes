@@ -1,5 +1,6 @@
 import { AppButton, type ButtonVariant } from '@/shared/ui';
 import type { LucideIcon } from 'lucide-react';
+import { cn } from '@/shared/lib';
 
 interface DialogFooterProps {
   onCancel: () => void;
@@ -76,9 +77,9 @@ export const DialogFooter = ({
 
   return (
     <div
-      className={`bg-background flex flex-col-reverse gap-2 p-4 sm:flex-row sm:justify-end ${
-        withBorder ? 'border-border/60 border-t border-b' : ''
-      }`}
+      className={cn('bg-background flex flex-col-reverse gap-2 p-4 sm:flex-row sm:justify-end', {
+        'border-border/60 border-t border-b': withBorder,
+      })}
     >
       {isReversedBtns ? (
         <>

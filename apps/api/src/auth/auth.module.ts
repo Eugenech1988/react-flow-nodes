@@ -38,7 +38,7 @@ import { RolesGuard } from '@/common/guards/roles.guard';
     GoogleStrategy,
     GithubStrategy,
     MailService,
-    RolesGuard
+    RolesGuard,
   ],
   exports: [RolesGuard],
 })

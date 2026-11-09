@@ -26,11 +26,11 @@ type BuildMetadataParams = {
 };
 
 export function buildMetadata({
-                                locale,
-                                path = '',
-                                title,
-                                description,
-                              }: BuildMetadataParams): Metadata {
+  locale,
+  path = '',
+  title,
+  description,
+}: BuildMetadataParams): Metadata {
   const ogLocale = OG_LOCALES[locale] ?? OG_LOCALES.en;
   const alternateLocale = Array.from(new Set(Object.values(OG_LOCALES))).filter(
     (value) => value !== ogLocale,
@@ -139,9 +139,7 @@ export async function getPageMetadata(
   let resolvedTitle = overrides?.title;
   if (!resolvedTitle && overrides?.titleKey) {
     resolvedTitle = t(overrides.titleKey, {
-      defaultValue: overrides.fallbackTitleKey
-        ? t(overrides.fallbackTitleKey)
-        : t('meta.title'), // Дефолтный фоллбек, если ничего не передано
+      defaultValue: overrides.fallbackTitleKey ? t(overrides.fallbackTitleKey) : t('meta.title'), // Дефолтный фоллбек, если ничего не передано
     });
   } else if (!resolvedTitle) {
     resolvedTitle = t('meta.title');

@@ -1,6 +1,5 @@
 import {
   ConflictException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -161,10 +160,7 @@ export class JobsService {
     return this.prisma.job.delete({ where: { id } });
   }
 
-  async upsertTranslation(
-    jobId: string,
-    data: TUpsertJobTranslationInputData,
-  ) {
+  async upsertTranslation(jobId: string, data: TUpsertJobTranslationInputData) {
     await this.findOne(jobId);
 
     return this.prisma.jobTranslation.upsert({

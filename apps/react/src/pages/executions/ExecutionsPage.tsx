@@ -8,12 +8,11 @@ import {
   type TableFeatures,
 } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
-import { EXECUTION_TABS } from './model';
+
 import { FloatingInput, Tabs, TableSkeleton, UniversalTable } from '@/shared/ui';
 import { PAGE_VARIANTS } from '@/shared/lib';
 
-import { buildColumns } from './model';
-import type { IExecutionItem } from './model';
+import { EXECUTION_TABS, buildColumns, type IExecutionItem } from './model';
 import { ExecutionDetailsDialog, PageHeader } from './components';
 import { useExecutionsTable } from './hooks';
 
@@ -40,8 +39,8 @@ export const ExecutionsPage = () => {
     handleRefresh,
   } = useExecutionsTable();
 
-  const columns = useMemo<ColumnDef<TableFeatures, IExecutionItem>[]>(
-    () => buildColumns() as ColumnDef<TableFeatures, IExecutionItem>[],
+  const columns = useMemo<ColumnDef<TableFeatures, IExecutionItem, unknown>[]>(
+    () => buildColumns(),
     [],
   );
 
