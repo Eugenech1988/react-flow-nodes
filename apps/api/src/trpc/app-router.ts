@@ -10,6 +10,7 @@ import { createPipelinesRouter } from '@/pipelines/pipelines.router';
 import { createExecutionsRouter } from '@/executions/executions.router';
 import { createDatabaseNodesRouter } from '@/database-nodes/database-nodes.router';
 import { createJobsRouter } from '@/jobs/jobs.router';
+import { createBlogRouter } from '@/blog/blog.router';
 
 import type { AuthService } from '@/auth/auth.service';
 import type { AiService } from '@/ai/ai.service';
@@ -20,6 +21,7 @@ import type { UsersService } from '@/users/users.service';
 import type { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
 import type { ExecutionsService } from '@/executions/executions.service';
 import type { JobsService } from '@/jobs/jobs.service';
+import type { BlogService } from '@/blog/blog.service';
 
 interface RouterServices {
   authService: AuthService;
@@ -31,6 +33,7 @@ interface RouterServices {
   databaseNodesService: DatabaseNodesService;
   executionsService: ExecutionsService;
   jobsService: JobsService;
+  blogService: BlogService;
 }
 
 export function createAppRouter(services: RouterServices) {
@@ -62,6 +65,7 @@ export function createAppRouter(services: RouterServices) {
     executions: createExecutionsRouter(services.executionsService),
     databaseNodes: createDatabaseNodesRouter(services.databaseNodesService),
     jobs: createJobsRouter(services.jobsService),
+    blog: createBlogRouter(services.blogService),
     profile: profileRouter,
     ai: aiRouter,
     health: publicProcedure.query(() => ({ status: 'ok' })),

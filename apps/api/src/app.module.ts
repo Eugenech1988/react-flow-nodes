@@ -11,6 +11,7 @@ import { AiModule } from './ai/ai.module';
 import { DatabaseNodesModule } from '@/database-nodes/database-nodes.module';
 import { ExecutionsModule } from './executions/executions.module';
 import { JobsModule } from '@/jobs/jobs.module';
+import { BlogModule } from '@/blog/blog.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { JobsModule } from '@/jobs/jobs.module';
     DatabaseNodesModule,
     ExecutionsModule,
     JobsModule,
+    BlogModule
   ],
 })
 export class AppModule {}
