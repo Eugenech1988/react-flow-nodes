@@ -38,12 +38,10 @@ interface RouterServices {
 
 export function createAppRouter(services: RouterServices) {
   const profileRouter = router({
-    update: protectedProcedure
-      .input(updateProfileInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        const updatedUser = await services.profileService.update(ctx.user.id, input);
-        return toSafeUser(updatedUser);
-      }),
+    update: protectedProcedure.input(updateProfileInputSchema).mutation(async ({ ctx, input }) => {
+      const updatedUser = await services.profileService.update(ctx.user.id, input);
+      return toSafeUser(updatedUser);
+    }),
   });
 
   const aiRouter = router({

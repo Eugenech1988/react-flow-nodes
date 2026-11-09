@@ -1,11 +1,5 @@
 import { PrismaPg } from '@prisma/adapter-pg';
-import {
-  PrismaClient,
-  JobStatus,
-  JobDepartment,
-  JobLevel,
-  JobType,
-} from '@prisma/client';
+import { PrismaClient, JobStatus, JobDepartment, JobLevel, JobType } from '@prisma/client';
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -99,8 +93,7 @@ const SEED_JOBS: TSeedJob[] = [
       {
         locale: 'en',
         title: 'Backend Engineer',
-        description:
-          'Design and scale the core infrastructure that powers our data pipelines.',
+        description: 'Design and scale the core infrastructure that powers our data pipelines.',
         responsibilities: [
           'Build high-throughput APIs.',
           'Optimize database queries.',
@@ -112,8 +105,7 @@ const SEED_JOBS: TSeedJob[] = [
           'Deep knowledge of PostgreSQL.',
         ],
         metaTitle: 'Backend Engineer',
-        metaDescription:
-          'Design and scale the core infrastructure that powers our data pipelines.',
+        metaDescription: 'Design and scale the core infrastructure that powers our data pipelines.',
       },
       {
         locale: 'ua',
@@ -160,8 +152,7 @@ const SEED_JOBS: TSeedJob[] = [
       {
         locale: 'ua',
         title: 'Продуктовий дизайнер',
-        description:
-          'Створюйте інтуїтивний та красивий досвід користувачів для нашої платформи.',
+        description: 'Створюйте інтуїтивний та красивий досвід користувачів для нашої платформи.',
         responsibilities: [
           'Проєктувати наскрізні сценарії користувачів.',
           'Створювати детальні макети та прототипи.',
@@ -286,8 +277,7 @@ const SEED_JOBS: TSeedJob[] = [
       {
         locale: 'ua',
         title: 'Партнер з талантів',
-        description:
-          'Допоможіть нам знайти виняткових майстрів для нашої майстерні.',
+        description: 'Допоможіть нам знайти виняткових майстрів для нашої майстерні.',
         responsibilities: [
           'Шукати та відбирати кандидатів.',
           'Керувати повним циклом рекрутингу.',
@@ -370,8 +360,7 @@ const SEED_JOBS: TSeedJob[] = [
       {
         locale: 'ua',
         title: 'UX-райтер',
-        description:
-          'Створюйте чіткий, лаконічний та корисний текст для продукту.',
+        description: 'Створюйте чіткий, лаконічний та корисний текст для продукту.',
         responsibilities: [
           'Писати чіткий текст інтерфейсу.',
           'Підтримувати стайлгайд контенту.',
@@ -438,8 +427,7 @@ const SEED_JOBS: TSeedJob[] = [
       {
         locale: 'en',
         title: 'Growth Manager',
-        description:
-          'Drive user acquisition and engagement strategies to scale our product reach.',
+        description: 'Drive user acquisition and engagement strategies to scale our product reach.',
         responsibilities: [
           'Develop growth strategies.',
           'Run A/B tests.',

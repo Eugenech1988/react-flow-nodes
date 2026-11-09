@@ -27,9 +27,7 @@ export function CareersConsole({ jobs, locale }: CareersConsoleProps) {
   const { t } = useT('careers');
 
   const filtered =
-    activeDept === 'all'
-      ? jobs
-      : jobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
+    activeDept === 'all' ? jobs : jobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
 
   const checkScrollHint = useCallback(() => {
     const el = scrollRef.current;
@@ -55,10 +53,7 @@ export function CareersConsole({ jobs, locale }: CareersConsoleProps) {
   const scrollMore = () => scrollRef.current?.scrollBy({ top: 220, behavior: 'smooth' });
 
   return (
-    <section
-      id="openings"
-      className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16"
-    >
+    <section id="openings" className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="relative">
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(111,162,140,0.22),transparent_65%)] blur-2xl" />
         <div className="pointer-events-none absolute inset-x-8 -top-4 -z-10 h-32 bg-[radial-gradient(ellipse_at_center,rgba(156,196,176,0.15),transparent_70%)] blur-xl" />

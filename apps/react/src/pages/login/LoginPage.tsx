@@ -16,10 +16,22 @@ export const LoginPage: React.FC = () => {
   const tokenFromUrl = searchParams.get('token');
 
   const {
-    mode, is2faRequired, isLoading, apiError, twoFactorError, recoveryError,
-    isRecoverySuccess, isRegistrationSuccess, setRegistrationSuccess, login,
-    register: registerAction, verifyTwoFactor, requestPasswordReset, resetPassword,
-    toggleMode, resetState,
+    mode,
+    is2faRequired,
+    isLoading,
+    apiError,
+    twoFactorError,
+    recoveryError,
+    isRecoverySuccess,
+    isRegistrationSuccess,
+    setRegistrationSuccess,
+    login,
+    register: registerAction,
+    verifyTwoFactor,
+    requestPasswordReset,
+    resetPassword,
+    toggleMode,
+    resetState,
   } = useAuthStore();
 
   const trpc = useTRPC();
@@ -116,7 +128,11 @@ export const LoginPage: React.FC = () => {
           <div className="mb-8 flex flex-col items-center text-center">
             <img src={Logo} alt="Pipeline Studio" className="mb-4 h-10 w-auto text-teal-400" />
             <h2 className="bg-gradient-to-r from-teal-200 via-teal-400 to-teal-600 bg-clip-text text-2xl font-semibold tracking-tight text-transparent drop-shadow-[0_0_15px_rgba(45,212,191,0.2)]">
-              {isRecoveryMode ? 'Reset Password' : is2faRequired ? 'Two-Factor Auth' : 'Welcome to the Pipeline Studio'}
+              {isRecoveryMode
+                ? 'Reset Password'
+                : is2faRequired
+                  ? 'Two-Factor Auth'
+                  : 'Welcome to the Pipeline Studio'}
             </h2>
 
             {!isRecoveryMode && !is2faRequired && (

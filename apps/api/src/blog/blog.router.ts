@@ -1,8 +1,5 @@
 import { z } from 'zod';
-import {
-  createPostInputSchema,
-  updatePostInputSchema,
-} from '@pipeline/contracts';
+import { createPostInputSchema, updatePostInputSchema } from '@pipeline/contracts';
 import { router, publicProcedure, contentManagerProcedure } from '@/trpc/init';
 import type { BlogService } from './blog.service';
 

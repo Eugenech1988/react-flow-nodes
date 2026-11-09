@@ -91,8 +91,7 @@ export const InfoBadge = ({ text, className, theme = 'default' }: IInfoBadgeProp
         <span
           className={cn('text-[10px] font-bold tracking-[0.15em] uppercase', {
             'text-teal-300/90 drop-shadow-[0_0_4px_rgba(57,179,155,0.4)]': !isCareers,
-            'font-typewriter text-[#9cc4b0] drop-shadow-[0_0_4px_rgba(111,162,140,0.4)]':
-              isCareers,
+            'font-typewriter text-[#9cc4b0] drop-shadow-[0_0_4px_rgba(111,162,140,0.4)]': isCareers,
           })}
         >
           {text}

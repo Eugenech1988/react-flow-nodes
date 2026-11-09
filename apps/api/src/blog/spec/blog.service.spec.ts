@@ -52,10 +52,7 @@ describe('BlogService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        BlogService,
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [BlogService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<BlogService>(BlogService);
@@ -204,9 +201,7 @@ describe('BlogService', () => {
       mockPrismaService.post.findUnique.mockResolvedValue(createMockPost());
 
       const input: TUpdatePostInputData = {
-        translations: [
-          { locale: 'en', title: 'Only EN', excerpt: 'Desc', content: 'Body' },
-        ],
+        translations: [{ locale: 'en', title: 'Only EN', excerpt: 'Desc', content: 'Body' }],
       };
 
       await service.update('post-1', input);

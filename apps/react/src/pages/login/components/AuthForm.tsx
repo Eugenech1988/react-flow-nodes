@@ -17,18 +17,20 @@ interface AuthFormProps {
   currentApiError?: string | null;
   onLogin: (data: TLoginInputData) => Promise<void>;
   onRegister: (data: RegisterFormInputData) => Promise<void>;
-  onSocialLogin: (provider: 'google' | 'github') => (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onSocialLogin: (
+    provider: 'google' | 'github',
+  ) => (e: React.MouseEvent<HTMLButtonElement>) => void;
   onForgotPassword: () => void;
 }
 
 export const AuthForm: React.FC<AuthFormProps> = ({
-                                                    mode,
-                                                    currentApiError,
-                                                    onLogin,
-                                                    onRegister,
-                                                    onSocialLogin,
-                                                    onForgotPassword,
-                                                  }) => {
+  mode,
+  currentApiError,
+  onLogin,
+  onRegister,
+  onSocialLogin,
+  onForgotPassword,
+}) => {
   const isLogin = mode === 'login';
 
   const {
@@ -78,7 +80,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               <div className="flex items-start justify-between gap-4 pt-1">
                 <div className="flex-1">
                   {currentApiError && (
-                    <span className="animate-in fade-in slide-in-from-left-2 block text-xs font-medium leading-relaxed text-red-500">
+                    <span className="animate-in fade-in slide-in-from-left-2 block text-xs leading-relaxed font-medium text-red-500">
                       {currentApiError}
                     </span>
                   )}
@@ -86,7 +88,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 <button
                   type="button"
                   onClick={onForgotPassword}
-                  className="shrink-0 cursor-pointer whitespace-nowrap text-xs font-medium text-zinc-400 transition-colors duration-300 hover:text-white focus:outline-none"
+                  className="shrink-0 cursor-pointer text-xs font-medium whitespace-nowrap text-zinc-400 transition-colors duration-300 hover:text-white focus:outline-none"
                 >
                   Forgot Password?
                 </button>
@@ -97,7 +99,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               <RegisterFields register={registerRegister} errors={registerErrors} />
 
               {currentApiError && (
-                <span className="animate-in fade-in slide-in-from-top-2 block pt-2 text-xs font-medium leading-relaxed text-red-500">
+                <span className="animate-in fade-in slide-in-from-top-2 block pt-2 text-xs leading-relaxed font-medium text-red-500">
                   {currentApiError}
                 </span>
               )}

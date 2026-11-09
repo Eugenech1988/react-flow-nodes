@@ -5,7 +5,7 @@ import type { IJob } from './types';
 import { JobTableRowActions } from '../components/JobTableRowActions';
 
 export const buildJobColumns = (
-  onEdit: (id: string) => void
+  onEdit: (id: string) => void,
 ): ColumnDef<TableFeatures, IJob, unknown>[] => [
   {
     id: 'slug',
@@ -33,7 +33,9 @@ export const buildJobColumns = (
     id: 'department',
     accessorFn: (job) => job.department,
     header: 'Department',
-    cell: ({ row }) => <span className="text-muted-foreground text-xs">{row.original.department}</span>,
+    cell: ({ row }) => (
+      <span className="text-muted-foreground text-xs">{row.original.department}</span>
+    ),
   },
   {
     id: 'locales',

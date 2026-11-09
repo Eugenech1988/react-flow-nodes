@@ -18,7 +18,12 @@ interface TwoFactorFormProps {
 export const TwoFactorForm: FC<TwoFactorFormProps> = ({ error, isLoading, onVerify, onBack }) => {
   const { tempToken } = useAuthStore();
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<TTwoFactorLoginInputData>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<TTwoFactorLoginInputData>({
     resolver: zodResolver(twoFactorLoginInputSchema),
     defaultValues: { tempToken: tempToken || '', code: '' },
   });
@@ -45,26 +50,47 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({ error, isLoading, onVeri
           placeholder="123456 or recovery code"
           {...register('code')}
           className={cn(
-            'h-12 w-full rounded-md border bg-white/5 text-center font-mono text-xl font-bold tracking-widest text-white placeholder:text-zinc-600 placeholder:tracking-normal transition-all duration-300 focus-visible:outline-none focus-visible:ring-1',
+            'h-12 w-full rounded-md border bg-white/5 text-center font-mono text-xl font-bold tracking-widest text-white transition-all duration-300 placeholder:tracking-normal placeholder:text-zinc-600 focus-visible:ring-1 focus-visible:outline-none',
             hasCodeError
               ? 'border-rose-500 focus-visible:border-rose-500 focus-visible:ring-rose-500/50'
               : 'border-white/10 focus-visible:border-teal-500 focus-visible:ring-teal-500/50',
           )}
         />
         {errors.code && (
-          <p className="text-center text-xs font-medium text-rose-400">
-            {errors.code.message}
-          </p>
+          <p className="text-center text-xs font-medium text-rose-400">{errors.code.message}</p>
         )}
       </div>
 
       <div className="grid grid-cols-2 gap-3 pt-2">
-        <AppButton type="button" text="Cancel" variant="secondary" size="md" onClick={onBack} isDisabled={isLoading} className="w-full rounded-md" />
-        <AppButton type="submit" text="Verify" pendingText="Verifying..." variant="primary" size="md" isPending={isLoading} isDisabled={isLoading} className="w-full rounded-md bg-teal-600 hover:bg-teal-500" />
+        <AppButton
+          type="button"
+          text="Cancel"
+          variant="secondary"
+          size="md"
+          onClick={onBack}
+          isDisabled={isLoading}
+          className="w-full rounded-md"
+        />
+        <AppButton
+          type="submit"
+          text="Verify"
+          pendingText="Verifying..."
+          variant="primary"
+          size="md"
+          isPending={isLoading}
+          isDisabled={isLoading}
+          className="w-full rounded-md bg-teal-600 hover:bg-teal-500"
+        />
       </div>
 
       <p className="pt-2 text-center text-xs text-zinc-500">
-        Lost access to your authenticator? <a href="mailto:support@pipeline.app?subject=2FA%20recovery" className="font-medium text-teal-400 hover:text-teal-300">Contact support</a>
+        Lost access to your authenticator?{' '}
+        <a
+          href="mailto:support@pipeline.app?subject=2FA%20recovery"
+          className="font-medium text-teal-400 hover:text-teal-300"
+        >
+          Contact support
+        </a>
       </p>
     </form>
   );

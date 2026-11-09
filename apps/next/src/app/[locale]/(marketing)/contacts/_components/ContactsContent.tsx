@@ -56,7 +56,6 @@ export const ContactsContent = () => {
   return (
     <div className="relative z-10 mx-auto max-w-6xl px-4 pb-24 sm:px-6">
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_1.2fr] lg:gap-12">
-
         <div className="flex flex-col gap-8">
           <div className="space-y-4">
             {CONTACT_CHANNELS.map((channel, index) => {
@@ -134,30 +133,35 @@ export const ContactsContent = () => {
             </div>
 
             {isSuccess ? (
-              <div className="flex flex-col items-center justify-center py-10 text-center animate-in fade-in zoom-in duration-500 ease-out">
-
+              <div className="animate-in fade-in zoom-in flex flex-col items-center justify-center py-10 text-center duration-500 ease-out">
                 <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/10">
-                  <span className="absolute inset-0 animate-ping rounded-full border border-[#2dd4bf]/40 opacity-75" style={{ animationDuration: '2s' }} />
-                  <span className="absolute -inset-2 animate-pulse rounded-full border border-[#2dd4bf]/20 bg-[#2dd4bf]/5" style={{ animationDuration: '3s' }} />
+                  <span
+                    className="absolute inset-0 animate-ping rounded-full border border-[#2dd4bf]/40 opacity-75"
+                    style={{ animationDuration: '2s' }}
+                  />
+                  <span
+                    className="absolute -inset-2 animate-pulse rounded-full border border-[#2dd4bf]/20 bg-[#2dd4bf]/5"
+                    style={{ animationDuration: '3s' }}
+                  />
                   <Send className="relative z-10 h-8 w-8 text-[#5eead4]" />
                 </div>
 
                 <h4
-                  className="animate-in slide-in-from-bottom-2 fade-in duration-500 text-xl font-bold text-[#d1faf5]"
+                  className="animate-in slide-in-from-bottom-2 fade-in text-xl font-bold text-[#d1faf5] duration-500"
                   style={{ animationDelay: '150ms', animationFillMode: 'both' }}
                 >
                   {t('form.success.title')}
                 </h4>
 
                 <p
-                  className="mt-2 max-w-xs animate-in slide-in-from-bottom-2 fade-in duration-500 text-sm text-slate-400"
+                  className="animate-in slide-in-from-bottom-2 fade-in mt-2 max-w-xs text-sm text-slate-400 duration-500"
                   style={{ animationDelay: '250ms', animationFillMode: 'both' }}
                 >
                   {t('form.success.description')}
                 </p>
 
                 <div
-                  className="mt-8 animate-in slide-in-from-bottom-2 fade-in duration-500"
+                  className="animate-in slide-in-from-bottom-2 fade-in mt-8 duration-500"
                   style={{ animationDelay: '350ms', animationFillMode: 'both' }}
                 >
                   <AppButton
@@ -172,7 +176,7 @@ export const ContactsContent = () => {
             ) : (
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-5 animate-in fade-in duration-300"
+                className="animate-in fade-in flex flex-col gap-5 duration-300"
               >
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <div className="space-y-2">
@@ -207,7 +211,9 @@ export const ContactsContent = () => {
                     error={!!errors.subject}
                     {...register('subject')}
                   />
-                  {errors.subject && <p className="text-xs text-red-400">{errors.subject.message}</p>}
+                  {errors.subject && (
+                    <p className="text-xs text-red-400">{errors.subject.message}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -219,7 +225,9 @@ export const ContactsContent = () => {
                     error={!!errors.message}
                     {...register('message')}
                   />
-                  {errors.message && <p className="text-xs text-red-400">{errors.message.message}</p>}
+                  {errors.message && (
+                    <p className="text-xs text-red-400">{errors.message.message}</p>
+                  )}
                 </div>
 
                 <div className="mt-2 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">

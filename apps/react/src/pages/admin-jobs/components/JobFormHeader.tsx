@@ -24,8 +24,22 @@ export function JobFormHeader({ isEditing, isSubmitting, onCancel }: JobFormHead
         </p>
       </div>
       <div className="flex shrink-0 items-center gap-3">
-        <AppButton type="button" variant="secondary" size="md" text="Cancel" onClick={onCancel} isDisabled={isSubmitting} />
-        <AppButton type="submit" variant="primary" size="md" isPending={isSubmitting} pendingText="Saving..." text={isEditing ? 'Save Changes' : 'Create Vacancy'} />
+        <AppButton
+          type="button"
+          variant="secondary"
+          size="md"
+          text="Cancel"
+          onClick={onCancel}
+          isDisabled={isSubmitting}
+        />
+        <AppButton
+          type="submit"
+          variant="primary"
+          size="md"
+          isPending={isSubmitting}
+          pendingText="Saving..."
+          text={isEditing ? 'Save Changes' : 'Create Vacancy'}
+        />
       </div>
     </div>
   );

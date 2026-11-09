@@ -49,27 +49,27 @@ export function JobForm({ jobId, initialData, onSuccess, onCancel }: JobFormProp
     resolver: zodResolver(jobFormSchema),
     defaultValues: initialData
       ? {
-        slug: initialData.slug,
-        department: initialData.department,
-        level: initialData.level,
-        type: initialData.type,
-        location: initialData.location,
-        icon: initialData.icon ?? '',
-        status: initialData.status,
-        en: fillTranslation(initialData.translations.find((t) => t.locale === 'en')),
-        ua: fillTranslation(initialData.translations.find((t) => t.locale === 'ua')),
-      }
+          slug: initialData.slug,
+          department: initialData.department,
+          level: initialData.level,
+          type: initialData.type,
+          location: initialData.location,
+          icon: initialData.icon ?? '',
+          status: initialData.status,
+          en: fillTranslation(initialData.translations.find((t) => t.locale === 'en')),
+          ua: fillTranslation(initialData.translations.find((t) => t.locale === 'ua')),
+        }
       : {
-        slug: '',
-        department: 'ENGINEERING',
-        level: 'MID',
-        type: 'FULL_TIME',
-        location: 'Remote',
-        icon: '',
-        status: 'DRAFT',
-        en: emptyTranslation,
-        ua: emptyTranslation,
-      },
+          slug: '',
+          department: 'ENGINEERING',
+          level: 'MID',
+          type: 'FULL_TIME',
+          location: 'Remote',
+          icon: '',
+          status: 'DRAFT',
+          en: emptyTranslation,
+          ua: emptyTranslation,
+        },
   });
 
   const onSubmit = async (data: TJobFormOutput) => {
@@ -129,11 +129,7 @@ export function JobForm({ jobId, initialData, onSuccess, onCancel }: JobFormProp
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-6 pb-12">
-      <JobFormHeader
-        isEditing={isEditing}
-        isSubmitting={isSubmitting}
-        onCancel={onCancel}
-      />
+      <JobFormHeader isEditing={isEditing} isSubmitting={isSubmitting} onCancel={onCancel} />
 
       {submitError && <LocalAlert hasError hasSuccess={false} alertMessage={submitError} />}
 

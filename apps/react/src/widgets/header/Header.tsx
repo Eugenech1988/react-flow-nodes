@@ -1,11 +1,4 @@
-import {
-  Camera,
-  Cloud,
-  CloudAlert,
-  CloudCheck,
-  Save,
-  ShieldCheck,
-} from 'lucide-react';
+import { Camera, Cloud, CloudAlert, CloudCheck, Save, ShieldCheck } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';

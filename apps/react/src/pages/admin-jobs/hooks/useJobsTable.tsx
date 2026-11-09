@@ -38,7 +38,15 @@ export const useJobsTable = ({ jobs, onEdit }: UseJobsTableParams) => {
   };
 
   return {
-    paginatedJobs, columns, sorting, page: safePage, limit, totalPages,
-    totalItems: jobs.length, handleSort, setPage, setLimit,
+    paginatedJobs,
+    columns,
+    sorting,
+    page: safePage,
+    limit,
+    totalPages,
+    totalItems: jobs.length,
+    handleSort,
+    setPage,
+    setLimit,
   };
 };

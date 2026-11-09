@@ -61,10 +61,7 @@ describe('JobsService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        JobsService,
-        { provide: PrismaService, useValue: mockPrismaService },
-      ],
+      providers: [JobsService, { provide: PrismaService, useValue: mockPrismaService }],
     }).compile();
 
     service = module.get<JobsService>(JobsService);
@@ -208,9 +205,21 @@ describe('JobsService', () => {
         location: 'London',
         status: 'PUBLISHED',
         translations: [
-          { locale: 'en', title: 'EN', description: 'Desc EN', responsibilities: [], requirements: [] },
-          { locale: 'ua', title: 'UA', description: 'Desc UA', responsibilities: [], requirements: [] }
-        ]
+          {
+            locale: 'en',
+            title: 'EN',
+            description: 'Desc EN',
+            responsibilities: [],
+            requirements: [],
+          },
+          {
+            locale: 'ua',
+            title: 'UA',
+            description: 'Desc UA',
+            responsibilities: [],
+            requirements: [],
+          },
+        ],
       };
 
       await service.update('job-1', input);
@@ -226,14 +235,14 @@ describe('JobsService', () => {
 
       expect(mockPrismaService.jobTranslation.upsert).toHaveBeenCalledTimes(2);
       expect(mockPrismaService.jobTranslation.upsert).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { jobId_locale: { jobId: 'job-1', locale: 'en' } } })
+        expect.objectContaining({ where: { jobId_locale: { jobId: 'job-1', locale: 'en' } } }),
       );
       expect(mockPrismaService.jobTranslation.upsert).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { jobId_locale: { jobId: 'job-1', locale: 'ua' } } })
+        expect.objectContaining({ where: { jobId_locale: { jobId: 'job-1', locale: 'ua' } } }),
       );
 
       expect(mockPrismaService.jobTranslation.deleteMany).toHaveBeenCalledWith({
-        where: { jobId: 'job-1', locale: { notIn: ['en', 'ua'] } }
+        where: { jobId: 'job-1', locale: { notIn: ['en', 'ua'] } },
       });
 
       expect(mockPrismaService.job.findUnique).toHaveBeenLastCalledWith({
@@ -247,14 +256,20 @@ describe('JobsService', () => {
 
       const input: TUpdateJobInputData = {
         translations: [
-          { locale: 'en', title: 'EN', description: 'Desc EN', responsibilities: [], requirements: [] }
-        ]
+          {
+            locale: 'en',
+            title: 'EN',
+            description: 'Desc EN',
+            responsibilities: [],
+            requirements: [],
+          },
+        ],
       };
 
       await service.update('job-1', input);
 
       expect(mockPrismaService.jobTranslation.deleteMany).toHaveBeenCalledWith({
-        where: { jobId: 'job-1', locale: { notIn: ['en'] } }
+        where: { jobId: 'job-1', locale: { notIn: ['en'] } },
       });
     });
 
@@ -262,16 +277,12 @@ describe('JobsService', () => {
       mockPrismaService.job.findUnique.mockResolvedValue(createMockJob());
       mockPrismaService.job.findFirst.mockResolvedValue(createMockJob({ id: 'other' }));
 
-      await expect(service.update('job-1', { slug: 'taken' })).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.update('job-1', { slug: 'taken' })).rejects.toThrow(ConflictException);
     });
 
     it('throws NotFoundException when job missing', async () => {
       mockPrismaService.job.findUnique.mockResolvedValue(null);
-      await expect(service.update('missing', { location: 'X' })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.update('missing', { location: 'X' })).rejects.toThrow(NotFoundException);
     });
   });
 

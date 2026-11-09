@@ -19,10 +19,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
   const isCareers = theme === 'careers';
 
   // Общие классы для повторяющихся элементов
-  const cogClasses = cn(
-    'absolute h-4 w-4',
-    isCareers ? 'text-[#6fa28c]/40' : 'text-teal-400/30',
-  );
+  const cogClasses = cn('absolute h-4 w-4', isCareers ? 'text-[#6fa28c]/40' : 'text-teal-400/30');
 
   const dotClasses = cn(
     'h-1 w-1 rounded-full',
@@ -45,7 +42,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
           className={cn(
             'relative w-full rounded-2xl border border-white/10 bg-white/6 px-5 py-8 shadow-[0_8px_32px_0_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md after:absolute after:inset-0 after:-z-10 after:rounded-2xl after:bg-linear-to-b after:from-white/5 after:to-transparent after:opacity-50 sm:px-8 md:px-10 md:py-12',
             isCareers &&
-            'rounded-sm border-[#4a5c52]/50 bg-[#0a0e0d]/80 after:rounded-sm after:from-[#4a5c52]/20',
+              'rounded-sm border-[#4a5c52]/50 bg-[#0a0e0d]/80 after:rounded-sm after:from-[#4a5c52]/20',
           )}
         >
           <span

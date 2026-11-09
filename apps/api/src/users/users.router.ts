@@ -1,7 +1,4 @@
-import {
-  updatePasswordInputSchema,
-  currentPipelineInputSchema,
-} from '@pipeline/contracts';
+import { updatePasswordInputSchema, currentPipelineInputSchema } from '@pipeline/contracts';
 import { router, protectedProcedure } from '@/trpc/init';
 import { toSafeUser } from './users.helpers';
 import type { UsersService } from './users.service';

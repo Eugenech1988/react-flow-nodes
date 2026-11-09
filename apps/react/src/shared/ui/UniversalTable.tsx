@@ -45,20 +45,20 @@ export const UniversalTable = <
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = Record<string, unknown>,
 >({
-    table,
-    columns,
-    sorting,
-    totalItems,
-    page,
-    totalPages,
-    limit,
-    onSort,
-    onSelect,
-    onPageChange,
-    onLimitChange,
-    noDataText = 'No items found matching your filters.',
-    itemsUnitLabel = 'items',
-  }: TUniversalTableProps<TFeatures, TData>) => {
+  table,
+  columns,
+  sorting,
+  totalItems,
+  page,
+  totalPages,
+  limit,
+  onSort,
+  onSelect,
+  onPageChange,
+  onLimitChange,
+  noDataText = 'No items found matching your filters.',
+  itemsUnitLabel = 'items',
+}: TUniversalTableProps<TFeatures, TData>) => {
   const rows = table.getRowModel().rows;
 
   const showFooter = totalItems > 10 || totalPages > 1;
@@ -84,8 +84,7 @@ export const UniversalTable = <
 
                   // Извлекаем кастомные стили из meta
                   const meta = header.column.columnDef.meta as
-                    | { headerClassName?: string; cellClassName?: string }
-                    | undefined;
+                    { headerClassName?: string; cellClassName?: string } | undefined;
 
                   return (
                     <TableHead
@@ -96,16 +95,16 @@ export const UniversalTable = <
                         header.index === 0 ? 'pl-4' : '',
                         header.index === headerGroup.headers.length - 1 ? 'pr-4' : '',
                         // Применяем класс заголовка из meta
-                        meta?.headerClassName
+                        meta?.headerClassName,
                       )}
                       onClick={canSort ? () => onSort(header.column.id) : undefined}
                     >
                       {header.isPlaceholder ? null : (
                         <div
                           className={cn(
-                            'flex w-full items-center gap-1.5 justify-start',
+                            'flex w-full items-center justify-start gap-1.5',
                             // Дублируем класс для выравнивания (если нужно justify-end)
-                            meta?.headerClassName
+                            meta?.headerClassName,
                           )}
                         >
                           <span>
@@ -138,8 +137,7 @@ export const UniversalTable = <
                   >
                     {cells.map((cell, idx) => {
                       const meta = cell.column.columnDef.meta as
-                        | { headerClassName?: string; cellClassName?: string }
-                        | undefined;
+                        { headerClassName?: string; cellClassName?: string } | undefined;
 
                       return (
                         <TableCell
@@ -149,14 +147,14 @@ export const UniversalTable = <
                             idx === 0 ? 'pl-4' : '',
                             idx === cells.length - 1 ? 'pr-4' : '',
                             // Применяем класс ячейки из meta
-                            meta?.cellClassName
+                            meta?.cellClassName,
                           )}
                         >
                           <div
                             className={cn(
                               'flex w-full items-center justify-start',
                               // Дублируем класс для выравнивания
-                              meta?.cellClassName
+                              meta?.cellClassName,
                             )}
                           >
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}

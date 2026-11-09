@@ -27,7 +27,7 @@ import { BlogModule } from '@/blog/blog.module';
     DatabaseNodesModule,
     ExecutionsModule,
     JobsModule,
-    BlogModule
+    BlogModule,
   ],
 })
 export class AppModule {}

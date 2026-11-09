@@ -5,3 +5,4 @@ export * from './PublicOnlyRoute';
 export * from './HomeRoute';
 export * from './ErrorBoundary';
 export * from './RoleGuard';
+export * from './ThemeProvider';

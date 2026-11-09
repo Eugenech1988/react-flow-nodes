@@ -3,8 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import '@pipeline/ui/globals.css';
 import './style.css';
-import { QueryProvider, AppRoutes } from '@/app/providers';
-import { ThemeProvider } from 'next-themes';
+import { QueryProvider, AppRoutes, ThemeProvider } from '@/app/providers';
 
 async function bootstrap() {
   try {
@@ -18,7 +17,7 @@ async function bootstrap() {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <QueryProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider defaultTheme="system">
           <Router>
             <AppRoutes />
           </Router>

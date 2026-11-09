@@ -33,7 +33,12 @@ export function useJobMutations() {
   const remove = useMutation(trpc.jobs.remove.mutationOptions({ onSuccess: invalidate }));
 
   return {
-    createJob, updateJob, upsertTranslation, removeTranslation,
-    publish, archive, remove,
+    createJob,
+    updateJob,
+    upsertTranslation,
+    removeTranslation,
+    publish,
+    archive,
+    remove,
   };
 }

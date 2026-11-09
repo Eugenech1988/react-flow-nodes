@@ -9,13 +9,13 @@ export const SETTINGS_TABS = (
   { id: 'account', label: 'Account Settings', icon: Shield },
   ...(!isContentManager
     ? [
-      {
-        id: 'billing',
-        label: 'Billing',
-        icon: CreditCard,
-        badge: isProActive ? 'PRO' : undefined,
-      },
-    ]
+        {
+          id: 'billing',
+          label: 'Billing',
+          icon: CreditCard,
+          badge: isProActive ? 'PRO' : undefined,
+        },
+      ]
     : []),
 ];
 

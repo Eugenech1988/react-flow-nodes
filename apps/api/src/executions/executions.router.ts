@@ -1,8 +1,5 @@
 import { z } from 'zod';
-import {
-  createExecutionInputSchema,
-  updateExecutionInputSchema,
-} from '@pipeline/contracts';
+import { createExecutionInputSchema, updateExecutionInputSchema } from '@pipeline/contracts';
 import { router, protectedProcedure } from '@/trpc/init';
 import type { ExecutionsService } from './executions.service';
 

@@ -19,7 +19,10 @@ export const createPostInputSchema = z.object({
 });
 
 export const updatePostInputSchema = z.object({
-  slug: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  slug: z
+    .string()
+    .regex(/^[a-z0-9-]+$/)
+    .optional(),
   status: postStatusSchema.optional(),
   coverImage: z.string().nullable().optional(),
   translations: z.array(postTranslationInputSchema).optional(),

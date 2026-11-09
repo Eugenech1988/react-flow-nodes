@@ -53,10 +53,19 @@
     "badge": "PERK",
     "list": {
       "1": { "title": "Remote-first", "description": "Work from anywhere across 12 time zones." },
-      "2": { "title": "Learning budget", "description": "$2,000/yr for books, courses, and conferences." },
-      "3": { "title": "Health & wellness", "description": "Full medical, dental, and mental health coverage." },
+      "2": {
+        "title": "Learning budget",
+        "description": "$2,000/yr for books, courses, and conferences."
+      },
+      "3": {
+        "title": "Health & wellness",
+        "description": "Full medical, dental, and mental health coverage."
+      },
       "4": { "title": "Async by default", "description": "Flexible hours with deep-focus blocks." },
-      "5": { "title": "Team retreats", "description": "Two offsites per year in interesting places." },
+      "5": {
+        "title": "Team retreats",
+        "description": "Two offsites per year in interesting places."
+      },
       "6": { "title": "Top hardware", "description": "Your choice of MacBook Pro or equivalent." }
     }
   },

@@ -12,9 +12,9 @@ export function createBillingRouter(billingService: BillingService) {
       billingService.getTransactionsByUserId(ctx.user.id),
     ),
 
-    checkout: protectedProcedure.input(planSchema).mutation(({ ctx, input }) =>
-      billingService.createCheckoutSession(ctx.user.id, input),
-    ),
+    checkout: protectedProcedure
+      .input(planSchema)
+      .mutation(({ ctx, input }) => billingService.createCheckoutSession(ctx.user.id, input)),
 
     cancel: protectedProcedure.mutation(({ ctx }) =>
       billingService.cancelSubscription(ctx.user.id),

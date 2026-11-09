@@ -49,7 +49,8 @@ export const PricingSection = () => {
             // 👇 Использование утилиты cn для чистоты классов
             const buttonClassName = cn(
               'w-full',
-              !isPopular && 'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white'
+              !isPopular &&
+                'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white',
             );
 
             return (
@@ -58,7 +59,7 @@ export const PricingSection = () => {
                   popular={isPopular}
                   className={cn(
                     'h-full justify-between rounded-3xl p-6 sm:p-8',
-                    isPopular && 'md:-translate-y-4'
+                    isPopular && 'md:-translate-y-4',
                   )}
                 >
                   {isPopular && (

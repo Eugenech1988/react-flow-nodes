@@ -138,10 +138,7 @@ export async function getPublishedJobs(locale: string): Promise<TPublicJob[]> {
   }
 }
 
-export async function getJobBySlug(
-  locale: string,
-  slug: string,
-): Promise<TPublicJob | null> {
+export async function getJobBySlug(locale: string, slug: string): Promise<TPublicJob | null> {
   const jobs = await getPublishedJobs(locale);
   return jobs.find((j) => j.slug === slug) ?? null;
 }

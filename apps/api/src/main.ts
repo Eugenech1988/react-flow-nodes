@@ -82,7 +82,7 @@ async function bootstrap() {
     databaseNodesService: app.get(DatabaseNodesService),
     executionsService: app.get(ExecutionsService),
     jobsService: app.get(JobsService),
-    blogService: app.get(BlogService)
+    blogService: app.get(BlogService),
   });
 
   app

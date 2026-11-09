@@ -5,21 +5,24 @@ import i18nConfig from '@/shared/lib/i18n/config';
 
 const intlProxy = createProxy(i18nConfig);
 
-const ALLOWED_ORIGINS = [
-  'http://localhost:5173',
-  process.env.ADMIN_APP_URL,
-].filter(Boolean) as string[];
+const ALLOWED_ORIGINS = ['http://localhost:5173', process.env.ADMIN_APP_URL].filter(
+  Boolean,
+) as string[];
+
+const corsOptions = {
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-revalidate-secret',
+  'Access-Control-Max-Age': '86400',
+};
 
 export function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith('/api/revalidate')) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname.startsWith('/api/revalidate')) {
     const origin = request.headers.get('origin') ?? '';
     const isAllowed = ALLOWED_ORIGINS.includes(origin);
 
-    const corsHeaders = new Headers({
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, x-revalidate-secret',
-      'Access-Control-Max-Age': '86400',
-    });
+    const corsHeaders = new Headers(corsOptions);
 
     if (isAllowed) {
       corsHeaders.set('Access-Control-Allow-Origin', origin);
@@ -41,5 +44,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],
 };
