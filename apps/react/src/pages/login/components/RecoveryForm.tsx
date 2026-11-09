@@ -1,9 +1,14 @@
 import type { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LocalAlert, AppButton } from '@/shared/ui';
-import { requestSchema, resetSchema, type TRecoveryMode, type TResetFormData, type TRequestFormData } from '../model';
-import { AuthField } from './AuthField';
+import { FloatingInput, LocalAlert, AppButton } from '@/shared/ui';
+import {
+  requestSchema,
+  resetSchema,
+  type TRecoveryMode,
+  type TResetFormData,
+  type TRequestFormData,
+} from '../model';
 
 interface RecoveryFormProps {
   mode: TRecoveryMode;
@@ -20,8 +25,19 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
                                                     }) => {
   const isRequest = mode === 'request';
 
-  const requestForm = useForm<TRequestFormData>({ resolver: zodResolver(requestSchema), defaultValues: { email: '' } });
-  const resetForm = useForm<TResetFormData>({ resolver: zodResolver(resetSchema), defaultValues: { password: '', confirmPassword: '' } });
+  const requestForm = useForm<TRequestFormData>({
+    resolver: zodResolver(requestSchema),
+    defaultValues: { email: '' },
+  });
+
+  const resetForm = useForm<TResetFormData>({
+    resolver: zodResolver(resetSchema),
+    defaultValues: { password: '', confirmPassword: '' },
+  });
+
+  const labelClasses = "text-zinc-400 peer-focus:text-teal-400 peer-not-placeholder-shown:text-teal-400 [&]:peer-[:autofill]:text-teal-400 [&]:peer-[:autofill]:top-0 [&]:peer-[:autofill]:-translate-y-1/2 [&]:peer-[:autofill]:text-[10px]";
+  const fieldsetClasses = "border-white/10 peer-focus:border-teal-500 peer-not-placeholder-shown:border-teal-500 peer-[:autofill]:border-teal-500";
+  const inputClasses = "text-white [&:-webkit-autofill]:shadow-[inset_0_0_0_100px_#050505]! [&:-webkit-autofill]:[-webkit-text-fill-color:white]!";
 
   if (isSuccess && isRequest) {
     return (
@@ -41,31 +57,43 @@ export const RecoveryForm: FC<RecoveryFormProps> = ({
 
       <div className="space-y-4">
         {isRequest ? (
-          <AuthField
-            id="email"
+          <FloatingInput
+            {...requestForm.register('email')}
             type="email"
             autoComplete="email"
             label="Email Address"
-            error={requestForm.formState.errors.email?.message}
-            {...requestForm.register('email')}
+            error={!!requestForm.formState.errors.email}
+            errorMessage={requestForm.formState.errors.email?.message}
+            labelClasses={labelClasses}
+            fieldsetClasses={fieldsetClasses}
+            className={inputClasses}
+            rounded="md"
           />
         ) : (
           <>
-            <AuthField
-              id="password"
+            <FloatingInput
+              {...resetForm.register('password')}
               type="password"
               autoComplete="new-password"
               label="New Password"
-              error={resetForm.formState.errors.password?.message}
-              {...resetForm.register('password')}
+              error={!!resetForm.formState.errors.password}
+              errorMessage={resetForm.formState.errors.password?.message}
+              labelClasses={labelClasses}
+              fieldsetClasses={fieldsetClasses}
+              className={inputClasses}
+              rounded="md"
             />
-            <AuthField
-              id="confirmPassword"
+            <FloatingInput
+              {...resetForm.register('confirmPassword')}
               type="password"
               autoComplete="new-password"
               label="Confirm New Password"
-              error={resetForm.formState.errors.confirmPassword?.message}
-              {...resetForm.register('confirmPassword')}
+              error={!!resetForm.formState.errors.confirmPassword}
+              errorMessage={resetForm.formState.errors.confirmPassword?.message}
+              labelClasses={labelClasses}
+              fieldsetClasses={fieldsetClasses}
+              className={inputClasses}
+              rounded="md"
             />
           </>
         )}

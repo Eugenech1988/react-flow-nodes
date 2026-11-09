@@ -19,6 +19,7 @@ import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
 import { doubleCsrf } from 'csrf-csrf';
 import { ExecutionsService } from '@/executions/executions.service';
 import { JobsService } from '@/jobs/jobs.service';
+import { BlogService } from '@/blog/blog.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
@@ -81,6 +82,7 @@ async function bootstrap() {
     databaseNodesService: app.get(DatabaseNodesService),
     executionsService: app.get(ExecutionsService),
     jobsService: app.get(JobsService),
+    blogService: app.get(BlogService)
   });
 
   app

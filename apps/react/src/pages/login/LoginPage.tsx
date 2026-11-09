@@ -16,22 +16,10 @@ export const LoginPage: React.FC = () => {
   const tokenFromUrl = searchParams.get('token');
 
   const {
-    mode,
-    is2faRequired,
-    isLoading,
-    apiError,
-    twoFactorError,
-    recoveryError,
-    isRecoverySuccess,
-    isRegistrationSuccess,
-    setRegistrationSuccess,
-    login,
-    register: registerAction,
-    verifyTwoFactor,
-    requestPasswordReset,
-    resetPassword,
-    toggleMode,
-    resetState,
+    mode, is2faRequired, isLoading, apiError, twoFactorError, recoveryError,
+    isRecoverySuccess, isRegistrationSuccess, setRegistrationSuccess, login,
+    register: registerAction, verifyTwoFactor, requestPasswordReset, resetPassword,
+    toggleMode, resetState,
   } = useAuthStore();
 
   const trpc = useTRPC();
@@ -121,8 +109,10 @@ export const LoginPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex w-full flex-col justify-start overflow-y-auto px-6 py-12 pt-16 sm:px-12 lg:w-[40%] xl:px-24">
-        <div className="mx-auto w-full max-w-sm">
+      {/* 👇 Правая панель: justify-center и overflow-y-auto */}
+      <div className="flex h-screen w-full flex-col items-center justify-center overflow-y-auto px-6 py-12 sm:px-12 lg:w-[40%] xl:px-24">
+        {/* 👇 my-auto гарантирует центрирование, даже если контент длиннее экрана */}
+        <div className="my-auto w-full max-w-sm">
           <div className="mb-8 flex flex-col items-center text-center">
             <img src={Logo} alt="Pipeline Studio" className="mb-4 h-10 w-auto text-teal-400" />
             <h2 className="bg-gradient-to-r from-teal-200 via-teal-400 to-teal-600 bg-clip-text text-2xl font-semibold tracking-tight text-transparent drop-shadow-[0_0_15px_rgba(45,212,191,0.2)]">

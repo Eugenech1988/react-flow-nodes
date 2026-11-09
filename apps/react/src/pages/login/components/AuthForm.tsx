@@ -70,13 +70,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         onSubmit={isLogin ? handleLoginSubmit(onLogin) : handleRegisterSubmit(onRegister)}
         className="flex flex-col gap-5"
       >
-        <div className="space-y-4">
+        <div className="space-y-2">
           {isLogin ? (
             <>
               <LoginFields register={loginRegister} errors={loginErrors} />
 
-              {/* Блок с ошибкой и Forgot Password. Никаких min-h и pt */}
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start justify-between gap-4 pt-1">
                 <div className="flex-1">
                   {currentApiError && (
                     <span className="animate-in fade-in slide-in-from-left-2 block text-xs font-medium leading-relaxed text-red-500">
@@ -98,7 +97,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               <RegisterFields register={registerRegister} errors={registerErrors} />
 
               {currentApiError && (
-                <span className="animate-in fade-in slide-in-from-top-2 block text-xs font-medium leading-relaxed text-red-500">
+                <span className="animate-in fade-in slide-in-from-top-2 block pt-2 text-xs font-medium leading-relaxed text-red-500">
                   {currentApiError}
                 </span>
               )}
@@ -106,7 +105,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           )}
         </div>
 
-        {/* Убран pt-4, кнопка теперь идет сразу за полями/ошибкой */}
         <div className="space-y-3">
           <AppButton
             type="submit"

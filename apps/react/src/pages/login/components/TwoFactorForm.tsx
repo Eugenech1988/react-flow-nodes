@@ -2,10 +2,11 @@ import type { FC } from 'react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@pipeline/ui';
 import { AppButton, LocalAlert } from '@/shared/ui';
 import { twoFactorLoginInputSchema, type TTwoFactorLoginInputData } from '@pipeline/contracts';
 import { useAuthStore } from '../model';
-import { AuthField } from './AuthField';
+import { cn } from '@/shared/lib';
 
 interface TwoFactorFormProps {
   error?: string | null;
@@ -26,25 +27,36 @@ export const TwoFactorForm: FC<TwoFactorFormProps> = ({ error, isLoading, onVeri
     if (tempToken) setValue('tempToken', tempToken, { shouldValidate: true });
   }, [tempToken, setValue]);
 
+  const hasCodeError = !!errors.code;
+
   return (
     <form onSubmit={handleSubmit(onVerify)} className="space-y-6">
       <input type="hidden" {...register('tempToken')} />
 
       {error && <LocalAlert hasError hasSuccess={false} alertMessage={error} />}
 
-      <AuthField
-        id="code"
-        type="text"
-        inputMode="numeric"
-        maxLength={32}
-        autoFocus
-        autoComplete="one-time-code"
-        placeholder="123456 or recovery code"
-        label="Verification Code"
-        error={errors.code?.message}
-        className="h-12 text-center font-mono text-xl font-bold tracking-widest"
-        {...register('code')}
-      />
+      <div className="space-y-2">
+        <Input
+          type="text"
+          inputMode="numeric"
+          maxLength={32}
+          autoFocus
+          autoComplete="one-time-code"
+          placeholder="123456 or recovery code"
+          {...register('code')}
+          className={cn(
+            'h-12 w-full rounded-md border bg-white/5 text-center font-mono text-xl font-bold tracking-widest text-white placeholder:text-zinc-600 placeholder:tracking-normal transition-all duration-300 focus-visible:outline-none focus-visible:ring-1',
+            hasCodeError
+              ? 'border-rose-500 focus-visible:border-rose-500 focus-visible:ring-rose-500/50'
+              : 'border-white/10 focus-visible:border-teal-500 focus-visible:ring-teal-500/50',
+          )}
+        />
+        {errors.code && (
+          <p className="text-center text-xs font-medium text-rose-400">
+            {errors.code.message}
+          </p>
+        )}
+      </div>
 
       <div className="grid grid-cols-2 gap-3 pt-2">
         <AppButton type="button" text="Cancel" variant="secondary" size="md" onClick={onBack} isDisabled={isLoading} className="w-full rounded-md" />
