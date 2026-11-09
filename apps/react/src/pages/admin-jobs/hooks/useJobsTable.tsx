@@ -23,7 +23,7 @@ export const useJobsTable = ({ jobs, onEdit }: UseJobsTableParams) => {
         accessorFn: (job) => job.slug,
         header: 'Slug',
         cell: ({ row }) => (
-          <span className="text-muted-foreground font-mono text-xs">{row.original.slug}</span>
+          <span className="text-muted-foreground">{row.original.slug}</span>
         ),
       },
       {
@@ -33,10 +33,10 @@ export const useJobsTable = ({ jobs, onEdit }: UseJobsTableParams) => {
         cell: ({ row }) => {
           const title = getEnTitle(row.original);
           if (title) {
-            return <span className="font-medium">{title}</span>;
+            return <span className="font-medium text-left">{title}</span>;
           }
           return (
-            <span className="border-destructive/30 bg-destructive/10 text-destructive rounded border px-2 py-0.5 text-xs">
+            <span className="text-xs">
               Missing EN
             </span>
           );
@@ -47,7 +47,7 @@ export const useJobsTable = ({ jobs, onEdit }: UseJobsTableParams) => {
         accessorFn: (job) => job.department,
         header: 'Department',
         cell: ({ row }) => (
-          <span className="text-muted-foreground text-xs uppercase">{row.original.department}</span>
+          <span className="text-muted-foreground">{row.original.department}</span>
         ),
       },
       {
@@ -55,7 +55,7 @@ export const useJobsTable = ({ jobs, onEdit }: UseJobsTableParams) => {
         accessorFn: (job) => getLocalesLabel(job),
         header: 'Locales',
         cell: ({ row }) => (
-          <span className="text-muted-foreground font-mono text-xs uppercase">
+          <span className="text-muted-foreground">
             {getLocalesLabel(row.original)}
           </span>
         ),

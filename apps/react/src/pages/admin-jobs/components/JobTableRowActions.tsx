@@ -1,5 +1,11 @@
-import { Pencil, Trash2, Send, Archive } from 'lucide-react';
-import { AppButton } from '@/shared/ui';
+import { Pencil, Trash2, Send, Archive, MoreHorizontal } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@pipeline/ui';
 import { useJobMutations } from '../hooks/';
 import type { IJob } from '../model/types';
 
@@ -15,6 +21,8 @@ export const JobTableRowActions = ({ job, onEdit }: JobsTableRowActionsProps) =>
   const isArchiving = archive.isPending && archive.variables?.id === job.id;
   const isRemoving = remove.isPending && remove.variables?.id === job.id;
 
+  const isAnyPending = isPublishing || isArchiving || isRemoving;
+
   const handleDelete = () => {
     if (confirm(`Delete "${job.slug}"? This cannot be undone.`)) {
       remove.mutate({ id: job.id });
@@ -22,47 +30,56 @@ export const JobTableRowActions = ({ job, onEdit }: JobsTableRowActionsProps) =>
   };
 
   return (
-    <div className="flex gap-1">
-      <span title="Edit">
-        <AppButton variant="ghost" size="sm" icon={Pencil} onClick={() => onEdit(job.id)} />
-      </span>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        disabled={isAnyPending}
+        className="text-muted-foreground hover:text-foreground hover:bg-muted flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-0 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-teal-500/50 disabled:pointer-events-none disabled:opacity-50"
+      >
+        <MoreHorizontal className="h-4 w-4" />
+      </DropdownMenuTrigger>
 
-      {job.status !== 'PUBLISHED' && (
-        <span title="Publish">
-          <AppButton
-            variant="ghost"
-            size="sm"
-            icon={Send}
-            iconClassName="text-emerald-500"
+      <DropdownMenuContent align="end" className="w-40">
+        <DropdownMenuItem
+          onClick={() => onEdit(job.id)}
+          className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium outline-none"
+        >
+          <Pencil className="h-4 w-4 text-muted-foreground" />
+          Edit
+        </DropdownMenuItem>
+
+        {job.status !== 'PUBLISHED' && (
+          <DropdownMenuItem
             onClick={() => publish.mutate({ id: job.id })}
-            isPending={isPublishing}
-          />
-        </span>
-      )}
+            disabled={isPublishing}
+            className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-emerald-600 outline-none focus:bg-emerald-500/10 focus:text-emerald-700 dark:text-emerald-400 dark:focus:bg-emerald-500/20 dark:focus:text-emerald-300"
+          >
+            <Send className="h-4 w-4" />
+            {isPublishing ? 'Publishing...' : 'Publish'}
+          </DropdownMenuItem>
+        )}
 
-      {job.status !== 'ARCHIVED' && (
-        <span title="Archive">
-          <AppButton
-            variant="ghost"
-            size="sm"
-            icon={Archive}
-            iconClassName="text-amber-500"
+        {job.status !== 'ARCHIVED' && (
+          <DropdownMenuItem
             onClick={() => archive.mutate({ id: job.id })}
-            isPending={isArchiving}
-          />
-        </span>
-      )}
+            disabled={isArchiving}
+            className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-amber-600 outline-none focus:bg-amber-500/10 focus:text-amber-700 dark:text-amber-400 dark:focus:bg-amber-500/20 dark:focus:text-amber-300"
+          >
+            <Archive className="h-4 w-4" />
+            {isArchiving ? 'Archiving...' : 'Archive'}
+          </DropdownMenuItem>
+        )}
 
-      <span title="Delete">
-        <AppButton
-          variant="ghost"
-          size="sm"
-          icon={Trash2}
-          iconClassName="text-destructive"
+        <DropdownMenuSeparator className="bg-border/60 my-1" />
+
+        <DropdownMenuItem
           onClick={handleDelete}
-          isPending={isRemoving}
-        />
-      </span>
-    </div>
+          disabled={isRemoving}
+          className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-rose-600 outline-none focus:bg-rose-500/10 focus:text-rose-700 dark:text-rose-400 dark:focus:bg-rose-500/20 dark:focus:text-rose-300"
+        >
+          <Trash2 className="h-4 w-4" />
+          {isRemoving ? 'Deleting...' : 'Delete'}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

@@ -38,7 +38,6 @@ export function JobTable({ jobs, onEdit, isLoading = false }: JobsTableProps) {
   if (isLoading) {
     return (
       <div className="animate-in fade-in duration-200">
-        {/* Показываем скелетон ровно на столько строк, сколько помещается на странице */}
         <TableSkeleton rowCount={limit} columnCount={6} />
       </div>
     );

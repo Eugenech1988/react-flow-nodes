@@ -1,32 +1,11 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Plus, AlertCircle, Briefcase } from 'lucide-react';
 import { AppButton } from '@/shared/ui';
 import { useAdminJobs } from './hooks';
-import { JobTable, JobForm } from './components';
+import { JobTable } from './components';
 
-export function AdminJobsPage() {
-  const { id } = useParams<{ id?: string }>();
+export function JobsListPage() {
   const navigate = useNavigate();
-
-  const isCreating = id === 'new';
-  const isEditing = !!id && !isCreating;
-
-  if (isCreating || isEditing) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        <JobForm
-          jobId={isEditing ? id! : null}
-          onSuccess={() => navigate('/admin/jobs')}
-          onCancel={() => navigate('/admin/jobs')}
-        />
-      </div>
-    );
-  }
-
-  return <JobsList onEdit={(jobId) => navigate(`/admin/jobs/${jobId}`)} />;
-}
-
-function JobsList({ onEdit }: { onEdit: (id: string) => void }) {
   const { data: jobs, isLoading, isError, error } = useAdminJobs();
 
   if (isError) {
@@ -64,7 +43,11 @@ function JobsList({ onEdit }: { onEdit: (id: string) => void }) {
         />
       </div>
 
-      <JobTable jobs={jobs ?? []} onEdit={onEdit} isLoading={isLoading} />
+      <JobTable
+        jobs={jobs ?? []}
+        onEdit={(jobId) => navigate(`/admin/jobs/${jobId}`)}
+        isLoading={isLoading}
+      />
     </div>
   );
 }
