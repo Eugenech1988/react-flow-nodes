@@ -13,7 +13,7 @@ export function createJobsRouter(jobsService: JobsService) {
       .input(
         z
           .object({
-            locale: z.string().default('en'),
+            locale: z.string().optional(),
             department: z.string().optional(),
           })
           .optional(),
@@ -21,7 +21,7 @@ export function createJobsRouter(jobsService: JobsService) {
       .query(({ input }) => jobsService.findAll(input)),
 
     bySlug: publicProcedure
-      .input(z.object({ slug: z.string(), locale: z.string().default('en') }))
+      .input(z.object({ slug: z.string(), locale: z.string().optional() }))
       .query(({ input }) => jobsService.findOneBySlug(input.slug, input.locale)),
 
     adminList: contentManagerProcedure.query(() => jobsService.findAllAdmin()),

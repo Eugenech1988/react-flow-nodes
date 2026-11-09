@@ -22,7 +22,7 @@ export class JobsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(options: FindAllJobsOptions = {}) {
-    const { locale = 'en', department, includeUnpublished = false } = options;
+    const { department, includeUnpublished = false } = options;
 
     const jobs = await this.prisma.job.findMany({
       where: {
@@ -30,7 +30,7 @@ export class JobsService {
         ...(department && { department: department as any }),
       },
       include: {
-        translations: { where: { locale } },
+        translations: true,
       },
       orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
     });
@@ -38,11 +38,11 @@ export class JobsService {
     return jobs.filter((j) => j.translations.length > 0);
   }
 
-  async findOneBySlug(slug: string, locale = 'en') {
+  async findOneBySlug(slug: string, _locale?: string) {
     const job = await this.prisma.job.findFirst({
       where: { slug, status: JobStatus.PUBLISHED },
       include: {
-        translations: { where: { locale } },
+        translations: true,
       },
     });
 

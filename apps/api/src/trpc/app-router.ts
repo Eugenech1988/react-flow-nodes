@@ -1,35 +1,25 @@
-import { TRPCError } from '@trpc/server';
-import {
-  loginInputSchema,
-  registerInputSchema,
-  twoFactorTotpOnlySchema,
-  twoFactorLoginInputSchema,
-  twoFactorCodeOrBackupSchema,
-  updatePasswordInputSchema,
-  updateProfileInputSchema,
-  updatePipelineInputSchema,
-  currentPipelineInputSchema,
-  removePipelineInputSchema,
-  planSchema,
-  passwordResetInputSchema,
-  requestResetInputSchema,
-  createDatabaseNodeInputSchema,
-  createExecutionInputSchema,
-  updateExecutionInputSchema,
-} from '@pipeline/contracts';
-import { AuthService } from '@/auth/auth.service';
-import { AiService } from '@/ai/ai.service';
-import { BillingService } from '@/billing/billing.service';
-import { PipelinesService } from '@/pipelines/pipelines.service';
-import { ProfileService } from '@/profile/profile.service';
-import { UsersService } from '@/users/users.service';
-import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
-import { protectedProcedure, publicProcedure, router } from '@/trpc/init';
-import { ExecutionsService } from '@/executions/executions.service';
-import { JobsService } from '@/jobs/jobs.service';
-import { createJobsRouter } from '@/jobs/jobs.router';
-import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 import { z } from 'zod';
+import { updateProfileInputSchema } from '@pipeline/contracts';
+import { router, publicProcedure, protectedProcedure } from '@/trpc/init';
+import { toSafeUser } from '@/users/users.helpers';
+
+import { createAuthRouter } from '@/auth/auth.router';
+import { createUsersRouter } from '@/users/users.router';
+import { createBillingRouter } from '@/billing/billing.router';
+import { createPipelinesRouter } from '@/pipelines/pipelines.router';
+import { createExecutionsRouter } from '@/executions/executions.router';
+import { createDatabaseNodesRouter } from '@/database-nodes/database-nodes.router';
+import { createJobsRouter } from '@/jobs/jobs.router';
+
+import type { AuthService } from '@/auth/auth.service';
+import type { AiService } from '@/ai/ai.service';
+import type { BillingService } from '@/billing/billing.service';
+import type { PipelinesService } from '@/pipelines/pipelines.service';
+import type { ProfileService } from '@/profile/profile.service';
+import type { UsersService } from '@/users/users.service';
+import type { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
+import type { ExecutionsService } from '@/executions/executions.service';
+import type { JobsService } from '@/jobs/jobs.service';
 
 interface RouterServices {
   authService: AuthService;
@@ -43,89 +33,14 @@ interface RouterServices {
   jobsService: JobsService;
 }
 
-function setTokenCookies(res: { cookie: Function }, accessToken: string, refreshToken: string) {
-  const secure = process.env.NODE_ENV === 'production';
-  const baseOptions = { httpOnly: true, secure, sameSite: 'lax' as const };
-
-  res.cookie('accessToken', accessToken, { ...baseOptions, maxAge: 15 * 60 * 1000 });
-  res.cookie('refreshToken', refreshToken, { ...baseOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
-}
-
-function toSafeUser<T extends Record<string, any>>(user: T) {
-  const {
-    password: _password,
-    twoFactorSecret: _twoFactorSecret,
-    recoveryCodes: _recoveryCodes,
-    ...safeUser
-  } = user;
-  return safeUser;
-}
-
 export function createAppRouter(services: RouterServices) {
-  const authRouter = router({
-    me: publicProcedure.query(({ ctx }) => (ctx.user ? toSafeUser(ctx.user) : null)),
-    login: publicProcedure.input(loginInputSchema).mutation(async ({ ctx, input }) => {
-      const user = await services.authService.validateUser(input.email, input.password);
-      if (!user) throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid credentials' });
-      if (user.isTwoFactorEnabled) {
-        return {
-          isTwoFactorRequired: true as const,
-          tempToken: services.authService.generateTempToken(user.id),
-        };
-      }
-
-      const tokens = await services.authService.generateTokens(user.id);
-      setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
-      return { isTwoFactorRequired: false as const, user: toSafeUser(user) };
-    }),
-    loginWith2fa: publicProcedure
-      .input(twoFactorLoginInputSchema)
+  const profileRouter = router({
+    update: protectedProcedure
+      .input(updateProfileInputSchema)
       .mutation(async ({ ctx, input }) => {
-        const user = await services.authService.authenticateWith2Fa(input.tempToken, input.code);
-        const tokens = await services.authService.generateTokens(user.id);
-        setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
-        return toSafeUser(user);
+        const updatedUser = await services.profileService.update(ctx.user.id, input);
+        return toSafeUser(updatedUser);
       }),
-    generate2fa: protectedProcedure.mutation(async ({ ctx }) => {
-      return services.authService.generateTwoFactorSecret(ctx.user.id);
-    }),
-    turnOn2fa: protectedProcedure
-      .input(twoFactorTotpOnlySchema)
-      .mutation(async ({ ctx, input }) => {
-        return services.authService.turnOnTwoFactor(ctx.user.id, input.code);
-      }),
-    turnOff2fa: protectedProcedure
-      .input(twoFactorCodeOrBackupSchema)
-      .mutation(async ({ ctx, input }) => {
-        return services.authService.turnOffTwoFactor(ctx.user.id, input.code);
-      }),
-    register: publicProcedure.input(registerInputSchema).mutation(async ({ ctx, input }) => {
-      const user = await services.authService.register(input);
-      const tokens = await services.authService.generateTokens(user.id);
-      setTokenCookies(ctx.res, tokens.accessToken, tokens.refreshToken);
-      return toSafeUser(user);
-    }),
-    logout: publicProcedure.mutation(async ({ ctx }) => {
-      const refreshToken = ctx.req.cookies?.['refreshToken'];
-
-      if (refreshToken) {
-        await services.authService.logout(refreshToken);
-      }
-
-      const secure = process.env.NODE_ENV === 'production';
-      const options = { httpOnly: true, secure, sameSite: 'lax' as const };
-      ctx.res.clearCookie('accessToken', options);
-      ctx.res.clearCookie('refreshToken', options);
-      return { success: true };
-    }),
-    requestPasswordReset: publicProcedure
-      .input(requestResetInputSchema)
-      .mutation(async ({ input }) => {
-        return services.authService.publicRequestResetPassword(input);
-      }),
-    resetPassword: publicProcedure.input(passwordResetInputSchema).mutation(async ({ input }) => {
-      return services.authService.publicResetPassword(input);
-    }),
   });
 
   const aiRouter = router({
@@ -136,145 +51,19 @@ export function createAppRouter(services: RouterServices) {
           system: z.string().optional(),
         }),
       )
-      .mutation(({ input }) => {
-        return services.aiService.test(input.message, input.system);
-      }),
+      .mutation(({ input }) => services.aiService.test(input.message, input.system)),
   });
-
-  const usersRouter = router({
-    updatePassword: protectedProcedure
-      .input(updatePasswordInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        await services.usersService.updatePassword(ctx.user.id, input);
-        return { success: true };
-      }),
-    remove: protectedProcedure.mutation(async ({ ctx }) => {
-      await services.usersService.delete(ctx.user.id);
-      return { success: true };
-    }),
-    setCurrentPipeline: protectedProcedure
-      .input(currentPipelineInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        const updatedUser = await services.usersService.setCurrentPipeline(ctx.user.id, input.id);
-        return toSafeUser(updatedUser);
-      }),
-  });
-
-  const billingRouter = router({
-    subscription: protectedProcedure.query(({ ctx }) =>
-      services.billingService.getSubscriptionByUserId(ctx.user.id),
-    ),
-    transactions: protectedProcedure.query(({ ctx }) =>
-      services.billingService.getTransactionsByUserId(ctx.user.id),
-    ),
-    checkout: protectedProcedure
-      .input(planSchema)
-      .mutation(({ ctx, input }) =>
-        services.billingService.createCheckoutSession(ctx.user.id, input),
-      ),
-    cancel: protectedProcedure.mutation(({ ctx }) =>
-      services.billingService.cancelSubscription(ctx.user.id),
-    ),
-  });
-
-  const pipelinesRouter = router({
-    list: protectedProcedure.query(({ ctx }) =>
-      services.pipelinesService.findAllByUserId(ctx.user.id),
-    ),
-    remove: protectedProcedure
-      .input(removePipelineInputSchema.pick({ id: true }))
-      .mutation(({ ctx, input }) => services.pipelinesService.remove(input.id, ctx.user.id)),
-    update: protectedProcedure.input(updatePipelineInputSchema).mutation(async ({ ctx, input }) => {
-      const { id, ...dto } = input;
-      return services.pipelinesService.update(id, ctx.user.id, dto as UpdatePipelineDto);
-    }),
-  });
-
-  const profileRouter = router({
-    update: protectedProcedure.input(updateProfileInputSchema).mutation(async ({ ctx, input }) => {
-      const updatedUser = await services.profileService.update(ctx.user.id, input);
-      return toSafeUser(updatedUser);
-    }),
-  });
-
-  const databaseNodesRouter = router({
-    createRecord: protectedProcedure
-      .input(createDatabaseNodeInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        const userId = ctx.user.id;
-        return services.databaseNodesService.createRecord(userId, input);
-      }),
-    getByNodeId: protectedProcedure.input(z.object({ nodeId: z.string() })).query(({ input }) => {
-      return services.databaseNodesService.findByNodeId(input.nodeId);
-    }),
-    getByPipelineId: protectedProcedure
-      .input(z.object({ pipelineId: z.string() }))
-      .query(({ input }) => {
-        return services.databaseNodesService.findByPipelineId(input.pipelineId);
-      }),
-  });
-
-  const executionsRouter = router({
-    create: protectedProcedure
-      .input(createExecutionInputSchema)
-      .mutation(async ({ ctx, input }) => {
-        return services.executionsService.create({
-          ...input,
-          userId: ctx.user.id,
-        });
-      }),
-    list: protectedProcedure
-      .input(
-        z
-          .object({
-            pipelineId: z.string().optional(),
-            page: z.number().int().positive().optional(),
-            limit: z.number().int().positive().optional(),
-            search: z.string().optional(),
-            status: z.string().optional(),
-          })
-          .optional(),
-      )
-      .query(({ ctx, input }) => {
-        return services.executionsService.findAll({
-          userId: ctx.user.id,
-          pipelineId: input?.pipelineId,
-          page: input?.page,
-          limit: input?.limit,
-          search: input?.search,
-          status: input?.status,
-        });
-      }),
-    getById: protectedProcedure.input(z.object({ id: z.string() })).query(({ input }) => {
-      return services.executionsService.findOne(input.id);
-    }),
-    update: protectedProcedure
-      .input(
-        z.object({
-          id: z.string(),
-          data: updateExecutionInputSchema,
-        }),
-      )
-      .mutation(({ input }) => {
-        return services.executionsService.update(input.id, input.data);
-      }),
-    remove: protectedProcedure.input(z.object({ id: z.string() })).mutation(({ input }) => {
-      return services.executionsService.remove(input.id);
-    }),
-  });
-
-  const jobsRouter = createJobsRouter(services.jobsService);
 
   return router({
-    auth: authRouter,
-    users: usersRouter,
-    billing: billingRouter,
-    pipelines: pipelinesRouter,
+    auth: createAuthRouter(services.authService),
+    users: createUsersRouter(services.usersService),
+    billing: createBillingRouter(services.billingService),
+    pipelines: createPipelinesRouter(services.pipelinesService),
+    executions: createExecutionsRouter(services.executionsService),
+    databaseNodes: createDatabaseNodesRouter(services.databaseNodesService),
+    jobs: createJobsRouter(services.jobsService),
     profile: profileRouter,
     ai: aiRouter,
-    databaseNodes: databaseNodesRouter,
-    executions: executionsRouter,
-    jobs: jobsRouter,
     health: publicProcedure.query(() => ({ status: 'ok' })),
   });
 }

@@ -62,8 +62,9 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       lang={locale}
       data-scroll-behavior="smooth"
       className={`${roboto.variable} ${caveat.variable} ${specialElite.variable} ${robotoMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <I18nProvider lng={locale}>{children}</I18nProvider>
       </body>
     </html>

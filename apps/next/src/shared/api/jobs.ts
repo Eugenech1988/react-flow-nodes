@@ -1,4 +1,4 @@
-const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL!;
+const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
 
 export type TPublicJob = {
   id: string;
@@ -17,6 +17,8 @@ export type TPublicJob = {
 };
 
 type TRawTranslation = {
+  id: string;
+  jobId: string;
   locale: string;
   title: string;
   description: string;
@@ -35,38 +37,83 @@ type TRawJob = {
   type: string;
   location: string;
   icon: string | null;
+  authorId: string | null;
+  publishedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
   translations: TRawTranslation[];
 };
 
-type TTRPCEnvelope<T> = { result: { data: { json: T } } };
+// type TTRPCEnvelope<T> =
+//   | { result: { data: T } }
+//   | { result: { data: { json: T } } };
+
+const extractData = <T>(payload: unknown): T | null => {
+  if (!Array.isArray(payload) || payload.length === 0) return null;
+
+  const first = payload[0];
+  if (!first || typeof first !== 'object' || !('result' in first)) return null;
+
+  const data = (first as { result?: { data?: unknown } }).result?.data;
+
+  if (data && typeof data === 'object' && 'json' in data) {
+    return (data as { json: T }).json ?? null;
+  }
+
+  return (data as T) ?? null;
+};
+
+const localeCandidates = (locale: string): string[] => {
+  if (locale === 'ua' || locale === 'uk') return ['ua', 'uk'];
+  return [locale];
+};
 
 const localizeJob = (raw: TRawJob, locale: string): TPublicJob | null => {
-  const t =
-    raw.translations.find((x) => x.locale === locale) ??
-    raw.translations.find((x) => x.locale === 'en');
-  if (!t) return null;
+  const candidates = localeCandidates(locale);
+
+  let translation: TRawTranslation | undefined;
+  for (const candidate of candidates) {
+    translation = raw.translations.find((t) => t.locale === candidate);
+    if (translation) break;
+  }
+
+  translation ??= raw.translations.find((t) => t.locale === 'en');
+  if (!translation) return null;
+
   return {
     id: raw.id,
     slug: raw.slug,
-    title: t.title,
-    description: t.description,
-    responsibilities: t.responsibilities ?? [],
-    requirements: t.requirements ?? [],
+    title: translation.title,
+    description: translation.description,
+    responsibilities: translation.responsibilities ?? [],
+    requirements: translation.requirements ?? [],
     department: raw.department,
     level: raw.level,
     type: raw.type,
     location: raw.location,
     icon: raw.icon,
-    metaTitle: t.metaTitle,
-    metaDescription: t.metaDescription,
+    metaTitle: translation.metaTitle,
+    metaDescription: translation.metaDescription,
   };
 };
 
+const buildTrpcUrl = (path: string, input: unknown): string => {
+  const encoded = encodeURIComponent(JSON.stringify({ 0: { json: input } }));
+  return `${API_URL}/trpc/${path}?batch=1&input=${encoded}`;
+};
+
+const assertApiUrl = (): string | null => {
+  if (!API_URL) {
+    console.error('[careers] API_URL is not set (expected API_URL or NEXT_PUBLIC_API_URL)');
+    return null;
+  }
+  return API_URL;
+};
+
 export async function getPublishedJobs(locale: string): Promise<TPublicJob[]> {
-  const input = encodeURIComponent(
-    JSON.stringify({ 0: { json: { locale } } }),
-  );
-  const url = `${API_URL}/trpc/jobs.list?batch=1&input=${input}`;
+  if (!assertApiUrl()) return [];
+
+  const url = buildTrpcUrl('jobs.list', {});
 
   try {
     const res = await fetch(url, {
@@ -74,25 +121,27 @@ export async function getPublishedJobs(locale: string): Promise<TPublicJob[]> {
     });
 
     if (!res.ok) {
-      console.error('[careers] trpc.jobs.list: bad status', res.status, url);
+      console.error('[careers] jobs.list: bad status', res.status, url);
       return [];
     }
 
-    const payload = (await res.json()) as Array<
-      TTRPCEnvelope<TRawJob[] | { items: TRawJob[] }>
-    >;
-
-    const data = payload[0]?.result?.data?.json;
-    if (!data) return [];
-
-    const raw = Array.isArray(data) ? data : (data.items ?? []);
+    const payload = await res.json();
+    const raw = extractData<TRawJob[]>(payload) ?? [];
 
     return raw
       .filter((j) => j.status === 'PUBLISHED')
       .map((j) => localizeJob(j, locale))
       .filter((j): j is TPublicJob => j !== null);
   } catch (err) {
-    console.error('[careers] trpc.jobs.list: fetch failed:', err);
+    console.error('[careers] jobs.list: fetch failed:', err);
     return [];
   }
+}
+
+export async function getJobBySlug(
+  locale: string,
+  slug: string,
+): Promise<TPublicJob | null> {
+  const jobs = await getPublishedJobs(locale);
+  return jobs.find((j) => j.slug === slug) ?? null;
 }

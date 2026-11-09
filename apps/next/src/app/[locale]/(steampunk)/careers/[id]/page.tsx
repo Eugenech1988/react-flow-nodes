@@ -3,26 +3,12 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
 import { getT } from '@/shared/lib/i18n/server';
-import { getJobBySlug, getPublishedJobs } from '@/shared/api';
+import { getJobBySlug } from '@/shared/api';
 import { JobDetailView } from './_components';
 
 type PageProps = {
   params: Promise<{ locale: string; id: string }>;
 };
-
-export async function generateStaticParams() {
-  try {
-    const locales = ['en', 'ua'];
-    const out: { locale: string; id: string }[] = [];
-    for (const locale of locales) {
-      const { jobs } = await getPublishedJobs(locale);
-      for (const job of jobs) out.push({ locale, id: job.slug });
-    }
-    return out;
-  } catch {
-    return [];
-  }
-}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, id } = await params;
@@ -33,8 +19,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { t } = await getT('careers', { lng: locale });
 
   return getPageMetadata(locale, 'careers', `/careers/${id}`, {
-    title: job.title || t('details.default.meta.title'),
-    description: job.description || t('details.default.meta.description'),
+    title: job.metaTitle || job.title || t('details.default.meta.title'),
+    description: job.metaDescription || job.description || t('details.default.meta.description'),
   });
 }
 
