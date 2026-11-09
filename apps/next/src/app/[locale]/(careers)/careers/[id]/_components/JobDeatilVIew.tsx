@@ -52,7 +52,7 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px] lg:items-start lg:gap-12">
         <Reveal className="relative">
           <MonitorFrame
-            theme="steampunk"
+            theme="careers"
             headerIcon={Activity}
             headerTitle={`SYS.DOSSIER // ${job.slug.toUpperCase()}`}
             footer={
@@ -147,7 +147,7 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
 
         <Reveal delay={150} className="lg:sticky lg:top-32">
           <MonitorFrame
-            theme="steampunk"
+            theme="careers"
             headerIcon={Radio}
             headerTitle="TRANSMIT.DATA"
             footer={
@@ -170,8 +170,8 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
                 review it within 24 hours.
               </p>
 
-              <InquiryModal theme="steampunk" type="contact">
-                <AppButton variant="steampunk" size="lg" className="w-full">
+              <InquiryModal theme="careers" type="contact">
+                <AppButton variant="careers" size="lg" className="w-full">
                   Initiate Application
                 </AppButton>
               </InquiryModal>

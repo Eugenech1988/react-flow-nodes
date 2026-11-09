@@ -4,9 +4,9 @@ import { Footer } from '@/widgets/footer';
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header theme="steampunk" />
+      <Header theme="careers" />
       <main className="flex-1">{children}</main>
-      <Footer theme="steampunk" />
+      <Footer theme="careers" />
     </>
   );
 }

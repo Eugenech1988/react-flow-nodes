@@ -74,7 +74,7 @@ export function CareersConsole({ jobs, locale }: CareersConsoleProps) {
         />
 
         <MonitorFrame
-          theme="steampunk"
+          theme="careers"
           className="h-100 sm:h-130"
           headerIcon={Power}
           headerTitle={

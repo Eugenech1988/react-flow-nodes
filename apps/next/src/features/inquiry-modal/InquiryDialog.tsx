@@ -41,7 +41,7 @@ export const InquiryDialog = ({
   const { t } = useT('inquiry');
   const Icon = icons[type];
 
-  if (theme === 'steampunk') {
+  if (theme === 'careers') {
     return (
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogContent className="max-h-[90dvh] w-[95vw] max-w-xl overflow-y-auto border-none bg-transparent p-0 shadow-none sm:max-w-2xl [&>button]:hidden">
@@ -72,7 +72,7 @@ export const InquiryDialog = ({
 
               <div className="relative z-10 px-4 py-6 sm:px-8 sm:py-8">
                 {isOpen && (
-                  <InquiryForm type={type} submitVariant="steampunk" submitIcon={submitIcon} />
+                  <InquiryForm type={type} submitVariant="careers" submitIcon={submitIcon} />
                 )}
               </div>
             </div>

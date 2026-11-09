@@ -32,7 +32,7 @@ export const InquiryForm = ({
   const { t } = useT('inquiry');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const isSteampunk = submitVariant === 'steampunk' || submitVariant === 'steampunk-outline';
+  const isCareers = submitVariant === 'careers' || submitVariant === 'careers-outline';
 
   const localizedSchema = z.object({
     name: z.string().min(2, { message: t('form.errors.name') }),
@@ -66,18 +66,18 @@ export const InquiryForm = ({
       <div className="animate-in fade-in zoom-in-95 relative z-10 flex flex-col items-center justify-center py-12 text-center duration-300">
         <div
           className={`mb-6 flex h-20 w-20 items-center justify-center rounded-full border shadow-[0_0_30px_rgba(45,212,191,0.2)] ${
-            isSteampunk
+            isCareers
               ? 'border-[#6fa28c]/50 bg-[#6fa28c]/10'
               : 'border-[#2dd4bf]/50 bg-[#2dd4bf]/10'
           }`}
         >
           <CheckCircle2
-            className={`h-10 w-10 ${isSteampunk ? 'text-[#6fa28c]' : 'text-[#2dd4bf]'}`}
+            className={`h-10 w-10 ${isCareers ? 'text-[#6fa28c]' : 'text-[#2dd4bf]'}`}
           />
         </div>
         <h3
           className={`text-xl font-bold ${
-            isSteampunk ? 'font-typewriter text-[#d4cfc0]' : 'text-[#d1faf5]'
+            isCareers ? 'font-typewriter text-[#d4cfc0]' : 'text-[#d1faf5]'
           }`}
         >
           {t(`form.modes.${type}.success`)}
@@ -86,34 +86,34 @@ export const InquiryForm = ({
     );
   }
 
-  const inputBaseStyles = isSteampunk
+  const inputBaseStyles = isCareers
     ? 'rounded-sm font-typewriter shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] bg-[#0a0e0d]/50'
     : '';
 
-  const inputErrorStyles = isSteampunk
+  const inputErrorStyles = isCareers
     ? 'border-[#c25a5a] text-[#c25a5a] placeholder:text-[#c25a5a]/60 focus-visible:border-[#c25a5a] focus-visible:ring-[#c25a5a]/50'
     : '';
 
-  const inputDefaultStyles = isSteampunk
+  const inputDefaultStyles = isCareers
     ? 'border-[#2f3d36] text-[#d4cfc0] placeholder:text-[#4a5c52] focus-visible:border-[#6fa28c] focus-visible:ring-[#6fa28c]/50'
     : '';
 
   const getInputStyles = (hasError: boolean) =>
     `${inputBaseStyles} ${hasError ? inputErrorStyles : inputDefaultStyles}`;
 
-  const labelStyles = isSteampunk
+  const labelStyles = isCareers
     ? 'font-typewriter text-[10px] tracking-widest text-[#6fa28c] uppercase'
     : '';
 
-  const iconStyles = isSteampunk ? 'text-[#4a5c52]' : 'text-slate-500';
+  const iconStyles = isCareers ? 'text-[#4a5c52]' : 'text-slate-500';
 
-  const errorStyles = isSteampunk
+  const errorStyles = isCareers
     ? 'font-typewriter text-xs text-[#c25a5a]'
     : 'font-mono text-xs text-red-400';
 
   const iconClass = (hasError: boolean) =>
     `absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 ${
-      hasError ? (isSteampunk ? 'text-[#c25a5a]' : 'text-red-400') : iconStyles
+      hasError ? (isCareers ? 'text-[#c25a5a]' : 'text-red-400') : iconStyles
     }`;
 
   return (
@@ -198,7 +198,7 @@ export const InquiryForm = ({
 
       <div
         className={`animate-in fade-in slide-in-from-left-4 mt-4 flex justify-end pt-5 duration-500 ${
-          isSteampunk ? 'border-t border-[#2f3d36]/50' : ''
+          isCareers ? 'border-t border-[#2f3d36]/50' : ''
         }`}
         style={{ animationDelay: '200ms', animationFillMode: 'both' }}
       >
