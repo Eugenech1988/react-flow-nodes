@@ -15,47 +15,30 @@ import {
 import { AppButton, MonitorFrame, Reveal, CutoutBadge } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
-import { JOBS } from '../../constants';
+import type { TPublicJob } from '@/shared/api';
+import { LEVEL_LABELS, TYPE_LABELS, resolveJobIcon } from '../../constants';
 
 interface IJobDetailProps {
-  jobId: string;
+  job: TPublicJob;
   locale: string;
 }
 
-export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
+export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
   const { t } = useT('careers');
 
-  const job = JOBS.find((j) => j.id === jobId);
-  const Icon = job?.icon;
-  const dept = job?.dept ?? '';
-
-  const responsibilities = t(`details.${jobId}.responsibilities`, {
-    returnObjects: true,
-    defaultValue: [],
-  }) as string[];
-
-  const requirements = t(`details.${jobId}.requirements`, {
-    returnObjects: true,
-    defaultValue: [],
-  }) as string[];
-
-  const description = t(`details.${jobId}.description`, {
-    defaultValue: t('details.default.description'),
+  const Icon = resolveJobIcon(job.icon);
+  const deptLabel = t(`openings.filters.${job.department.toLowerCase()}`, {
+    defaultValue: job.department,
   });
-
-  const respList =
-    Array.isArray(responsibilities) && responsibilities.length > 0
-      ? responsibilities
-      : (t('details.default.responsibilities', { returnObjects: true }) as string[]);
-
-  const reqList =
-    Array.isArray(requirements) && requirements.length > 0
-      ? requirements
-      : (t('details.default.requirements', { returnObjects: true }) as string[]);
+  const typeLabel = t(`openings.types.${job.type}`, {
+    defaultValue: TYPE_LABELS[job.type] ?? job.type,
+  });
+  const levelLabel = t(`openings.levels.${job.level}`, {
+    defaultValue: LEVEL_LABELS[job.level] ?? job.level,
+  });
 
   return (
     <div className="relative z-10 mx-auto max-w-5xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16">
-      {' '}
       <Reveal>
         <Link
           href={`/${locale}/careers`}
@@ -65,12 +48,13 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
           Return to Openings
         </Link>
       </Reveal>
+
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px] lg:items-start lg:gap-12">
         <Reveal className="relative">
           <MonitorFrame
             theme="steampunk"
             headerIcon={Activity}
-            headerTitle={`SYS.DOSSIER // ${jobId.toUpperCase()}`}
+            headerTitle={`SYS.DOSSIER // ${job.slug.toUpperCase()}`}
             footer={
               <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-widest text-[#8a9488] uppercase">
                 <span className="flex items-center gap-2">
@@ -86,72 +70,81 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
 
               <div className="relative z-10">
                 <div className="mb-6 flex flex-wrap items-center gap-3">
-                  <CutoutBadge>{t(`openings.filters.${dept}`)}</CutoutBadge>
+                  <CutoutBadge>{deptLabel}</CutoutBadge>
                   <span className="font-mono text-[10px] tracking-widest text-[#4a5c52] uppercase">
-                    REF: 00{jobId.length}-A
+                    REF: 00{job.slug.length}-A
                   </span>
                 </div>
 
                 <h1 className="font-typewriter mb-6 text-3xl font-bold tracking-tight text-[#d4cfc0] uppercase sm:text-4xl md:text-5xl">
-                  {t(`openings.list.${jobId}.title`)}
+                  {job.title}
                 </h1>
 
                 <div className="mb-8 flex flex-wrap items-center gap-4 border-y border-dashed border-[#2f3d36] py-4 font-mono text-[10px] tracking-widest text-[#8a9488] uppercase sm:text-xs">
                   <span className="flex items-center gap-2">
                     <MapPin className="h-3.5 w-3.5 text-[#6fa28c]" />
-                    {t(`openings.list.${jobId}.location`)}
+                    {job.location}
                   </span>
                   <span className="text-[#2f3d36]">/</span>
                   <span className="flex items-center gap-2">
                     <Clock className="h-3.5 w-3.5 text-[#6fa28c]" />
-                    {t(`openings.list.${jobId}.type`)}
+                    {typeLabel}
                   </span>
                   <span className="text-[#2f3d36]">/</span>
                   <span className="flex items-center gap-2">
                     <Target className="h-3.5 w-3.5 text-[#6fa28c]" />
-                    {t(`openings.list.${jobId}.level`)}
+                    {levelLabel}
                   </span>
                 </div>
 
                 <div className="max-w-none">
-                  <p className="font-typewriter text-lg text-[#d4cfc0]">{description}</p>
+                  {job.description && (
+                    <p className="font-typewriter text-lg text-[#d4cfc0]">{job.description}</p>
+                  )}
 
-                  <h2 className="font-typewriter mt-10 mb-4 flex items-center gap-2 border-b border-[#2f3d36] pb-2 text-xl font-bold tracking-widest text-[#9cc4b0] uppercase">
-                    <ChevronRight className="h-5 w-5" />
-                    Key Responsibilities
-                  </h2>
-                  <ul className="space-y-3 font-mono text-sm text-[#8a9488]">
-                    {respList.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm bg-[#6fa28c]/20 text-[#6fa28c]">
-                          <CheckCircle2 className="h-3 w-3" />
-                        </span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                  {job.responsibilities.length > 0 && (
+                    <>
+                      <h2 className="font-typewriter mt-10 mb-4 flex items-center gap-2 border-b border-[#2f3d36] pb-2 text-xl font-bold tracking-widest text-[#9cc4b0] uppercase">
+                        <ChevronRight className="h-5 w-5" />
+                        Key Responsibilities
+                      </h2>
+                      <ul className="space-y-3 font-mono text-sm text-[#8a9488]">
+                        {job.responsibilities.map((item, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm bg-[#6fa28c]/20 text-[#6fa28c]">
+                              <CheckCircle2 className="h-3 w-3" />
+                            </span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
 
-                  <h3 className="font-typewriter mt-10 mb-4 flex items-center gap-2 border-b border-[#2f3d36] pb-2 text-xl font-bold tracking-widest text-[#9cc4b0] uppercase">
-                    <ChevronRight className="h-5 w-5" />
-                    Requirements
-                  </h3>
-                  <ul className="space-y-3 font-mono text-sm text-[#8a9488]">
-                    {reqList.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm bg-[#6fa28c]/20 text-[#6fa28c]">
-                          <CheckCircle2 className="h-3 w-3" />
-                        </span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                  {job.requirements.length > 0 && (
+                    <>
+                      <h3 className="font-typewriter mt-10 mb-4 flex items-center gap-2 border-b border-[#2f3d36] pb-2 text-xl font-bold tracking-widest text-[#9cc4b0] uppercase">
+                        <ChevronRight className="h-5 w-5" />
+                        Requirements
+                      </h3>
+                      <ul className="space-y-3 font-mono text-sm text-[#8a9488]">
+                        {job.requirements.map((item, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm bg-[#6fa28c]/20 text-[#6fa28c]">
+                              <CheckCircle2 className="h-3 w-3" />
+                            </span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
           </MonitorFrame>
         </Reveal>
 
-        {/* Сайдбар */}
         <Reveal delay={150} className="lg:sticky lg:top-32">
           <MonitorFrame
             theme="steampunk"
@@ -166,7 +159,7 @@ export const JobDetailView = ({ jobId, locale }: IJobDetailProps) => {
           >
             <div className="p-6">
               <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-xl border border-[#4a5c52] bg-[#0a0e0d] text-[#6fa28c] shadow-[inset_0_0_15px_rgba(111,162,140,0.1)]">
-                {Icon && <Icon className="h-8 w-8" />}
+                <Icon className="h-8 w-8" />
               </div>
 
               <h3 className="font-typewriter mb-2 text-lg font-bold text-[#d4cfc0]">

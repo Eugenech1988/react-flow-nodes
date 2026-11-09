@@ -1,10 +1,13 @@
 import { SectionHeading } from '@/shared/ui';
-import { getT } from '@/shared/lib/i18n/server';
+import type { TFunction } from 'i18next';
 import { CareersGauge } from './CareersGauge';
 
-export async function CareersHero() {
-  const { t } = await getT('careers');
+interface CareersHeroProps {
+  total: number;
+  t: TFunction<'careers'>;
+}
 
+export function CareersHero({ total, t }: CareersHeroProps) {
   return (
     <section className="relative z-10 px-4 pt-28 pb-4 text-center sm:px-6 sm:pt-36 sm:pb-8 md:pt-40">
       <SectionHeading
@@ -17,7 +20,7 @@ export async function CareersHero() {
         descriptionColor="text-[#8a9488]"
       />
 
-      <CareersGauge />
+      <CareersGauge value={total} />
     </section>
   );
 }

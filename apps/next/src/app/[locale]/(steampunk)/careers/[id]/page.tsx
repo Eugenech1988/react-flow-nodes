@@ -1,39 +1,46 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getPageMetadata } from '@/shared/lib/seo/metadata';
-import { JOBS } from '../constants';
-import { JobDetailView } from './_components';
 import { Suspense } from 'react';
+import { getPageMetadata } from '@/shared/lib/seo/metadata';
 import { getT } from '@/shared/lib/i18n/server';
+import { getJobBySlug, getPublishedJobs } from '@/shared/api';
+import { JobDetailView } from './_components';
 
 type PageProps = {
   params: Promise<{ locale: string; id: string }>;
 };
 
 export async function generateStaticParams() {
-  const locales = ['en', 'ua'];
-  return locales.flatMap((locale) => JOBS.map((job) => ({ locale, id: job.id })));
+  try {
+    const locales = ['en', 'ua'];
+    const out: { locale: string; id: string }[] = [];
+    for (const locale of locales) {
+      const { jobs } = await getPublishedJobs(locale);
+      for (const job of jobs) out.push({ locale, id: job.slug });
+    }
+    return out;
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, id } = await params;
-  const job = JOBS.find((j) => j.id === id);
+  const job = await getJobBySlug(locale, id);
 
   if (!job) return {};
 
   const { t } = await getT('careers', { lng: locale });
 
   return getPageMetadata(locale, 'careers', `/careers/${id}`, {
-    title: t(`details.${id}.meta.title`, { defaultValue: t('details.default.meta.title') }),
-    description: t(`details.${id}.meta.description`, {
-      defaultValue: t('details.default.meta.description'),
-    }),
+    title: job.title || t('details.default.meta.title'),
+    description: job.description || t('details.default.meta.description'),
   });
 }
 
 async function JobContent({ params }: PageProps) {
   const { locale, id } = await params;
-  const job = JOBS.find((j) => j.id === id);
+  const job = await getJobBySlug(locale, id);
 
   if (!job) {
     notFound();
@@ -41,7 +48,7 @@ async function JobContent({ params }: PageProps) {
 
   return (
     <div className="relative overflow-hidden bg-[#0a0805] text-[#d4cfc0]">
-      <JobDetailView jobId={job.id} locale={locale} />
+      <JobDetailView job={job} locale={locale} />
     </div>
   );
 }

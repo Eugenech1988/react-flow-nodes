@@ -1,13 +1,16 @@
 'use client';
 
 import { useT } from '@/shared/lib/i18n/client';
-import { JOBS, MAX_VACANCIES, RIVETS, TICKS } from '../constants';
+import { MAX_VACANCIES, RIVETS, TICKS } from '../constants';
 
-export const CareersGauge = () => {
+interface ICareersGaugeProps {
+  value: number;
+}
+
+export const CareersGauge = ({ value }: ICareersGaugeProps) => {
   const { t } = useT('careers');
 
-  const value = JOBS.length;
-  const ratio = Math.min(1, value / MAX_VACANCIES);
+  const ratio = MAX_VACANCIES > 0 ? Math.min(1, value / MAX_VACANCIES) : 0;
   const targetAngle = -135 + ratio * 270;
   const isReady = value > 0;
 

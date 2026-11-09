@@ -7,7 +7,6 @@
     "title": "Join the Workshop",
     "description": "We're crafting precision tools for the next generation of data engineers. Bring your craft.",
     "badge": {
-      "value": "12",
       "label": "open positions"
     }
   },
@@ -32,67 +31,18 @@
       "operations": "Operations"
     },
     "apply": "Apply",
-    "list": {
-      "senior-frontend": {
-        "title": "Senior Frontend Engineer",
-        "location": "Remote",
-        "type": "Full-time",
-        "level": "Senior"
-      },
-      "backend-engineer": {
-        "title": "Backend Engineer",
-        "location": "Remote",
-        "type": "Full-time",
-        "level": "Mid"
-      },
-      "product-designer": {
-        "title": "Product Designer",
-        "location": "London",
-        "type": "Full-time",
-        "level": "Mid"
-      },
-      "ml-researcher": {
-        "title": "ML Researcher",
-        "location": "Remote",
-        "type": "Full-time",
-        "level": "Senior"
-      },
-      "devops-engineer": {
-        "title": "DevOps Engineer",
-        "location": "Remote",
-        "type": "Full-time",
-        "level": "Mid"
-      },
-      "talent-partner": {
-        "title": "Talent Partner",
-        "location": "London",
-        "type": "Full-time",
-        "level": "Mid"
-      },
-      "data-engineer": {
-        "title": "Data Engineer",
-        "location": "Remote",
-        "type": "Full-time",
-        "level": "Mid"
-      },
-      "ux-writer": {
-        "title": "UX Writer",
-        "location": "London",
-        "type": "Full-time",
-        "level": "Mid"
-      },
-      "security-engineer": {
-        "title": "Security Engineer",
-        "location": "Remote",
-        "type": "Full-time",
-        "level": "Senior"
-      },
-      "growth-manager": {
-        "title": "Growth Manager",
-        "location": "London",
-        "type": "Full-time",
-        "level": "Mid"
-      }
+    "empty": "No open positions right now. Check back soon.",
+    "types": {
+      "FULL_TIME": "Full-time",
+      "PART_TIME": "Part-time",
+      "CONTRACT": "Contract",
+      "INTERNSHIP": "Internship"
+    },
+    "levels": {
+      "JUNIOR": "Junior",
+      "MID": "Mid",
+      "SENIOR": "Senior",
+      "LEAD": "Lead"
     }
   },
   "perks": {
@@ -102,30 +52,12 @@
     },
     "badge": "PERK",
     "list": {
-      "1": {
-        "title": "Remote-first",
-        "description": "Work from anywhere across 12 time zones."
-      },
-      "2": {
-        "title": "Learning budget",
-        "description": "$2,000/yr for books, courses, and conferences."
-      },
-      "3": {
-        "title": "Health & wellness",
-        "description": "Full medical, dental, and mental health coverage."
-      },
-      "4": {
-        "title": "Async by default",
-        "description": "Flexible hours with deep-focus blocks."
-      },
-      "5": {
-        "title": "Team retreats",
-        "description": "Two offsites per year in interesting places."
-      },
-      "6": {
-        "title": "Top hardware",
-        "description": "Your choice of MacBook Pro or equivalent."
-      }
+      "1": { "title": "Remote-first", "description": "Work from anywhere across 12 time zones." },
+      "2": { "title": "Learning budget", "description": "$2,000/yr for books, courses, and conferences." },
+      "3": { "title": "Health & wellness", "description": "Full medical, dental, and mental health coverage." },
+      "4": { "title": "Async by default", "description": "Flexible hours with deep-focus blocks." },
+      "5": { "title": "Team retreats", "description": "Two offsites per year in interesting places." },
+      "6": { "title": "Top hardware", "description": "Your choice of MacBook Pro or equivalent." }
     }
   },
   "process": {
@@ -161,196 +93,5 @@
     "description": "We're always looking for exceptional craftspeople. Send us a note.",
     "primary": "Get in touch",
     "email": "careers@example.com"
-  },
-  "details": {
-    "senior-frontend": {
-      "meta": {
-        "title": "Senior Frontend Engineer",
-        "description": "Lead the development of our visual pipeline editor. Build highly interactive, performant, and accessible interfaces."
-      },
-      "description": "We are looking for a Senior Frontend Engineer to lead the development of our visual pipeline editor. You will work closely with designers and backend engineers to build highly interactive, performant, and accessible interfaces.",
-      "responsibilities": [
-        "Architect and build complex React components for the visual canvas.",
-        "Optimize application for maximum speed and scalability.",
-        "Collaborate with backend engineers to define API contracts.",
-        "Mentor junior developers and conduct code reviews."
-      ],
-      "requirements": [
-        "5+ years of experience with React and TypeScript.",
-        "Deep understanding of state management (Zustand, Redux, or similar).",
-        "Experience with canvas/WebGL (React Flow, D3, etc.) is a huge plus.",
-        "Strong eye for design and attention to detail."
-      ]
-    },
-    "backend-engineer": {
-      "meta": {
-        "title": "Backend Engineer",
-        "description": "Design and scale the core infrastructure that powers our data pipelines."
-      },
-      "description": "Design and scale the core infrastructure that powers our data pipelines.",
-      "responsibilities": [
-        "Build high-throughput APIs.",
-        "Optimize database queries.",
-        "Ensure system reliability."
-      ],
-      "requirements": [
-        "3+ years of backend experience.",
-        "Proficiency in Node.js/Go.",
-        "Deep knowledge of PostgreSQL."
-      ]
-    },
-    "product-designer": {
-      "meta": {
-        "title": "Product Designer",
-        "description": "Craft intuitive and beautiful user experiences for our data engineering platform."
-      },
-      "description": "Craft intuitive and beautiful user experiences for our data engineering platform.",
-      "responsibilities": [
-        "Design end-to-end user flows.",
-        "Create high-fidelity mockups and prototypes.",
-        "Conduct user research."
-      ],
-      "requirements": [
-        "3+ years of product design experience.",
-        "Strong portfolio.",
-        "Proficiency in Figma."
-      ]
-    },
-    "ml-researcher": {
-      "meta": {
-        "title": "ML Researcher",
-        "description": "Explore and implement state-of-the-art machine learning models to enhance our data pipelines."
-      },
-      "description": "Explore and implement state-of-the-art machine learning models to enhance our data pipelines.",
-      "responsibilities": [
-        "Research and develop new ML models.",
-        "Collaborate with engineering to deploy models.",
-        "Publish findings."
-      ],
-      "requirements": [
-        "PhD or Master's in CS/Math.",
-        "Experience with PyTorch/TensorFlow.",
-        "Strong publication record."
-      ]
-    },
-    "devops-engineer": {
-      "meta": {
-        "title": "DevOps Engineer",
-        "description": "Maintain and scale our cloud infrastructure, ensuring high availability and security."
-      },
-      "description": "Maintain and scale our cloud infrastructure, ensuring high availability and security.",
-      "responsibilities": [
-        "Manage AWS/GCP infrastructure.",
-        "Automate deployments.",
-        "Monitor system health."
-      ],
-      "requirements": [
-        "3+ years of DevOps experience.",
-        "Proficiency with Kubernetes and Terraform.",
-        "Strong scripting skills."
-      ]
-    },
-    "talent-partner": {
-      "meta": {
-        "title": "Talent Partner",
-        "description": "Help us find exceptional craftspeople to join our workshop and drive our mission forward."
-      },
-      "description": "Help us find exceptional craftspeople to join our workshop and drive our mission forward.",
-      "responsibilities": [
-        "Source and screen candidates.",
-        "Manage the full recruitment cycle.",
-        "Build employer brand."
-      ],
-      "requirements": [
-        "3+ years of technical recruiting.",
-        "Excellent communication skills.",
-        "Passion for tech."
-      ]
-    },
-    "data-engineer": {
-      "meta": {
-        "title": "Data Engineer",
-        "description": "Build robust data pipelines and architectures that empower our engineering teams."
-      },
-      "description": "Build robust data pipelines and architectures that empower our engineering teams.",
-      "responsibilities": [
-        "Design data architectures.",
-        "Build ETL pipelines.",
-        "Ensure data quality."
-      ],
-      "requirements": [
-        "3+ years of data engineering.",
-        "Experience with Airflow/Spark.",
-        "Strong SQL skills."
-      ]
-    },
-    "ux-writer": {
-      "meta": {
-        "title": "UX Writer",
-        "description": "Craft clear, concise, and helpful product copy that guides our users through complex workflows."
-      },
-      "description": "Craft clear, concise, and helpful product copy that guides our users through complex workflows.",
-      "responsibilities": [
-        "Write clear UI copy.",
-        "Maintain content style guide.",
-        "Collaborate with designers."
-      ],
-      "requirements": [
-        "3+ years of UX writing.",
-        "Strong portfolio of product copy.",
-        "Native English speaker."
-      ]
-    },
-    "security-engineer": {
-      "meta": {
-        "title": "Security Engineer",
-        "description": "Safeguard our platform and user data, implementing robust security protocols and practices."
-      },
-      "description": "Safeguard our platform and user data, implementing robust security protocols and practices.",
-      "responsibilities": [
-        "Conduct security audits.",
-        "Implement secure coding practices.",
-        "Respond to incidents."
-      ],
-      "requirements": [
-        "5+ years of security engineering.",
-        "Knowledge of OWASP top 10.",
-        "Experience with cloud security."
-      ]
-    },
-    "growth-manager": {
-      "meta": {
-        "title": "Growth Manager",
-        "description": "Drive user acquisition and engagement strategies to scale our product reach."
-      },
-      "description": "Drive user acquisition and engagement strategies to scale our product reach.",
-      "responsibilities": [
-        "Develop growth strategies.",
-        "Run A/B tests.",
-        "Analyze funnel metrics."
-      ],
-      "requirements": [
-        "3+ years of growth marketing.",
-        "Data-driven mindset.",
-        "Experience with B2B SaaS."
-      ]
-    },
-    "default": {
-      "meta": {
-        "title": "Join the Workshop",
-        "description": "Join our workshop and help us build precision tools for data engineers."
-      },
-      "description": "Join our workshop and help us build precision tools for data engineers.",
-      "responsibilities": [
-        "Contribute to core product development.",
-        "Collaborate with cross-functional teams.",
-        "Ship high-quality code."
-      ],
-      "requirements": [
-        "Strong engineering background.",
-        "Passion for building great products.",
-        "Remote-first mindset."
-      ]
-    }
   }
 }

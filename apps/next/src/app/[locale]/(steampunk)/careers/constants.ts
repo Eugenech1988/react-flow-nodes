@@ -19,6 +19,8 @@ import {
   ShieldCheck,
   TrendingUp,
   PenTool,
+  CircleDot,
+  type LucideIcon,
 } from 'lucide-react';
 import { round4 } from '@/shared/lib';
 
@@ -39,18 +41,44 @@ export const DEPARTMENTS = [
 
 export type Department = (typeof DEPARTMENTS)[number]['id'];
 
-export const JOBS = [
-  { id: 'senior-frontend', dept: 'engineering', icon: Code2 },
-  { id: 'backend-engineer', dept: 'engineering', icon: Cpu },
-  { id: 'product-designer', dept: 'design', icon: Palette },
-  { id: 'ml-researcher', dept: 'research', icon: FlaskConical },
-  { id: 'devops-engineer', dept: 'engineering', icon: Cog },
-  { id: 'talent-partner', dept: 'operations', icon: Briefcase },
-  { id: 'data-engineer', dept: 'engineering', icon: Database },
-  { id: 'ux-writer', dept: 'design', icon: PenTool },
-  { id: 'security-engineer', dept: 'engineering', icon: ShieldCheck },
-  { id: 'growth-manager', dept: 'operations', icon: TrendingUp },
-];
+export const DEPT_TO_BACKEND: Record<Exclude<Department, 'all'>, string> = {
+  engineering: 'ENGINEERING',
+  design: 'DESIGN',
+  research: 'RESEARCH',
+  operations: 'OPERATIONS',
+};
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  'code-2': Code2,
+  cpu: Cpu,
+  palette: Palette,
+  'flask-conical': FlaskConical,
+  cog: Cog,
+  briefcase: Briefcase,
+  database: Database,
+  'pen-tool': PenTool,
+  'shield-check': ShieldCheck,
+  'trending-up': TrendingUp,
+};
+
+export const resolveJobIcon = (name: string | null | undefined): LucideIcon => {
+  if (!name) return CircleDot;
+  return ICON_MAP[name] ?? CircleDot;
+};
+
+export const TYPE_LABELS: Record<string, string> = {
+  FULL_TIME: 'Full-time',
+  PART_TIME: 'Part-time',
+  CONTRACT: 'Contract',
+  INTERNSHIP: 'Internship',
+};
+
+export const LEVEL_LABELS: Record<string, string> = {
+  JUNIOR: 'Junior',
+  MID: 'Mid',
+  SENIOR: 'Senior',
+  LEAD: 'Lead',
+};
 
 export const PERKS = [
   { id: '1', icon: Globe },

@@ -2,19 +2,34 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { MapPin, Clock, ArrowUpRight, Gauge, Power, ChevronDown } from 'lucide-react';
-import { useT } from '@/shared/lib/i18n/client';
-import { JOBS, DEPARTMENTS, type Department } from '../constants';
-import { SectionHeading, MonitorFrame } from '@/shared/ui';
 import Link from 'next/link';
+import { useT } from '@/shared/lib/i18n/client';
+import type { TPublicJob } from '@/shared/api';
+import {
+  DEPARTMENTS,
+  DEPT_TO_BACKEND,
+  LEVEL_LABELS,
+  TYPE_LABELS,
+  resolveJobIcon,
+  type Department,
+} from '../constants';
+import { SectionHeading, MonitorFrame } from '@/shared/ui';
 
-export function CareersConsole() {
+interface CareersConsoleProps {
+  jobs: TPublicJob[];
+  locale: string;
+}
+
+export function CareersConsole({ jobs, locale }: CareersConsoleProps) {
   const [activeDept, setActiveDept] = useState<Department>('all');
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(false);
-  const { t, i18n } = useT('careers');
-  const lng = i18n.language;
+  const { t } = useT('careers');
 
-  const filtered = activeDept === 'all' ? JOBS : JOBS.filter((j) => j.dept === activeDept);
+  const filtered =
+    activeDept === 'all'
+      ? jobs
+      : jobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
 
   const checkScrollHint = useCallback(() => {
     const el = scrollRef.current;
@@ -40,7 +55,10 @@ export function CareersConsole() {
   const scrollMore = () => scrollRef.current?.scrollBy({ top: 220, behavior: 'smooth' });
 
   return (
-    <section className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+    <section
+      id="openings"
+      className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16"
+    >
       <div className="relative">
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(111,162,140,0.22),transparent_65%)] blur-2xl" />
         <div className="pointer-events-none absolute inset-x-8 -top-4 -z-10 h-32 bg-[radial-gradient(ellipse_at_center,rgba(156,196,176,0.15),transparent_70%)] blur-xl" />
@@ -75,6 +93,7 @@ export function CareersConsole() {
                 return (
                   <button
                     key={dept.id}
+                    type="button"
                     onClick={() => setActiveDept(dept.id)}
                     className={`group relative flex min-w-0 flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-md border px-3 py-2 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px] ${
                       isActive
@@ -112,55 +131,68 @@ export function CareersConsole() {
               ref={scrollRef}
               className="h-full scrollbar-thin overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#4a6d5e]/70"
             >
-              <div key={activeDept} className="relative z-10 flex flex-col">
-                {filtered.map((job, idx) => {
-                  const Icon = job.icon;
-                  return (
-                    <div
-                      key={job.id}
-                      className="group animate-in fade-in slide-in-from-left-4 relative flex flex-col gap-3 border-b border-dashed border-[#2f3d36] px-4 py-4 transition-colors duration-300 ease-out hover:bg-[#6fa28c]/5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
-                      style={{ animationDelay: `${idx * 30}ms`, animationFillMode: 'both' }}
-                    >
-                      <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-transparent via-[#6fa28c]/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                      <div className="relative flex items-start gap-3 sm:gap-4">
-                        <div className="flex flex-col items-center">
-                          <span className="font-mono text-[9px] tracking-widest text-[#4a5c52] uppercase">
-                            {String(idx + 1).padStart(3, '0')}
-                          </span>
-                          <Icon className="mt-1 h-5 w-5 text-[#6fa28c]" />
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className="text-sm font-bold text-[#d4cfc0] transition-colors group-hover:text-[#9cc4b0] sm:text-base">
-                            {t(`openings.list.${job.id}.title`)}
-                          </h3>
-                          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[9px] tracking-widest text-[#8a9488] uppercase sm:text-[10px]">
-                            <span className="flex items-center gap-1">
-                              <MapPin className="h-2.5 w-2.5" />
-                              {t(`openings.list.${job.id}.location`)}
+              {filtered.length === 0 ? (
+                <div className="flex h-full items-center justify-center px-6 py-12 text-center font-mono text-xs tracking-widest text-[#8a9488] uppercase">
+                  {t('openings.empty', {
+                    defaultValue: 'No open positions right now. Check back soon.',
+                  })}
+                </div>
+              ) : (
+                <div key={activeDept} className="relative z-10 flex flex-col">
+                  {filtered.map((job, idx) => {
+                    const Icon = resolveJobIcon(job.icon);
+                    const typeLabel = t(`openings.types.${job.type}`, {
+                      defaultValue: TYPE_LABELS[job.type] ?? job.type,
+                    });
+                    const levelLabel = t(`openings.levels.${job.level}`, {
+                      defaultValue: LEVEL_LABELS[job.level] ?? job.level,
+                    });
+
+                    return (
+                      <div
+                        key={job.id}
+                        className="group animate-in fade-in slide-in-from-left-4 relative flex flex-col gap-3 border-b border-dashed border-[#2f3d36] px-4 py-4 transition-colors duration-300 ease-out hover:bg-[#6fa28c]/5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
+                        style={{ animationDelay: `${idx * 30}ms`, animationFillMode: 'both' }}
+                      >
+                        <div className="pointer-events-none absolute inset-0 bg-linear-to-r from-transparent via-[#6fa28c]/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                        <div className="relative flex items-start gap-3 sm:gap-4">
+                          <div className="flex flex-col items-center">
+                            <span className="font-mono text-[9px] tracking-widest text-[#4a5c52] uppercase">
+                              {String(idx + 1).padStart(3, '0')}
                             </span>
-                            <span className="text-[#4a5c52]">·</span>
-                            <span className="flex items-center gap-1">
-                              <Clock className="h-2.5 w-2.5" />
-                              {t(`openings.list.${job.id}.type`)}
-                            </span>
-                            <span className="text-[#4a5c52]">·</span>
-                            <span className="text-[#6fa28c]">
-                              {t(`openings.list.${job.id}.level`)}
-                            </span>
+                            <Icon className="mt-1 h-5 w-5 text-[#6fa28c]" />
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="text-sm font-bold text-[#d4cfc0] transition-colors group-hover:text-[#9cc4b0] sm:text-base">
+                              {job.title}
+                            </h3>
+                            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[9px] tracking-widest text-[#8a9488] uppercase sm:text-[10px]">
+                              <span className="flex items-center gap-1">
+                                <MapPin className="h-2.5 w-2.5" />
+                                {job.location}
+                              </span>
+                              <span className="text-[#4a5c52]">·</span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-2.5 w-2.5" />
+                                {typeLabel}
+                              </span>
+                              <span className="text-[#4a5c52]">·</span>
+                              <span className="text-[#6fa28c]">{levelLabel}</span>
+                            </div>
                           </div>
                         </div>
+                        <Link
+                          href={`/${locale}/careers/${job.slug}`}
+                          className="relative flex cursor-pointer items-center gap-2 self-start rounded border border-[#3a4842] bg-[#0f1512] px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest text-[#9cc4b0] uppercase transition-all hover:border-[#6fa28c] hover:bg-[#6fa28c]/10 sm:self-center sm:text-[10px]"
+                        >
+                          {t('openings.apply')}
+                          <ArrowUpRight className="h-3 w-3" />
+                        </Link>
                       </div>
-                      <Link
-                        href={`/${lng}/careers/${job.id}`}
-                        className="relative flex cursor-pointer items-center gap-2 self-start rounded border border-[#3a4842] bg-[#0f1512] px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest text-[#9cc4b0] uppercase transition-all hover:border-[#6fa28c] hover:bg-[#6fa28c]/10 sm:self-center sm:text-[10px]"
-                      >
-                        {t('openings.apply')}
-                        <ArrowUpRight className="h-3 w-3" />
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {showScrollHint && (
