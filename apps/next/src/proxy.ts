@@ -1,8 +1,9 @@
-// import { createProxy } from 'next-i18next/proxy';
-// import i18nConfig from '@/shared/lib/i18n/config';
-
 // apps/next/src/proxy.ts
 import { NextResponse, type NextRequest } from 'next/server';
+import { createProxy } from 'next-i18next/proxy';
+import i18nConfig from '@/shared/lib/i18n/config';
+
+const intlProxy = createProxy(i18nConfig);
 
 const ALLOWED_ORIGINS = [
   'http://localhost:5173',
@@ -10,36 +11,35 @@ const ALLOWED_ORIGINS = [
 ].filter(Boolean) as string[];
 
 export function proxy(request: NextRequest) {
-  if (!request.nextUrl.pathname.startsWith('/api/revalidate')) {
-    return NextResponse.next();
+  if (request.nextUrl.pathname.startsWith('/api/revalidate')) {
+    const origin = request.headers.get('origin') ?? '';
+    const isAllowed = ALLOWED_ORIGINS.includes(origin);
+
+    const corsHeaders = new Headers({
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, x-revalidate-secret',
+      'Access-Control-Max-Age': '86400',
+    });
+
+    if (isAllowed) {
+      corsHeaders.set('Access-Control-Allow-Origin', origin);
+      corsHeaders.set('Vary', 'Origin');
+    }
+
+    if (request.method === 'OPTIONS') {
+      return new NextResponse(null, { status: 204, headers: corsHeaders });
+    }
+
+    const response = NextResponse.next();
+    corsHeaders.forEach((value, key) => {
+      response.headers.set(key, value);
+    });
+    return response;
   }
 
-  const origin = request.headers.get('origin') ?? '';
-  const isAllowed = ALLOWED_ORIGINS.includes(origin);
-
-  const corsHeaders = new Headers({
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, x-revalidate-secret',
-    'Access-Control-Max-Age': '86400',
-  });
-
-  if (isAllowed) {
-    corsHeaders.set('Access-Control-Allow-Origin', origin);
-    corsHeaders.set('Vary', 'Origin');
-  }
-
-  if (request.method === 'OPTIONS') {
-    return new NextResponse(null, { status: 204, headers: corsHeaders });
-  }
-
-  const response = NextResponse.next();
-  corsHeaders.forEach((value, key) => {
-    response.headers.set(key, value);
-  });
-
-  return response;
+  return intlProxy(request);
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)', '/api/revalidate/:path*'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],
 };
