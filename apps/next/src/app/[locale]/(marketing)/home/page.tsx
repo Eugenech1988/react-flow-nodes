@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default function Home() {
   return (
-    <>
+    <div data-home-page>
       <HeroSection />
       <FeaturesSection />
       <TrustedBySection />
@@ -30,6 +30,6 @@ export default function Home() {
       <UseCasesSection />
       <TestimonialsSection />
       <PricingSection />
-    </>
+    </div>
   );
 }

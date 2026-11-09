@@ -60,7 +60,6 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   return (
     <html
       lang={locale}
-      data-scroll-behavior="smooth"
       className={`${roboto.variable} ${caveat.variable} ${specialElite.variable} ${robotoMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
