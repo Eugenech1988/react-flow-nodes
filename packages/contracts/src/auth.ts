@@ -14,7 +14,6 @@ export const registerInputSchema = loginInputSchema.extend({
   lastName: z.string().optional(),
   nickName: z.string().min(3, 'Nickname must be at least 3 characters').optional(),
 });
-
 export type TRegisterInputData = z.infer<typeof registerInputSchema>;
 
 export const registerFormInputSchema = registerInputSchema
@@ -36,6 +35,7 @@ export const twoFactorTotpOnlySchema = z.object({
       message: 'Code must be exactly 6 digits',
     }),
 });
+export type TTwoFactorTotpInputData = z.infer<typeof twoFactorTotpOnlySchema>;
 
 export const twoFactorCodeOrBackupSchema = z.object({
   code: z
@@ -46,6 +46,7 @@ export const twoFactorCodeOrBackupSchema = z.object({
       message: 'Enter a valid 6-digit code or recovery code',
     }),
 });
+export type TTwoFactorCodeOrBackupData = z.infer<typeof twoFactorCodeOrBackupSchema>;
 
 export const twoFactorLoginInputSchema = z.object({
   tempToken: z.string().min(1, 'Temp token is required'),

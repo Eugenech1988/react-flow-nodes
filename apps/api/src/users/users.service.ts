@@ -5,10 +5,9 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { CreateUserDto } from '@/users/dtos/create-user.dto';
-import { UpdatePasswordDto } from '@/users/dtos/update-password.dto';
 import { Prisma } from '@prisma/client';
 import { hash, verify } from 'argon2';
+import type { TRegisterInputData, TUpdatePasswordInputData } from '@pipeline/contracts';
 
 const userWithRelationsValidator = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { profile: true, subscription: true, currentPipeline: true },
@@ -33,6 +32,12 @@ export const safeUserSelect = {
 
 export type SafeUserWithRelations = Prisma.UserGetPayload<{ select: typeof safeUserSelect }>;
 
+export type TCreateUserInputData = TRegisterInputData & {
+  avatarUrl?: string;
+  provider?: string;
+  providerId?: string;
+};
+
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
@@ -48,7 +53,7 @@ export class UsersService {
     }
   }
 
-  async register(createUserDto: CreateUserDto): Promise<UserWithRelations> {
+  async register(createUserDto: TCreateUserInputData): Promise<UserWithRelations> {
     const { email, password, firstName, lastName, avatarUrl, provider, providerId } = createUserDto;
 
     const existingUser = await this.prisma.user.findUnique({ where: { email } });
@@ -172,7 +177,7 @@ export class UsersService {
     }
   }
 
-  async updatePassword(id: string, dto: UpdatePasswordDto): Promise<{ success: boolean }> {
+  async updatePassword(id: string, dto: TUpdatePasswordInputData): Promise<{ success: boolean }> {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {

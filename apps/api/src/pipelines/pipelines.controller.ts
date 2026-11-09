@@ -11,8 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PipelinesService } from '@/pipelines/pipelines.service';
-import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
-import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
+import type { TCreatePipelineInputData, TUpdatePipelineInputData } from '@pipeline/contracts';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'node:path';
@@ -39,7 +38,7 @@ export class PipelinesController {
   )
   async create(
     @CurrentUser('id') userId: string,
-    @Body() dto: CreatePipelineDto,
+    @Body() dto: TCreatePipelineInputData,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     return this.pipelinesService.create(userId, dto, file);
@@ -66,7 +65,7 @@ export class PipelinesController {
   async update(
     @Param('id') id: string,
     @CurrentUser('id') userId: string,
-    @Body() dto: UpdatePipelineDto,
+    @Body() dto: Omit<TUpdatePipelineInputData, 'id'>,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     return this.pipelinesService.update(id, userId, dto, file);

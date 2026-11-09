@@ -14,9 +14,14 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '@/auth/auth.service';
-import { RegisterDto } from '@/auth/dtos/register.dto';
-import { RecoveryDto } from '@/auth/dtos/recovery.dto';
-import { ResetPasswordDto } from '@/auth/dtos/reset-password.dto';
+import type {
+  TRegisterInputData,
+  TTwoFactorLoginInputData,
+  TTwoFactorTotpInputData,
+  TTwoFactorCodeOrBackupData,
+  TRequestResetInputData,
+  TPasswordResetInputData,
+} from '@pipeline/contracts';
 import { LocalAuthGuard } from '@/auth/guards/local-auth.guard';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { GoogleOauthGuard } from '@/auth/guards/google.guard';
@@ -62,7 +67,7 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'User successfully registered and logged in.' })
   @ApiResponse({ status: 400, description: 'Bad request.' })
   async register(
-    @Body() dto: RegisterDto,
+    @Body() dto: TRegisterInputData,
     @Res({ passthrough: true }) res: Response,
   ): Promise<TUserSafe> {
     const user = await this.authService.register(dto);
@@ -102,11 +107,10 @@ export class AuthController {
   @ApiResponse({ status: 200, description: '2FA verified successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid code or expired temp token.' })
   async loginWith2fa(
-    @Body('tempToken') tempToken: string,
-    @Body('code') code: string,
+    @Body() dto: TTwoFactorLoginInputData,
     @Res({ passthrough: true }) res: Response,
   ): Promise<TUserSafe> {
-    const user = await this.authService.authenticateWith2Fa(tempToken, code);
+    const user = await this.authService.authenticateWith2Fa(dto.tempToken, dto.code);
     const tokens = await this.authService.generateTokens(user.id);
     this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
     return user;
@@ -127,16 +131,16 @@ export class AuthController {
     status: 200,
     description: '2FA successfully enabled. Returns list of backup recovery codes.',
   })
-  async turnOn2fa(@Req() req: IRequestWithUser, @Body('code') code: string) {
-    return this.authService.turnOnTwoFactor(req.user.id, code);
+  async turnOn2fa(@Req() req: IRequestWithUser, @Body() dto: TTwoFactorTotpInputData) {
+    return this.authService.turnOnTwoFactor(req.user.id, dto.code);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('2fa/turn-off')
   @ApiOperation({ summary: 'Disable 2FA for account' })
   @ApiResponse({ status: 200, description: '2FA successfully disabled.' })
-  async turnOff2fa(@Req() req: IRequestWithUser, @Body('code') code: string) {
-    return this.authService.turnOffTwoFactor(req.user.id, code);
+  async turnOff2fa(@Req() req: IRequestWithUser, @Body() dto: TTwoFactorCodeOrBackupData) {
+    return this.authService.turnOffTwoFactor(req.user.id, dto.code);
   }
 
   @Get('google')
@@ -234,7 +238,7 @@ export class AuthController {
   @Post('recovery')
   @ApiOperation({ summary: 'Request password recovery email' })
   @ApiResponse({ status: 200, description: 'Recovery link generated and sent if email exists.' })
-  async recovery(@Body() dto: RecoveryDto): Promise<{ message: string }> {
+  async recovery(@Body() dto: TRequestResetInputData): Promise<{ message: string }> {
     return this.authService.publicRequestResetPassword(dto);
   }
 
@@ -243,7 +247,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Reset password using token' })
   @ApiResponse({ status: 200, description: 'Password updated.' })
   @ApiResponse({ status: 400, description: 'Invalid or expired token.' })
-  async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ success: boolean }> {
+  async resetPassword(@Body() dto: TPasswordResetInputData): Promise<{ success: boolean }> {
     return this.authService.publicResetPassword(dto);
   }
 }

@@ -6,11 +6,10 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { CreatePipelineDto } from '@/pipelines/dtos/create-pipeline.dto';
-import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 import * as fs from 'node:fs/promises';
 import path from 'node:path';
 import { Prisma } from '@prisma/client';
+import type { TCreatePipelineInputData, TUpdatePipelineInputData } from '@pipeline/contracts';
 
 @Injectable()
 export class PipelinesService {
@@ -26,7 +25,7 @@ export class PipelinesService {
     }
   }
 
-  async create(userId: string, dto: CreatePipelineDto, file?: Express.Multer.File) {
+  async create(userId: string, dto: TCreatePipelineInputData, file?: Express.Multer.File) {
     const screenshotUrl = file ? `/uploads/screenshots/${file.filename}` : null;
 
     try {
@@ -60,7 +59,7 @@ export class PipelinesService {
   async update(
     id: string,
     userId: string,
-    dto: UpdatePipelineDto & { screenshotBase64?: string },
+    dto: Omit<TUpdatePipelineInputData, 'id'>,
     file?: Express.Multer.File,
   ) {
     const existingPipeline = await this.prisma.pipeline.findUnique({
@@ -78,7 +77,6 @@ export class PipelinesService {
     const { screenshotBase64, graphData, ...restDto } = dto;
     let newScreenshotUrl: string | undefined;
 
-    // 1. Сохраняем новый файл перед записью в БД
     if (screenshotBase64) {
       const base64Data = screenshotBase64.replace(/^data:image\/\w+;base64,/, '');
       const buffer = Buffer.from(base64Data, 'base64');
@@ -94,7 +92,6 @@ export class PipelinesService {
     }
 
     try {
-      // 2. Обновляем данные в базе
       const updatedPipeline = await this.prisma.pipeline.update({
         where: { id },
         data: {
@@ -106,14 +103,12 @@ export class PipelinesService {
         },
       });
 
-      // 3. Старый файл удаляем ТОЛЬКО после успешного обновления БД
       if (newScreenshotUrl && existingPipeline.screenshotUrl) {
         await this.deleteFile(existingPipeline.screenshotUrl);
       }
 
       return updatedPipeline;
     } catch (error: any) {
-      // В случае ошибки БД откатываем загруженный новый файл
       if (newScreenshotUrl) {
         await this.deleteFile(newScreenshotUrl);
       }

@@ -106,6 +106,23 @@ describe('AuthController', () => {
     });
   });
 
+  describe('loginWith2fa', () => {
+    it('should complete 2FA login and issue cookies', async () => {
+      const dto = { tempToken: 'temp_token', code: '123456' };
+      const user = { id: 'user_1', email: 'test@example.com' } as any;
+      const tokens = { accessToken: 'at', refreshToken: 'rt' };
+
+      authService.authenticateWith2Fa.mockResolvedValue(user);
+      authService.generateTokens.mockResolvedValue(tokens);
+
+      const result = await controller.loginWith2fa(dto, mockRes);
+
+      expect(authService.authenticateWith2Fa).toHaveBeenCalledWith(dto.tempToken, dto.code);
+      expect(mockRes.cookie).toHaveBeenCalledTimes(2);
+      expect(result).toEqual(user);
+    });
+  });
+
   describe('refresh', () => {
     it('should throw UnauthorizedException if refresh token cookie is missing', async () => {
       const req = { cookies: {}, headers: {} } as any;

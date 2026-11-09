@@ -2,10 +2,11 @@ import { z } from 'zod';
 
 export const updateProfileInputSchema = z.object({
   firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  company: z.string().optional(),
-  location: z.string().optional(),
-  jobTitle: z.string().optional(),
-  avatarUrl: z.string().nullable().optional(),
+  lastName: z.string().nullish(),
+  company: z.string().nullish(),
+  location: z.string().nullish(),
+  jobTitle: z.string().nullish(),
+  avatarUrl: z.string().nullish(),
 });
+
 export type TUpdateProfileInputData = z.infer<typeof updateProfileInputSchema>;

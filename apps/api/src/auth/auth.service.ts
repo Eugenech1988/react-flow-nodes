@@ -4,9 +4,11 @@ import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService, UserWithRelations } from '@/users/users.service';
 import { MailService } from '@/mail/mail.service';
-import { RegisterDto } from '@/auth/dtos/register.dto';
-import { RecoveryDto } from '@/auth/dtos/recovery.dto';
-import { ResetPasswordDto } from '@/auth/dtos/reset-password.dto';
+import type {
+  TRegisterInputData,
+  TRequestResetInputData,
+  TPasswordResetInputData,
+} from '@pipeline/contracts';
 import { TUserSafe, TJwtPayload, TOauthUser } from '@/auth/types/auth.types';
 import { generateSecret, verify as verifyOtp, generateURI } from 'otplib';
 import * as qrcode from 'qrcode';
@@ -100,7 +102,7 @@ export class AuthService {
     return this.sanitizeUser(newUser);
   }
 
-  async register(dto: RegisterDto): Promise<TUserSafe> {
+  async register(dto: TRegisterInputData): Promise<TUserSafe> {
     const user = await this.usersService.register({
       email: dto.email,
       password: dto.password,
@@ -251,7 +253,7 @@ export class AuthService {
     }
   }
 
-  async recovery(dto: RecoveryDto): Promise<string | null> {
+  async recovery(dto: TRequestResetInputData): Promise<string | null> {
     const user = await this.usersService.findOneByEmail(dto.email);
     if (!user) return null;
 
@@ -275,7 +277,7 @@ export class AuthService {
     });
   }
 
-  async resetPassword(dto: ResetPasswordDto): Promise<void> {
+  async resetPassword(dto: TPasswordResetInputData): Promise<void> {
     let payload: IResetPasswordPayload;
 
     try {
@@ -303,7 +305,7 @@ export class AuthService {
     });
   }
 
-  async publicRequestResetPassword(dto: RecoveryDto): Promise<{ message: string }> {
+  async publicRequestResetPassword(dto: TRequestResetInputData): Promise<{ message: string }> {
     const token = await this.recovery(dto);
 
     if (token) {
@@ -316,7 +318,7 @@ export class AuthService {
     return { message: 'If the email exists, a reset link has been sent.' };
   }
 
-  async publicResetPassword(dto: ResetPasswordDto): Promise<{ success: boolean }> {
+  async publicResetPassword(dto: TPasswordResetInputData): Promise<{ success: boolean }> {
     await this.resetPassword(dto);
     return { success: true };
   }

@@ -103,6 +103,7 @@ describe('UsersService', () => {
       prisma.profile.findFirst.mockResolvedValue(null);
       prisma.user.create.mockResolvedValue({ id: 'user_1', email: 'new@example.com' });
 
+      // Передаем объект, соответствующий TRegisterInputData
       const dto = { email: 'new@example.com', password: 'password123', firstName: 'John' };
       const result = await service.register(dto);
 

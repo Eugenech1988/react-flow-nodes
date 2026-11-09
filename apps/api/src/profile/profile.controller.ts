@@ -45,6 +45,7 @@ export class ProfileController {
     };
 
     const updatedUser = await this.profileService.update(userId, input);
+
     const { password, ...safeUser } = updatedUser;
 
     return safeUser;

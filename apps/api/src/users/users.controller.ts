@@ -9,8 +9,6 @@ import {
   HttpCode,
   HttpStatus,
   Body,
-  UsePipes,
-  ValidationPipe,
   BadRequestException,
 } from '@nestjs/common';
 import { Role } from '@prisma/client';
@@ -18,9 +16,9 @@ import {
   UsersService,
   type SafeUserWithRelations,
   type UserWithRelations,
+  type TCreateUserInputData,
 } from '@/users/users.service';
-import { CreateUserDto } from '@/users/dtos/create-user.dto';
-import { UpdatePasswordDto } from '@/users/dtos/update-password.dto';
+import type { TUpdatePasswordInputData } from '@pipeline/contracts';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -36,8 +34,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserWithRelations> {
+  async create(@Body() createUserDto: TCreateUserInputData): Promise<UserWithRelations> {
     return this.usersService.register(createUserDto);
   }
 
@@ -51,10 +48,9 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   @Patch('password')
-  @UsePipes(new ValidationPipe({ whitelist: true }))
   async updatePassword(
     @Req() req: IRequestWithUser,
-    @Body() dto: UpdatePasswordDto,
+    @Body() dto: TUpdatePasswordInputData,
   ): Promise<{ success: boolean }> {
     await this.usersService.updatePassword(req.user.id, dto);
     return { success: true };
