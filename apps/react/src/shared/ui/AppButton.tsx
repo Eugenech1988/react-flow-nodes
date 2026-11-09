@@ -45,11 +45,11 @@ const sizeStyles: Record<ButtonSize, { button: string; icon: string }> = {
     icon: 'w-3.5 h-3.5',
   },
   sm: {
-    button: 'px-3.5 py-1.5 text-xs rounded-xl min-h-9',
+    button: 'px-3.5 py-1.5 text-xs rounded-md min-h-9',
     icon: 'w-4 h-4',
   },
   md: {
-    button: 'px-4 py-2 text-sm rounded-xl min-h-10',
+    button: 'px-4 py-2 text-sm rounded-md min-h-10',
     icon: 'w-4 h-4',
   },
 };

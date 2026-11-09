@@ -25,7 +25,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
       className = '',
       labelClasses = '',
       fieldsetClasses = '',
-      rounded = 'xl',
+      rounded = 'md',
       ...props
     },
     ref,
@@ -35,8 +35,8 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
 
     return (
       <div className="w-full">
+        {/* 👇 Высота h-11 задана здесь */}
         <div className={cn('group relative flex h-11 w-full items-center', roundedClass)}>
-          {/* Input перенесен вверх, чтобы стать peer для иконки */}
           <Input
             {...props}
             ref={ref}
@@ -53,7 +53,6 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
             )}
           />
 
-          {/* Иконка (идет после Input): реагирует на peer-focus и peer-[:not(:placeholder-shown)] */}
           {hasIcon && (
             <div
               className={cn(
@@ -90,13 +89,14 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
 
           <fieldset
             className={cn(
+              // 👇 Возвращаем -top-1.5, чтобы рамка "разрывалась" под лейбл
               'pointer-events-none absolute inset-0 -top-1.5 z-0 m-0 box-border min-w-0 border transition-all duration-200',
               roundedClass,
               '[&_legend]:invisible [&_legend]:max-w-0 [&_legend]:p-0 [&_legend]:transition-all [&_legend]:duration-200',
-              'peer-focus:[&_legend]:visible peer-focus:[&_legend]:max-w-full peer-focus:[&_legend]:px-1',
-              'peer-not-placeholder-shown:[&_legend]:visible peer-not-placeholder-shown:[&_legend]:max-w-full peer-not-placeholder-shown:[&_legend]:px-1',
-              'autofill:[&_legend]:visible autofill:[&_legend]:max-w-full autofill:[&_legend]:px-1',
-              'peer-disabled:bg-muted/30 peer-disabled:border-border/60 peer-disabled:[&_legend]:visible peer-disabled:[&_legend]:max-w-full peer-disabled:[&_legend]:px-1',
+              'peer-focus:[&_legend]:visible peer-focus:[&_legend]:max-w-fit peer-focus:[&_legend]:px-1',
+              'peer-not-placeholder-shown:[&_legend]:visible peer-not-placeholder-shown:[&_legend]:max-w-fit peer-not-placeholder-shown:[&_legend]:px-1',
+              'autofill:[&_legend]:visible autofill:[&_legend]:max-w-fit autofill:[&_legend]:px-1',
+              'peer-disabled:bg-muted/30 peer-disabled:border-border/60 peer-disabled:[&_legend]:visible peer-disabled:[&_legend]:max-w-fit peer-disabled:[&_legend]:px-1',
               error
                 ? 'border-red-500! shadow-[0_0_15px_rgba(239,68,68,0.02)]'
                 : 'border-zinc-400 group-hover:border-teal-500 peer-not-placeholder-shown:border-teal-500 peer-focus:border-teal-500 peer-focus-visible:border-teal-500 hover:border-teal-500 dark:border-zinc-500 dark:group-hover:border-teal-500 dark:peer-not-placeholder-shown:border-teal-500 dark:peer-focus:border-teal-500 dark:peer-focus-visible:border-teal-500 dark:hover:border-teal-500',
@@ -105,6 +105,7 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
           >
             <legend
               className={cn(
+                // 👇 Убран max-w-full и truncate, чтобы не ломать правую рамку
                 'pointer-events-none invisible box-border block h-3 w-auto px-1 font-sans text-[10px] whitespace-nowrap opacity-0 transition-all duration-200 select-none',
                 hasIcon ? 'ml-9' : 'ml-2.5',
               )}

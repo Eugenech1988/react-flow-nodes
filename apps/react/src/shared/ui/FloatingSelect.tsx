@@ -38,7 +38,7 @@ export const FloatingSelect: React.FC<FloatingSelectProps> = ({
   labelClasses = '',
   fieldsetClasses = '',
   renderValue,
-  rounded = 'xl',
+  rounded = 'md',
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const id = useId();

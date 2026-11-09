@@ -23,7 +23,7 @@ export const FloatingTextarea = React.forwardRef<HTMLTextAreaElement, FloatingTe
       labelClasses = '',
       fieldsetClasses = '',
       rows = 3,
-      rounded = 'xl',
+      rounded = 'md',
       ...props
     },
     ref,
