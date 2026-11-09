@@ -29,18 +29,16 @@ export function LanguageSwitcher({ isMobile = false, theme = 'default' }: Langua
     router.push(newPath, { scroll: false });
   };
 
-  // Базовые классы контейнера
   const containerClasses = isSteampunk
     ? 'rounded-sm border-[#2f3d36] bg-[#0a0e0d] shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]'
     : 'rounded-xl border-slate-700/60 bg-[#0a1210] shadow-[inset_0_1px_4px_rgba(0,0,0,0.8)]';
 
-  // Классы для винтиков
   const screwClasses = isSteampunk ? 'bg-[#3a4842]' : 'bg-slate-600';
 
   return (
     <div
       className={`relative flex items-center gap-1 border p-1 ${containerClasses} ${
-        isMobile ? 'w-full justify-center' : ''
+        isMobile ? 'w-full' : ''
       }`}
     >
       <span
@@ -54,12 +52,10 @@ export function LanguageSwitcher({ isMobile = false, theme = 'default' }: Langua
         const isActive = i18n.language === lng;
         const label = t(`languages.${lng}`, { defaultValue: lng.toUpperCase() });
 
-        // Классы для активной кнопки
         const activeClasses = isSteampunk
           ? 'rounded-sm border border-[#4a6d5e] bg-[#0d1f1e] text-[#9cc4b0] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_2px_0_#2f3d36]'
           : 'rounded-lg border border-[#2dd4bf]/40 bg-[#2dd4bf]/15 text-[#5eead4] shadow-[inset_0_0_10px_rgba(45,212,191,0.2)]';
 
-        // Классы для неактивной кнопки
         const inactiveClasses = isSteampunk
           ? 'rounded-sm border border-transparent text-[#8a9488] hover:bg-[#141a16] hover:text-[#9cc4b0]'
           : 'rounded-lg border border-transparent text-slate-500 hover:bg-white/5 hover:text-slate-300';
@@ -69,9 +65,9 @@ export function LanguageSwitcher({ isMobile = false, theme = 'default' }: Langua
             key={lng}
             type="button"
             onClick={() => switchLanguage(lng)}
-            className={`relative flex h-7 items-center justify-center px-3 font-mono text-[10px] font-bold tracking-widest uppercase transition-all duration-300 sm:text-xs ${
-              isActive ? activeClasses : inactiveClasses
-            }`}
+            className={`relative flex h-7 cursor-pointer items-center justify-center px-3 font-mono text-[10px] font-bold tracking-widest uppercase transition-all duration-300 sm:text-xs ${
+              isMobile ? 'flex-1' : ''
+            } ${isActive ? activeClasses : inactiveClasses}`}
           >
             {label}
           </button>

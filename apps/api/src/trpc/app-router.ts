@@ -26,6 +26,8 @@ import { UsersService } from '@/users/users.service';
 import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
 import { protectedProcedure, publicProcedure, router } from '@/trpc/init';
 import { ExecutionsService } from '@/executions/executions.service';
+import { JobsService } from '@/jobs/jobs.service';
+import { createJobsRouter } from '@/jobs/jobs.router';
 import { UpdatePipelineDto } from '@/pipelines/dtos/update-pipeline.dto';
 import { z } from 'zod';
 
@@ -38,6 +40,7 @@ interface RouterServices {
   aiService: AiService;
   databaseNodesService: DatabaseNodesService;
   executionsService: ExecutionsService;
+  jobsService: JobsService;
 }
 
 function setTokenCookies(res: { cookie: Function }, accessToken: string, refreshToken: string) {
@@ -260,6 +263,8 @@ export function createAppRouter(services: RouterServices) {
     }),
   });
 
+  const jobsRouter = createJobsRouter(services.jobsService);
+
   return router({
     auth: authRouter,
     users: usersRouter,
@@ -269,6 +274,7 @@ export function createAppRouter(services: RouterServices) {
     ai: aiRouter,
     databaseNodes: databaseNodesRouter,
     executions: executionsRouter,
+    jobs: jobsRouter,
     health: publicProcedure.query(() => ({ status: 'ok' })),
   });
 }

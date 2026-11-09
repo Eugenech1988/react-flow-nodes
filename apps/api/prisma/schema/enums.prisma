@@ -38,3 +38,36 @@ enum TriggerType {
   CRON
   API
 }
+
+enum JobStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum JobDepartment {
+  ENGINEERING
+  DESIGN
+  RESEARCH
+  OPERATIONS
+}
+
+enum JobLevel {
+  JUNIOR
+  MID
+  SENIOR
+  LEAD
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+}
+
+enum Role {
+  USER
+  CONTENT_MANAGER
+  SUPER_ADMIN
+}

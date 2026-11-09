@@ -5,11 +5,10 @@
   },
   "header": {
     "nav": {
-      "features": "Features",
-      "how-it-works": "How It Works",
-      "use-cases": "Use Cases",
-      "testimonials": "Testimonials",
-      "pricing": "Pricing"
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact"
     },
     "signIn": "Sign in",
     "getStarted": "Get started",

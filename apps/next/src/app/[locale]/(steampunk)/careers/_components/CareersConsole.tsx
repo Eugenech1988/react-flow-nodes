@@ -5,12 +5,14 @@ import { MapPin, Clock, ArrowUpRight, Gauge, Power, ChevronDown } from 'lucide-r
 import { useT } from '@/shared/lib/i18n/client';
 import { JOBS, DEPARTMENTS, type Department } from '../constants';
 import { SectionHeading, MonitorFrame } from '@/shared/ui';
+import Link from 'next/link';
 
 export function CareersConsole() {
-  const { t } = useT('careers');
   const [activeDept, setActiveDept] = useState<Department>('all');
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(false);
+  const { t, i18n } = useT('careers');
+  const lng = i18n.language;
 
   const filtered = activeDept === 'all' ? JOBS : JOBS.filter((j) => j.dept === activeDept);
 
@@ -148,13 +150,13 @@ export function CareersConsole() {
                           </div>
                         </div>
                       </div>
-                      <button
-                        type="button"
+                      <Link
+                        href={`/${lng}/careers/${job.id}`}
                         className="relative flex cursor-pointer items-center gap-2 self-start rounded border border-[#3a4842] bg-[#0f1512] px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest text-[#9cc4b0] uppercase transition-all hover:border-[#6fa28c] hover:bg-[#6fa28c]/10 sm:self-center sm:text-[10px]"
                       >
                         {t('openings.apply')}
                         <ArrowUpRight className="h-3 w-3" />
-                      </button>
+                      </Link>
                     </div>
                   );
                 })}

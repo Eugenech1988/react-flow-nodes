@@ -12,6 +12,7 @@ import { JwtAccessStrategy } from '@/auth/strategies/jwt-access.strategy';
 import { GoogleStrategy } from '@/auth/strategies/google.strategy';
 import { GithubStrategy } from '@/auth/strategies/github.strategy';
 import { MailModule } from '@/mail/mail.module';
+import { RolesGuard } from '@/common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -37,6 +38,8 @@ import { MailModule } from '@/mail/mail.module';
     GoogleStrategy,
     GithubStrategy,
     MailService,
+    RolesGuard
   ],
+  exports: [RolesGuard],
 })
 export class AuthModule {}

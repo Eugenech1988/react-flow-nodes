@@ -5,11 +5,10 @@
   },
   "header": {
     "nav": {
-      "features": "Можливості",
-      "how-it-works": "Як це працює",
-      "use-cases": "Сценарії",
-      "testimonials": "Відгуки",
-      "pricing": "Ціни"
+      "about": "Про нас",
+      "blog": "Блог",
+      "careers": "Кар'єра",
+      "contact": "Контакти"
     },
     "signIn": "Увійти",
     "getStarted": "Почати",

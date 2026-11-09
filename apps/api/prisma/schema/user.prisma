@@ -4,6 +4,8 @@ model User {
   hasPassword Boolean @default(false) @map("has_password")
   password    String?
 
+  role Role @default(USER)
+
   provider   String @default("local")
   providerId String @map("provider_id")
 
@@ -25,6 +27,8 @@ model User {
 
   currentPipelineId String?   @map("current_pipeline_id")
   currentPipeline   Pipeline? @relation("UserCurrentPipeline", fields: [currentPipelineId], references: [id], onDelete: SetNull)
+
+  createdJobs Job[] @relation("JobAuthor")
 
   @@unique([provider, providerId])
   @@map("users")

@@ -26,11 +26,11 @@ type BuildMetadataParams = {
 };
 
 export function buildMetadata({
-  locale,
-  path = '',
-  title,
-  description,
-}: BuildMetadataParams): Metadata {
+                                locale,
+                                path = '',
+                                title,
+                                description,
+                              }: BuildMetadataParams): Metadata {
   const ogLocale = OG_LOCALES[locale] ?? OG_LOCALES.en;
   const alternateLocale = Array.from(new Set(Object.values(OG_LOCALES))).filter(
     (value) => value !== ogLocale,
@@ -114,20 +114,55 @@ export async function getRootMetadata(locale: string): Promise<Metadata> {
   };
 }
 
+// 👇 Расширенный тип для гибкой передачи (готовые строки или ключи)
+export type PageMetadataOverrides = {
+  title?: string;
+  description?: string;
+  titleKey?: string;
+  descriptionKey?: string;
+  fallbackTitleKey?: string;
+  fallbackDescriptionKey?: string;
+};
+
 export async function getPageMetadata(
   locale: string,
   namespace: string,
   path = '',
+  overrides?: PageMetadataOverrides,
 ): Promise<Metadata> {
   'use cache';
   cacheLife('days');
 
   const { t } = await getT(namespace, { lng: locale });
 
+  // Разрешаем Title
+  let resolvedTitle = overrides?.title;
+  if (!resolvedTitle && overrides?.titleKey) {
+    resolvedTitle = t(overrides.titleKey, {
+      defaultValue: overrides.fallbackTitleKey
+        ? t(overrides.fallbackTitleKey)
+        : t('meta.title'), // Дефолтный фоллбек, если ничего не передано
+    });
+  } else if (!resolvedTitle) {
+    resolvedTitle = t('meta.title');
+  }
+
+  // Разрешаем Description
+  let resolvedDescription = overrides?.description;
+  if (!resolvedDescription && overrides?.descriptionKey) {
+    resolvedDescription = t(overrides.descriptionKey, {
+      defaultValue: overrides.fallbackDescriptionKey
+        ? t(overrides.fallbackDescriptionKey)
+        : t('meta.description'), // Дефолтный фоллбек
+    });
+  } else if (!resolvedDescription) {
+    resolvedDescription = t('meta.description');
+  }
+
   return buildMetadata({
     locale,
     path,
-    title: t('meta.title'),
-    description: t('meta.description'),
+    title: resolvedTitle,
+    description: resolvedDescription,
   });
 }

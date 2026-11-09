@@ -13,6 +13,7 @@ import {
   ValidationPipe,
   BadRequestException,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import {
   UsersService,
   type SafeUserWithRelations,
@@ -21,6 +22,8 @@ import {
 import { CreateUserDto } from '@/users/dtos/create-user.dto';
 import { UpdatePasswordDto } from '@/users/dtos/update-password.dto';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
 import { type TUserSafe } from '@/users/types';
 import type { Request } from 'express';
 
@@ -39,7 +42,8 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPER_ADMIN)
   async findAll(): Promise<SafeUserWithRelations[]> {
     return this.usersService.findAll();
   }

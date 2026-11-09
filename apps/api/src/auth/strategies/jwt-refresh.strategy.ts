@@ -26,7 +26,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    const { password, ...safeUser } = user;
-    return safeUser;
+    const { password, twoFactorSecret, recoveryCodes, ...safeUser } = user as Record<string, any>;
+    return safeUser as TUserSafe;
   }
 }

@@ -10,14 +10,12 @@ import { UpdatePasswordDto } from '@/users/dtos/update-password.dto';
 import { Prisma } from '@prisma/client';
 import { hash, verify } from 'argon2';
 
-// Валидатор полной модели пользователя (включая приватные поля)
 const userWithRelationsValidator = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { profile: true, subscription: true, currentPipeline: true },
 });
 
 export type UserWithRelations = Prisma.UserGetPayload<typeof userWithRelationsValidator>;
 
-// Безопасная выборка (без password) для контроллеров и списка пользователей
 export const safeUserSelect = {
   id: true,
   email: true,
@@ -25,6 +23,7 @@ export const safeUserSelect = {
   provider: true,
   providerId: true,
   currentPipelineId: true,
+  role: true,
   createdAt: true,
   updatedAt: true,
   profile: true,
@@ -180,7 +179,6 @@ export class UsersService {
       throw new BadRequestException('User not found');
     }
 
-    // Если локальный пароль был установлен ранее — требуем и проверяем текущий
     if (user.hasPassword) {
       if (!dto.currentPassword) {
         throw new BadRequestException('Current password is required');
@@ -196,7 +194,6 @@ export class UsersService {
       }
     }
 
-    // Хешируем новый пароль и выставляем flag `hasPassword: true`
     const hashedPassword = await hash(dto.newPassword);
 
     try {

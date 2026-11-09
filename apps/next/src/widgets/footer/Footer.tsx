@@ -152,7 +152,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
 
             {FOOTER_COLUMNS.map((column) => (
               <div key={column.id} className="col-span-1">
-                <h4
+                <h3
                   className={cn(
                     'relative mb-5 text-[11px] font-bold tracking-[0.15em] uppercase md:mb-6 md:text-xs',
                     {
@@ -168,7 +168,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                       'bg-[#6fa28c]/50 shadow-[0_0_6px_rgba(111,162,140,0.5)]': isSteampunk,
                     })}
                   />
-                </h4>
+                </h3>
                 <ul className="space-y-3 md:space-y-3.5">
                   {column.links.map((link) => (
                     <li key={link.id}>

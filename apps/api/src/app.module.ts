@@ -10,6 +10,7 @@ import { InngestModule } from '@/inngest/inngest.module';
 import { AiModule } from './ai/ai.module';
 import { DatabaseNodesModule } from '@/database-nodes/database-nodes.module';
 import { ExecutionsModule } from './executions/executions.module';
+import { JobsModule } from '@/jobs/jobs.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ExecutionsModule } from './executions/executions.module';
     AiModule,
     DatabaseNodesModule,
     ExecutionsModule,
+    JobsModule
   ],
 })
 export class AppModule {}

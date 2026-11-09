@@ -1,0 +1,23 @@
+model Job {
+  id         String        @id @default(cuid())
+  slug       String        @unique
+  status     JobStatus     @default(DRAFT)
+  department JobDepartment
+  level      JobLevel
+  type       JobType       @default(FULL_TIME)
+  location   String
+  icon       String?
+
+  authorId String? @map("author_id")
+  author   User?   @relation("JobAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  translations JobTranslation[]
+
+  @@index([status, publishedAt])
+  @@index([department])
+  @@map("jobs")
+}

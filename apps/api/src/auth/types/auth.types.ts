@@ -26,5 +26,5 @@ export type TOauthUser = {
   isTwoFactorEnabled?: boolean;
   twoFactorSecret?: string;
   providerId: string;
-  provider: 'google' | 'github' | ' local';
+  provider: 'google' | 'github' | 'local';
 };

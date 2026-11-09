@@ -14,6 +14,7 @@ interface IMonitorFrameProps {
   innerClassName?: string;
   toolbar?: ReactNode;
   theme?: 'default' | 'steampunk';
+  withRivets?: boolean;
 }
 
 export const MonitorFrame = ({
@@ -26,6 +27,7 @@ export const MonitorFrame = ({
   className,
   innerClassName,
   toolbar,
+  withRivets,
   theme = 'default',
 }: IMonitorFrameProps) => {
   const isSteampunk = theme === 'steampunk';
@@ -40,9 +42,8 @@ export const MonitorFrame = ({
         className,
       )}
     >
-      <Rivets className={isSteampunk ? 'bg-[#3a4842]' : 'bg-slate-700'} />
+      {withRivets ?? <Rivets className={isSteampunk ? 'bg-[#3a4842]' : 'bg-slate-700'} />}
 
-      {/* Панель инструментов (табы) на безеле */}
       {toolbar && <div className="relative z-10 mb-3 w-full px-1">{toolbar}</div>}
 
       <div

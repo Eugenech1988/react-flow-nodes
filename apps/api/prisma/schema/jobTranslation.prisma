@@ -1,0 +1,21 @@
+model JobTranslation {
+  id    String @id @default(cuid())
+  jobId String @map("job_id")
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  locale           String
+  title            String
+  description      String   @db.Text
+  responsibilities String[]
+  requirements     String[]
+  metaTitle        String?  @map("meta_title")
+  metaDescription  String?  @map("meta_description")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([jobId, locale])
+  @@index([locale])
+  @@index([locale, title])
+  @@map("jobs_translations")
+}
