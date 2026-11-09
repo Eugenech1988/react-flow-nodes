@@ -1,0 +1,55 @@
+{
+  "hero": {
+    "title": "Встановити зв'язок",
+    "description": "Відкрийте захищений канал зв'язку з нашим командним центром. Технічна підтримка, комерційні питання чи просто привітання."
+  },
+  "channels": {
+    "email": {
+      "label": "Основна пошта",
+      "value": "hello@pipeline.studio"
+    },
+    "phone": {
+      "label": "Захищена лінія",
+      "value": "+1 (555) 019-2834"
+    },
+    "hq": {
+      "label": "Локація штабу",
+      "value": "77 Data Stream Ave, Silicon Valley"
+    }
+  },
+  "radar": {
+    "title": "SYS.LOCATOR // HQ_NODE",
+    "signal": "СИГНАЛ МІЦНИЙ",
+    "coordinates": "LAT 47.37 / LON 8.54"
+  },
+  "form": {
+    "title": "Передати повідомлення",
+    "description": "Заповніть форму нижче, і наші оператори зв'яжуться з вами протягом 24 годин.",
+    "fields": {
+      "name": "Ім'я оператора",
+      "email": "Зворотна частота (Email)",
+      "subject": "Тема / Питання",
+      "message": "Тіло повідомлення"
+    },
+    "placeholder": {
+      "name": "Іван Іванов",
+      "email": "ivan@example.com",
+      "subject": "Технічне питання...",
+      "message": "Введіть ваше повідомлення..."
+    },
+    "encrypted": "ЗАШИФРОВАНИЙ КАНАЛ",
+    "submit": "Надіслати сигнал",
+    "submitting": "Передача...",
+    "success": {
+      "title": "Передачу успішно завершено",
+      "description": "Ми отримали ваше повідомлення.",
+      "again": "Надіслати ще"
+    }
+  },
+  "socials": {
+    "title": "Альтернативні частоти",
+    "twitter": "TWITTER // X",
+    "github": "GITHUB",
+    "linkedin": "LINKEDIN"
+  }
+}

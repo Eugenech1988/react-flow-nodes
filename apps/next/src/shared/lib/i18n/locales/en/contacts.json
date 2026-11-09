@@ -1,0 +1,55 @@
+{
+  "hero": {
+    "title": "Establish Connection",
+    "description": "Open a secure channel with our command center. Whether you need technical support, sales inquiries, or just want to say hi."
+  },
+  "channels": {
+    "email": {
+      "label": "Primary Email",
+      "value": "hello@pipeline.studio"
+    },
+    "phone": {
+      "label": "Secure Line",
+      "value": "+1 (555) 019-2834"
+    },
+    "hq": {
+      "label": "HQ Location",
+      "value": "77 Data Stream Ave, Silicon Valley"
+    }
+  },
+  "radar": {
+    "title": "SYS.LOCATOR // HQ_NODE",
+    "signal": "SIGNAL STRONG",
+    "coordinates": "LAT 47.37 / LON 8.54"
+  },
+  "form": {
+    "title": "Transmit Message",
+    "description": "Fill out the form below and our operators will respond within 24 hours.",
+    "fields": {
+      "name": "Operator Name",
+      "email": "Return Frequency (Email)",
+      "subject": "Subject / Topic",
+      "message": "Message Payload"
+    },
+    "placeholder": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "subject": "Technical inquiry...",
+      "message": "Enter your transmission here..."
+    },
+    "encrypted": "ENCRYPTED CHANNEL",
+    "submit": "Send Signal",
+    "submitting": "Transmitting...",
+    "success": {
+      "title": "Transmission Successful",
+      "description": "We have received your message.",
+      "again": "Send another"
+    }
+  },
+  "socials": {
+    "title": "Alternative Frequencies",
+    "twitter": "TWITTER // X",
+    "github": "GITHUB",
+    "linkedin": "LINKEDIN"
+  }
+}

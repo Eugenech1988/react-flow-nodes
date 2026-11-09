@@ -4,5 +4,5 @@ export const NAV_LINKS: TNavLink[] = [
   { id: 'about', href: '/about' },
   { id: 'blog', href: '#' },
   { id: 'careers', href: '/careers' },
-  { id: 'contact', href: '#' },
+  { id: 'contacts', href: '/contacts' },
 ];
