@@ -1,17 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
 import { triggerPortalRevalidate } from '@/shared/api/revalidate';
-import { LocalAlert, GlobalLoader } from '@/shared/ui';
-import { useAdminJob, useJobMutations } from '../hooks';
+import { LocalAlert } from '@/shared/ui';
+import { useJobMutations } from '../hooks';
 import type { IJob } from '../model';
-import {
-  jobFormSchema,
-  type TJobFormInput,
-  type TJobFormOutput,
-} from '../model/form-schema';
+import { jobFormSchema, type TJobFormInput, type TJobFormOutput } from '../model/form-schema';
 import { fillTranslation, buildTranslationPayload } from '../model/helpers';
 import { JobFormHeader } from './JobFormHeader';
 import { JobFormTabs, type TFormTab } from './JobFormTabs';
@@ -20,6 +16,7 @@ import { JobFormTranslationTab } from './JobFormTranslationTab';
 
 interface JobFormProps {
   jobId: string | null;
+  initialData?: IJob;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -33,9 +30,8 @@ const emptyTranslation = {
   metaDescription: '',
 };
 
-export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
+export function JobForm({ jobId, initialData, onSuccess, onCancel }: JobFormProps) {
   const isEditing = !!jobId;
-  const { data: existingJob, isLoading } = useAdminJob(jobId);
   const { createJob, updateJob } = useJobMutations();
 
   const trpc = useTRPC();
@@ -48,39 +44,33 @@ export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
     register,
     control,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<TJobFormInput, unknown, TJobFormOutput>({
     resolver: zodResolver(jobFormSchema),
-    defaultValues: {
-      slug: '',
-      department: 'ENGINEERING',
-      level: 'MID',
-      type: 'FULL_TIME',
-      location: 'Remote',
-      icon: '',
-      status: 'DRAFT',
-      en: emptyTranslation,
-      ua: emptyTranslation,
-    },
+    defaultValues: initialData
+      ? {
+        slug: initialData.slug,
+        department: initialData.department,
+        level: initialData.level,
+        type: initialData.type,
+        location: initialData.location,
+        icon: initialData.icon ?? '',
+        status: initialData.status,
+        en: fillTranslation(initialData.translations.find((t) => t.locale === 'en')),
+        ua: fillTranslation(initialData.translations.find((t) => t.locale === 'ua')),
+      }
+      : {
+        slug: '',
+        department: 'ENGINEERING',
+        level: 'MID',
+        type: 'FULL_TIME',
+        location: 'Remote',
+        icon: '',
+        status: 'DRAFT',
+        en: emptyTranslation,
+        ua: emptyTranslation,
+      },
   });
-
-  useEffect(() => {
-    if (!existingJob) return;
-    const job = existingJob as IJob;
-
-    reset({
-      slug: job.slug,
-      department: job.department,
-      level: job.level,
-      type: job.type,
-      location: job.location,
-      icon: job.icon ?? '',
-      status: job.status,
-      en: fillTranslation(job.translations.find((t) => t.locale === 'en')),
-      ua: fillTranslation(job.translations.find((t) => t.locale === 'ua')),
-    });
-  }, [existingJob, reset]);
 
   const onSubmit = async (data: TJobFormOutput) => {
     setSubmitError(null);
@@ -88,15 +78,12 @@ export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
     const hasUa = data.ua.title.trim().length > 0 || data.ua.description.trim().length > 0;
 
     try {
-      // Формируем массив переводов. Если UA пустой — мы его НЕ отправляем.
-      // Бэкенд увидит, что UA нет в массиве, и удалит его из базы.
       const translationsToSend = [buildTranslationPayload('en', data.en)];
       if (hasUa) {
         translationsToSend.push(buildTranslationPayload('ua', data.ua));
       }
 
       if (isEditing) {
-        // ЕДИНЫЙ ЗАПРОС на сохранение
         await updateJob.mutateAsync({
           id: jobId!,
           data: {
@@ -123,11 +110,9 @@ export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
         });
       }
 
-      // Инвалидация React Query
       queryClient.invalidateQueries(trpc.jobs.adminList.queryFilter());
       queryClient.invalidateQueries(trpc.jobs.adminById.queryFilter());
 
-      // Сброс кэша Next.js
       await triggerPortalRevalidate();
 
       onSuccess();
@@ -141,8 +126,6 @@ export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
     else if (formErrors.en) setActiveTab('en');
     else if (formErrors.ua) setActiveTab('ua');
   };
-
-  if (isEditing && isLoading) return <GlobalLoader />;
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-6 pb-12">

@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { JobForm } from './components';
+import { JobFormWrapper } from './components';
 
 export function EditJobPage() {
   const { id } = useParams<{ id: string }>();
@@ -9,7 +9,11 @@ export function EditJobPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      <JobForm jobId={id} onSuccess={() => navigate('/admin/jobs')} onCancel={() => navigate('/admin/jobs')} />
+      <JobFormWrapper
+        jobId={id}
+        onSuccess={() => navigate('/admin/jobs')}
+        onCancel={() => navigate('/admin/jobs')}
+      />
     </div>
   );
 }

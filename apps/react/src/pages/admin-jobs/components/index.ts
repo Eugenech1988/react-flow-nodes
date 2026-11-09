@@ -6,3 +6,4 @@ export * from './JobFormHeader';
 export * from './JobFormTabs';
 export * from './JobFormDetailsTab';
 export * from './JobFormTranslationTab';
+export * from './JobFormWrapper.tsx';
