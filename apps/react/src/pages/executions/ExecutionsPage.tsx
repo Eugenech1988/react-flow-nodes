@@ -61,7 +61,7 @@ export const ExecutionsPage = () => {
       initial="initial"
       animate="animate"
     >
-      <div className="mx-auto max-w-7xl space-y-8">
+      <div className="mx-auto space-y-8">
         <PageHeader isFetching={isFetching} handleRefresh={handleRefresh} />
 
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">

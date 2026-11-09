@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plus, AlertCircle } from 'lucide-react';
+import { Plus, AlertCircle, Briefcase } from 'lucide-react';
 import { AppButton } from '@/shared/ui';
 import { useAdminJobs } from './hooks';
-import { JobsTable, JobForm } from './components';
+import { JobTable, JobForm } from './components';
 
 export function AdminJobsPage() {
   const { id } = useParams<{ id?: string }>();
@@ -45,7 +45,12 @@ function JobsList({ onEdit }: { onEdit: (id: string) => void }) {
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Job Vacancies</h1>
+          <div className="flex items-center gap-2">
+            <Briefcase className="h-6 w-6 text-teal-600 dark:text-teal-400" />
+            <h1 className="text-foreground text-2xl font-bold tracking-tight">
+              Job Vacancies
+            </h1>
+          </div>
           <p className="text-muted-foreground mt-1 text-sm">
             Manage open positions on the marketing site
           </p>
@@ -59,7 +64,7 @@ function JobsList({ onEdit }: { onEdit: (id: string) => void }) {
         />
       </div>
 
-      <JobsTable jobs={jobs ?? []} onEdit={onEdit} isLoading={isLoading} />
+      <JobTable jobs={jobs ?? []} onEdit={onEdit} isLoading={isLoading} />
     </div>
   );
 }

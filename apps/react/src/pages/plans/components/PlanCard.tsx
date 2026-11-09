@@ -124,7 +124,7 @@ export const PlanCard = ({
 
         <div className="border-border/60 border-t pt-4" />
 
-        <div className="space-y-3">
+        <div className="flex flex-col space-y-3">
           <span className="text-foreground/80 text-xs font-semibold tracking-wide uppercase">
             What's included:
           </span>

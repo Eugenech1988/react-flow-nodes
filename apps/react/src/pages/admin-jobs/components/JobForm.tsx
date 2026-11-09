@@ -13,7 +13,7 @@ import { fillTranslation, buildTranslationPayload } from '../model/helpers';
 import { JobFormHeader } from './JobFormHeader';
 import { JobFormTabs, type TFormTab } from './JobFormTabs';
 import { JobFormDetailsTab } from './JobFormDetailsTab';
-import { JobFormTranslationTab } from './JobFormTranslationTab.tsx';
+import { JobFormTranslationTab } from './JobFormTranslationTab';
 
 interface JobFormProps {
   jobId: string | null;
@@ -33,7 +33,7 @@ const emptyTranslation = {
 export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
   const isEditing = !!jobId;
   const { data: existingJob, isLoading } = useAdminJob(jobId);
-  const { createJob, updateJob, upsertTranslation } = useJobMutations();
+  const { createJob, updateJob, upsertTranslation, removeTranslation } = useJobMutations();
 
   const [activeTab, setActiveTab] = useState<TFormTab>('details');
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -80,6 +80,7 @@ export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
     setSubmitError(null);
 
     const hasUa = data.ua.title.trim().length > 0 || data.ua.description.trim().length > 0;
+    const hadUa = !!existingJob?.translations.some((t) => t.locale === 'ua');
 
     try {
       if (isEditing) {
@@ -106,6 +107,9 @@ export function JobForm({ jobId, onSuccess, onCancel }: JobFormProps) {
             jobId: jobId!,
             data: buildTranslationPayload('ua', data.ua),
           });
+        } else if (hadUa) {
+          // 👇 Если перевод был, но пользователь его очистил — удаляем
+          await removeTranslation.mutateAsync({ jobId: jobId!, locale: 'ua' });
         }
       } else {
         const translations = [buildTranslationPayload('en', data.en)];

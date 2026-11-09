@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
+import { triggerPortalRevalidate } from '@/shared/api/revalidate';
 
 export function useAdminJobs() {
   const trpc = useTRPC();
@@ -18,15 +19,21 @@ export function useJobMutations() {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  const invalidate = () => {
+  const invalidate = async () => {
     queryClient.invalidateQueries(trpc.jobs.adminList.queryFilter());
-    queryClient.invalidateQueries(trpc.jobs.list.queryFilter());
+    queryClient.invalidateQueries(trpc.jobs.adminById.queryFilter());
+
+    await triggerPortalRevalidate();
   };
 
   const createJob = useMutation(trpc.jobs.create.mutationOptions({ onSuccess: invalidate }));
   const updateJob = useMutation(trpc.jobs.update.mutationOptions({ onSuccess: invalidate }));
   const upsertTranslation = useMutation(
     trpc.jobs.upsertTranslation.mutationOptions({ onSuccess: invalidate }),
+  );
+
+  const removeTranslation = useMutation(
+    trpc.jobs.removeTranslation.mutationOptions({ onSuccess: invalidate }),
   );
 
   const publish = useMutation(trpc.jobs.publish.mutationOptions({ onSuccess: invalidate }));
@@ -37,6 +44,7 @@ export function useJobMutations() {
     createJob,
     updateJob,
     upsertTranslation,
+    removeTranslation,
     publish,
     archive,
     remove,

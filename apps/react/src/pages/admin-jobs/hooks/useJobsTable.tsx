@@ -4,7 +4,7 @@ import { StatusBadge } from '@/shared/ui';
 import { DEFAULT_PAGE_LIMIT } from '../model/constants';
 import { getEnTitle, getLocalesLabel, getStatusConfig, sortJobs } from '../model/utils';
 import type { IJob } from '../model/types';
-import { JobsTableRowActions } from '../components';
+import { JobTableRowActions } from '../components';
 
 interface UseJobsTableParams {
   jobs: IJob[];
@@ -69,7 +69,7 @@ export const useJobsTable = ({ jobs, onEdit }: UseJobsTableParams) => {
       {
         id: 'actions',
         header: 'Actions',
-        cell: ({ row }) => <JobsTableRowActions job={row.original} onEdit={onEdit} />,
+        cell: ({ row }) => <JobTableRowActions job={row.original} onEdit={onEdit} />,
       },
     ],
     [onEdit],

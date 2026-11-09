@@ -28,7 +28,7 @@ export const PipelinesPage = () => {
       initial="initial"
       animate="animate"
     >
-      <div className="mx-auto max-w-7xl space-y-8">
+      <div className="mx-auto space-y-8">
         <PipelineHeader />
         <PipelineSearchAndFilter
           searchQuery={searchQuery}
