@@ -1,14 +1,22 @@
 import { User, Shield, CreditCard, Cpu, Clock, HardDrive } from 'lucide-react';
+import type { TabItem } from '@/shared/ui';
 
-export const SETTINGS_TABS = (isProActive: boolean) => [
+export const SETTINGS_TABS = (
+  isProActive: boolean,
+  isContentManager: boolean = false,
+): TabItem[] => [
   { id: 'profile', label: 'Profile', icon: User },
   { id: 'account', label: 'Account Settings', icon: Shield },
-  {
-    id: 'billing',
-    label: 'Billing',
-    icon: CreditCard,
-    badge: isProActive ? 'PRO' : undefined,
-  },
+  ...(!isContentManager
+    ? [
+      {
+        id: 'billing',
+        label: 'Billing',
+        icon: CreditCard,
+        badge: isProActive ? 'PRO' : undefined,
+      },
+    ]
+    : []),
 ];
 
 export const PLAN_FEATURES = [

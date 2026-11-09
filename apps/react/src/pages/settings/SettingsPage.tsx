@@ -11,13 +11,20 @@ export const SettingsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isInitialMount = useRef(true);
-  const { isProActive } = useUser();
+  const { isProActive, role } = useUser();
+  const isContentManager = role === 'CONTENT_MANAGER';
 
   const currentTab = location.pathname.split('/').pop() || 'profile';
 
   useEffect(() => {
     isInitialMount.current = false;
   }, []);
+
+  useEffect(() => {
+    if (isContentManager && currentTab === 'billing') {
+      navigate('/settings/profile', { replace: true });
+    }
+  }, [isContentManager, currentTab, navigate]);
 
   const handleTabChange = (tabId: string) => {
     navigate(`/settings/${tabId}`);
@@ -41,7 +48,7 @@ export const SettingsPage = () => {
         <div className="space-y-6">
           <Tabs
             layoutId="settings-tabs"
-            tabs={SETTINGS_TABS(isProActive)}
+            tabs={SETTINGS_TABS(isProActive, isContentManager)}
             currentTab={currentTab}
             onTabChange={handleTabChange}
           />

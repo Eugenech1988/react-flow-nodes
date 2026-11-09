@@ -14,9 +14,10 @@ import {
 const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const UserDropdown = () => {
-  const { user } = useUser();
+  const { user, role } = useUser();
   const { logout } = useLogout();
 
+  const isContentManager = role === 'CONTENT_MANAGER';
   const isFreePlan = user?.subscription && user?.subscription.plan === 'FREE';
 
   const firstName = user?.profile?.firstName || '';
@@ -95,12 +96,15 @@ export const UserDropdown = () => {
             <span>Account Settings</span>
           </DropdownMenuItem>
 
-          <DropdownMenuItem render={<Link to="/settings/billing" />} className={itemClasses}>
-            <CreditCard className="h-4 w-4 shrink-0" />
-            <span>Billing</span>
-          </DropdownMenuItem>
+          {/* 👇 Скрываем ссылку на биллинг для контент-менеджера */}
+          {!isContentManager && (
+            <DropdownMenuItem render={<Link to="/settings/billing" />} className={itemClasses}>
+              <CreditCard className="h-4 w-4 shrink-0" />
+              <span>Billing</span>
+            </DropdownMenuItem>
+          )}
 
-          {isFreePlan && (
+          {!isContentManager && isFreePlan && (
             <>
               <DropdownMenuSeparator className="bg-border/60 my-1" />
 
