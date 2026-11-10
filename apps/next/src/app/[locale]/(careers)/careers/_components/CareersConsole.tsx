@@ -33,37 +33,25 @@ interface CareersConsoleProps {
 
 export const CareersConsole = ({ jobs, locale }: CareersConsoleProps) => {
   const [activeDept, setActiveDept] = useState<Department>('all');
-  const [optimisticJobs, setOptimisticJobs] = useState<TPublicJob[]>(jobs);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(false);
   const { t } = useT('careers');
   const router = useRouter();
 
-  useEffect(() => {
-    setOptimisticJobs(jobs);
-  }, [jobs]);
-
-  const handleJobClick = async (e: React.MouseEvent, job: TPublicJob) => {
+  const handleJobClick = (e: React.MouseEvent, job: TPublicJob) => {
     e.preventDefault();
 
-    setOptimisticJobs((prev) =>
-      prev.map((j) => (j.id === job.id ? { ...j, views: (j.views ?? 0) + 1 } : j)),
-    );
-
-    const success = await incrementJobViews(job.id, job.slug, locale);
-
-    if (!success) {
-      console.error('Failed to increment views');
-    }
+    incrementJobViews(job.id, job.slug, locale).catch((err) => {
+      console.error('Failed to increment views', err);
+    });
 
     router.push(`/${locale}/careers/${job.slug}`);
-    router.refresh();
   };
 
   const filtered =
     activeDept === 'all'
-      ? optimisticJobs
-      : optimisticJobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
+      ? jobs
+      : jobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
 
   useEffect(() => {
     const checkScrollHint = () => {
@@ -89,7 +77,7 @@ export const CareersConsole = ({ jobs, locale }: CareersConsoleProps) => {
   const scrollMore = () => scrollRef.current?.scrollBy({ top: 220, behavior: 'smooth' });
 
   return (
-    <section id="openings" className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+    <section id="openings" className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-4 sm:py-16">
       <div className="relative">
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(111,162,140,0.22),transparent_65%)] blur-2xl" />
         <div className="pointer-events-none absolute inset-x-8 -top-4 -z-10 h-32 bg-[radial-gradient(ellipse_at_center,rgba(156,196,176,0.15),transparent_70%)] blur-xl" />
