@@ -168,10 +168,13 @@ describe('AuthService', () => {
 
       const result = await service.validateOauthUser(oauthProfile);
 
-      expect(usersService.update).toHaveBeenCalledWith('1', expect.objectContaining({
-        provider: 'google',
-        providerId: 'google_123',
-      }));
+      expect(usersService.update).toHaveBeenCalledWith(
+        '1',
+        expect.objectContaining({
+          provider: 'google',
+          providerId: 'google_123',
+        }),
+      );
       expect(result).toEqual(updatedUser);
     });
 
@@ -191,9 +194,7 @@ describe('AuthService', () => {
 
   describe('generateTokens', () => {
     it('should sign tokens and save hashed refresh token', async () => {
-      jwtService.sign
-        .mockReturnValueOnce('access_token')
-        .mockReturnValueOnce('refresh_token');
+      jwtService.sign.mockReturnValueOnce('access_token').mockReturnValueOnce('refresh_token');
 
       const result = await service.generateTokens('user_1');
 
@@ -274,7 +275,10 @@ describe('AuthService', () => {
     });
 
     it('should return QR code and save secret', async () => {
-      usersService.findOneById.mockResolvedValue({ id: 'user_1', email: 'test@example.com' } as any);
+      usersService.findOneById.mockResolvedValue({
+        id: 'user_1',
+        email: 'test@example.com',
+      } as any);
 
       const result = await service.generateTwoFactorSecret('user_1');
 
@@ -291,11 +295,16 @@ describe('AuthService', () => {
   describe('turnOnTwoFactor', () => {
     it('should throw BadRequestException if secret is not initialized', async () => {
       usersService.findOneById.mockResolvedValue({ id: 'user_1', twoFactorSecret: null } as any);
-      await expect(service.turnOnTwoFactor('user_1', '123456')).rejects.toThrow(BadRequestException);
+      await expect(service.turnOnTwoFactor('user_1', '123456')).rejects.toThrow(
+        BadRequestException,
+      );
     });
 
     it('should validate OTP, generate recovery codes, and update user', async () => {
-      usersService.findOneById.mockResolvedValue({ id: 'user_1', twoFactorSecret: 'secret' } as any);
+      usersService.findOneById.mockResolvedValue({
+        id: 'user_1',
+        twoFactorSecret: 'secret',
+      } as any);
       (otplib.verify as jest.Mock).mockReturnValueOnce({ valid: true });
 
       const result = await service.turnOnTwoFactor('user_1', '123456');
@@ -311,7 +320,10 @@ describe('AuthService', () => {
 
   describe('turnOffTwoFactor', () => {
     it('should disable 2FA using valid OTP', async () => {
-      usersService.findOneById.mockResolvedValue({ id: 'user_1', twoFactorSecret: 'secret' } as any);
+      usersService.findOneById.mockResolvedValue({
+        id: 'user_1',
+        twoFactorSecret: 'secret',
+      } as any);
       (otplib.verify as jest.Mock).mockReturnValueOnce({ valid: true });
 
       const result = await service.turnOffTwoFactor('user_1', '123456');
@@ -337,9 +349,12 @@ describe('AuthService', () => {
       const result = await service.turnOffTwoFactor('user_1', 'ABCD-1234');
 
       expect(result.success).toBe(true);
-      expect(usersService.update).toHaveBeenCalledWith('user_1', expect.objectContaining({
-        isTwoFactorEnabled: false,
-      }));
+      expect(usersService.update).toHaveBeenCalledWith(
+        'user_1',
+        expect.objectContaining({
+          isTwoFactorEnabled: false,
+        }),
+      );
     });
   });
 
@@ -380,7 +395,7 @@ describe('AuthService', () => {
 
       (otplib.verify as jest.Mock).mockReturnValueOnce({ valid: false });
 
-      (argon2.verify as jest.Mock).mockImplementation(async (hashStr, plain) => {
+      (argon2.verify as jest.Mock).mockImplementation(async (hashStr) => {
         return hashStr === 'hashed_code_1';
       });
 

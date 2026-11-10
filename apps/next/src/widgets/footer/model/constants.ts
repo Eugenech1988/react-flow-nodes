@@ -1,10 +1,5 @@
-import { CircleUserRound, X, type LucideIcon } from 'lucide-react';
-import type { TFooterColumn, TSocial } from './types';
+import type { TFooterColumn, } from './types';
 
-export const SOCIALS: (TSocial & { icon: LucideIcon })[] = [
-  { id: 'github', icon: CircleUserRound, href: 'https://github.com' },
-  { id: 'twitter', icon: X, href: 'https://twitter.com' },
-];
 
 export const getFooterColumns = (lng: string): TFooterColumn[] => [
   {

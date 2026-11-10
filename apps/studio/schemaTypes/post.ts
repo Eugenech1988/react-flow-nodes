@@ -1,4 +1,4 @@
-import { defineField, defineType } from 'sanity'
+import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'post',
@@ -27,8 +27,8 @@ export default defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'English', value: 'en' },
-          { title: 'Українська', value: 'ua' },
+          {title: 'English', value: 'en'},
+          {title: 'Українська', value: 'ua'},
         ],
       },
       validation: (Rule) => Rule.required(),
@@ -57,7 +57,7 @@ export default defineType({
       name: 'body',
       title: 'Body',
       type: 'array',
-      of: [{ type: 'block' }], // Portable Text
+      of: [{type: 'block'}], // Portable Text
     }),
   ],
   preview: {

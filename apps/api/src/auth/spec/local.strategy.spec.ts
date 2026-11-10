@@ -29,10 +29,7 @@ describe('LocalStrategy', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        LocalStrategy,
-        { provide: AuthService, useValue: mockAuthService },
-      ],
+      providers: [LocalStrategy, { provide: AuthService, useValue: mockAuthService }],
     }).compile();
 
     strategy = module.get<LocalStrategy>(LocalStrategy);

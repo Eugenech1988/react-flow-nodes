@@ -3,7 +3,7 @@ import PipelineLogo from '@/assets/logo.svg';
 import { InfoBadge, SocialLinks } from '@/shared/ui';
 import { getT } from '@/shared/lib/i18n/server';
 import { Cog } from 'lucide-react';
-import { getFooterColumns, SOCIALS } from './model';
+import { getFooterColumns } from './model';
 import { cn } from '@/shared/lib';
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -110,7 +110,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
               </div>
 
               <div className="mt-6 flex flex-wrap items-center gap-3 md:mt-8">
-                <SocialLinks theme='careers' size='sm'/>
+                <SocialLinks theme="careers" size="sm" />
               </div>
             </div>
 

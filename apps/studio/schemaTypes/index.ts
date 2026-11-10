@@ -1,5 +1,3 @@
 import post from './post'
 
-export const schemaTypes = [
-  post
-]
+export const schemaTypes = [post]

@@ -1,15 +1,9 @@
-import { Mail, MapPin, Phone, AtSign, GitBranch, Briefcase } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 
 export const CONTACT_CHANNELS = [
   { id: 'email', icon: Mail, href: 'mailto:hello@pipeline.studio' },
   { id: 'phone', icon: Phone, href: 'tel:+15550192834' },
   { id: 'hq', icon: MapPin, href: '#' },
-];
-
-export const SOCIAL_NODES = [
-  { id: 'twitter', icon: AtSign, handle: '@pipelinestudio' },
-  { id: 'github', icon: GitBranch, handle: '/pipeline-studio' },
-  { id: 'linkedin', icon: Briefcase, handle: '/company/pipeline-studio' },
 ];
 
 export const RADAR_BLIPS = [

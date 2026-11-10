@@ -1,6 +1,6 @@
 'use client';
 
-import { Globe } from 'lucide-react';
+// import { Globe } from 'lucide-react';
 import type { SVGProps } from 'react';
 import { useT } from '@/shared/lib/i18n/client';
 import { cn } from '@/shared/lib';
@@ -53,12 +53,12 @@ export const SOCIAL_NODES = [
 ];
 
 export const SocialLinks = ({
-                              title,
-                              className,
-                              align = 'start',
-                              size = 'md',
-                              theme = 'default',
-                            }: SocialLinksProps) => {
+  title,
+  className,
+  align = 'start',
+  size = 'md',
+  theme = 'default',
+}: SocialLinksProps) => {
   const { t } = useT('common');
 
   const sizeClasses = {

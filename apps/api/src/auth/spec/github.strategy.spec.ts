@@ -21,10 +21,7 @@ describe('GithubStrategy', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        GithubStrategy,
-        { provide: ConfigService, useValue: mockConfigService },
-      ],
+      providers: [GithubStrategy, { provide: ConfigService, useValue: mockConfigService }],
     }).compile();
 
     strategy = module.get<GithubStrategy>(GithubStrategy);
@@ -53,7 +50,10 @@ describe('GithubStrategy', () => {
     const done = jest.fn();
     await strategy.validate('access_token', 'refresh_token', mockProfile, done);
 
-    expect(mockFetch).toHaveBeenCalledWith('https://api.github.com/user/emails', expect.any(Object));
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://api.github.com/user/emails',
+      expect.any(Object),
+    );
     expect(done).toHaveBeenCalledWith(null, {
       email: 'primary@example.com',
       firstName: 'John',
@@ -77,8 +77,11 @@ describe('GithubStrategy', () => {
     const done = jest.fn();
     await strategy.validate('access_token', 'refresh_token', mockProfile, done);
 
-    expect(done).toHaveBeenCalledWith(null, expect.objectContaining({
-      email: 'johndoe_github_123@github.placeholder',
-    }));
+    expect(done).toHaveBeenCalledWith(
+      null,
+      expect.objectContaining({
+        email: 'johndoe_github_123@github.placeholder',
+      }),
+    );
   });
 });

@@ -21,10 +21,7 @@ describe('GoogleStrategy', () => {
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        GoogleStrategy,
-        { provide: ConfigService, useValue: mockConfigService },
-      ],
+      providers: [GoogleStrategy, { provide: ConfigService, useValue: mockConfigService }],
     }).compile();
 
     strategy = module.get<GoogleStrategy>(GoogleStrategy);

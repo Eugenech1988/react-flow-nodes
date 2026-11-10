@@ -10,8 +10,8 @@ This project is part of a monorepo powered by **Turborepo** and **Bun**.
 - [ Project Structure & Modules](#project-structure--modules)
 - [ tRPC Architecture](#trpc-architecture)
 - [ Project Setup](#project-setup)
-    - [Environment Variables](#environment-variables)
-    - [Database Setup & Seeding](#database-setup--seeding)
+  - [Environment Variables](#environment-variables)
+  - [Database Setup & Seeding](#database-setup--seeding)
 - [ Running the Application](#running-the-application)
 - [ API Documentation](#api-documentation)
 - [ Running Tests](#running-tests)
@@ -20,6 +20,7 @@ This project is part of a monorepo powered by **Turborepo** and **Bun**.
 - [ Deployment Checklist](#deployment-checklist)
 
 ---
+
 ---
 
 ## Tech Stack
@@ -61,16 +62,20 @@ The `src` directory is organized into domain-driven modules. Each module typical
 The API uses tRPC for type-safe client-server communication. It is structured as follows:
 
 ### 1. Context (`trpc/context.ts`)
+
 Creates a context object for every request. It extracts the `accessToken` from HTTP-only cookies, verifies it using `JwtService`, and fetches the `UserWithRelations` object from the database. If the token is invalid or missing, `user` is set to `null`.
 
 ### 2. Procedures (`trpc/init.ts`)
+
 We use custom procedures to enforce authorization at the router level:
+
 - `publicProcedure` — No auth required.
 - `protectedProcedure` — Requires an authenticated user (throws `UNAUTHORIZED` if `ctx.user` is missing).
 - `contentManagerProcedure` — Requires a user with `CONTENT_MANAGER` or `SUPER_ADMIN` role.
 - `superAdminProcedure` — Requires a user with `SUPER_ADMIN` role.
 
 ### 3. App Router (`trpc/app-router.ts`)
+
 The main `createAppRouter` function aggregates all sub-routers (auth, users, billing, pipelines, etc.) into a single, typesafe `AppRouter`. This type is exported and used by the frontend to ensure end-to-end type safety.
 
 ## Project Setup
@@ -86,43 +91,44 @@ $ bun install
 
 Create a .env file in the apps/api directory based on the .env.example provided. You will need to configure:
 
-| Variable | Description |
-| :--- | :--- |
-| **Database** | |
-| `DATABASE_URL` | PostgreSQL connection string |
-| **App & Client URLs** | |
-| `FRONTEND_URL` | Frontend URL for Stripe redirects (e.g., `http://localhost:5173`) |
-| `API_URL` | Base URL of the API (used to generate absolute links for uploaded files, e.g., `http://localhost:3000`) |
-| `ADMIN_EMAIL` | Email address where inquiries and job applications are sent |
-| `CSRF_SECRET` | Secret key for CSRF protection (used in `main.ts`) |
-| **JWT Auth** | |
-| `JWT_ACCESS_SECRET` | Secret for signing short-lived access tokens |
-| `JWT_ACCESS_TEMP_EXPIRES` | Expiration for temporary access tokens (e.g., during 2FA) |
-| `JWT_ACCESS_EXPIRES` | Expiration time for standard access tokens (e.g., `15m`) |
-| `JWT_REFRESH_SECRET` | Secret for signing long-lived refresh tokens |
-| `JWT_REFRESH_EXPIRES` | Expiration time for refresh tokens (e.g., `7d`) |
-| `JWT_RECOVERY_SECRET` | Secret for signing temporary password recovery tokens |
-| **OAuth Google** | |
-| `GOOGLE_CLIENT_ID` | Google OAuth App Client ID |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth App Client Secret |
-| `GOOGLE_CALLBACK_URL` | Redirect URI configured in Google Cloud Console |
-| **OAuth GitHub** | |
-| `GITHUB_CLIENT_ID` | GitHub OAuth App Client ID |
-| `GITHUB_CLIENT_SECRET` | GitHub OAuth App Client Secret |
-| `GITHUB_CALLBACK_URL` | Redirect URI configured in GitHub Developer Settings |
-| **Stripe Payments** | |
-| `STRIPE_SECRET_KEY` | Stripe API Secret Key (`sk_test_...` or `sk_live_...`) |
-| `STRIPE_PRO_PRICE_ID` | Stripe Price ID for the "Pro" subscription plan |
-| `STRIPE_ENTERPRISE_PRICE_ID` | Stripe Price ID for the "Enterprise" subscription plan |
-| `STRIPE_WEBHOOK_SECRET` | Secret for verifying Stripe webhook signatures (`whsec_...`) |
-| **Mail SMTP Server** | |
-| `MAIL_HOST` | SMTP server hostname (e.g., `smtp.gmail.com` or `sandbox.smtp.mailtrap.io`) |
-| `MAIL_PORT` | SMTP port (e.g., `587`, `465`, or `2525` for Mailtrap) |
-| `MAIL_USER` | SMTP username |
-| `MAIL_PASSWORD` | SMTP password |
-| `MAIL_FROM` | Default "From" address for outgoing emails |
+| Variable                     | Description                                                                                             |
+| :--------------------------- | :------------------------------------------------------------------------------------------------------ |
+| **Database**                 |                                                                                                         |
+| `DATABASE_URL`               | PostgreSQL connection string                                                                            |
+| **App & Client URLs**        |                                                                                                         |
+| `FRONTEND_URL`               | Frontend URL for Stripe redirects (e.g., `http://localhost:5173`)                                       |
+| `API_URL`                    | Base URL of the API (used to generate absolute links for uploaded files, e.g., `http://localhost:3000`) |
+| `ADMIN_EMAIL`                | Email address where inquiries and job applications are sent                                             |
+| `CSRF_SECRET`                | Secret key for CSRF protection (used in `main.ts`)                                                      |
+| **JWT Auth**                 |                                                                                                         |
+| `JWT_ACCESS_SECRET`          | Secret for signing short-lived access tokens                                                            |
+| `JWT_ACCESS_TEMP_EXPIRES`    | Expiration for temporary access tokens (e.g., during 2FA)                                               |
+| `JWT_ACCESS_EXPIRES`         | Expiration time for standard access tokens (e.g., `15m`)                                                |
+| `JWT_REFRESH_SECRET`         | Secret for signing long-lived refresh tokens                                                            |
+| `JWT_REFRESH_EXPIRES`        | Expiration time for refresh tokens (e.g., `7d`)                                                         |
+| `JWT_RECOVERY_SECRET`        | Secret for signing temporary password recovery tokens                                                   |
+| **OAuth Google**             |                                                                                                         |
+| `GOOGLE_CLIENT_ID`           | Google OAuth App Client ID                                                                              |
+| `GOOGLE_CLIENT_SECRET`       | Google OAuth App Client Secret                                                                          |
+| `GOOGLE_CALLBACK_URL`        | Redirect URI configured in Google Cloud Console                                                         |
+| **OAuth GitHub**             |                                                                                                         |
+| `GITHUB_CLIENT_ID`           | GitHub OAuth App Client ID                                                                              |
+| `GITHUB_CLIENT_SECRET`       | GitHub OAuth App Client Secret                                                                          |
+| `GITHUB_CALLBACK_URL`        | Redirect URI configured in GitHub Developer Settings                                                    |
+| **Stripe Payments**          |                                                                                                         |
+| `STRIPE_SECRET_KEY`          | Stripe API Secret Key (`sk_test_...` or `sk_live_...`)                                                  |
+| `STRIPE_PRO_PRICE_ID`        | Stripe Price ID for the "Pro" subscription plan                                                         |
+| `STRIPE_ENTERPRISE_PRICE_ID` | Stripe Price ID for the "Enterprise" subscription plan                                                  |
+| `STRIPE_WEBHOOK_SECRET`      | Secret for verifying Stripe webhook signatures (`whsec_...`)                                            |
+| **Mail SMTP Server**         |                                                                                                         |
+| `MAIL_HOST`                  | SMTP server hostname (e.g., `smtp.gmail.com` or `sandbox.smtp.mailtrap.io`)                             |
+| `MAIL_PORT`                  | SMTP port (e.g., `587`, `465`, or `2525` for Mailtrap)                                                  |
+| `MAIL_USER`                  | SMTP username                                                                                           |
+| `MAIL_PASSWORD`              | SMTP password                                                                                           |
+| `MAIL_FROM`                  | Default "From" address for outgoing emails                                                              |
 
 ## Database Setup & Seeding
+
 Make sure your PostgreSQL instance is running. To apply the Prisma schema to your database, run:
 
 ```bash
@@ -142,6 +148,7 @@ $ bun run db:seed:jobs
 ```
 
 ## Running the Application
+
 From the monorepo root, you can start the API along with other apps:
 
 ```bash
@@ -161,14 +168,15 @@ $ bun run start:prod
 ```
 
 ## API Documentation
-**Swagger UI**: is available at:
 
+**Swagger UI**: is available at:
 
 `'http://localhost:3000/api/docs`
 
 **tRPC:** Handled dynamically via `@/trpc` (used by the frontend for type-safe queries/mutations).
 
 # Running Tests
+
 ```bash
 # unit tests
 $ bun run test
@@ -180,8 +188,8 @@ $ bun run test:e2e
 $ bun run test:cov
 ```
 
-
 ## File Uploads & Storage
+
 Uploaded files (resumes, cover letters) are stored locally in the ./uploads directory.
 
 - **Path Structure:** ./uploads/applications/{jobId}/cvs/ and ./uploads/applications/{jobId}/covers/
@@ -191,21 +199,23 @@ Uploaded files (resumes, cover letters) are stored locally in the ./uploads dire
 - **Production Note:** Ensure the `uploads` folder is persistent (e.g., mounted as a Docker volume) when deploying.
 
 ## Email Templates
+
 Email templates are written in Handlebars (.hbs) and stored in apps/api/src/mail/templates/.
 When building the project for production, ensure that nest-cli.json is configured to copy these assets to the dist folder:
 
 ```json
 {
   "assets": [
-      {
+    {
       "include": "mail/templates/**/*",
       "watchAssets": true
-      }
+    }
   ]
 }
 ```
 
 ## Deployment Checklist
+
 Run `bun run build.`
 
 Run database migrations `(bunx prisma migrate deploy).`
