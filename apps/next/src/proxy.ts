@@ -1,4 +1,3 @@
-// apps/next/src/proxy.ts
 import { NextResponse, type NextRequest } from 'next/server';
 import { createProxy } from 'next-i18next/proxy';
 import i18nConfig from '@/shared/lib/i18n/config';

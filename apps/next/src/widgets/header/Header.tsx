@@ -253,7 +253,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
                 </AppButton>
                 <AppButton
                   isLink
-                  linkTo={`http://localhost:5173/login/`}
+                  linkTo={`http://localhost:5173/login`}
                   onClick={() => setIsOpen(false)}
                   size="sm"
                   variant={btnVariant}

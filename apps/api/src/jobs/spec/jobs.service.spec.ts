@@ -198,7 +198,6 @@ describe('JobsService', () => {
 
   describe('update', () => {
     it('updates root fields and handles translations atomically', async () => {
-      // Для проверки findOne внутри update
       mockPrismaService.job.findUnique.mockResolvedValue(createMockJob());
 
       const input: TUpdateJobInputData = {

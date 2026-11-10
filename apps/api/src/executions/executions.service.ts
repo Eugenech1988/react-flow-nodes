@@ -71,15 +71,13 @@ export class ExecutionsService {
     const limit = options?.limit && options.limit > 0 ? options.limit : 10;
     const skip = (page - 1) * limit;
 
-    // Безопасно приводим статус к верхнему регистру и типу ExecutionStatus
     const validStatus =
       status && status !== 'all' ? (status.toUpperCase() as ExecutionStatus) : undefined;
 
-    // Формируем гибкий where для Prisma
     const whereClause: Prisma.ExecutionWhereInput = {
       ...(userId && { userId }),
       ...(pipelineId && { pipelineId }),
-      ...(validStatus && { status: validStatus }), // <-- Используем валидный статус
+      ...(validStatus && { status: validStatus }),
       ...(search && {
         OR: [
           { id: { contains: search, mode: 'insensitive' } },

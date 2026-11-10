@@ -24,7 +24,7 @@ const mockPrismaService = {
   execution: {
     create: jest.fn(),
     findMany: jest.fn(),
-    count: jest.fn(), // Добавлено, так как сервис вызывает count
+    count: jest.fn(),
     findUnique: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),

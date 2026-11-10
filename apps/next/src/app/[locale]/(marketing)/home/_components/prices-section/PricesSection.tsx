@@ -38,7 +38,6 @@ export const PricingSection = () => {
             const isPopular = tier.popular;
             const isEnterprise = tier.id === 'enterprise';
 
-            // 👇 Безопасное извлечение массива строк
             const featuresRaw = t(`pricing.tiers.${tier.id}.features`, {
               returnObjects: true,
             });
@@ -46,7 +45,6 @@ export const PricingSection = () => {
 
             const buttonContent = t(`pricing.tiers.${tier.id}.cta`);
 
-            // 👇 Использование утилиты cn для чистоты классов
             const buttonClassName = cn(
               'w-full',
               !isPopular &&

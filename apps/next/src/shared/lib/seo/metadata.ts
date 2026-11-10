@@ -114,7 +114,6 @@ export async function getRootMetadata(locale: string): Promise<Metadata> {
   };
 }
 
-// 👇 Расширенный тип для гибкой передачи (готовые строки или ключи)
 export type PageMetadataOverrides = {
   title?: string;
   description?: string;
@@ -135,7 +134,6 @@ export async function getPageMetadata(
 
   const { t } = await getT(namespace, { lng: locale });
 
-  // Разрешаем Title
   let resolvedTitle = overrides?.title;
   if (!resolvedTitle && overrides?.titleKey) {
     resolvedTitle = t(overrides.titleKey, {
@@ -145,7 +143,6 @@ export async function getPageMetadata(
     resolvedTitle = t('meta.title');
   }
 
-  // Разрешаем Description
   let resolvedDescription = overrides?.description;
   if (!resolvedDescription && overrides?.descriptionKey) {
     resolvedDescription = t(overrides.descriptionKey, {

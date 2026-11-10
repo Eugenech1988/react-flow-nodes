@@ -191,7 +191,7 @@ export const HowItWorksSection = () => {
         <div className="mt-12 text-center sm:mt-20">
           <AppButton
             isLink
-            linkTo="http://localhost:5173"
+            linkTo="http://localhost:5173/login"
             variant="primary"
             size="lg"
             className="mx-auto"

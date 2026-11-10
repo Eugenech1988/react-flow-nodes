@@ -8,7 +8,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    // 👇 Меняем 'max' на 'default' (так как в fetch у вас revalidate: 60)
     revalidateTag('jobs', 'default');
     console.log('✅ Cache tag "jobs" revalidated with default profile');
     return NextResponse.json({ ok: true });

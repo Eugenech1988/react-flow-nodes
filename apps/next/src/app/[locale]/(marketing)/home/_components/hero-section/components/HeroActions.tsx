@@ -12,7 +12,7 @@ export const HeroActions = () => {
     <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
       <AppButton
         isLink
-        linkTo="http://localhost:5173"
+        linkTo="http://localhost:5173/login"
         variant="primary"
         size="lg"
         className="group]: w-full font-bold sm:w-auto"
