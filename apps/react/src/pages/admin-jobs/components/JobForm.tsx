@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
@@ -44,6 +44,8 @@ export function JobForm({ jobId, initialData, onSuccess, onCancel }: JobFormProp
     register,
     control,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<TJobFormInput, unknown, TJobFormOutput>({
     resolver: zodResolver(jobFormSchema),
@@ -120,6 +122,23 @@ export function JobForm({ jobId, initialData, onSuccess, onCancel }: JobFormProp
       setSubmitError(err instanceof Error ? err.message : 'Failed to save job');
     }
   };
+
+  const selectedDept = watch('department');
+
+  useEffect(() => {
+    if (!isEditing) {
+      const deptIcons: Record<string, string> = {
+        ENGINEERING: 'code-2',
+        DESIGN: 'palette',
+        RESEARCH: 'flask-conical',
+        OPERATIONS: 'briefcase',
+      };
+
+      if (deptIcons[selectedDept]) {
+        setValue('icon', deptIcons[selectedDept]);
+      }
+    }
+  }, [selectedDept, setValue, isEditing]);
 
   const onInvalid = (formErrors: FieldErrors<TJobFormInput>) => {
     if (formErrors.slug || formErrors.location) setActiveTab('details');

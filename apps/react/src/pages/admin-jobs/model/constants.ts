@@ -1,6 +1,35 @@
-import { AlertCircle, Send, Archive, AlertTriangle } from 'lucide-react';
+import {
+  AlertCircle,
+  Send,
+  Archive,
+  AlertTriangle,
+  Code2,
+  Cpu,
+  Palette,
+  FlaskConical,
+  Cog,
+  Briefcase,
+  Database,
+  PenTool,
+  ShieldCheck,
+  TrendingUp,
+  type LucideIcon
+} from 'lucide-react';
 import type { TStatusConfigItem } from '@/shared/ui';
 import type { TJobStatus } from './types';
+
+export const ICON_MAP: Record<string, LucideIcon> = {
+  'code-2': Code2,
+  cpu: Cpu,
+  palette: Palette,
+  'flask-conical': FlaskConical,
+  cog: Cog,
+  briefcase: Briefcase,
+  database: Database,
+  'pen-tool': PenTool,
+  'shield-check': ShieldCheck,
+  'trending-up': TrendingUp,
+};
 
 export const STATUS_CONFIG: Record<TJobStatus, TStatusConfigItem> = {
   DRAFT: {

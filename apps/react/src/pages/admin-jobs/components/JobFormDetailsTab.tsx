@@ -1,7 +1,7 @@
 import { Controller, type UseFormRegister, type FieldErrors, type Control } from 'react-hook-form';
 import { FloatingInput, FloatingSelect } from '@/shared/ui';
 import type { TJobDepartment, TJobLevel, TJobType, TJobStatus } from '@pipeline/contracts';
-import { DEPT_OPTIONS, LEVEL_OPTIONS, TYPE_OPTIONS, STATUS_OPTIONS } from '../model';
+import { DEPT_OPTIONS, LEVEL_OPTIONS, TYPE_OPTIONS, STATUS_OPTIONS, ICON_MAP } from '../model';
 import type { TJobFormInput, TJobFormOutput } from '../model';
 
 interface JobFormDetailsTabProps {
@@ -74,14 +74,22 @@ export function JobFormDetailsTab({ register, control, errors }: JobFormDetailsT
         error={!!errors.location}
         errorMessage={errors.location?.message}
       />
-      <FloatingInput
-        {...register('icon')}
-        label="Icon (Lucide name)"
-        placeholder="code-2"
-        error={!!errors.icon}
-        errorMessage={errors.icon?.message}
-        className="font-mono"
-      />
+      <div className="relative">
+        <FloatingInput
+          {...register('icon')}
+          label="Icon (Lucide name)"
+          placeholder="code-2"
+          list="icon-options"
+          error={!!errors.icon}
+          errorMessage={errors.icon?.message}
+          className="font-mono"
+        />
+        <datalist id="icon-options">
+          {Object.keys(ICON_MAP).map((iconName) => (
+            <option key={iconName} value={iconName} />
+          ))}
+        </datalist>
+      </div>
 
       <Controller
         name="status"
