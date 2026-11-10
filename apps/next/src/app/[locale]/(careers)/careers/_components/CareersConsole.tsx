@@ -2,7 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { MapPin, Clock, ChevronRight, Gauge, Power, ChevronDown, Eye, FileText } from 'lucide-react';
+import {
+  MapPin,
+  Clock,
+  ChevronRight,
+  Gauge,
+  Power,
+  ChevronDown,
+  Eye,
+  FileText,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useT } from '@/shared/lib/i18n/client';
 import type { TPublicJob } from '@/shared/api';

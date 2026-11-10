@@ -17,10 +17,10 @@ interface IInquiryFormProps {
 }
 
 export const InquiryForm = ({
-                              type = 'demo',
-                              submitVariant = 'primary',
-                              submitIcon = Send,
-                            }: IInquiryFormProps) => {
+  type = 'demo',
+  submitVariant = 'primary',
+  submitIcon = Send,
+}: IInquiryFormProps) => {
   const { t } = useT('inquiry');
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -39,11 +39,7 @@ export const InquiryForm = ({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<
-    z.input<typeof localizedSchema>,
-    unknown,
-    z.output<typeof localizedSchema>
-  >({
+  } = useForm<z.input<typeof localizedSchema>, unknown, z.output<typeof localizedSchema>>({
     resolver: zodResolver(localizedSchema),
     defaultValues: {
       name: '',

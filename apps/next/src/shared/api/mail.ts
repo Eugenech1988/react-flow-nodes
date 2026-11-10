@@ -25,7 +25,6 @@ export const sendInquiry = async (data: TSendInquiryInputData) => {
     }
 
     return res.ok;
-
   } catch (err) {
     console.error('[mail] sendInquiry fetch failed:', err);
     return false;

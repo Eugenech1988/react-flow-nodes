@@ -33,7 +33,7 @@ async function JobContent({ params }: PageProps) {
   }
 
   return (
-    <div className="relative overflow-hidden bg-[#0a0805] text-[#d4cfc0]">
+    <div className="relative bg-[#0a0805] text-[#d4cfc0]">
       <JobDetailView job={job} locale={locale} />
     </div>
   );
