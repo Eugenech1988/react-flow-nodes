@@ -11,6 +11,7 @@ import { createExecutionsRouter } from '@/executions/executions.router';
 import { createDatabaseNodesRouter } from '@/database-nodes/database-nodes.router';
 import { createJobsRouter } from '@/jobs/jobs.router';
 import { createBlogRouter } from '@/blog/blog.router';
+import { createMailRouter } from '@/mail/mail.router';
 
 import type { AuthService } from '@/auth/auth.service';
 import type { AiService } from '@/ai/ai.service';
@@ -22,6 +23,7 @@ import type { DatabaseNodesService } from '@/database-nodes/database-nodes.servi
 import type { ExecutionsService } from '@/executions/executions.service';
 import type { JobsService } from '@/jobs/jobs.service';
 import type { BlogService } from '@/blog/blog.service';
+import type { MailService } from '@/mail/mail.service';
 
 interface RouterServices {
   authService: AuthService;
@@ -34,6 +36,7 @@ interface RouterServices {
   executionsService: ExecutionsService;
   jobsService: JobsService;
   blogService: BlogService;
+  mailService: MailService;
 }
 
 export function createAppRouter(services: RouterServices) {
@@ -64,6 +67,7 @@ export function createAppRouter(services: RouterServices) {
     databaseNodes: createDatabaseNodesRouter(services.databaseNodesService),
     jobs: createJobsRouter(services.jobsService),
     blog: createBlogRouter(services.blogService),
+    mail: createMailRouter(services.mailService),
     profile: profileRouter,
     ai: aiRouter,
     health: publicProcedure.query(() => ({ status: 'ok' })),

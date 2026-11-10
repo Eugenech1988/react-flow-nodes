@@ -30,7 +30,9 @@
     "errors": {
       "name": "Name must be at least 2 characters.",
       "email": "Please enter a valid email address.",
-      "company": "Organization name is required."
+      "company": "Organization name is required.",
+      "position": "Position is required.",
+      "message": "Message must be at least 10 characters."
     },
     "modes": {
       "demo": {

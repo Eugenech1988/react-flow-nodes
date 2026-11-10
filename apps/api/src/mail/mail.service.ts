@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { TDemoRequestInputData } from '@pipeline/contracts';
+import type { TSendInquiryInputData, TInquiryTypeData } from '@pipeline/contracts';
+
+const INQUIRY_SUBJECTS: Record<TInquiryTypeData, string> = {
+  demo: 'New Demo Request',
+  contact: 'New Contact Message',
+  review: 'New Review Entry',
+  glitch: 'New Glitch Report',
+};
 
 @Injectable()
 export class MailService {
@@ -17,19 +24,24 @@ export class MailService {
     });
   }
 
-  async sendDemoRequestEmail(dto: TDemoRequestInputData): Promise<void> {
+  async sendInquiryEmail(dto: TSendInquiryInputData): Promise<void> {
     const adminEmail = process.env.ADMIN_EMAIL || 'sales@example.com';
+    const inquiryType = dto.type || 'demo';
+    const subjectText = INQUIRY_SUBJECTS[inquiryType];
 
     await this.mailerService.sendMail({
       to: adminEmail,
       replyTo: dto.email,
-      subject: `New Demo Request from ${dto.name} (${dto.company || 'N/A'})`,
-      template: 'demo-request',
+      subject: `${subjectText} from ${dto.name} (${dto.company || 'N/A'})`,
+      template: 'request',
       context: {
+        title: subjectText,
         name: dto.name,
         email: dto.email,
         company: dto.company || 'Not specified',
+        position: dto.position || 'Not specified',
         message: dto.message || 'No description provided',
+        type: inquiryType,
       },
     });
   }

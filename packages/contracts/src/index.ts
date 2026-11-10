@@ -5,5 +5,5 @@ export * from './pipelines';
 export * from './profile';
 export * from './exections';
 export * from './jobs';
-export * from './request-demo';
+export * from './mail';
 export * from './blog';

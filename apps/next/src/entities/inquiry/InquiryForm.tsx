@@ -4,61 +4,67 @@ import { useState, type ElementType } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { User, Mail, Building2, Send, CheckCircle2 } from 'lucide-react';
+import { User, Mail, Building2, Send, CheckCircle2, Briefcase } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { AppButton, AppInput, AppLabel, AppTextarea, type ButtonVariant } from '@/shared/ui';
-import type { TInquiryType } from './types';
-
-const baseSchema = z.object({
-  name: z.string(),
-  email: z.string(),
-  company: z.string(),
-  message: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof baseSchema>;
+import { sendInquiry } from '@/shared/api/mail';
+import { sendInquiryInputSchema, type TInquiryTypeData } from '@pipeline/contracts';
 
 interface IInquiryFormProps {
-  type?: TInquiryType;
+  type?: TInquiryTypeData;
   submitVariant?: ButtonVariant;
   submitIcon?: ElementType;
 }
 
 export const InquiryForm = ({
-  type = 'demo',
-  submitVariant = 'primary',
-  submitIcon = Send,
-}: IInquiryFormProps) => {
+                              type = 'demo',
+                              submitVariant = 'primary',
+                              submitIcon = Send,
+                            }: IInquiryFormProps) => {
   const { t } = useT('inquiry');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const isCareers = submitVariant === 'careers' || submitVariant === 'careers-outline';
 
-  const localizedSchema = z.object({
+  const localizedSchema = sendInquiryInputSchema.extend({
     name: z.string().min(2, { message: t('form.errors.name') }),
-    email: z.email({ message: t('form.errors.email') }),
+    email: z.string().email({ message: t('form.errors.email') }),
     company: z.string().min(2, { message: t('form.errors.company') }),
-    message: z.string().optional(),
+    position: z.string().min(2, { message: t('form.errors.position') }),
+    message: z.string().min(10, { message: t('form.errors.message') }),
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
+  } = useForm<
+    z.input<typeof localizedSchema>,
+    unknown,
+    z.output<typeof localizedSchema>
+  >({
     resolver: zodResolver(localizedSchema),
     defaultValues: {
       name: '',
       email: '',
       company: '',
+      position: '',
       message: '',
+      type,
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log('Form Submitted:', data);
-    setIsSuccess(true);
+  const onSubmit = async (data: z.output<typeof localizedSchema>) => {
+    setErrorMsg(null);
+
+    const success = await sendInquiry(data);
+
+    if (success) {
+      setIsSuccess(true);
+    } else {
+      setErrorMsg('Failed to send request. Please try again.');
+    }
   };
 
   if (isSuccess) {
@@ -118,6 +124,12 @@ export const InquiryForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative z-10 flex flex-col gap-5">
+      {errorMsg && (
+        <div className="rounded-md border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-500">
+          {errorMsg}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
         <div className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500">
           <AppLabel htmlFor="name" className={labelStyles}>
@@ -158,29 +170,51 @@ export const InquiryForm = ({
         </div>
       </div>
 
-      <div
-        className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500"
-        style={{ animationDelay: '100ms', animationFillMode: 'both' }}
-      >
-        <AppLabel htmlFor="company" className={labelStyles}>
-          {t('form.company')}
-        </AppLabel>
-        <div className="relative">
-          <Building2 className={iconClass(!!errors.company)} />
-          <AppInput
-            id="company"
-            placeholder={t('form.placeholderCompany')}
-            className={`pl-10 ${getInputStyles(!!errors.company)}`}
-            error={!!errors.company}
-            {...register('company')}
-          />
+      <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
+        <div
+          className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500"
+          style={{ animationDelay: '100ms', animationFillMode: 'both' }}
+        >
+          <AppLabel htmlFor="company" className={labelStyles}>
+            {t('form.company')}
+          </AppLabel>
+          <div className="relative">
+            <Building2 className={iconClass(!!errors.company)} />
+            <AppInput
+              id="company"
+              placeholder={t('form.placeholderCompany')}
+              className={`pl-10 ${getInputStyles(!!errors.company)}`}
+              error={!!errors.company}
+              {...register('company')}
+            />
+          </div>
+          {errors.company && <p className={errorStyles}>{errors.company.message}</p>}
         </div>
-        {errors.company && <p className={errorStyles}>{errors.company.message}</p>}
+
+        <div
+          className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500"
+          style={{ animationDelay: '150ms', animationFillMode: 'both' }}
+        >
+          <AppLabel htmlFor="position" className={labelStyles}>
+            {t('form.position')}
+          </AppLabel>
+          <div className="relative">
+            <Briefcase className={iconClass(!!errors.position)} />
+            <AppInput
+              id="position"
+              placeholder={t('form.placeholderPosition')}
+              className={`pl-10 ${getInputStyles(!!errors.position)}`}
+              error={!!errors.position}
+              {...register('position')}
+            />
+          </div>
+          {errors.position && <p className={errorStyles}>{errors.position.message}</p>}
+        </div>
       </div>
 
       <div
         className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500"
-        style={{ animationDelay: '150ms', animationFillMode: 'both' }}
+        style={{ animationDelay: '200ms', animationFillMode: 'both' }}
       >
         <AppLabel htmlFor="message" className={labelStyles}>
           {t('form.message')}
@@ -200,7 +234,7 @@ export const InquiryForm = ({
         className={`animate-in fade-in slide-in-from-left-4 mt-4 flex justify-end pt-5 duration-500 ${
           isCareers ? 'border-t border-[#2f3d36]/50' : ''
         }`}
-        style={{ animationDelay: '200ms', animationFillMode: 'both' }}
+        style={{ animationDelay: '250ms', animationFillMode: 'both' }}
       >
         <AppButton
           type="submit"
