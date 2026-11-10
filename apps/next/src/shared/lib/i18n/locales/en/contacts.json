@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "Contacts",
+    "description": "Get in touch with the Pipeline Studio team. Reach out for technical support, sales inquiries, or general questions about automating your workflows."
+  },
   "hero": {
     "title": "Establish Connection",
     "description": "Open a secure channel with our command center. Whether you need technical support, sales inquiries, or just want to say hi."
