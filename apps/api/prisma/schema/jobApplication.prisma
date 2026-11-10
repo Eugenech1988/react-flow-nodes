@@ -1,0 +1,18 @@
+model JobApplication {
+  id    String @id @default(cuid())
+  jobId String @map("job_id")
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  name     String
+  email    String
+  company  String
+  position String
+  message  String? @db.Text
+
+  resumeUrl      String  @map("resume_url")
+  coverLetterUrl String? @map("cover_letter_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("job_applications")
+}

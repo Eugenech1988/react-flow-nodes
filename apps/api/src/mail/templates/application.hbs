@@ -1,0 +1,22 @@
+<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.5; padding: 16px;">
+    <h3 style="color: #0f172a; margin-top: 0;">New Job Application</h3>
+    <p><strong>Name:</strong> {{name}}</p>
+    <p><strong>Email:</strong> {{email}}</p>
+    <p><strong>Company:</strong> {{company}}</p>
+    <p><strong>Position:</strong> {{position}}</p>
+
+    <p><strong>Cover Letter / Message:</strong></p>
+    <blockquote style="background: #f8fafc; padding: 10px; border-left: 4px solid #0d9488; margin: 0; white-space: pre-wrap;">
+        {{message}}
+    </blockquote>
+
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+
+    <p><strong>Attachments:</strong></p>
+    <ul>
+        <li><a href="{{resumeUrl}}" target="_blank">Download Resume / CV</a></li>
+        {{#if coverLetterUrl}}
+            <li><a href="{{coverLetterUrl}}" target="_blank">Download Cover Letter File</a></li>
+        {{/if}}
+    </ul>
+</div>

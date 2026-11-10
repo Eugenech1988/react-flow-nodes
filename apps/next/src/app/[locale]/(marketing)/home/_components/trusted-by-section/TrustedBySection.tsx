@@ -45,7 +45,7 @@ export function TrustedBySection() {
                 return (
                   <TechCard
                     key={`${company.name}-${index}`}
-                    className="flex shrink-0 items-center gap-4 rounded-xl px-8 py-4 transition-[colors,box-shadow] duration-300 hover:border-[#2dd4bf]/50 hover:bg-slate-800/90 hover:shadow-[0_0_30px_rgba(45,212,191,0.15)]"
+                    className="flex flex-row shrink-0 items-center gap-4 rounded-xl px-8 py-4 transition-[colors,box-shadow] duration-300 hover:border-[#2dd4bf]/50 hover:translate-0 hover:bg-slate-800/90 hover:shadow-[0_0_30px_rgba(45,212,191,0.15)]"
                   >
                     <Icon className="h-6 w-6 text-[#2dd4bf] drop-shadow-[0_0_8px_rgba(45,212,191,0.5)] transition-transform duration-300 group-hover:scale-110" />
                     <span className="font-mono text-sm font-bold tracking-widest text-slate-200 uppercase transition-colors group-hover:text-white">

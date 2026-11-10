@@ -20,6 +20,8 @@ model Job {
 
   translations JobTranslation[]
 
+  jobApplications JobApplication[]
+
   @@index([status, publishedAt])
   @@index([department])
   @@map("jobs")

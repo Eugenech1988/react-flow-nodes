@@ -21,6 +21,7 @@ import { ExecutionsService } from '@/executions/executions.service';
 import { JobsService } from '@/jobs/jobs.service';
 import { BlogService } from '@/blog/blog.service';
 import { MailService } from '@/mail/mail.service';
+import { ApplicationsService } from '@/applications/applications.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
@@ -67,6 +68,7 @@ async function bootstrap() {
       '/stripe/webhook',
       '/inngest',
       '/trpc',
+      '/applications'
     ];
 
     if (excludedPaths.some((path) => req.path.startsWith(path))) {
@@ -91,6 +93,7 @@ async function bootstrap() {
     jobsService: app.get(JobsService),
     blogService: app.get(BlogService),
     mailService: app.get(MailService),
+    applicationsService: app.get(ApplicationsService)
   });
 
   app

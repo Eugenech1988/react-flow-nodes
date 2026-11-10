@@ -4,7 +4,20 @@
     "description": "Join the Pipeline Studio workshop. Explore open positions, learn about our perks, and apply to help us build the next generation of data tools."
   },
   "details": {
-    "returnToOpenings": "Return to Openings"
+    "returnToOpenings": "Return to Openings",
+    "ref": "REF: 00{{length}}-A",
+    "initiateApplication": "Initiate Application",
+    "responsibilities": "Key Responsibilities",
+    "requirements": "Requirements",
+    "views_one": "{{count}} View",
+    "views_other": "{{count}} Views",
+    "applications_one": "{{count}} Application",
+    "applications_other": "{{count}} Applications",
+    "sidebar": {
+      "title": "Interested in this role?",
+      "description": "Send your dossier and a brief message outlining your craft. Our operators will review it within 24 hours.",
+      "orSendTo": "OR SEND DIRECTLY TO"
+    }
   },
   "hero": {
     "title": "Join the Workshop",
@@ -31,11 +44,7 @@
         "value": "2019",
         "label": "Founded"
       }
-    },
-    "views_one": "{{count}} View",
-    "views_other": "{{count}} Views",
-    "applications_one": "{{count}} Application",
-    "applications_other": "{{count}} Applications"
+    }
   },
   "openings": {
     "heading": {
@@ -123,6 +132,38 @@
         "title": "Offer",
         "description": "Reference check and a competitive offer within 3 days."
       }
+    }
+  },
+  "applicationForm": {
+    "successTitle": "Application Transmitted",
+    "successDescription": "We have received your dossier and will contact you shortly.",
+    "labels": {
+      "name": "Name *",
+      "email": "Email *",
+      "position": "Position *",
+      "company": "Company *",
+      "resume": "Resume / CV *",
+      "coverLetter": "Cover Letter (Optional)"
+    },
+    "placeholders": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "company": "Acme Corp",
+      "coverLetter": "Write your cover letter here..."
+    },
+    "buttons": {
+      "write": "Write",
+      "upload": "Upload",
+      "submit": "Submit Application",
+      "submitting": "Transmitting..."
+    },
+    "errors": {
+      "submitFailed": "Failed to submit application. Please try again.",
+      "name": "Name must be at least 2 characters.",
+      "email": "Please enter a valid email address.",
+      "position": "Position is required.",
+      "company": "Company name is required.",
+      "resume": "Resume is required."
     }
   },
   "cta": {

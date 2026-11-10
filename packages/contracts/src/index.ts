@@ -7,3 +7,4 @@ export * from './exections';
 export * from './jobs';
 export * from './mail';
 export * from './blog';
+export * from './applications';

@@ -12,6 +12,7 @@ import { DatabaseNodesModule } from '@/database-nodes/database-nodes.module';
 import { ExecutionsModule } from './executions/executions.module';
 import { JobsModule } from '@/jobs/jobs.module';
 import { BlogModule } from '@/blog/blog.module';
+import { ApplicationsModule } from './applications/applications.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BlogModule } from '@/blog/blog.module';
     ExecutionsModule,
     JobsModule,
     BlogModule,
+    ApplicationsModule,
   ],
 })
 export class AppModule {}
