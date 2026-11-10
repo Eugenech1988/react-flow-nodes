@@ -66,8 +66,7 @@ export const BackgroundArtifacts = () => (
       0x7F.SYS.002 //// DATA.STREAM
     </div>
 
-    {/* Bottom HUD */}
-    <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 items-center gap-3 font-mono text-[8px] tracking-widest text-[#2dd4bf]/30 uppercase md:flex">
+    <div className="absolute bottom-2 left-1/2 hidden -translate-x-1/2 items-center gap-3 font-mono text-[8px] tracking-widest text-[#2dd4bf]/30 uppercase md:flex">
       <span>LAT 47.3769</span>
       <span className="h-1 w-1 rounded-full bg-[#2dd4bf]/40" />
       <span>LON 8.5417</span>

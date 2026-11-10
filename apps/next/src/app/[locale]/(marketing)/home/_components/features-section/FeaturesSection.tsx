@@ -34,7 +34,7 @@ export function FeaturesSection() {
           />
 
           <div
-            className={`relative grid w-full flex-1 place-items-center py-8 lg:py-6 ${
+            className={`relative grid w-full place-items-center ${
               !ready ? 'lg:opacity-0' : 'opacity-100'
             }`}
           >
@@ -82,9 +82,9 @@ export function FeaturesSection() {
                     <button
                       type="button"
                       onClick={() => goToStep(i)}
-                      className={`flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 font-mono text-[9px] font-bold transition-all duration-300 ease-out outline-none hover:scale-110 active:scale-95 sm:h-8 sm:w-8 sm:text-[10px] ${
+                      className={`flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 font-mono text-[10px] font-bold transition-all duration-300 ease-out outline-none hover:scale-110 active:scale-95 sm:h-10 sm:w-10 sm:text-xs ${
                         isActive
-                          ? 'scale-110 border-[#5eead4] bg-[#2dd4bf]/20 text-[#5eead4] shadow-[0_0_12px_rgba(45,212,191,0.5)]'
+                          ? 'scale-110 border-[#5eead4] bg-[#2dd4bf]/20 text-[#5eead4] shadow-[0_0_15px_rgba(45,212,191,0.6)]'
                           : isPassed
                             ? 'border-[#2dd4bf]/60 bg-[#2dd4bf]/10 text-[#2dd4bf]'
                             : 'border-[#2dd4bf]/20 bg-transparent text-[#2dd4bf]/50 hover:border-[#5eead4]/80 hover:bg-[#2dd4bf]/15 hover:text-[#5eead4]'
@@ -95,7 +95,7 @@ export function FeaturesSection() {
                     </button>
 
                     {i < TOTAL_STEPS - 1 && (
-                      <div className="relative h-px flex-1 overflow-hidden bg-[#2dd4bf]/15">
+                      <div className="relative h-0.5 flex-1 overflow-hidden bg-[#2dd4bf]/15">
                         <div
                           className="absolute inset-y-0 left-0 bg-[#2dd4bf] transition-[width] duration-300 ease-out"
                           style={{ width: isPassed ? '100%' : '0%' }}
