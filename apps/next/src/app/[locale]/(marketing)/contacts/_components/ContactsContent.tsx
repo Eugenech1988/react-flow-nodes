@@ -1,57 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Activity, RadioTower, Send, ShieldCheck } from 'lucide-react';
+import { RadioTower, Send, ShieldCheck } from 'lucide-react';
 import {
   MonitorFrame,
   TechCard,
   Reveal,
-  AppButton,
   Rivets,
-  AppInput,
-  AppTextarea,
-  AppLabel,
 } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
+import { InquiryForm } from '@/entities/inquiry/InquiryForm';
+import { SocialLinks } from '@/shared/ui';
 import { CONTACT_CHANNELS, SOCIAL_NODES, RADAR_BLIPS } from '../constants';
-
-const contactFormSchema = z.object({
-  name: z.string().min(2, 'Operator name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid return frequency (email)'),
-  subject: z.string().min(5, 'Subject must be at least 5 characters'),
-  message: z.string().min(10, 'Message payload must be at least 10 characters'),
-});
-
-type TContactFormValues = z.infer<typeof contactFormSchema>;
 
 export const ContactsContent = () => {
   const { t } = useT('contacts');
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<TContactFormValues>({
-    resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      subject: '',
-      message: '',
-    },
-  });
-
-  const onSubmit = async (data: TContactFormValues) => {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log('Form Data:', data);
-    setIsSuccess(true);
-    reset();
-  };
 
   return (
     <div className="relative z-10 mx-auto max-w-6xl px-4 pb-24 sm:px-6">
@@ -89,7 +51,7 @@ export const ContactsContent = () => {
             <MonitorFrame
               headerIcon={RadioTower}
               headerTitle={t('radar.title')}
-              className="h-[300px]"
+              className="h-75"
               footer={
                 <div className="flex w-full items-center justify-between font-mono text-[9px] tracking-widest text-slate-500 uppercase">
                   <span className="flex items-center gap-2">
@@ -132,143 +94,14 @@ export const ContactsContent = () => {
               <ShieldCheck className="hidden h-8 w-8 text-[#2dd4bf]/40 sm:block" />
             </div>
 
-            {isSuccess ? (
-              <div className="animate-in fade-in zoom-in flex flex-col items-center justify-center py-10 text-center duration-500 ease-out">
-                <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[#2dd4bf]/40 bg-[#2dd4bf]/10">
-                  <span
-                    className="absolute inset-0 animate-ping rounded-full border border-[#2dd4bf]/40 opacity-75"
-                    style={{ animationDuration: '2s' }}
-                  />
-                  <span
-                    className="absolute -inset-2 animate-pulse rounded-full border border-[#2dd4bf]/20 bg-[#2dd4bf]/5"
-                    style={{ animationDuration: '3s' }}
-                  />
-                  <Send className="relative z-10 h-8 w-8 text-[#5eead4]" />
-                </div>
-
-                <h4
-                  className="animate-in slide-in-from-bottom-2 fade-in text-xl font-bold text-[#d1faf5] duration-500"
-                  style={{ animationDelay: '150ms', animationFillMode: 'both' }}
-                >
-                  {t('form.success.title')}
-                </h4>
-
-                <p
-                  className="animate-in slide-in-from-bottom-2 fade-in mt-2 max-w-xs text-sm text-slate-400 duration-500"
-                  style={{ animationDelay: '250ms', animationFillMode: 'both' }}
-                >
-                  {t('form.success.description')}
-                </p>
-
-                <div
-                  className="animate-in slide-in-from-bottom-2 fade-in mt-8 duration-500"
-                  style={{ animationDelay: '350ms', animationFillMode: 'both' }}
-                >
-                  <AppButton
-                    variant="ghost"
-                    onClick={() => setIsSuccess(false)}
-                    className="border border-[#2dd4bf]/30 text-[#2dd4bf] transition-colors hover:bg-[#2dd4bf]/10 hover:text-white"
-                  >
-                    {t('form.success.again')}
-                  </AppButton>
-                </div>
-              </div>
-            ) : (
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="animate-in fade-in flex flex-col gap-5 duration-300"
-              >
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <AppLabel htmlFor="name">{t('form.fields.name')}</AppLabel>
-                    <AppInput
-                      id="name"
-                      placeholder={t('form.placeholder.name')}
-                      error={!!errors.name}
-                      {...register('name')}
-                    />
-                    {errors.name && <p className="text-xs text-red-400">{errors.name.message}</p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <AppLabel htmlFor="email">{t('form.fields.email')}</AppLabel>
-                    <AppInput
-                      id="email"
-                      type="email"
-                      placeholder={t('form.placeholder.email')}
-                      error={!!errors.email}
-                      {...register('email')}
-                    />
-                    {errors.email && <p className="text-xs text-red-400">{errors.email.message}</p>}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <AppLabel htmlFor="subject">{t('form.fields.subject')}</AppLabel>
-                  <AppInput
-                    id="subject"
-                    placeholder={t('form.placeholder.subject')}
-                    error={!!errors.subject}
-                    {...register('subject')}
-                  />
-                  {errors.subject && (
-                    <p className="text-xs text-red-400">{errors.subject.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <AppLabel htmlFor="message">{t('form.fields.message')}</AppLabel>
-                  <AppTextarea
-                    id="message"
-                    placeholder={t('form.placeholder.message')}
-                    rows={5}
-                    error={!!errors.message}
-                    {...register('message')}
-                  />
-                  {errors.message && (
-                    <p className="text-xs text-red-400">{errors.message.message}</p>
-                  )}
-                </div>
-
-                <div className="mt-2 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-                  <div className="flex items-center gap-2 text-xs text-[#2dd4bf]/60">
-                    <Activity className="h-4 w-4 animate-pulse" />
-                    <span>{t('form.encrypted')}</span>
-                  </div>
-                  <AppButton
-                    type="submit"
-                    variant="primary"
-                    size="lg"
-                    isPending={isSubmitting}
-                    pendingText={t('form.submitting')}
-                    icon={Send}
-                    className="w-full px-8 sm:w-auto"
-                  >
-                    {t('form.submit')}
-                  </AppButton>
-                </div>
-              </form>
-            )}
+            <InquiryForm type="contact" submitIcon={Send} />
 
             <div className="mt-10 border-t border-[#2dd4bf]/10 pt-6 pb-2">
               <div className="mb-4 font-mono text-[10px] tracking-widest text-[#2dd4bf]/50 uppercase">
                 {t('socials.title')}
               </div>
               <div className="flex items-center gap-3">
-                {SOCIAL_NODES.map((node) => {
-                  const Icon = node.icon;
-                  return (
-                    <a
-                      key={node.id}
-                      href="#"
-                      title={t(`socials.${node.id}`)}
-                      aria-label={t(`socials.${node.id}`)}
-                      className="group flex h-11 w-11 items-center justify-center rounded-xl border border-[#2dd4bf]/20 bg-[#040a09] text-slate-400 transition-all duration-300 hover:border-[#2dd4bf]/50 hover:bg-[#2dd4bf]/10 hover:text-[#2dd4bf] hover:shadow-[0_0_15px_rgba(45,212,191,0.2)]"
-                    >
-                      <Icon className="h-5 w-5" />
-                    </a>
-                  );
-                })}
+                <SocialLinks/>
               </div>
             </div>
           </div>

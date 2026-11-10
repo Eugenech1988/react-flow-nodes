@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import PipelineLogo from '@/assets/logo.svg';
-import { InfoBadge } from '@/shared/ui';
+import { InfoBadge, SocialLinks } from '@/shared/ui';
 import { getT } from '@/shared/lib/i18n/server';
 import { Cog } from 'lucide-react';
 import { getFooterColumns, SOCIALS } from './model';
@@ -18,7 +18,6 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
 
   const isCareers = theme === 'careers';
 
-  // Общие классы для повторяющихся элементов
   const cogClasses = cn('absolute h-4 w-4', isCareers ? 'text-[#6fa28c]/40' : 'text-teal-400/30');
 
   const dotClasses = cn(
@@ -58,7 +57,6 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
             )}
           />
 
-          {/* Иконки Cog по углам (оптимизировано через map) */}
           {[
             'top-3 left-3 md:top-5 md:left-5',
             'top-3 right-3 md:top-5 md:right-5',
@@ -112,26 +110,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
               </div>
 
               <div className="mt-6 flex flex-wrap items-center gap-3 md:mt-8">
-                {SOCIALS.map((social) => {
-                  const Icon = social.icon;
-                  return (
-                    <a
-                      key={social.id}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={t(`footer.socials.${social.id}`)}
-                      className={cn(
-                        'relative overflow-hidden transition-all duration-300',
-                        isCareers
-                          ? 'rounded-sm border-[#2f3d36] bg-[#0a0e0d] p-2 text-[#8a9488] shadow-none hover:border-[#6fa28c] hover:bg-[#141a16] hover:text-[#9cc4b0] hover:shadow-[0_0_15px_rgba(111,162,140,0.2)]'
-                          : 'rounded-xl border border-white/10 bg-white/5 p-2 text-neutral-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.35)] hover:border-teal-500/30 hover:bg-white/10 hover:text-teal-400 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_0_15px_rgba(57,179,155,0.2)]',
-                      )}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </a>
-                  );
-                })}
+                <SocialLinks theme='careers' size='sm'/>
               </div>
             </div>
 
