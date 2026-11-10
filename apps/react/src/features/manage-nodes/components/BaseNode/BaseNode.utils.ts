@@ -28,6 +28,7 @@ export const buildInitialValues = (
   fields.forEach((field) => {
     const fallbackValue =
       typeof field.defaultValue === 'function' ? field.defaultValue(id) : field.defaultValue;
+    // @ts-ignore
     initialValues[field.key] = data[field.key] ?? fallbackValue ?? '';
   });
   return initialValues;

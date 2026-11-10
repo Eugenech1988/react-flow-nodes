@@ -8,6 +8,9 @@ model Job {
   location   String
   icon       String?
 
+  views        Int @default(0) @map("views")
+  applications Int @default(0) @map("applications")
+
   authorId String? @map("author_id")
   author   User?   @relation("JobAuthor", fields: [authorId], references: [id], onDelete: SetNull)
 

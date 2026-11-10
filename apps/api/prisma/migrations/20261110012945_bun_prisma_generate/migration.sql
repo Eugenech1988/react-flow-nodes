@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "jobs" ADD COLUMN     "applications" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "views" INTEGER NOT NULL DEFAULT 0;

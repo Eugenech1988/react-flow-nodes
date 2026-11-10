@@ -39,6 +39,9 @@ export default defineConfig({
       ),
     },
   },
+  preview: {
+    port: 5173,
+  },
   optimizeDeps: {
     include: [
       'react',
