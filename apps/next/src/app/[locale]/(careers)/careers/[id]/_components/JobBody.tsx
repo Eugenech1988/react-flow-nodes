@@ -17,9 +17,7 @@ export const JobBody = ({ job, scrollToForm }: JobBodyProps) => {
     <div className="max-w-none">
       {job.description && (
         <div className="mb-8">
-          <p className="font-typewriter text-base text-[#d4cfc0] sm:text-lg">
-            {job.description}
-          </p>
+          <p className="font-typewriter text-base text-[#d4cfc0] sm:text-lg">{job.description}</p>
           <div className="mt-6">
             <AppButton
               onClick={scrollToForm}

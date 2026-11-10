@@ -13,7 +13,7 @@ import {
   PenTool,
   ShieldCheck,
   TrendingUp,
-  type LucideIcon
+  type LucideIcon,
 } from 'lucide-react';
 import type { TStatusConfigItem } from '@/shared/ui';
 import type { TJobStatus } from './types';

@@ -17,7 +17,11 @@ interface JobApplicationFormProps {
   setApplicationsCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const JobApplicationForm = ({ job, locale, setApplicationsCount }: JobApplicationFormProps) => {
+export const JobApplicationForm = ({
+  job,
+  locale,
+  setApplicationsCount,
+}: JobApplicationFormProps) => {
   const { t } = useT('careers');
   const [isSuccess, setIsSuccess] = useState(false);
   const [coverLetterMode, setCoverLetterMode] = useState<'write' | 'upload'>('write');
@@ -28,7 +32,9 @@ export const JobApplicationForm = ({ job, locale, setApplicationsCount }: JobApp
     email: z.string().email({ message: t('applicationForm.errors.email') }),
     position: z.string().min(2, { message: t('applicationForm.errors.position') }),
     company: z.string().min(2, { message: t('applicationForm.errors.company') }),
-    resume: z.any().refine((files) => files?.length > 0, { message: t('applicationForm.errors.resume') }),
+    resume: z
+      .any()
+      .refine((files) => files?.length > 0, { message: t('applicationForm.errors.resume') }),
     coverLetterFile: z.any().optional(),
   });
 
@@ -36,11 +42,7 @@ export const JobApplicationForm = ({ job, locale, setApplicationsCount }: JobApp
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<
-    z.input<typeof localizedSchema>,
-    unknown,
-    z.output<typeof localizedSchema>
-  >({
+  } = useForm<z.input<typeof localizedSchema>, unknown, z.output<typeof localizedSchema>>({
     resolver: zodResolver(localizedSchema),
     defaultValues: {
       jobId: job.id,
@@ -88,9 +90,12 @@ export const JobApplicationForm = ({ job, locale, setApplicationsCount }: JobApp
     }
   };
 
-  const inputBaseStyles = 'rounded-sm font-typewriter shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] bg-[#0a0e0d]/50';
-  const inputErrorStyles = 'border-[#c25a5a] text-[#c25a5a] placeholder:text-[#c25a5a]/60 focus-visible:border-[#c25a5a] focus-visible:ring-[#c25a5a]/50';
-  const inputDefaultStyles = 'border-[#2f3d36] text-[#d4cfc0] placeholder:text-[#4a5c52] focus-visible:border-[#6fa28c] focus-visible:ring-[#6fa28c]/50';
+  const inputBaseStyles =
+    'rounded-sm font-typewriter shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] bg-[#0a0e0d]/50';
+  const inputErrorStyles =
+    'border-[#c25a5a] text-[#c25a5a] placeholder:text-[#c25a5a]/60 focus-visible:border-[#c25a5a] focus-visible:ring-[#c25a5a]/50';
+  const inputDefaultStyles =
+    'border-[#2f3d36] text-[#d4cfc0] placeholder:text-[#4a5c52] focus-visible:border-[#6fa28c] focus-visible:ring-[#6fa28c]/50';
 
   const getInputStyles = (hasError: boolean) =>
     `${inputBaseStyles} ${hasError ? inputErrorStyles : inputDefaultStyles}`;

@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import type { TSendInquiryInputData, TInquiryTypeData, TJobApplicationCreateData } from '@pipeline/contracts';
+import type {
+  TSendInquiryInputData,
+  TInquiryTypeData,
+  TJobApplicationCreateData,
+} from '@pipeline/contracts';
 
 const INQUIRY_SUBJECTS: Record<TInquiryTypeData, string> = {
   demo: 'New Demo Request',

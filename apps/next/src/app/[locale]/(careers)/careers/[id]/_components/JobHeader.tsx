@@ -14,12 +14,12 @@ interface JobHeaderProps {
 }
 
 export const JobHeader = ({
-                            job,
-                            deptLabel,
-                            typeLabel,
-                            levelLabel,
-                            applicationsCount,
-                          }: JobHeaderProps) => {
+  job,
+  deptLabel,
+  typeLabel,
+  levelLabel,
+  applicationsCount,
+}: JobHeaderProps) => {
   const { t } = useT('careers');
 
   return (

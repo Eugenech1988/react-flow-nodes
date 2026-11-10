@@ -49,9 +49,7 @@ export const CareersConsole = ({ jobs, locale }: CareersConsoleProps) => {
   };
 
   const filtered =
-    activeDept === 'all'
-      ? jobs
-      : jobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
+    activeDept === 'all' ? jobs : jobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
 
   useEffect(() => {
     const checkScrollHint = () => {

@@ -68,7 +68,7 @@ async function bootstrap() {
       '/stripe/webhook',
       '/inngest',
       '/trpc',
-      '/applications'
+      '/applications',
     ];
 
     if (excludedPaths.some((path) => req.path.startsWith(path))) {
@@ -93,7 +93,7 @@ async function bootstrap() {
     jobsService: app.get(JobsService),
     blogService: app.get(BlogService),
     mailService: app.get(MailService),
-    applicationsService: app.get(ApplicationsService)
+    applicationsService: app.get(ApplicationsService),
   });
 
   app

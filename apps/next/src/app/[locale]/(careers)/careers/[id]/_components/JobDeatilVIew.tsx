@@ -54,7 +54,6 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
 
       <div className="flex flex-col gap-12">
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
-
           <Reveal className="relative">
             <MonitorFrame
               theme="careers"
