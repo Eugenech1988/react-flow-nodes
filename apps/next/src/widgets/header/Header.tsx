@@ -124,7 +124,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
 
             <AppButton
               isLink
-              linkTo="http://localhost:5173"
+              linkTo="http://localhost:5173/login"
               variant="nav"
               className={cn('text-sm font-medium text-neutral-300 hover:text-white', navBtnClasses)}
             >
@@ -135,7 +135,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
               variant={btnVariant}
               className={cn({ 'rounded-sm capitalize': isCareers })}
               newTab={false}
-              linkTo="http://localhost:5173"
+              linkTo="http://localhost:5173/login"
               size="sm"
             >
               {t('header.getStarted')}
@@ -238,7 +238,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
 
                 <AppButton
                   isLink
-                  linkTo={`http://localhost:5173`}
+                  linkTo={`http://localhost:5173/login`}
                   onClick={() => setIsOpen(false)}
                   variant="nav"
                   className={cn(
@@ -253,7 +253,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
                 </AppButton>
                 <AppButton
                   isLink
-                  linkTo={`http://localhost:5173/`}
+                  linkTo={`http://localhost:5173/login/`}
                   onClick={() => setIsOpen(false)}
                   size="sm"
                   variant={btnVariant}

@@ -7,8 +7,8 @@ import { HomeRoute } from '@/app/providers/HomeRoute';
 import { AppLayout } from '@/app/AppLayout';
 import { GlobalLoader } from '@/shared/ui';
 import { ErrorBoundary } from '@/app/providers/ErrorBoundary';
+import { LoginPage } from '@/pages/login';
 
-const LoginPage = lazy(() => import('@/pages/login').then((m) => ({ default: m.LoginPage })));
 const CanvasPage = lazy(() => import('@/pages/canvas').then((m) => ({ default: m.CanvasPage })));
 const PlansPage = lazy(() => import('@/pages/plans').then((m) => ({ default: m.PlansPage })));
 const PipelinesPage = lazy(() =>
