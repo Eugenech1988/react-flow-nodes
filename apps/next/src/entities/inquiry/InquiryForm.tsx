@@ -227,7 +227,7 @@ export const InquiryForm = ({
       </div>
 
       <div
-        className={`animate-in fade-in slide-in-from-left-4 mt-4 flex justify-end pt-5 duration-500 ${
+        className={`animate-in fade-in slide-in-from-left-4 flex justify-end pt-5 duration-500 ${
           isCareers ? 'border-t border-[#2f3d36]/50' : ''
         }`}
         style={{ animationDelay: '250ms', animationFillMode: 'both' }}
