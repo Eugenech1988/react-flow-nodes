@@ -67,5 +67,17 @@ export function createJobsRouter(jobsService: JobsService) {
     removeTranslation: contentManagerProcedure
       .input(z.object({ jobId: z.string(), locale: z.string() }))
       .mutation(({ input }) => jobsService.removeTranslation(input.jobId, input.locale)),
+
+    incrementViews: publicProcedure
+      .input(z.object({ id: z.string() }))
+      .mutation(({ input }) => {
+        return jobsService.incrementViews(input.id);
+      }),
+
+    incrementApplications: publicProcedure
+      .input(z.object({ id: z.string() }))
+      .mutation(({ input }) => {
+        return jobsService.incrementApplications(input.id);
+      }),
   });
 }

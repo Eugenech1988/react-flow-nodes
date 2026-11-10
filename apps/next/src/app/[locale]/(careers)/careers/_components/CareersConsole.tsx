@@ -1,10 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { MapPin, Clock, ArrowUpRight, Gauge, Power, ChevronDown } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { MapPin, Clock, ChevronRight, Gauge, Power, ChevronDown, Eye, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { useT } from '@/shared/lib/i18n/client';
 import type { TPublicJob } from '@/shared/api';
+import { incrementJobViews } from '@/shared/api';
 import {
   DEPARTMENTS,
   DEPT_TO_BACKEND,
@@ -20,24 +22,49 @@ interface CareersConsoleProps {
   locale: string;
 }
 
-export function CareersConsole({ jobs, locale }: CareersConsoleProps) {
+export const CareersConsole = ({ jobs, locale }: CareersConsoleProps) => {
   const [activeDept, setActiveDept] = useState<Department>('all');
+  const [optimisticJobs, setOptimisticJobs] = useState<TPublicJob[]>(jobs);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(false);
   const { t } = useT('careers');
-
-  const filtered =
-    activeDept === 'all' ? jobs : jobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
-
-  const checkScrollHint = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const hasOverflow = el.scrollHeight > el.clientHeight + 2;
-    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 8;
-    setShowScrollHint(hasOverflow && !atBottom);
-  }, []);
+  const router = useRouter();
 
   useEffect(() => {
+    setOptimisticJobs(jobs);
+  }, [jobs]);
+
+  const handleJobClick = async (e: React.MouseEvent, job: TPublicJob) => {
+    e.preventDefault();
+
+    setOptimisticJobs((prev) =>
+      prev.map((j) => (j.id === job.id ? { ...j, views: (j.views ?? 0) + 1 } : j)),
+    );
+
+    const success = await incrementJobViews(job.id, job.slug, locale);
+
+    if (!success) {
+      console.error('Failed to increment views');
+    }
+
+    router.push(`/${locale}/careers/${job.slug}`);
+    router.refresh();
+  };
+
+  const filtered =
+    activeDept === 'all'
+      ? optimisticJobs
+      : optimisticJobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
+
+  useEffect(() => {
+    const checkScrollHint = () => {
+      const el = scrollRef.current;
+      if (!el) return;
+      const hasOverflow = el.scrollHeight > el.clientHeight + 2;
+      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 8;
+      setShowScrollHint(hasOverflow && !atBottom);
+    };
+
     checkScrollHint();
     const el = scrollRef.current;
     if (!el) return;
@@ -48,7 +75,7 @@ export function CareersConsole({ jobs, locale }: CareersConsoleProps) {
       ro.disconnect();
       el.removeEventListener('scroll', checkScrollHint);
     };
-  }, [checkScrollHint, activeDept]);
+  }, [activeDept]);
 
   const scrollMore = () => scrollRef.current?.scrollBy({ top: 220, behavior: 'smooth' });
 
@@ -144,8 +171,10 @@ export function CareersConsole({ jobs, locale }: CareersConsoleProps) {
                     });
 
                     return (
-                      <div
+                      <Link
                         key={job.id}
+                        href={`/${locale}/careers/${job.slug}`}
+                        onClick={(e) => handleJobClick(e, job)}
                         className="group animate-in fade-in slide-in-from-left-4 relative flex flex-col gap-3 border-b border-dashed border-[#2f3d36] px-4 py-4 transition-colors duration-300 ease-out hover:bg-[#6fa28c]/5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
                         style={{ animationDelay: `${idx * 30}ms`, animationFillMode: 'both' }}
                       >
@@ -173,17 +202,25 @@ export function CareersConsole({ jobs, locale }: CareersConsoleProps) {
                               </span>
                               <span className="text-[#4a5c52]">·</span>
                               <span className="text-[#6fa28c]">{levelLabel}</span>
+                              <span className="text-[#4a5c52]">·</span>
+                              <span className="flex items-center gap-1" title="Views">
+                                <Eye className="h-2.5 w-2.5" />
+                                {job.views ?? 0}
+                              </span>
+                              <span className="text-[#4a5c52]">·</span>
+                              <span className="flex items-center gap-1" title="Applications">
+                                <FileText className="h-2.5 w-2.5" />
+                                {job.applications ?? 0}
+                              </span>
                             </div>
                           </div>
                         </div>
-                        <Link
-                          href={`/${locale}/careers/${job.slug}`}
-                          className="relative flex cursor-pointer items-center gap-2 self-start rounded border border-[#3a4842] bg-[#0f1512] px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest text-[#9cc4b0] uppercase transition-all hover:border-[#6fa28c] hover:bg-[#6fa28c]/10 sm:self-center sm:text-[10px]"
-                        >
+
+                        <span className="relative flex cursor-pointer items-center gap-2 self-start rounded border border-[#3a4842] bg-[#0f1512] px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest text-[#9cc4b0] uppercase transition-all group-hover:border-[#6fa28c] group-hover:bg-[#6fa28c]/10 sm:self-center sm:text-[10px]">
                           {t('openings.apply')}
-                          <ArrowUpRight className="h-3 w-3" />
-                        </Link>
-                      </div>
+                          <ChevronRight className="h-3 w-3" />
+                        </span>
+                      </Link>
                     );
                   })}
                 </div>
@@ -206,4 +243,4 @@ export function CareersConsole({ jobs, locale }: CareersConsoleProps) {
       </div>
     </section>
   );
-}
+};

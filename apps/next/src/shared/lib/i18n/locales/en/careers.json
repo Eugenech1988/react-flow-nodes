@@ -3,6 +3,9 @@
     "title": "Careers",
     "description": "Join the Pipeline Studio workshop. Explore open positions, learn about our perks, and apply to help us build the next generation of data tools."
   },
+  "details": {
+    "returnToOpenings": "Return to Openings"
+  },
   "hero": {
     "title": "Join the Workshop",
     "description": "We're crafting precision tools for the next generation of data engineers. Bring your craft.",
@@ -12,11 +15,27 @@
   },
   "stats": {
     "list": {
-      "1": { "value": "42", "label": "Engineers" },
-      "2": { "value": "12", "label": "Countries" },
-      "3": { "value": "68", "label": "Projects" },
-      "4": { "value": "2019", "label": "Founded" }
-    }
+      "1": {
+        "value": "42",
+        "label": "Engineers"
+      },
+      "2": {
+        "value": "12",
+        "label": "Countries"
+      },
+      "3": {
+        "value": "68",
+        "label": "Projects"
+      },
+      "4": {
+        "value": "2019",
+        "label": "Founded"
+      }
+    },
+    "views_one": "{{count}} View",
+    "views_other": "{{count}} Views",
+    "applications_one": "{{count}} Application",
+    "applications_other": "{{count}} Applications"
   },
   "openings": {
     "heading": {
@@ -52,7 +71,10 @@
     },
     "badge": "PERK",
     "list": {
-      "1": { "title": "Remote-first", "description": "Work from anywhere across 12 time zones." },
+      "1": {
+        "title": "Remote-first",
+        "description": "Work from anywhere across 12 time zones."
+      },
       "2": {
         "title": "Learning budget",
         "description": "$2,000/yr for books, courses, and conferences."
@@ -61,12 +83,18 @@
         "title": "Health & wellness",
         "description": "Full medical, dental, and mental health coverage."
       },
-      "4": { "title": "Async by default", "description": "Flexible hours with deep-focus blocks." },
+      "4": {
+        "title": "Async by default",
+        "description": "Flexible hours with deep-focus blocks."
+      },
       "5": {
         "title": "Team retreats",
         "description": "Two offsites per year in interesting places."
       },
-      "6": { "title": "Top hardware", "description": "Your choice of MacBook Pro or equivalent." }
+      "6": {
+        "title": "Top hardware",
+        "description": "Your choice of MacBook Pro or equivalent."
+      }
     }
   },
   "process": {

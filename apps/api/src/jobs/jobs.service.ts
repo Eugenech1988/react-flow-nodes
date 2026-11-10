@@ -209,4 +209,18 @@ export class JobsService {
       where: { jobId_locale: { jobId, locale } },
     });
   }
+
+  async incrementViews(id: string) {
+    return this.prisma.job.update({
+      where: { id },
+      data: { views: { increment: 1 } },
+    });
+  }
+
+  async incrementApplications(id: string) {
+    return this.prisma.job.update({
+      where: { id },
+      data: { applications: { increment: 1 } },
+    });
+  }
 }

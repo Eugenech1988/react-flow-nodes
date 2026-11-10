@@ -60,7 +60,7 @@ async function bootstrap() {
   const doubleCsrfProtection = csrf.doubleCsrfProtection;
 
   app.use((req, res, next) => {
-    const excludedPaths = ['/csrf-token', '/billing/webhook', '/stripe/webhook', '/inngest'];
+    const excludedPaths = ['/csrf-token', '/billing/webhook', '/stripe/webhook', '/inngest',  '/trpc'];
 
     if (excludedPaths.some((path) => req.path.startsWith(path))) {
       return next();

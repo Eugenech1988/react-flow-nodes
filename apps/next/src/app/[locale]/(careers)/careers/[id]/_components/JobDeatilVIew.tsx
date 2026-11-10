@@ -11,6 +11,8 @@ import {
   Target,
   ShieldAlert,
   Radio,
+  Eye,
+  FileText,
 } from 'lucide-react';
 import { AppButton, MonitorFrame, Reveal, CutoutBadge } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
@@ -45,7 +47,7 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
           className="mb-8 inline-flex items-center gap-2 font-mono text-[10px] tracking-widest text-[#8a9488] uppercase transition-colors hover:text-[#9cc4b0]"
         >
           <ArrowLeft className="h-4 w-4" />
-          Return to Openings
+          {t('details.returnToOpenings', { defaultValue: 'Return to Openings' })}
         </Link>
       </Reveal>
 
@@ -94,6 +96,16 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
                   <span className="flex items-center gap-2">
                     <Target className="h-3.5 w-3.5 text-[#6fa28c]" />
                     {levelLabel}
+                  </span>
+                  <span className="text-[#2f3d36]">/</span>
+                  <span className="flex items-center gap-2">
+                    <Eye className="h-3.5 w-3.5 text-[#6fa28c]" />
+                    {job.views ?? 0} Views
+                  </span>
+                  <span className="text-[#2f3d36]">/</span>
+                  <span className="flex items-center gap-2">
+                    <FileText className="h-3.5 w-3.5 text-[#6fa28c]" />
+                    {job.applications ?? 0} Applications
                   </span>
                 </div>
 

@@ -1,3 +1,7 @@
+'use server';
+
+import { revalidatePath, revalidateTag } from 'next/cache';
+
 const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
 
 export type TPublicJob = {
@@ -14,6 +18,8 @@ export type TPublicJob = {
   icon: string | null;
   metaTitle: string | null;
   metaDescription: string | null;
+  views: number;
+  applications: number;
 };
 
 type TRawTranslation = {
@@ -42,11 +48,9 @@ type TRawJob = {
   createdAt: string;
   updatedAt: string;
   translations: TRawTranslation[];
+  views: number | string;
+  applications: number | string;
 };
-
-// type TTRPCEnvelope<T> =
-//   | { result: { data: T } }
-//   | { result: { data: { json: T } } };
 
 const extractData = <T>(payload: unknown): T | null => {
   if (!Array.isArray(payload) || payload.length === 0) return null;
@@ -94,11 +98,13 @@ const localizeJob = (raw: TRawJob, locale: string): TPublicJob | null => {
     icon: raw.icon,
     metaTitle: translation.metaTitle,
     metaDescription: translation.metaDescription,
+    views: Number(raw.views) || 0,
+    applications: Number(raw.applications) || 0,
   };
 };
 
 const buildTrpcUrl = (path: string, input: unknown): string => {
-  const encoded = encodeURIComponent(JSON.stringify({ 0: { json: input } }));
+  const encoded = encodeURIComponent(JSON.stringify({ 0: input }));
   return `${API_URL}/trpc/${path}?batch=1&input=${encoded}`;
 };
 
@@ -110,7 +116,7 @@ const assertApiUrl = (): string | null => {
   return API_URL;
 };
 
-export async function getPublishedJobs(locale: string): Promise<TPublicJob[]> {
+export const getPublishedJobs = async (locale: string): Promise<TPublicJob[]> => {
   if (!assertApiUrl()) return [];
 
   const url = buildTrpcUrl('jobs.list', {});
@@ -136,9 +142,77 @@ export async function getPublishedJobs(locale: string): Promise<TPublicJob[]> {
     console.error('[careers] jobs.list: fetch failed:', err);
     return [];
   }
-}
+};
 
-export async function getJobBySlug(locale: string, slug: string): Promise<TPublicJob | null> {
+export const getJobBySlug = async (locale: string, slug: string): Promise<TPublicJob | null> => {
   const jobs = await getPublishedJobs(locale);
   return jobs.find((j) => j.slug === slug) ?? null;
-}
+};
+
+export const incrementJobViews = async (
+  id: string,
+  slug: string,
+  locale: string,
+): Promise<boolean> => {
+  const baseUrl = assertApiUrl();
+  if (!baseUrl) return false;
+
+  try {
+    const res = await fetch(`${baseUrl}/trpc/jobs.incrementViews?batch=1`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 0: { id } }),
+      cache: 'no-store',
+    });
+
+    const data = await res.json();
+
+    if (data?.[0]?.error) {
+      console.error('[careers] incrementViews tRPC error:', data[0].error);
+      return false;
+    }
+
+    if (!res.ok) {
+      console.error('[careers] jobs.incrementViews: bad status', res.status);
+      return false;
+    }
+
+    revalidateTag('jobs', 'max');
+    revalidatePath(`/${locale}/careers/${slug}`);
+    return true;
+  } catch (err) {
+    console.error('[careers] jobs.incrementViews: fetch failed:', err);
+    return false;
+  }
+};
+
+export const incrementJobApplications = async (id: string): Promise<boolean> => {
+  const baseUrl = assertApiUrl();
+  if (!baseUrl) return false;
+
+  try {
+    const res = await fetch(`${baseUrl}/trpc/jobs.incrementApplications?batch=1`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 0: { id } }),
+      cache: 'no-store',
+    });
+
+    const data = await res.json();
+    if (data?.[0]?.error) {
+      console.error('[careers] incrementApplications tRPC error:', data[0].error);
+      return false;
+    }
+
+    if (!res.ok) {
+      console.error('[careers] jobs.incrementApplications: bad status', res.status);
+      return false;
+    }
+
+    revalidateTag('jobs', 'max');
+    return true;
+  } catch (err) {
+    console.error('[careers] jobs.incrementApplications: fetch failed:', err);
+    return false;
+  }
+};
