@@ -55,6 +55,8 @@ export const HowItWorksSection = () => {
                   <button
                     key={step.id}
                     onClick={() => handleStepClick(index)}
+                    type="button"
+                    aria-pressed={isActive}
                     className={`group relative flex w-full cursor-pointer items-start gap-4 rounded-2xl p-4 text-left transition-all duration-300 md:gap-6 md:p-5 ${isActive ? 'bg-[#0d1f1e]/80' : 'hover:bg-[#0d1f1e]/40'}`}
                   >
                     <div
@@ -107,7 +109,9 @@ export const HowItWorksSection = () => {
                     return (
                       <button
                         key={step.id}
-                        aria-label={step.id}
+                        type="button"
+                        aria-pressed={isActive}
+                        aria-label={t(`howItWorks.steps.${step.id}.title`)}
                         onClick={() => handleStepClick(index)}
                         className={`relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-300 sm:h-10 sm:w-10 ${isActive ? 'border-[#2dd4bf] bg-[#2dd4bf]/20 shadow-[0_0_15px_rgba(45,212,191,0.5)]' : 'border-slate-700 bg-slate-900/50 hover:border-slate-500'}`}
                       >
@@ -125,10 +129,11 @@ export const HowItWorksSection = () => {
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(4,10,9,0.85)_100%)]" />
 
                 <div
+                  aria-hidden={!isLoading}
                   className={`absolute inset-0 z-20 flex flex-col items-center justify-center px-4 text-center transition-opacity duration-200 sm:px-6 ${isLoading ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
                 >
                   <Loader2
-                    className={`h-8 w-8 text-[#2dd4bf] drop-shadow-[0_0_10px_#2dd4bf] sm:h-10 sm:w-10 ${isLoading ? 'animate-spin' : ''}`}
+                    className={`h-8 w-8 text-[#2dd4bf] drop-shadow-[0_0_10px_#2dd4bf] sm:h-10 sm:w-10 ${isLoading ? 'animate-spin motion-reduce:animate-none' : ''}`}
                   />
                   <div className="mt-4 h-1.5 w-40 overflow-hidden rounded-full bg-slate-800 sm:mt-6 sm:w-48">
                     <div
@@ -147,10 +152,12 @@ export const HowItWorksSection = () => {
                   return (
                     <div
                       key={step.id}
-                      className={`absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-6 ${visible ? 'blur-0 scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0 blur-sm'}`}
+                      aria-hidden={!visible}
+                      inert={!visible}
+                      className={`absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center transition-all duration-500 motion-reduce:transition-none ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-6 ${visible ? 'blur-0 scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0 blur-sm'}`}
                     >
                       <div className="relative mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-slate-700 bg-slate-900 shadow-[inset_0_4px_20px_rgba(0,0,0,0.8)] sm:mb-6 sm:h-24 sm:w-24">
-                        <div className="absolute inset-1.5 animate-[spin_10s_linear_infinite] rounded-full border border-dashed border-[#2dd4bf]/30 sm:inset-2" />
+                        <div className="absolute inset-1.5 animate-[spin_10s_linear_infinite] motion-reduce:animate-none rounded-full border border-dashed border-[#2dd4bf]/30 sm:inset-2" />
                         <Icon className="h-6 w-6 text-[#5eead4] drop-shadow-[0_0_15px_#2dd4bf] sm:h-10 sm:w-10" />
                       </div>
                       <h3 className="text-base font-bold text-[#d1faf5] sm:text-xl md:text-2xl">
@@ -167,7 +174,7 @@ export const HowItWorksSection = () => {
 
             <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 bg-[#0d1f1e] px-3 py-3 sm:px-6">
               <div className="flex items-center gap-2 font-mono text-[10px] text-slate-500">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#2dd4bf]" /> SYSTEM
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#2dd4bf] motion-reduce:animate-none" /> SYSTEM
                 ONLINE
               </div>
               <div className="flex items-center gap-3 sm:gap-5">
@@ -176,7 +183,7 @@ export const HowItWorksSection = () => {
                     <Gauge className="h-3.5 w-3.5 text-slate-500 sm:h-4 sm:w-4" />
                     <div className="mt-1 h-1 w-full rounded-full bg-slate-800">
                       <div
-                        className="h-full rounded-full bg-slate-600"
+                        className="h-full rounded-full bg-slate-600 motion-reduce:animate-none!"
                         style={{ animation: `pulse-width ${3 + i}s ease-in-out infinite` }}
                       />
                     </div>

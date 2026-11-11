@@ -244,3 +244,10 @@ body {
         transform: scale(1);
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .careers-gauge .gauge-needle,
+    .careers-gauge .gauge-value {
+        animation-duration: 0.01ms !important;
+    }
+}

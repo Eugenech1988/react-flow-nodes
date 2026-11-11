@@ -102,7 +102,7 @@ const CustomNode = ({ data }: NodeProps<TCustomNodeType>) => {
       <div>
         <div className="font-mono text-xs font-bold text-slate-100">{data.label}</div>
         <div className="flex items-center gap-1.5 font-mono text-[9px] text-[#2dd4bf]/80">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#2dd4bf]" />
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#2dd4bf] motion-reduce:animate-none" />
           {data.status}
         </div>
       </div>
@@ -127,6 +127,15 @@ export const ClientFlowCanvas = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<TCustomNodeType>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isInteractive, setIsInteractive] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia('(hover: hover) and (pointer: fine)');
+    setIsInteractive(media.matches);
+    const onChange = (e: MediaQueryListEvent) => setIsInteractive(e.matches);
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -142,7 +151,7 @@ export const ClientFlowCanvas = () => {
     <div className="relative flex h-full w-full items-center justify-center">
       {isLoading && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#040a09]/80 text-[#2dd4bf]/40 backdrop-blur-xs">
-          <Cpu className="h-8 w-8 animate-pulse text-[#2dd4bf] sm:h-16 sm:w-16" />
+          <Cpu className="h-8 w-8 animate-pulse text-[#2dd4bf] motion-reduce:animate-none sm:h-16 sm:w-16" />
           <span className="font-mono text-[8px] tracking-widest uppercase sm:text-xs">
             INITIALIZING_CANVAS_NODES...
           </span>
@@ -150,7 +159,7 @@ export const ClientFlowCanvas = () => {
       )}
 
       <div
-        className={`h-full w-full transition-all duration-600 ease-out ${
+        className={`h-full w-full transition-all duration-600 ease-out motion-reduce:transition-none ${isInteractive ? '' : 'pointer-events-none'} ${
           isLoading ? 'pointer-events-none scale-[0.98] opacity-0' : 'scale-100 opacity-100'
         }`}
       >
@@ -167,8 +176,11 @@ export const ClientFlowCanvas = () => {
           zoomOnPinch={false}
           zoomOnDoubleClick={false}
           panOnScroll={false}
-          panOnDrag={true}
-          preventScrolling={true}
+          panOnDrag={isInteractive}
+          preventScrolling={false}
+          nodesDraggable={isInteractive}
+          nodesConnectable={false}
+          elementsSelectable={isInteractive}
         >
           <Background color="#2dd4bf" gap={32} size={1} style={{ opacity: 0.1 }} />
         </ReactFlow>

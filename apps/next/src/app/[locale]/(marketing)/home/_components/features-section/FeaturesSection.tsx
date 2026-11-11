@@ -47,7 +47,9 @@ export const FeaturesSection = () => {
                 return (
                   <div
                     key={i}
-                    className={`col-start-1 row-start-1 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    aria-hidden={!isActive}
+                    inert={!isActive}
+                    className={`col-start-1 row-start-1 flex items-center justify-center transition-all duration-500 motion-reduce:transition-none ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       isActive
                         ? 'blur-0 z-10 translate-y-0 scale-100 opacity-100'
                         : isPast
@@ -84,14 +86,15 @@ export const FeaturesSection = () => {
                     <button
                       type="button"
                       onClick={() => goToStep(i)}
-                      className={`flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 font-mono text-[10px] font-bold transition-all duration-300 ease-out outline-none hover:scale-110 active:scale-95 sm:h-10 sm:w-10 sm:text-xs ${
+                      className={`flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 font-mono text-[10px] font-bold transition-all duration-300 ease-out outline-none motion-reduce:transition-none hover:scale-110 active:scale-95 sm:h-10 sm:w-10 sm:text-xs ${
                         isActive
                           ? 'scale-110 border-[#5eead4] bg-[#2dd4bf]/20 text-[#5eead4] shadow-[0_0_15px_rgba(45,212,191,0.6)]'
                           : isPassed
                             ? 'border-[#2dd4bf]/60 bg-[#2dd4bf]/10 text-[#2dd4bf]'
                             : 'border-[#2dd4bf]/20 bg-transparent text-[#2dd4bf]/50 hover:border-[#5eead4]/80 hover:bg-[#2dd4bf]/15 hover:text-[#5eead4]'
                       }`}
-                      aria-label={`Go to step ${i + 1}`}
+                      aria-label={t('features.stepLabel', { defaultValue: 'Go to step {{n}}', n: i + 1 })}
+                      aria-current={isActive ? 'step' : undefined}
                     >
                       {String(i + 1).padStart(2, '0')}
                     </button>
