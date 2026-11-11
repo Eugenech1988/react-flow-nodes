@@ -8,18 +8,16 @@ import { cn } from '@/shared/lib';
 interface ILanguageSwitcherProps {
   locale: string;
   isMobile?: boolean;
-  theme?: 'default' | 'careers';
+  theme?: 'default' | 'careers' | 'blog';
 }
 
 export const LanguageSwitcher = ({
-  locale,
-  isMobile = false,
-  theme = 'default',
-}: ILanguageSwitcherProps) => {
+                                   locale,
+                                   isMobile = false,
+                                   theme = 'default',
+                                 }: ILanguageSwitcherProps) => {
   const { t } = useT('common');
   const router = useRouter();
-
-  const isCareers = theme === 'careers';
 
   const currentLocale =
     locale && i18nConfig.supportedLngs.includes(locale)
@@ -37,16 +35,21 @@ export const LanguageSwitcher = ({
   };
 
   const containerClasses = cn(
-    'relative flex items-center gap-1 border p-1',
-    isMobile && 'w-full',
-    isCareers
-      ? 'rounded-sm border-[#2f3d36] bg-[#0a0e0d] shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]'
-      : 'rounded-xl border-slate-700/60 bg-[#0a1210] shadow-[inset_0_1px_4px_rgba(0,0,0,0.8)]',
+    'relative flex items-stretch gap-1 border p-1', // <--- items-stretch вместо items-center
+    isMobile ? 'h-11 w-full' : 'h-11',
+    theme === 'careers' &&
+    'rounded-sm border-[#2f3d36] bg-[#0a0e0d] shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]',
+    theme === 'blog' &&
+    'rounded-sm border-[#1E293B] bg-[#050B14] shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]',
+    theme === 'default' &&
+    'rounded-xl border-slate-700/60 bg-[#0a1210] shadow-[inset_0_1px_4px_rgba(0,0,0,0.8)]',
   );
 
   const screwClasses = cn(
-    'absolute h-1 w-1 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]',
-    isCareers ? 'bg-[#3a4842]' : 'bg-slate-600',
+    'absolute h-1 w-1 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)] z-10',
+    theme === 'careers' && 'bg-[#3a4842]',
+    theme === 'blog' && 'bg-[#1E293B]',
+    theme === 'default' && 'bg-slate-600',
   );
 
   return (
@@ -59,17 +62,25 @@ export const LanguageSwitcher = ({
         const label = t(`languages.${lng}`, { defaultValue: lng.toUpperCase() });
 
         const buttonClasses = cn(
-          'relative flex h-7 min-w-9 cursor-pointer items-center justify-center px-3 font-mono text-[10px] font-bold tracking-widest uppercase transition-all duration-300 sm:text-xs',
+          'relative flex cursor-pointer items-center justify-center px-3 font-mono text-[10px] font-bold tracking-widest uppercase transition-all duration-300 sm:text-xs', // <--- убран h-full
           isMobile && 'flex-1',
-          isActive && [
-            isCareers
-              ? 'rounded-sm border border-[#4a6d5e] bg-[#0d1f1e] text-[#9cc4b0] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_2px_0_#2f3d36]'
-              : 'rounded-lg border border-[#2dd4bf]/40 bg-[#2dd4bf]/15 text-[#5eead4] shadow-[inset_0_0_10px_rgba(45,212,191,0.2)]',
+          isActive && theme === 'careers' && [
+            'rounded-sm border border-[#4a6d5e] bg-[#0d1f1e] text-[#9cc4b0] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_2px_0_#2f3d36]',
           ],
-          !isActive && [
-            isCareers
-              ? 'rounded-sm border border-transparent text-[#8a9488] hover:bg-[#141a16] hover:text-[#9cc4b0]'
-              : 'rounded-lg border border-transparent text-slate-500 hover:bg-white/5 hover:text-slate-300',
+          isActive && theme === 'blog' && [
+            'rounded-sm border border-[#2dd4bf]/60 bg-[#2dd4bf]/15 text-[#5eead4] shadow-[inset_0_0_10px_rgba(45,212,191,0.2)]',
+          ],
+          isActive && theme === 'default' && [
+            'rounded-lg border border-[#2dd4bf]/40 bg-[#2dd4bf]/15 text-[#5eead4] shadow-[inset_0_0_10px_rgba(45,212,191,0.2)]',
+          ],
+          !isActive && theme === 'careers' && [
+            'rounded-sm border border-transparent text-[#8a9488] hover:bg-[#141a16] hover:text-[#9cc4b0]',
+          ],
+          !isActive && theme === 'blog' && [
+            'rounded-sm border border-transparent text-[#64748b] hover:bg-[#0B1424] hover:text-[#2dd4bf]',
+          ],
+          !isActive && theme === 'default' && [
+            'rounded-lg border border-transparent text-slate-500 hover:bg-white/5 hover:text-slate-300',
           ],
         );
 

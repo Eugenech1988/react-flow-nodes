@@ -121,3 +121,105 @@ body {
         transform: translateX(100%);
     }
 }
+
+@keyframes star-twinkle {
+    0%,
+    100% {
+        opacity: 0.35;
+        transform: scale(0.9);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+}
+
+@keyframes orbit-rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes orbit-drift {
+    0%,
+    100% {
+        opacity: 0.25;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes comet-fly {
+    0% {
+        transform: translate(-10vw, -30px) rotate(22deg);
+        opacity: 0;
+    }
+    8% {
+        opacity: 1;
+    }
+    92% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(110vw, 120px) rotate(22deg);
+        opacity: 0;
+    }
+}
+
+@keyframes discovery-sweep {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes discovery-blink {
+    0%,
+    55%,
+    100% {
+        opacity: 0;
+    }
+    60%,
+    68% {
+        opacity: 1;
+    }
+    72% {
+        opacity: 0.4;
+    }
+    78% {
+        opacity: 0.9;
+    }
+    84% {
+        opacity: 0;
+    }
+}
+
+@keyframes discovery-ping {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+    58% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+    60% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2.4);
+    }
+}
+
+@keyframes discovery-pulse {
+    0% {
+        opacity: 0.5;
+        transform: scale(0.2);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+}

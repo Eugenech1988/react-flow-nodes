@@ -1,6 +1,5 @@
 'use client';
 
-// import { Globe } from 'lucide-react';
 import type { SVGProps } from 'react';
 import { useT } from '@/shared/lib/i18n/client';
 import { cn } from '@/shared/lib';
@@ -35,50 +34,41 @@ export const FacebookIcon = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-interface SocialLinksProps {
+interface ISocialLinksProps {
   title?: string;
   className?: string;
   iconClassName?: string;
   align?: 'start' | 'center' | 'end';
   size?: 'sm' | 'md';
-  theme?: 'default' | 'careers';
+  theme?: 'default' | 'careers' | 'blog';
 }
 
 export const SOCIAL_NODES = [
   { id: 'github', icon: GithubIcon, href: 'https://github.com' },
   { id: 'linkedin', icon: LinkedinIcon, href: 'https://linkedin.com' },
   { id: 'twitter', icon: XTwitterIcon, href: 'https://twitter.com' },
-  // { id: 'telegram', icon: TelegramIcon, href: 'https://t.me' },
-  // { id: 'website', icon: Globe, href: 'https://example.com' },
 ];
 
 export const SocialLinks = ({
-  title,
-  className,
-  align = 'start',
-  size = 'md',
-  theme = 'default',
-}: SocialLinksProps) => {
+                              title,
+                              className,
+                              align = 'start',
+                              size = 'md',
+                              theme = 'default',
+                            }: ISocialLinksProps) => {
   const { t } = useT('common');
 
   const sizeClasses = {
-    sm: {
-      container: 'h-9 w-9 rounded-lg',
-      icon: 'h-4 w-4',
-    },
-    md: {
-      container: 'h-11 w-11 rounded-xl',
-      icon: 'h-5 w-5',
-    },
+    sm: { container: 'h-9 w-9 rounded-lg', icon: 'h-4 w-4' },
+    md: { container: 'h-11 w-11 rounded-xl', icon: 'h-5 w-5' },
   };
 
   const themeClasses = {
-    default: {
-      base: 'border-[#2dd4bf]/20 bg-[#040a09] text-slate-400 hover:border-[#2dd4bf]/50 hover:bg-[#2dd4bf]/10 hover:text-[#2dd4bf] hover:shadow-[0_0_15px_rgba(45,212,191,0.2)]',
-    },
-    careers: {
-      base: 'border-[#4a5c52]/40 bg-[#0a0e0d] text-[#8a9488] hover:border-[#6fa28c]/60 hover:bg-[#6fa28c]/10 hover:text-[#d4cfc0] hover:shadow-[0_0_15px_rgba(111,162,140,0.2)]',
-    },
+    default:
+      'border-[#2dd4bf]/20 bg-[#040a09] text-slate-400 hover:border-[#2dd4bf]/50 hover:bg-[#2dd4bf]/10 hover:text-[#2dd4bf] hover:shadow-[0_0_15px_rgba(45,212,191,0.2)]',
+    careers:
+      'border-[#4a5c52]/40 bg-[#0a0e0d] text-[#8a9488] hover:border-[#6fa28c]/60 hover:bg-[#6fa28c]/10 hover:text-[#d4cfc0] hover:shadow-[0_0_15px_rgba(111,162,140,0.2)]',
+    blog: 'border-[#4a5c52]/40 bg-[#0a1a1e] text-[#8a9488] hover:border-[#6fa28c]/60 hover:bg-[#6fa28c]/10 hover:text-[#d4ccb8] hover:shadow-[0_0_15px_rgba(212,204,184,0.15)]',
   };
 
   return (
@@ -87,7 +77,9 @@ export const SocialLinks = ({
         <div
           className={cn(
             'mb-4 font-mono text-[10px] tracking-widest uppercase',
-            theme === 'careers' ? 'text-[#6fa28c]/70' : 'text-[#2dd4bf]/50',
+            theme === 'careers' && 'text-[#6fa28c]/70',
+            theme === 'blog' && 'text-[#6fa28c]/70',
+            theme === 'default' && 'text-[#2dd4bf]/50',
             align === 'center' && 'text-center',
             align === 'end' && 'text-right',
           )}
@@ -116,7 +108,7 @@ export const SocialLinks = ({
               className={cn(
                 'group flex items-center justify-center border transition-all duration-300',
                 sizeClasses[size].container,
-                themeClasses[theme].base,
+                themeClasses[theme],
               )}
             >
               <Icon className={sizeClasses[size].icon} />

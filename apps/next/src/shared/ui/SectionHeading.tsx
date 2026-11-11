@@ -11,20 +11,19 @@ interface ISectionHeadingProps {
   descriptionColor?: string;
 }
 
-export function SectionHeading({
-  title,
-  description,
-  align = 'center',
-  isMain = false,
-  className = '',
-  titleClassName = '',
-  gradientDirection = 'right',
-  gradientColors = 'from-[#5eead4] via-[#2dd4bf] to-[#0d9488]',
-  titleColor = 'text-[#d1faf5]',
-  descriptionColor = 'text-[#8db8b4]',
-}: ISectionHeadingProps) {
+export const SectionHeading = ({
+                                 title,
+                                 description,
+                                 align = 'center',
+                                 isMain = false,
+                                 className = '',
+                                 titleClassName = '',
+                                 gradientDirection = 'right',
+                                 gradientColors = 'from-[#5eead4] via-[#2dd4bf] to-[#0d9488]',
+                                 titleColor = 'text-[#d1faf5]',
+                                 descriptionColor = 'text-[#8db8b4]',
+                               }: ISectionHeadingProps) => {
   const isCenter = align === 'center';
-
   const Tag = isMain ? 'h1' : 'h2';
 
   const titleSizeClasses = isMain
@@ -66,4 +65,4 @@ export function SectionHeading({
       )}
     </div>
   );
-}
+};

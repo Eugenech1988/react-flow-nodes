@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "Pipeline Journal — Notes from the Craft",
+    "description": "Long-form articles from the Pipeline Studio team on engineering, design, research, and product."
+  },
+  "hero": {
+    "title": "Pipeline Journal",
+    "description": "Long-form notes from the craft — engineering, design, research, and product.",
+    "status": "SYS.JOURNAL // STREAM.ACTIVE",
+    "entries": "ENTRIES: {{count}}",
+    "lastUpdate": "LAST.UPDATE"
+  },
+  "featured": {
+    "code": "001",
+    "badge": "FEATURED",
+    "status": "FILE.DECRYPTED"
+  },
+  "archive": {
+    "label": "SYS.ARCHIVE // {{count}} ENTRIES"
+  },
+  "empty": "NO ENTRIES IN SECTOR",
+  "readEntry": "READ ENTRY",
+  "categories": {
+    "all": "ALL",
+    "engineering": "ENGINEERING",
+    "design": "DESIGN",
+    "research": "RESEARCH",
+    "product": "PRODUCT"
+  },
+  "posts": {
+    "declarative-pipeline-as-code": {
+      "title": "Declarative Pipeline as Code",
+      "excerpt": "Why the declarative approach wins long-term over imperative scripts."
+    },
+    "designing-for-speed": {
+      "title": "Designing for Speed",
+      "excerpt": "Latency is a design constraint, not a feature. How we treat every millisecond."
+    },
+    "the-future-of-ai-infra": {
+      "title": "The Future of AI Infrastructure",
+      "excerpt": "What changes when compute is the bottleneck and models are the product."
+    },
+    "ship-fast-ship-safe": {
+      "title": "Ship Fast, Ship Safe",
+      "excerpt": "Balancing velocity and reliability in a pipeline-first world."
+    },
+    "product-velocity-metrics": {
+      "title": "Product Velocity Metrics",
+      "excerpt": "Which signals actually predict shipping speed, and which ones lie."
+    },
+    "visual-hierarchy-in-terminal-ui": {
+      "title": "Visual Hierarchy in Terminal UI",
+      "excerpt": "Designing dense interfaces that don't feel cluttered."
+    }
+  },
+  "cta": {
+    "title": "Join the Transmission",
+    "description": "One entry per week, no noise — just deep dives from the team.",
+    "placeholder": "operator@domain.io",
+    "submit": "SUBSCRIBE",
+    "status": "BROADCAST.READY"
+  }
+}

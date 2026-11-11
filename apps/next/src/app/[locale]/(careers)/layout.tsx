@@ -1,5 +1,6 @@
 import { Header } from '@/widgets/header';
 import { Footer } from '@/widgets/footer';
+import { SteampunkBackground } from '@/shared/ui';
 
 interface IMarketingLayoutProps {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ const CareersLayout = async ({ children, params }: IMarketingLayoutProps) => {
 
   return (
     <>
+      <SteampunkBackground/>
       <Header theme="careers" locale={locale} />
       <main className="flex-1">{children}</main>
       <Footer theme="careers" />

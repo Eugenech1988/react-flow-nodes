@@ -6,24 +6,60 @@ interface ISectionProps {
   children: ReactNode;
   className?: string;
   noBorder?: boolean;
+  theme?: 'default' | 'careers' | 'blog';
 }
 
-export const Section = ({ id, children, className, noBorder }: ISectionProps) => (
-  <section
-    id={id}
-    className={cn(
-      'relative overflow-hidden bg-[#040a09] py-16 text-[#d1faf5] sm:py-24',
-      !noBorder && 'border-t border-[#2dd4bf]/10',
-      className,
-    )}
-  >
-    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
+export const Section = ({
+                          id,
+                          children,
+                          className,
+                          noBorder,
+                          theme = 'default',
+                        }: ISectionProps) => {
+  const isCareers = theme === 'careers';
+  const isBlog = theme === 'blog';
 
-    <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2dd4bf]/5 blur-3xl" />
+  return (
+    <section
+      id={id}
+      className={cn(
+        'relative overflow-hidden py-16 text-[#d1faf5] sm:py-24',
+        isCareers && 'bg-[#0a0e0d] text-[#d4cfc0]',
+        isBlog && 'bg-[#071316] text-[#d4cfc0]',
+        !isCareers && !isBlog && 'bg-[#040a09]',
+        !noBorder &&
+        (isCareers
+          ? 'border-t border-[#2f3d36]'
+          : isBlog
+            ? 'border-t border-[#2f3d36]'
+            : 'border-t border-[#2dd4bf]/10'),
+        className,
+      )}
+    >
+      <div
+        className={cn(
+          'pointer-events-none absolute inset-0 bg-size-[22px_22px] opacity-[0.03]',
+          isBlog && 'opacity-[0.05]',
+        )}
+        style={{
+          backgroundImage: isCareers
+            ? 'radial-gradient(circle at 1px 1px, #6fa28c 1px, transparent 0)'
+            : isBlog
+              ? 'radial-gradient(circle at 1px 1px, #6fa28c 1px, transparent 0)'
+              : 'radial-gradient(circle at 1px 1px, #5eead4 1px, transparent 0)',
+        }}
+      />
 
-    {/* Опционально: огромные иконки на фоне */}
-    {/* Их можно передавать через пропс, например <SectionDecorations icons={[Network, Factory]} /> */}
+      <div
+        className={cn(
+          'pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl',
+          isCareers && 'bg-[#6fa28c]/5',
+          isBlog && 'bg-[#6fa28c]/5',
+          !isCareers && !isBlog && 'bg-[#2dd4bf]/5',
+        )}
+      />
 
-    {children}
-  </section>
-);
+      {children}
+    </section>
+  );
+};

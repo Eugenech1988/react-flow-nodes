@@ -14,7 +14,9 @@ export type ButtonVariant =
   | 'teal'
   | 'nav'
   | 'careers'
-  | 'careers-outline';
+  | 'careers-outline'
+  | 'blog'
+  | 'blog-outline';
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
@@ -63,6 +65,8 @@ const variantStyles: Record<ButtonVariant, string> = {
     'group relative overflow-hidden !rounded-sm border border-[#4a6d5e] bg-[#0d1f1e] font-typewriter text-xs uppercase tracking-widest text-[#9cc4b0] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_2px_0_#2f3d36] transition-all duration-150 ease-out hover:border-[#6fa28c] hover:bg-[#141a16] hover:text-[#e8f4ee] hover:shadow-[inset_0_0_10px_rgba(111,162,140,0.3),0_0_8px_rgba(111,162,140,0.2)] active:translate-y-[2px] active:shadow-none',
   'careers-outline':
     'relative overflow-hidden !rounded-sm border border-[#2f3d36] bg-[#0a0e0d] font-typewriter text-xs uppercase tracking-widest text-[#8a9488] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_2px_0_#1a2420] transition-all duration-150 ease-out hover:border-[#4a6d5e] hover:bg-[#141a16] hover:text-[#9cc4b0] active:translate-y-[2px] active:shadow-none',
+  blog: 'group relative overflow-hidden !rounded-sm border border-[#2dd4bf]/60 bg-[#2dd4bf]/15 text-sm font-medium text-[#5eead4] shadow-[inset_0_1px_0_rgba(94,234,212,0.2),inset_0_-1px_2px_rgba(0,0,0,0.4),0_0_15px_rgba(45,212,191,0.08)] transition-all duration-150 ease-out hover:border-[#5eead4]/70 hover:bg-[#2dd4bf]/25 hover:shadow-[inset_0_1px_0_rgba(94,234,212,0.3),0_0_20px_rgba(45,212,191,0.2)] active:translate-y-px',
+  'blog-outline': 'relative overflow-hidden !rounded-sm border border-[#1E293B] bg-[#101C2E] text-sm font-medium text-[#64748b] shadow-[inset_0_1px_0_rgba(45,212,191,0.08)] transition-all duration-150 ease-out hover:border-[#2dd4bf]/60 hover:bg-[#0B1424] hover:text-[#2dd4bf] active:translate-y-px',
 };
 
 const sizeStyles: Record<ButtonSize, { button: string; icon: string }> = {
@@ -72,28 +76,46 @@ const sizeStyles: Record<ButtonSize, { button: string; icon: string }> = {
   lg: { button: 'px-8 py-4 text-sm rounded-xl min-h-12', icon: 'w-5 h-5' },
 };
 
+const BLOG_VARIANTS: ButtonVariant[] = ['blog', 'blog-outline'];
+
 export const AppButton = ({
-  text,
-  children,
-  variant = 'primary',
-  size = 'md',
-  icon: Icon,
-  iconClassName,
-  isPending = false,
-  pendingText,
-  isDisabled = false,
-  type = 'button',
-  onClick,
-  className,
-  isLink = false,
-  linkTo = '#',
-  newTab,
-  ariaLabel,
-  'aria-label': nativeAriaLabel,
-  ...props
-}: IAppButtonProps) => {
+                            text,
+                            children,
+                            variant = 'primary',
+                            size = 'md',
+                            icon: Icon,
+                            iconClassName,
+                            isPending = false,
+                            pendingText,
+                            isDisabled = false,
+                            type = 'button',
+                            onClick,
+                            className,
+                            isLink = false,
+                            linkTo = '#',
+                            newTab,
+                            ariaLabel,
+                            'aria-label': nativeAriaLabel,
+                            ...props
+                          }: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
-  const currentSize = variant === 'nav' ? { button: '', icon: 'w-4 h-4' } : sizeStyles[size];
+  const isBlog = BLOG_VARIANTS.includes(variant);
+
+  const currentSize =
+    variant === 'nav'
+      ? { button: '', icon: 'w-4 h-4' }
+      : isBlog
+        ? {
+          button:
+            size === 'sm'
+              ? 'h-8 px-3 text-xs'
+              : size === 'lg'
+                ? 'h-11 px-6 text-sm'
+                : 'h-9 px-4 text-sm',
+          icon: size === 'lg' ? 'w-4 h-4' : 'w-3.5 h-3.5',
+        }
+        : sizeStyles[size];
+
   const effectiveAriaLabel = ariaLabel || nativeAriaLabel;
 
   const sharedClasses = cn(
