@@ -14,5 +14,5 @@ export * from './SteampunkBackground';
 export * from './TerminalPanel';
 export * from './TornPaperCard';
 export * from './StickyNoteCard';
-export * from './ChamferedCard';
+export * from './ChamberedCard';
 export * from './SocialLinks';

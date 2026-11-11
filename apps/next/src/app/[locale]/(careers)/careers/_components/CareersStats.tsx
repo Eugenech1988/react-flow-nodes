@@ -3,7 +3,7 @@
 import { useT } from '@/shared/lib/i18n/client';
 import { CAREERS_STATS } from '../constants';
 import { Odometer } from './CareersOdometer';
-import { ChamferedCard } from '@/shared/ui';
+import { ChamberedCard } from '@/shared/ui';
 
 export function CareersStats() {
   const { t } = useT('careers');
@@ -11,21 +11,13 @@ export function CareersStats() {
   return (
     <section className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-6">
       <div className="grid grid-cols-2 items-start gap-3 sm:grid-cols-4 sm:gap-5">
-        {CAREERS_STATS.map((stat, index) => {
+        {CAREERS_STATS.map((stat) => {
           const Icon = stat.icon;
           const value = t(`stats.list.${stat.id}.value`);
 
           return (
-            <div
-              key={stat.id}
-              className="animate-in fade-in relative duration-300 ease-out"
-              style={{
-                filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.5))',
-                animationDelay: `${index * 40}ms`,
-                animationFillMode: 'both',
-              }}
-            >
-              <ChamferedCard>
+            <div key={stat.id}>
+              <ChamberedCard>
                 <div className="flex h-14 w-full items-center justify-center rounded-md border border-[#2f3d36] bg-[#0a0e0d]/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
                   <div className="absolute top-1/2 left-2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-[#3a4842] shadow-[inset_0_1px_2px_rgba(156,196,176,0.3),0_1px_1px_rgba(0,0,0,0.8)]" />
                   <div className="absolute top-1/2 right-2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-[#3a4842] shadow-[inset_0_1px_2px_rgba(156,196,176,0.3),0_1px_1px_rgba(0,0,0,0.8)]" />
@@ -41,7 +33,7 @@ export function CareersStats() {
                     {t(`stats.list.${stat.id}.label`)}
                   </span>
                 </div>
-              </ChamferedCard>
+              </ChamberedCard>
             </div>
           );
         })}

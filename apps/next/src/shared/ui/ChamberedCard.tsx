@@ -10,7 +10,7 @@ interface IChamferedCardProps {
   className?: string;
 }
 
-export const ChamferedCard = ({ children, className }: IChamferedCardProps) => (
+export const ChamberedCard = ({ children, className }: IChamferedCardProps) => (
   <div className={className}>
     <div
       className="bg-linear-to-b from-[#4a5c52] via-[#2f3d36] to-[#1a2420] p-px"
