@@ -29,18 +29,18 @@ export const TestimonialsSection = () => {
           isMain={false}
         />
 
-        <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-16 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {TESTIMONIALS_DATA.map((item, index) => (
             <Reveal key={item.id} delay={index * 150}>
-              <TechCard className={`h-full justify-between p-6 sm:p-8 ${item.rotation}`}>
-                <Quote className="absolute -top-4 -right-4 h-24 w-24 text-[#2dd4bf]/5 transition-transform duration-500 group-hover:scale-110 group-hover:text-[#2dd4bf]/10" />
+              <TechCard className={`h-full justify-between p-5 sm:p-8 ${item.rotation}`}>
+                <Quote className="absolute -top-3 -right-3 h-16 w-16 text-[#2dd4bf]/5 transition-transform duration-500 group-hover:scale-110 group-hover:text-[#2dd4bf]/10 sm:-top-4 sm:-right-4 sm:h-24 sm:w-24" />
 
                 <div className="relative z-10">
-                  <div className="mb-6 flex gap-1">
+                  <div className="mb-4 flex gap-1 sm:mb-6">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className="h-4 w-4 fill-[#2dd4bf] text-[#2dd4bf] drop-shadow-[0_0_5px_rgba(45,212,191,0.5)]"
+                        className="h-3.5 w-3.5 fill-[#2dd4bf] text-[#2dd4bf] drop-shadow-[0_0_5px_rgba(45,212,191,0.5)] sm:h-4 sm:w-4"
                       />
                     ))}
                   </div>
@@ -49,10 +49,10 @@ export const TestimonialsSection = () => {
                   </p>
                 </div>
 
-                <div className="relative z-10 mt-8 flex items-center gap-4 border-t border-slate-800/80 pt-6">
-                  <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#2dd4bf]/30 bg-[#0a1210] shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
+                <div className="relative z-10 mt-6 flex items-center gap-3 border-t border-slate-800/80 pt-5 sm:mt-8 sm:gap-4 sm:pt-6">
+                  <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-[#2dd4bf]/30 bg-[#0a1210] shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] sm:h-12 sm:w-12">
                     <div className="absolute inset-1 rounded-full border border-[#2dd4bf]/10" />
-                    <span className="font-mono text-sm font-bold text-[#5eead4]">
+                    <span className="font-mono text-xs font-bold text-[#5eead4] sm:text-sm">
                       {item.initials}
                     </span>
                   </div>
@@ -60,7 +60,7 @@ export const TestimonialsSection = () => {
                     <div className="text-sm font-bold text-[#d1faf5]">
                       {t(`testimonials.list.${item.id}.author`)}
                     </div>
-                    <div className="mt-0.5 font-mono text-[10px] tracking-widest text-[#2dd4bf]/70 uppercase">
+                    <div className="mt-0.5 font-mono text-[9px] tracking-widest text-[#2dd4bf]/70 uppercase sm:text-[10px]">
                       {t(`testimonials.list.${item.id}.role`)}{' '}
                       <span className="text-slate-600">{'//'}</span>{' '}
                       {t(`testimonials.list.${item.id}.company`)}
@@ -72,7 +72,7 @@ export const TestimonialsSection = () => {
           ))}
         </div>
 
-        <Reveal delay={400} className="mt-16 flex justify-center">
+        <Reveal delay={400} className="mt-10 flex justify-center sm:mt-16">
           <InquiryModal type="review">
             <AppButton
               variant="ghost"

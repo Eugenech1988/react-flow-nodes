@@ -8,7 +8,7 @@ export const MissionSection = () => {
   const { t } = useT('about');
 
   return (
-    <section className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+    <section className="mb-12 grid items-center lg:mb-18 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
       <Reveal animation="fade-left">
         <div className="mb-7 flex items-center justify-center gap-3 lg:justify-start">
           <span className="h-px w-10 bg-[#2dd4bf]/60" />
@@ -39,7 +39,7 @@ export const MissionSection = () => {
       <Reveal
         animation="fade-right"
         delay={150}
-        className="relative mx-auto mt-10 w-full max-w-[16rem] sm:max-w-[22rem] lg:mt-0 lg:max-w-[26rem]"
+        className="relative mx-auto mt-10 w-full max-w-[16rem] sm:max-w-88 lg:mt-0 lg:max-w-104"
       >
         <div className="relative flex aspect-square w-full items-center justify-center">
           <div className="absolute h-[88%] w-[88%] rounded-full border border-[#2dd4bf]/15" />

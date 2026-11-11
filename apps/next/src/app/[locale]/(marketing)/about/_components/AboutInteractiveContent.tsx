@@ -13,7 +13,7 @@ export const AboutInteractiveContent = () => {
         <div className="absolute top-0 left-1/2 h-125 w-175 -translate-x-1/2 rounded-full bg-[#2dd4bf]/2.5 blur-[120px]" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl space-y-24 px-4 py-20 sm:px-6 sm:py-28 lg:space-y-36">
+      <div className="relative mx-auto max-w-6xl space-y-16 px-4 py-8 sm:space-y-24 sm:px-6 lg:space-y-36">
         <MissionSection />
         <PrinciplesSection />
         <CrewSection />

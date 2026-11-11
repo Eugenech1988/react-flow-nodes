@@ -1,6 +1,11 @@
-import { Cpu, Database, Flame, Globe, Terminal, Wind } from 'lucide-react';
+import { Cpu, Database, Flame, Globe, Terminal, Wind, type LucideIcon } from 'lucide-react';
 
-export const COMPANIES = [
+export type TCompany = {
+  name: string;
+  icon: LucideIcon;
+};
+
+export const COMPANIES: TCompany[] = [
   { name: 'Synapse', icon: Cpu },
   { name: 'PrismDB', icon: Database },
   { name: 'Aether', icon: Flame },

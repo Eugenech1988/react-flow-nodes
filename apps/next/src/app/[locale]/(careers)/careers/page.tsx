@@ -15,45 +15,12 @@ import {
 
 type PageProps = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export const generateMetadata = async ({ params }: PageProps): Promise<Metadata> => {
   const { locale } = await params;
   return getPageMetadata(locale, 'careers', '/careers');
-}
+};
 
-async function CareersData({ locale }: { locale: string }) {
-  const [jobs, { t }] = await Promise.all([
-    getPublishedJobs(locale),
-    getT('careers', { lng: locale }),
-  ]);
-
-  return (
-    <>
-      <CareersHero total={jobs.length} t={t} />
-      <CareersStats />
-      <CareersConsole jobs={jobs} locale={locale} />
-    </>
-  );
-}
-
-export default async function CareersPage({ params }: PageProps) {
-  const { locale } = await params;
-
-  return (
-    <div className="relative min-h-screen overflow-hidden bg-[#0a0e0d] text-[#d4cfc0]">
-      <SteampunkBackground />
-
-      <Suspense fallback={<CareersSkeleton />}>
-        <CareersData locale={locale} />
-      </Suspense>
-
-      <CareersPerks />
-      <CareersProcess />
-      <CareersCTA />
-    </div>
-  );
-}
-
-function CareersSkeleton() {
+const CareersSkeleton = () => {
   return (
     <div className="animate-pulse">
       <div className="mx-auto mt-36 max-w-5xl space-y-6 px-4">
@@ -69,8 +36,41 @@ function CareersSkeleton() {
       </div>
 
       <div className="mx-auto mt-12 max-w-5xl px-4">
-        <div className="h-[400px] rounded-2xl bg-white/5" />
+        <div className="h-100 rounded-2xl bg-white/5" />
       </div>
+    </div>
+  );
+};
+
+const CareersData = async ({ locale }: { locale: string }) => {
+  const [jobs, { t }] = await Promise.all([
+    getPublishedJobs(locale),
+    getT('careers', { lng: locale }),
+  ]);
+
+  return (
+    <>
+      <CareersHero total={jobs.length} t={t} />
+      <CareersStats />
+      <CareersConsole jobs={jobs} locale={locale} />
+    </>
+  );
+};
+
+export default async function CareersPage({ params }: PageProps) {
+  const { locale } = await params;
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-[#0a0e0d] text-[#d4cfc0]">
+      <SteampunkBackground />
+
+      <Suspense fallback={<CareersSkeleton />}>
+        <CareersData locale={locale} />
+      </Suspense>
+
+      <CareersPerks />
+      <CareersProcess />
+      <CareersCTA />
     </div>
   );
 }

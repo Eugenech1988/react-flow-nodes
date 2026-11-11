@@ -12,7 +12,7 @@ export const CrewSection = () => {
   const { t } = useT('about');
 
   return (
-    <section>
+    <section className="mb-18 md:mb-20">
       <SectionHeading title={t('crew.title')} description={t('crew.description')} isMain={false} />
 
       <div className="mt-12 grid gap-5 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3">

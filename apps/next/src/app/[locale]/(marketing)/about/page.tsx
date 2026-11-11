@@ -2,17 +2,17 @@ import type { Metadata } from 'next';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
 import { AboutBackground, AboutHero, AboutInteractiveContent } from './_components';
 
-type PageProps = {
+type TPageProps = {
   params: Promise<{ locale: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export const generateMetadata = async ({ params }: TPageProps): Promise<Metadata> => {
   const { locale } = await params;
 
   return getPageMetadata(locale, 'about', '/about');
-}
+};
 
-export default function AboutPage() {
+const AboutPage = () => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#040a09] text-[#d1faf5]">
       <AboutBackground />
@@ -20,4 +20,6 @@ export default function AboutPage() {
       <AboutInteractiveContent />
     </div>
   );
-}
+};
+
+export default AboutPage;

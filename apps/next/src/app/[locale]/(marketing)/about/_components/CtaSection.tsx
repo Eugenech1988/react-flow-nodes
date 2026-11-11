@@ -12,7 +12,7 @@ export const CtaSection = () => {
 
   return (
     <>
-      <Reveal className="relative pb-10">
+      <Reveal className="relative">
         <MonitorFrame
           headerIcon={Activity}
           headerTitle={

@@ -6,7 +6,7 @@ import { FeaturePlaque, CtaPlaque, BackgroundArtifacts } from './components';
 import { SLIDES, TOTAL_STEPS } from './constants';
 import { useFeaturesScroll } from './hooks';
 
-export function FeaturesSection() {
+export const FeaturesSection = () => {
   const { t } = useT('marketing');
   const { wrapperRef, index, ready, goToStep } = useFeaturesScroll();
 
@@ -17,7 +17,7 @@ export function FeaturesSection() {
       className="relative w-full bg-[#040a09] lg:h-(--scroll-height)"
       style={{ '--scroll-height': `${TOTAL_STEPS * 150}vh` } as React.CSSProperties}
     >
-      <div className="relative flex min-h-dvh w-full flex-col overflow-hidden border-t border-[#2dd4bf]/20 pt-24 pb-16 text-[#d1faf5] lg:sticky lg:top-0 lg:h-dvh lg:justify-center lg:pt-32 lg:pb-0">
+      <div className="relative flex w-full flex-col overflow-hidden border-t border-[#2dd4bf]/20 py-16 text-[#d1faf5] sm:py-24 lg:sticky lg:top-0 lg:h-dvh lg:min-h-dvh lg:justify-center lg:py-0">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.05]" />
         <div className="pointer-events-none absolute top-0 left-1/2 h-175 w-175 -translate-x-1/2 rounded-full bg-[#2dd4bf]/[0.07] blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 left-1/2 h-100 w-150 -translate-x-1/2 rounded-full bg-[#2dd4bf]/4 blur-3xl" />
@@ -26,19 +26,20 @@ export function FeaturesSection() {
 
         <Rivets className="bg-[#2dd4bf]/30 sm:h-2.5 sm:w-2.5" />
 
-        <div className="relative z-10 mx-auto flex h-full w-full max-w-4xl flex-col px-6">
+        <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col px-4 sm:px-6">
           <SectionHeading
             gradientDirection="left"
             title={t('features.heading.title')}
             description={t('features.heading.description')}
           />
 
+          {/* Карточка: немного увеличили отступ от заголовка на десктопе для дыхания */}
           <div
-            className={`relative grid w-full place-items-center ${
+            className={`relative mt-8 grid w-full place-items-center sm:mt-12 lg:mt-12 ${
               !ready ? 'lg:opacity-0' : 'opacity-100'
             }`}
           >
-            <div className="relative min-h-95 w-full max-w-3xl">
+            <div className="grid w-full max-w-3xl">
               {SLIDES.map((slide, i) => {
                 const isActive = i === index;
                 const isPast = i < index;
@@ -46,7 +47,7 @@ export function FeaturesSection() {
                 return (
                   <div
                     key={i}
-                    className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    className={`col-start-1 row-start-1 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                       isActive
                         ? 'blur-0 z-10 translate-y-0 scale-100 opacity-100'
                         : isPast
@@ -71,14 +72,15 @@ export function FeaturesSection() {
             </div>
           </div>
 
-          <div className="mx-auto w-full max-w-2xl pb-4 sm:pb-12">
-            <div className="flex items-center justify-between gap-1.5 sm:gap-2">
+          {/* Точки навигации: сбалансированный отступ, чтобы они были ближе к карточке */}
+          <div className="mx-auto mt-10 w-full max-w-2xl sm:mt-14 lg:mt-16">
+            <div className="flex items-center justify-between gap-1 sm:gap-2">
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => {
                 const isActive = i === index;
                 const isPassed = i < index;
 
                 return (
-                  <div key={`step-${i}`} className="flex flex-1 items-center gap-1.5 sm:gap-2">
+                  <div key={`step-${i}`} className="flex flex-1 items-center gap-1 sm:gap-2">
                     <button
                       type="button"
                       onClick={() => goToStep(i)}
@@ -111,4 +113,4 @@ export function FeaturesSection() {
       </div>
     </section>
   );
-}
+};

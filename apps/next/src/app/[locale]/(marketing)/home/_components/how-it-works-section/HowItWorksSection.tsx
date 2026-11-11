@@ -43,8 +43,7 @@ export const HowItWorksSection = () => {
           isMain={false}
         />
 
-        <div className="mt-12 grid grid-cols-1 items-stretch gap-8 sm:mt-20 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
-          {/* Desktop accordion */}
+        <div className="mt-10 grid grid-cols-1 items-stretch gap-6 sm:mt-16 sm:gap-8 lg:mt-20 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
           <div className="relative hidden lg:flex lg:flex-col">
             <div className="flex flex-col gap-2">
               {HOW_IT_WORKS_STEPS.map((step, index) => {
@@ -55,7 +54,7 @@ export const HowItWorksSection = () => {
                   <button
                     key={step.id}
                     onClick={() => handleStepClick(index)}
-                    className={`group relative flex w-full cursor-pointer items-start gap-5 rounded-2xl p-4 text-left transition-all duration-300 md:gap-6 md:p-5 ${isActive ? 'bg-[#0d1f1e]/80' : 'hover:bg-[#0d1f1e]/40'}`}
+                    className={`group relative flex w-full cursor-pointer items-start gap-4 rounded-2xl p-4 text-left transition-all duration-300 md:gap-6 md:p-5 ${isActive ? 'bg-[#0d1f1e]/80' : 'hover:bg-[#0d1f1e]/40'}`}
                   >
                     <div
                       className={`relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 bg-[#0a1210] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] transition-colors duration-300 md:h-14 md:w-14 ${isActive ? 'border-[#2dd4bf]' : 'border-[#2dd4bf]/20'}`}
@@ -94,14 +93,13 @@ export const HowItWorksSection = () => {
             </div>
           </div>
 
-          {/* Display Monitor (Теперь через MonitorFrame) */}
           <MonitorFrame
             headerTitle={`SYS.WORKSPACE // ${t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.subtitle`).toUpperCase()}`}
             className="lg:h-full"
           >
             <div className="relative flex flex-1 overflow-hidden">
-              <div className="flex w-16 shrink-0 flex-col items-center justify-center border-r border-slate-800/80 bg-[#0a1210]/80 py-4 lg:hidden">
-                <div className="flex flex-col gap-4">
+              <div className="flex w-12 shrink-0 flex-col items-center justify-center border-r border-slate-800/80 bg-[#0a1210]/80 py-4 sm:w-16 lg:hidden">
+                <div className="flex flex-col gap-3 sm:gap-4">
                   {HOW_IT_WORKS_STEPS.map((step, index) => {
                     const isActive = index === activeStep;
                     const Icon = step.icon;
@@ -110,10 +108,10 @@ export const HowItWorksSection = () => {
                         key={step.id}
                         aria-label={step.id}
                         onClick={() => handleStepClick(index)}
-                        className={`relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-300 ${isActive ? 'border-[#2dd4bf] bg-[#2dd4bf]/20 shadow-[0_0_15px_rgba(45,212,191,0.5)]' : 'border-slate-700 bg-slate-900/50 hover:border-slate-500'}`}
+                        className={`relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-2 transition-all duration-300 sm:h-10 sm:w-10 ${isActive ? 'border-[#2dd4bf] bg-[#2dd4bf]/20 shadow-[0_0_15px_rgba(45,212,191,0.5)]' : 'border-slate-700 bg-slate-900/50 hover:border-slate-500'}`}
                       >
                         <Icon
-                          className={`h-4 w-4 transition-colors ${isActive ? 'text-[#5eead4] drop-shadow-[0_0_5px_#2dd4bf]' : 'text-slate-500'}`}
+                          className={`h-3.5 w-3.5 transition-colors sm:h-4 sm:w-4 ${isActive ? 'text-[#5eead4] drop-shadow-[0_0_5px_#2dd4bf]' : 'text-slate-500'}`}
                         />
                       </button>
                     );
@@ -121,23 +119,23 @@ export const HowItWorksSection = () => {
                 </div>
               </div>
 
-              <div className="relative flex flex-1 items-center justify-center overflow-hidden p-6 sm:p-8">
+              <div className="relative flex min-h-80 flex-1 items-center justify-center overflow-hidden p-4 sm:min-h-90 sm:p-8">
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(4,10,9,0.85)_100%)]" />
 
                 <div
-                  className={`absolute inset-0 z-20 flex flex-col items-center justify-center px-6 text-center transition-opacity duration-200 ${isLoading ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+                  className={`absolute inset-0 z-20 flex flex-col items-center justify-center px-4 text-center transition-opacity duration-200 sm:px-6 ${isLoading ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
                 >
                   <Loader2
-                    className={`h-10 w-10 text-[#2dd4bf] drop-shadow-[0_0_10px_#2dd4bf] ${isLoading ? 'animate-spin' : ''}`}
+                    className={`h-8 w-8 text-[#2dd4bf] drop-shadow-[0_0_10px_#2dd4bf] sm:h-10 sm:w-10 ${isLoading ? 'animate-spin' : ''}`}
                   />
-                  <div className="mt-6 h-1.5 w-48 overflow-hidden rounded-full bg-slate-800">
+                  <div className="mt-4 h-1.5 w-40 overflow-hidden rounded-full bg-slate-800 sm:mt-6 sm:w-48">
                     <div
                       key={loadCount}
                       className="h-full animate-[fill-bar_0.6s_linear_forwards] bg-[#2dd4bf]"
                     />
                   </div>
-                  <span className="mt-4 font-mono text-xs tracking-widest text-[#2dd4bf]/70 uppercase">
+                  <span className="mt-3 font-mono text-[10px] tracking-widest text-[#2dd4bf]/70 uppercase sm:mt-4 sm:text-xs">
                     Initializing Module...
                   </span>
                 </div>
@@ -148,16 +146,16 @@ export const HowItWorksSection = () => {
                   return (
                     <div
                       key={step.id}
-                      className={`absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${visible ? 'blur-0 scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0 blur-sm'}`}
+                      className={`absolute inset-0 z-10 flex flex-col items-center justify-center px-4 text-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-6 ${visible ? 'blur-0 scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0 blur-sm'}`}
                     >
-                      <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-slate-700 bg-slate-900 shadow-[inset_0_4px_20px_rgba(0,0,0,0.8)] sm:h-24 sm:w-24">
+                      <div className="relative mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-slate-700 bg-slate-900 shadow-[inset_0_4px_20px_rgba(0,0,0,0.8)] sm:mb-6 sm:h-24 sm:w-24">
                         <div className="absolute inset-1.5 animate-[spin_10s_linear_infinite] rounded-full border border-dashed border-[#2dd4bf]/30 sm:inset-2" />
-                        <Icon className="h-8 w-8 text-[#5eead4] drop-shadow-[0_0_15px_#2dd4bf] sm:h-10 sm:w-10" />
+                        <Icon className="h-6 w-6 text-[#5eead4] drop-shadow-[0_0_15px_#2dd4bf] sm:h-10 sm:w-10" />
                       </div>
-                      <h3 className="text-lg font-bold text-[#d1faf5] sm:text-xl md:text-2xl">
+                      <h3 className="text-base font-bold text-[#d1faf5] sm:text-xl md:text-2xl">
                         {t(`howItWorks.steps.${step.id}.title`)}
                       </h3>
-                      <p className="mt-3 text-xs leading-relaxed text-slate-400 sm:text-sm md:text-base">
+                      <p className="mt-2 max-w-sm text-xs leading-relaxed text-slate-400 sm:mt-3 sm:text-sm md:text-base">
                         {t(`howItWorks.steps.${step.id}.description`)}
                       </p>
                     </div>
@@ -166,14 +164,14 @@ export const HowItWorksSection = () => {
               </div>
             </div>
 
-            <div className="relative z-10 flex items-center justify-between border-t border-slate-800 bg-[#0d1f1e] px-4 py-3 sm:px-6">
+            <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 bg-[#0d1f1e] px-3 py-3 sm:px-6">
               <div className="flex items-center gap-2 font-mono text-[10px] text-slate-500">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#2dd4bf]" /> SYSTEM
                 ONLINE
               </div>
               <div className="flex items-center gap-3 sm:gap-5">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex w-10 flex-col items-center sm:w-14">
+                  <div key={i} className="flex w-8 flex-col items-center sm:w-14">
                     <Gauge className="h-3.5 w-3.5 text-slate-500 sm:h-4 sm:w-4" />
                     <div className="mt-1 h-1 w-full rounded-full bg-slate-800">
                       <div
@@ -188,14 +186,8 @@ export const HowItWorksSection = () => {
           </MonitorFrame>
         </div>
 
-        <div className="mt-12 text-center sm:mt-20">
-          <AppButton
-            isLink
-            linkTo="http://localhost:5173/login"
-            variant="primary"
-            size="lg"
-            className="mx-auto"
-          >
+        <div className="mt-10 text-center sm:mt-16 lg:mt-20">
+          <AppButton isLink linkTo="/login" variant="primary" size="lg" className="mx-auto">
             {t('howItWorks.cta')}
           </AppButton>
         </div>
