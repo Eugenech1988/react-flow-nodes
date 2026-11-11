@@ -48,7 +48,7 @@ export const PricingSection = () => {
             const buttonClassName = cn(
               'w-full',
               !isPopular &&
-                'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white',
+              'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white',
             );
 
             return (
@@ -81,7 +81,6 @@ export const PricingSection = () => {
                           </span>
                         )}
                       </div>
-                      {/* min-h-12 отлично выравнивает блоки с описанием */}
                       <p className="mt-4 min-h-12 text-sm leading-relaxed text-slate-400">
                         {t(`pricing.tiers.${tier.id}.description`)}
                       </p>

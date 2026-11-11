@@ -60,7 +60,7 @@ export const UseCasesSection = () => {
                           </div>
                         </div>
                       </div>
-                      + <Badge variant="hex" className="text-[10px] sm:text-xs">
+                      <Badge variant="hex" className="text-[10px] sm:text-xs">
                         {t(`useCases.list.${item.id}.category`)}
                       </Badge>
                     </div>

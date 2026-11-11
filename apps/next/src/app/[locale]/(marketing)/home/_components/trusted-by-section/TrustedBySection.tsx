@@ -11,11 +11,11 @@ export const TrustedBySection = () => {
 
   return (
     <Section className="bg-slate-950 py-16 text-slate-100 sm:py-24">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(4,47,46,0.4)_1px,transparent_1px),linear-gradient(to_bottom,rgba(4,47,46,0.4)_1px,transparent_1px)] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] bg-size-[4rem_4rem]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(30,41,59,0.4)_1px,transparent_1px),linear-gradient(to_bottom,rgba(30,41,59,0.4)_1px,transparent_1px)] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] bg-size-[4rem_4rem]" />
 
       <SectionDecorator icon={Gauge} position="top-left" opacity={0.03} />
       <SectionDecorator icon={Activity} position="bottom-right" opacity={0.03} />
-      <Disc className="pointer-events-none absolute bottom-10 left-1/4 h-24 w-24 text-[#2dd4bf]/2 sm:h-32 sm:w-32" />
+      <Disc className="pointer-events-none absolute bottom-10 left-1/4 h-24 w-24 text-[#2dd4bf]/5 sm:h-32 sm:w-32" />
 
       <div className="pointer-events-none absolute bottom-0 left-10 h-48 w-48 animate-[float-blob_6s_ease-in-out_infinite] rounded-full bg-[#2dd4bf]/20 blur-[80px] motion-reduce:animate-none sm:h-64 sm:w-64" />
       <div className="pointer-events-none absolute top-1/4 right-10 h-56 w-56 animate-[float-blob-delayed_8s_ease-in-out_infinite_2s] rounded-full bg-[#2dd4bf]/10 blur-[100px] motion-reduce:animate-none sm:h-72 sm:w-72" />
