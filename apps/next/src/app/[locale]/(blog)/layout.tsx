@@ -11,12 +11,12 @@ const BlogLayout = async ({ children, params }: IBlogLayoutProps) => {
   const { locale } = await params;
 
   return (
-    <>
+    <div data-theme="blog" className="contents">
       <BlogBackground />
       <Header locale={locale} theme="blog" />
       <main className="flex-1">{children}</main>
       <Footer theme="blog" />
-    </>
+    </div>
   );
 };
 

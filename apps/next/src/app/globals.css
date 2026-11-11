@@ -28,6 +28,8 @@ html:has([data-home-page]) {
 }
 
 @theme {
+    /* DEPRECATED: оставлено для компонентов вне этого набора (Header/Footer/InquiryModal).
+       Новый код должен использовать theme-* токены. */
     /* Blog Theme */
     --color-blog-bg: #02060C;
     --color-blog-surface: #050B14;
@@ -46,6 +48,97 @@ html:has([data-home-page]) {
     --color-careers-accent: #6fa28c;
     --color-careers-text: #d4cfc0;
     --color-careers-muted: #8a9488;
+}
+
+/*
+ * ============================================================
+ * Единая система тем
+ * Палитра задаётся CSS-переменными --theme-*, а компоненты
+ * используют утилиты theme-* (bg-theme-surface, text-theme-accent/70 ...).
+ * Тема выбирается атрибутом data-theme на любом предке (или на самом компоненте).
+ * Тема по умолчанию (default) действует на :root.
+ * ============================================================
+ */
+@theme inline {
+    --color-theme-bg: var(--theme-bg);
+    --color-theme-surface: var(--theme-surface);
+    --color-theme-panel: var(--theme-panel);
+    --color-theme-raised: var(--theme-raised);
+    --color-theme-line: var(--theme-line);
+    --color-theme-line-strong: var(--theme-line-strong);
+    --color-theme-accent: var(--theme-accent);
+    --color-theme-accent-hover: var(--theme-accent-hover);
+    --color-theme-accent-deep: var(--theme-accent-deep);
+    --color-theme-fg: var(--theme-fg);
+    --color-theme-muted: var(--theme-muted);
+    --color-theme-dim: var(--theme-dim);
+    --color-theme-danger: var(--theme-danger);
+    --color-theme-rivet: var(--theme-rivet);
+
+    --shadow-theme-glow-sm: 0 0 8px color-mix(in oklab, var(--theme-accent) 20%, transparent);
+    --shadow-theme-glow: 0 0 15px color-mix(in oklab, var(--theme-accent) 15%, transparent);
+    --shadow-theme-glow-lg: 0 0 30px color-mix(in oklab, var(--theme-accent) 25%, transparent);
+    --shadow-theme-frame: inset 0 1px 0 color-mix(in oklab, var(--theme-accent-hover) 15%, transparent), 0 20px 50px rgba(0, 0, 0, 0.8);
+    --shadow-theme-panel: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 color-mix(in oklab, var(--theme-accent) 10%, transparent);
+}
+
+:root,
+[data-theme='default'] {
+    --theme-bg: #040a09;
+    --theme-surface: #0a1210;
+    --theme-panel: #0d1f1e;
+    --theme-raised: #123332;
+    --theme-line: #1e293b;
+    --theme-line-strong: #134e4a;
+    --theme-accent: #2dd4bf;
+    --theme-accent-hover: #5eead4;
+    --theme-accent-deep: #0d9488;
+    --theme-fg: #d1faf5;
+    --theme-muted: #8db8b4;
+    --theme-dim: #64748b;
+    --theme-danger: #ef4444;
+    --theme-rivet: #334155;
+}
+
+[data-theme='blog'] {
+    --theme-bg: #02060c;
+    --theme-surface: #050b14;
+    --theme-panel: #0b1424;
+    --theme-raised: #0f1b30;
+    --theme-line: #1e293b;
+    --theme-line-strong: #334155;
+    --theme-accent: #2dd4bf;
+    --theme-accent-hover: #5eead4;
+    --theme-accent-deep: #0d9488;
+    --theme-fg: #e2e8f0;
+    --theme-muted: #94a3b8;
+    --theme-dim: #64748b;
+    --theme-danger: #ef4444;
+    --theme-rivet: #1e293b;
+}
+
+[data-theme='careers'] {
+    --theme-bg: #0a0e0d;
+    --theme-surface: #0a0e0d;
+    --theme-panel: #0f1512;
+    --theme-raised: #1a2420;
+    --theme-line: #2f3d36;
+    --theme-line-strong: #4a5c52;
+    --theme-accent: #6fa28c;
+    --theme-accent-hover: #9cc4b0;
+    --theme-accent-deep: #4a6d5e;
+    --theme-fg: #d4cfc0;
+    --theme-muted: #8a9488;
+    --theme-dim: #4a5c52;
+    --theme-danger: #c25a5a;
+    --theme-rivet: #3a4842;
+}
+
+/* Сетка-«миллиметровка» из акцентного цвета темы (используется с bg-size-[16px_16px]) */
+@utility theme-grid {
+    background-image:
+            linear-gradient(color-mix(in oklab, var(--theme-accent) 3%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in oklab, var(--theme-accent) 3%, transparent) 1px, transparent 1px);
 }
 
 @media (prefers-color-scheme: dark) {

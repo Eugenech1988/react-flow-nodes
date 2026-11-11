@@ -11,14 +11,12 @@ const CareersLayout = async ({ children, params }: ICareersLayoutProps) => {
   const { locale } = await params;
 
   return (
-    <>
+    <div data-theme="careers" className="contents">
       <CareersBackground/>
       <Header theme="careers" locale={locale} />
-      <main className="flex-1">
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
       <Footer theme="careers" />
-    </>
+    </div>
   );
 };
 

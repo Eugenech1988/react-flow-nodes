@@ -9,7 +9,7 @@ import {
   CareersConsole,
   CareersPerks,
   CareersProcess,
-  CareersCTA
+  CareersCta
 } from './_components';
 
 export const generateMetadata = async ({params}: TPageProps): Promise<Metadata> => {
@@ -32,7 +32,7 @@ const CareersPage = async ({params}: TPageProps) => {
       <CareersConsole jobs={jobs} locale={locale}/>
       <CareersPerks/>
       <CareersProcess/>
-      <CareersCTA/>
+      <CareersCta/>
     </>
   );
 };

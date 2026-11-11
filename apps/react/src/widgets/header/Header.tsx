@@ -7,6 +7,7 @@ import { WorkflowExecutionControl } from './components/WorkflowExecutionControl'
 import { ShareDialog } from '@/widgets';
 import { useUser } from '@/shared/hooks';
 import { useStore } from '@/entities';
+import { SidebarToggle } from '@/widgets/sidebar/components/SidebarToggle';
 
 export const Header = () => {
   const location = useLocation();
@@ -18,7 +19,6 @@ export const Header = () => {
   const triggerSave = useStore((state) => state.triggerSave);
   const saveStatus = useStore((state) => state.saveStatus);
 
-  // Content managers manage jobs, not pipelines — hide pipeline-specific UI
   const isContentManager = role === 'CONTENT_MANAGER';
   const isSuperAdmin = role === 'SUPER_ADMIN';
   const isAdmin = isContentManager || isSuperAdmin;
@@ -43,6 +43,8 @@ export const Header = () => {
         <Link to="/">
           <img className="h-6 w-auto object-contain" src={logo} alt="Pipeline logo" />
         </Link>
+
+        <SidebarToggle />
 
         {isAdmin && (
           <>
