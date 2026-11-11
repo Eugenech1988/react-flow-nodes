@@ -6,7 +6,7 @@ import { PERKS } from '../constants';
 
 const ROTATIONS = ['-rotate-1', 'rotate-1', '-rotate-2', 'rotate-2', '-rotate-1', 'rotate-1'];
 
-export function CareersPerks() {
+export const CareersPerks = () => {
   const { t } = useT('careers');
 
   return (
@@ -45,4 +45,4 @@ export function CareersPerks() {
       </div>
     </section>
   );
-}
+};

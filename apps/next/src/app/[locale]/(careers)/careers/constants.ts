@@ -39,9 +39,9 @@ export const DEPARTMENTS = [
   { id: 'operations' },
 ];
 
-export type Department = (typeof DEPARTMENTS)[number]['id'];
+export type TDepartment = (typeof DEPARTMENTS)[number]['id'];
 
-export const DEPT_TO_BACKEND: Record<Exclude<Department, 'all'>, string> = {
+export const DEPT_TO_BACKEND: Record<Exclude<TDepartment, 'all'>, string> = {
   engineering: 'ENGINEERING',
   design: 'DESIGN',
   research: 'RESEARCH',

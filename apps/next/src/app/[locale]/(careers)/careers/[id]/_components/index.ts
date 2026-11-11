@@ -1,1 +1,1 @@
-export * from './JobDeatilVIew';
+export * from './JobDetailVIew';

@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import { Rivets, CutoutBadge, TechLabel } from '@/shared/ui';
 
-interface IPlaqueProps {
+interface IFeaturePlaqueProps {
   title: string;
   badge: string;
   description: string;
@@ -9,7 +9,7 @@ interface IPlaqueProps {
   number: string;
 }
 
-export const FeaturePlaque = ({ title, badge, description, Icon, number }: IPlaqueProps) => {
+export const FeaturePlaque = ({ title, badge, description, Icon, number }: IFeaturePlaqueProps) => {
   return (
     <div className="relative flex w-full flex-col overflow-hidden rounded-3xl border border-[#2dd4bf]/40 bg-linear-to-br from-[#0d1f1e] via-[#0a1615] to-[#06100f] p-5 shadow-[inset_0_1px_0_rgba(45,212,191,0.12),0_8px_24px_rgba(0,0,0,0.5)] sm:p-8">
       <Rivets className="bg-[#5eead4]/40" />

@@ -5,7 +5,7 @@ export const ContactsHero = async () => {
   const { t } = await getT('contacts');
 
   return (
-    <section className="relative z-10 px-4 pt-24 pb-8 text-center sm:px-6 sm:pt-28 sm:pb-12 md:pt-28">
+    <section className="relative z-10 px-4 pt-24 pb-8 text-center sm:px-6 sm:pt-28 sm:pb-12 md:pt-34">
       <SectionHeading
         isMain
         title={t('hero.title', { defaultValue: 'Establish Connection' })}

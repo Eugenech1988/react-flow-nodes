@@ -12,17 +12,17 @@ export const HeroSection = async () => {
 
       <div className="pointer-events-none absolute top-0 left-1/2 h-75 w-150 -translate-x-1/2 rounded-full bg-teal-500/10 blur-3xl" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-4 pt-24 pb-8 text-center sm:px-6 sm:pt-32 sm:pb-16 lg:px-8">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-4 pt-24 pb-8 text-center sm:px-6 sm:pt-28 sm:pb-16 md:pt-34 lg:px-8">
         <SectionHeading
           isMain
           title={t('hero.title')}
           description={t('hero.description')}
+          className="max-w-7xl"
           titleClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
         />
 
         <HeroActions />
 
-        {/* Используем MonitorFrame для обертки холста */}
         <MonitorFrame
           className="mt-8 w-full max-w-5xl rounded-2xl sm:mt-16 sm:rounded-3xl"
           innerClassName="rounded-xl sm:rounded-[1.4rem]"

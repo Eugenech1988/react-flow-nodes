@@ -11,7 +11,7 @@ import { jobApplicationInputSchema } from '@pipeline/contracts';
 import type { TPublicJob } from '@/shared/api';
 import { AppButton, MonitorFrame, AppInput, AppLabel, AppTextarea } from '@/shared/ui';
 
-interface JobApplicationFormProps {
+interface IJobApplicationFormProps {
   job: TPublicJob;
   locale: string;
   setApplicationsCount: React.Dispatch<React.SetStateAction<number>>;
@@ -21,7 +21,7 @@ export const JobApplicationForm = ({
   job,
   locale,
   setApplicationsCount,
-}: JobApplicationFormProps) => {
+}: IJobApplicationFormProps) => {
   const { t } = useT('careers');
   const [isSuccess, setIsSuccess] = useState(false);
   const [coverLetterMode, setCoverLetterMode] = useState<'write' | 'upload'>('write');
@@ -32,10 +32,13 @@ export const JobApplicationForm = ({
     email: z.string().email({ message: t('applicationForm.errors.email') }),
     position: z.string().min(2, { message: t('applicationForm.errors.position') }),
     company: z.string().min(2, { message: t('applicationForm.errors.company') }),
-    resume: z
-      .any()
-      .refine((files) => files?.length > 0, { message: t('applicationForm.errors.resume') }),
-    coverLetterFile: z.any().optional(),
+    resume: z.custom<FileList>(
+      (files) => typeof FileList !== 'undefined' && files instanceof FileList && files.length > 0,
+      { message: t('applicationForm.errors.resume') },
+    ),
+    coverLetterFile: z
+      .custom<FileList>((files) => typeof FileList === 'undefined' || files instanceof FileList)
+      .optional(),
   });
 
   const {
@@ -217,9 +220,7 @@ export const JobApplicationForm = ({
                 />
               </div>
               {errors.resume && (
-                <p className="font-mono text-xs text-[#c25a5a]">
-                  {errors.resume.message as string}
-                </p>
+                <p className="font-mono text-xs text-[#c25a5a]">{errors.resume.message}</p>
               )}
             </div>
 

@@ -5,7 +5,7 @@ import { CutoutBadge } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import type { TPublicJob } from '@/shared/api';
 
-interface JobHeaderProps {
+interface IJobHeaderProps {
   job: TPublicJob;
   deptLabel: string;
   typeLabel: string;
@@ -19,7 +19,7 @@ export const JobHeader = ({
   typeLabel,
   levelLabel,
   applicationsCount,
-}: JobHeaderProps) => {
+}: IJobHeaderProps) => {
   const { t } = useT('careers');
 
   return (

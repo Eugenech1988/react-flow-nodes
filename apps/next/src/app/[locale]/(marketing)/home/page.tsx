@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { TPageProps } from '@/shared/lib';
 import {
   HeroSection,
   FeaturesSection,
@@ -10,26 +11,21 @@ import {
 } from './_components';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
 
-type PageProps = {
-  params: Promise<{ locale: string }>;
+export const generateMetadata = async ({ params }: TPageProps): Promise<Metadata> => {
+  const { locale } = await params;
+  return getPageMetadata(locale, 'marketing');
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale } = await params;
+const Home = () => (
+  <div data-home-page>
+    <HeroSection />
+    <FeaturesSection />
+    <TrustedBySection />
+    <HowItWorksSection />
+    <UseCasesSection />
+    <TestimonialsSection />
+    <PricingSection />
+  </div>
+);
 
-  return getPageMetadata(locale, 'marketing');
-}
-
-export default function Home() {
-  return (
-    <div data-home-page>
-      <HeroSection />
-      <FeaturesSection />
-      <TrustedBySection />
-      <HowItWorksSection />
-      <UseCasesSection />
-      <TestimonialsSection />
-      <PricingSection />
-    </div>
-  );
-}
+export default Home;

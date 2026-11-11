@@ -22,17 +22,17 @@ import {
   LEVEL_LABELS,
   TYPE_LABELS,
   resolveJobIcon,
-  type Department,
+  type TDepartment,
 } from '../constants';
 import { SectionHeading, MonitorFrame } from '@/shared/ui';
 
-interface CareersConsoleProps {
+interface ICareersConsoleProps {
   jobs: TPublicJob[];
   locale: string;
 }
 
-export const CareersConsole = ({ jobs, locale }: CareersConsoleProps) => {
-  const [activeDept, setActiveDept] = useState<Department>('all');
+export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
+  const [activeDept, setActiveDept] = useState<TDepartment>('all');
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(false);
   const { t } = useT('careers');

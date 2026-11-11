@@ -16,7 +16,7 @@ import {
 } from '@xyflow/react';
 import { Cpu, Database, ShieldCheck, type LucideIcon } from 'lucide-react';
 
-type CustomNodeData = {
+type TCustomNodeData = {
   label: string;
   icon: LucideIcon;
   status: string;
@@ -24,9 +24,9 @@ type CustomNodeData = {
   hasSource?: boolean;
 };
 
-type CustomNodeType = Node<CustomNodeData, 'custom'>;
+type TCustomNodeType = Node<TCustomNodeData, 'custom'>;
 
-const initialNodes: CustomNodeType[] = [
+const initialNodes: TCustomNodeType[] = [
   {
     id: '1',
     type: 'custom',
@@ -80,7 +80,7 @@ const initialEdges: Edge[] = [
   },
 ];
 
-const CustomNode = ({ data }: NodeProps<CustomNodeType>) => {
+const CustomNode = ({ data }: NodeProps<TCustomNodeType>) => {
   const Icon = data.icon;
   const hasTarget = data.hasTarget ?? true;
   const hasSource = data.hasSource ?? true;
@@ -124,7 +124,7 @@ const nodeTypes = {
 } as NodeTypes;
 
 export const ClientFlowCanvas = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<CustomNodeType>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<TCustomNodeType>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [isLoading, setIsLoading] = useState(true);
 

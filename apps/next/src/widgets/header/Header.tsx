@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import PipelineLogo from '@/assets/logo.svg';
 import { cn } from '@/shared/lib';
@@ -10,17 +10,16 @@ import { Menu, X } from 'lucide-react';
 import { NAV_LINKS } from './model';
 import { LanguageSwitcher } from '@/features';
 
-interface THeaderProps {
+interface IHeaderProps {
+  locale: string;
   theme?: 'default' | 'careers';
 }
 
-export const Header = ({ theme = 'default' }: THeaderProps) => {
-  const { t, i18n } = useT('common');
-  const lng = i18n.language;
+export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
+  const { t } = useT('common');
   const [isOpen, setIsOpen] = useState(false);
 
   const isCareers = theme === 'careers';
-
   const btnVariant = isCareers ? 'careers' : 'primary';
 
   const navBtnClasses = cn({
@@ -54,7 +53,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
 
         <div className="flex items-center justify-between gap-2">
           <Link
-            href={`/${lng}`}
+            href={`/${locale}`}
             className="group flex min-w-0 flex-1 items-center gap-2.5 text-lg font-semibold tracking-tight text-white xl:flex-none xl:gap-3"
           >
             <div
@@ -93,7 +92,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
               <AppButton
                 key={link.id}
                 isLink
-                linkTo={`/${lng}${link.href}`}
+                linkTo={`/${locale}${link.href}`}
                 className={navBtnClasses}
                 variant="nav"
               >
@@ -109,17 +108,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
           </nav>
 
           <div className="hidden items-center gap-4 xl:flex">
-            <Suspense
-              fallback={
-                <div
-                  className={cn('h-9.5 w-22.5 animate-pulse rounded-xl bg-[#0a1210]', {
-                    'rounded-sm': isCareers,
-                  })}
-                />
-              }
-            >
-              <LanguageSwitcher theme={theme} />
-            </Suspense>
+            <LanguageSwitcher locale={locale} theme={theme} />
             <div className={cn('h-6 w-px bg-white/10', { 'bg-[#4a5c52]/50': isCareers })} />
 
             <AppButton
@@ -183,7 +172,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
                 <AppButton
                   key={link.id}
                   isLink
-                  linkTo={`/${lng}${link.href}`}
+                  linkTo={`/${locale}${link.href}`}
                   onClick={() => setIsOpen(false)}
                   variant="nav"
                   className={cn(
@@ -224,21 +213,11 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
               </div>
 
               <div className="flex flex-col gap-3 pt-1 pb-1">
-                <Suspense
-                  fallback={
-                    <div
-                      className={cn('h-9.5 w-full animate-pulse rounded-xl bg-[#0a1210]', {
-                        'rounded-sm': isCareers,
-                      })}
-                    />
-                  }
-                >
-                  <LanguageSwitcher theme={theme} isMobile />
-                </Suspense>
+                <LanguageSwitcher locale={locale} theme={theme} isMobile />
 
                 <AppButton
                   isLink
-                  linkTo={`http://localhost:5173/login`}
+                  linkTo="http://localhost:5173/login"
                   onClick={() => setIsOpen(false)}
                   variant="nav"
                   className={cn(
@@ -253,7 +232,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
                 </AppButton>
                 <AppButton
                   isLink
-                  linkTo={`http://localhost:5173/login`}
+                  linkTo="http://localhost:5173/login"
                   onClick={() => setIsOpen(false)}
                   size="sm"
                   variant={btnVariant}

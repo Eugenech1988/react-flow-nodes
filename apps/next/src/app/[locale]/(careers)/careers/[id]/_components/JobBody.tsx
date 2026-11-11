@@ -5,12 +5,12 @@ import { AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import type { TPublicJob } from '@/shared/api';
 
-interface JobBodyProps {
+interface IJobBodyProps {
   job: TPublicJob;
   scrollToForm: () => void;
 }
 
-export const JobBody = ({ job, scrollToForm }: JobBodyProps) => {
+export const JobBody = ({ job, scrollToForm }: IJobBodyProps) => {
   const { t } = useT('careers');
 
   return (

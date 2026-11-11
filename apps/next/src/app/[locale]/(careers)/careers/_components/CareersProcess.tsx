@@ -6,7 +6,7 @@ import { PROCESS_STEPS } from '../constants';
 
 const ROTATIONS = ['rotate-1', '-rotate-1', 'rotate-2', '-rotate-2', 'rotate-1'];
 
-export function CareersProcess() {
+export const CareersProcess = () => {
   const { t } = useT('careers');
 
   return (
@@ -41,4 +41,4 @@ export function CareersProcess() {
       </div>
     </section>
   );
-}
+};

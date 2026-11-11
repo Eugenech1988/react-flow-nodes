@@ -1,31 +1,37 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import i18nConfig from '@/shared/lib/i18n/config';
 import { useT } from '@/shared/lib/i18n/client';
 import { cn } from '@/shared/lib';
 
-interface LanguageSwitcherProps {
+interface ILanguageSwitcherProps {
+  locale: string;
   isMobile?: boolean;
   theme?: 'default' | 'careers';
 }
 
-export function LanguageSwitcher({ isMobile = false, theme = 'default' }: LanguageSwitcherProps) {
-  const { t, i18n } = useT('common');
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+export const LanguageSwitcher = ({
+  locale,
+  isMobile = false,
+  theme = 'default',
+}: ILanguageSwitcherProps) => {
+  const { t } = useT('common');
   const router = useRouter();
 
   const isCareers = theme === 'careers';
 
-  const switchLanguage = (locale: string) => {
-    if (i18n.language === locale) return;
+  const currentLocale =
+    locale && i18nConfig.supportedLngs.includes(locale)
+      ? locale
+      : (i18nConfig.fallbackLng ?? i18nConfig.supportedLngs[0]);
 
-    const segments = pathname.split('/');
-    segments[1] = locale;
+  const switchLanguage = (nextLocale: string) => {
+    if (currentLocale === nextLocale) return;
 
-    const query = searchParams.toString();
-    const newPath = segments.join('/') + (query ? `?${query}` : '');
+    const segments = window.location.pathname.split('/');
+    segments[1] = nextLocale;
+    const newPath = `${segments.join('/')}${window.location.search}`;
 
     router.push(newPath, { scroll: false });
   };
@@ -49,11 +55,11 @@ export function LanguageSwitcher({ isMobile = false, theme = 'default' }: Langua
       <span className={cn(screwClasses, 'right-1.5 bottom-1.5')} />
 
       {i18nConfig.supportedLngs.map((lng) => {
-        const isActive = i18n.language === lng;
+        const isActive = currentLocale === lng;
         const label = t(`languages.${lng}`, { defaultValue: lng.toUpperCase() });
 
         const buttonClasses = cn(
-          'relative flex h-7 cursor-pointer items-center justify-center px-3 font-mono text-[10px] font-bold tracking-widest uppercase transition-all duration-300 sm:text-xs',
+          'relative flex h-7 min-w-9 cursor-pointer items-center justify-center px-3 font-mono text-[10px] font-bold tracking-widest uppercase transition-all duration-300 sm:text-xs',
           isMobile && 'flex-1',
           isActive && [
             isCareers
@@ -73,11 +79,12 @@ export function LanguageSwitcher({ isMobile = false, theme = 'default' }: Langua
             type="button"
             onClick={() => switchLanguage(lng)}
             className={buttonClasses}
+            aria-pressed={isActive}
           >
-            {label}
+            <span>{label}</span>
           </button>
         );
       })}
     </div>
   );
-}
+};

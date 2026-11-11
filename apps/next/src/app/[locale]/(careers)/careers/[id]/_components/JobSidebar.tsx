@@ -6,13 +6,13 @@ import { useT } from '@/shared/lib/i18n/client';
 import type { TPublicJob } from '@/shared/api';
 import { LEVEL_LABELS } from '../../constants';
 
-interface JobSidebarProps {
+interface IJobSidebarProps {
   job: TPublicJob;
   Icon: React.ElementType;
   scrollToForm: () => void;
 }
 
-export const JobSidebar = ({ job, Icon, scrollToForm }: JobSidebarProps) => {
+export const JobSidebar = ({ job, Icon, scrollToForm }: IJobSidebarProps) => {
   const { t } = useT('careers');
   const deptLabel = t(`openings.filters.${job.department.toLowerCase()}`, {
     defaultValue: job.department,
