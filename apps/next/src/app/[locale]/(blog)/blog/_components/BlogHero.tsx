@@ -8,7 +8,7 @@ interface IBlogHeroProps {
 }
 
 export const BlogHero = ({ t, total, lastUpdate }: IBlogHeroProps) => (
-  <section className="relative z-10 px-4 pt-24 pb-8 text-center sm:px-6 md:pt-34 sm:pt-28 sm:pb-12">
+  <section className="relative z-10 px-4 pt-24 pb-8 text-center sm:px-6 sm:pt-28 sm:pb-12 md:pt-34">
     <SectionHeading
       isMain
       title={t('hero.title')}

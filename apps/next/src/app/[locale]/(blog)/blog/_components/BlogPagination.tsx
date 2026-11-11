@@ -1,7 +1,9 @@
 'use client';
 
-import { useT } from '@/shared/lib/i18n/client';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useT } from '@/shared/lib/i18n/client';
+import { AppButton } from '@/shared/ui';
+import { cn } from '@/shared/lib';
 
 interface IBlogPaginationProps {
   currentPage: number;
@@ -9,37 +11,67 @@ interface IBlogPaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export const BlogPagination = ({ currentPage, totalPages, onPageChange }: IBlogPaginationProps) => {
+export const BlogPagination = ({
+                                 currentPage,
+                                 totalPages,
+                                 onPageChange,
+                               }: IBlogPaginationProps) => {
   const { t } = useT('blog');
 
   if (totalPages <= 1) return null;
 
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   return (
-    <div className="mt-12 flex items-center justify-center gap-6 font-mono text-[10px] uppercase tracking-widest text-blog-dim sm:text-xs">
-      <button
-        type="button"
+    <div className="relative flex pt-12 flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
+      <AppButton
+        variant="blog-outline"
+        size="sm"
+        icon={ChevronLeft}
         onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="flex cursor-pointer items-center gap-1 transition-colors hover:text-blog-accent disabled:pointer-events-none disabled:opacity-30"
+        isDisabled={currentPage === 1}
+        ariaLabel={t('pagination.prev')}
       >
-        <ChevronLeft className="h-3 w-3" />
-        {t('pagination.prev')}
-      </button>
+        <span className="hidden sm:inline">{t('pagination.prev')}</span>
+      </AppButton>
 
-      <span className="flex items-center gap-2 rounded-sm border border-blog-border bg-blog-surface px-4 py-1.5 text-blog-accent shadow-[inset_0_1px_0_rgba(45,212,191,0.05)]">
-        <span className="opacity-50">PAGE</span>
-        {String(currentPage).padStart(2, '0')} / {String(totalPages).padStart(2, '0')}
-      </span>
+      <div className="flex items-center gap-1.5">
+        {pages.map((page) => {
+          const isActive = page === currentPage;
+          return (
+            <button
+              key={page}
+              type="button"
+              onClick={() => onPageChange(page)}
+              aria-current={isActive ? 'page' : undefined}
+              className={cn(
+                'relative flex h-8 w-8 cursor-pointer items-center justify-center',
+                'rounded-sm border font-mono text-[10px] font-bold tracking-widest transition-all',
+                isActive
+                  ? 'border-[#2dd4bf] bg-[#2dd4bf]/15 text-[#5eead4] shadow-[inset_0_1px_0_rgba(94,234,212,0.2),0_0_12px_rgba(45,212,191,0.2)]'
+                  : 'border-[#1E293B] bg-[#050B14]/80 text-[#94a3b8] hover:border-[#2dd4bf]/60 hover:bg-[#0B1424] hover:text-[#2dd4bf]',
+              )}
+            >
+              {String(page).padStart(2, '0')}
+              {isActive && (
+                <span className="absolute -bottom-px left-1/2 h-px w-3 -translate-x-1/2 bg-[#5eead4] shadow-[0_0_6px_rgba(45,212,191,0.8)]" />
+              )}
+            </button>
+          );
+        })}
+      </div>
 
-      <button
-        type="button"
+      <AppButton
+        variant="blog-outline"
+        size="sm"
+        icon={ChevronRight}
+        iconClassName="order-2"
         onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="flex cursor-pointer items-center gap-1 transition-colors hover:text-blog-accent disabled:pointer-events-none disabled:opacity-30"
+        isDisabled={currentPage === totalPages}
+        ariaLabel={t('pagination.next')}
       >
-        {t('pagination.next')}
-        <ChevronRight className="h-3 w-3" />
-      </button>
+        <span className="order-1 hidden sm:inline">{t('pagination.next')}</span>
+      </AppButton>
     </div>
   );
 };

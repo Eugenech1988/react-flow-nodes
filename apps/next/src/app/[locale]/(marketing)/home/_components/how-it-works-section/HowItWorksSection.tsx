@@ -5,6 +5,7 @@ import { Gauge, Activity, Loader2, ShieldCheck } from 'lucide-react';
 import { Section, SectionDecorator, MonitorFrame, SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { HOW_IT_WORKS_STEPS } from './constants';
+import { APP_LOGIN_URL } from '@/shared/lib/app-url';
 
 export const HowItWorksSection = () => {
   const { t } = useT('marketing');
@@ -187,7 +188,7 @@ export const HowItWorksSection = () => {
         </div>
 
         <div className="mt-10 text-center sm:mt-16 lg:mt-20">
-          <AppButton isLink linkTo="/login" variant="primary" size="lg" className="mx-auto">
+          <AppButton isLink linkTo={APP_LOGIN_URL} variant="primary" size="lg" className="mx-auto">
             {t('howItWorks.cta')}
           </AppButton>
         </div>

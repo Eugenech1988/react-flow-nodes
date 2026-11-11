@@ -18,10 +18,10 @@ interface IJobApplicationFormProps {
 }
 
 export const JobApplicationForm = ({
-  job,
-  locale,
-  setApplicationsCount,
-}: IJobApplicationFormProps) => {
+                                     job,
+                                     locale,
+                                     setApplicationsCount,
+                                   }: IJobApplicationFormProps) => {
   const { t } = useT('careers');
   const [isSuccess, setIsSuccess] = useState(false);
   const [coverLetterMode, setCoverLetterMode] = useState<'write' | 'upload'>('write');
@@ -125,7 +125,7 @@ export const JobApplicationForm = ({
       <div className="p-5 sm:p-10">
         {isSuccess ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[#6fa28c]/50 bg-[#6fa28c]/10 shadow-[0_0_30px_rgba(45,212,191,0.2)]">
+            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[#6fa28c]/50 bg-[#6fa28c]/10 shadow-[0_0_30px_rgba(111,162,140,0.25)]">
               <CheckCircle2 className="h-10 w-10 text-[#6fa28c]" />
             </div>
             <h3 className="font-typewriter text-xl font-bold text-[#d4cfc0]">

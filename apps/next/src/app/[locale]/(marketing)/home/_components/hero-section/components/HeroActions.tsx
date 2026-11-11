@@ -4,6 +4,7 @@ import { AppButton } from '@/shared/ui';
 import { Play } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
+import { APP_LOGIN_URL } from '@/shared/lib/app-url';
 
 export const HeroActions = () => {
   const { t } = useT('marketing');
@@ -12,10 +13,10 @@ export const HeroActions = () => {
     <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
       <AppButton
         isLink
-        linkTo="http://localhost:5173/login"
+        linkTo={APP_LOGIN_URL}
         variant="primary"
         size="lg"
-        className="group]: w-full font-bold sm:w-auto"
+        className="w-full font-bold sm:w-auto"
       >
         {t('hero.cta.primary')}
       </AppButton>

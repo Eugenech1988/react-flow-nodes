@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Archive } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { cn } from '@/shared/lib';
@@ -17,10 +17,6 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
   const [active, setActive] = useState('all');
   const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    setPage(1);
-  }, [active]);
-
   const nonFeatured = useMemo(() => BLOG_POSTS.filter((p) => !p.featured), []);
 
   const filtered = useMemo(
@@ -30,6 +26,11 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / BLOG_PAGE_SIZE));
   const visible = filtered.slice((page - 1) * BLOG_PAGE_SIZE, page * BLOG_PAGE_SIZE);
+
+  const handleCategoryChange = (id: string) => {
+    setActive(id);
+    setPage(1);
+  };
 
   const handlePageChange = (next: number) => {
     setPage(Math.min(Math.max(1, next), totalPages));
@@ -52,7 +53,7 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
               <button
                 key={cat.id}
                 type="button"
-                onClick={() => setActive(cat.id)}
+                onClick={() => handleCategoryChange(cat.id)}
                 className={cn(
                   'cursor-pointer rounded-sm border px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px]',
                   isActive

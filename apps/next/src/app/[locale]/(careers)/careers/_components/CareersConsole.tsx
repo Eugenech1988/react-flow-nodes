@@ -39,6 +39,9 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
   const router = useRouter();
 
   const handleJobClick = (e: React.MouseEvent, job: TPublicJob) => {
+    const isModified = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
+    if (isModified) return;
+
     e.preventDefault();
 
     incrementJobViews(job.id, job.slug, locale).catch((err) => {

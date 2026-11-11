@@ -58,7 +58,9 @@ export const MonitorFrame = ({
         </>
       )}
 
-      {!isBlog && (withRivets ?? <Rivets className={isCareers ? 'bg-[#3a4842]' : 'bg-slate-700'} />)}
+      {!isBlog && withRivets !== false && (
+        <Rivets className={isCareers ? 'bg-[#3a4842]' : 'bg-slate-700'} />
+      )}
 
       {toolbar && <div className="relative z-10 mb-3 w-full px-1">{toolbar}</div>}
 

@@ -14,24 +14,24 @@ interface IJobHeaderProps {
 }
 
 export const JobHeader = ({
-  job,
-  deptLabel,
-  typeLabel,
-  levelLabel,
-  applicationsCount,
-}: IJobHeaderProps) => {
+                            job,
+                            deptLabel,
+                            typeLabel,
+                            levelLabel,
+                            applicationsCount,
+                          }: IJobHeaderProps) => {
   const { t } = useT('careers');
 
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        <CutoutBadge>{deptLabel}</CutoutBadge>
+        <CutoutBadge theme="careers">{deptLabel}</CutoutBadge>
         <span className="font-mono text-[10px] tracking-widest text-[#4a5c52] uppercase">
           {t('details.ref', { length: job.slug.length })}
         </span>
       </div>
 
-      <h1 className="font-typewriter mb-6 truncate text-2xl font-bold tracking-tight text-[#d4cfc0] uppercase sm:text-4xl md:text-5xl">
+      <h1 className="font-typewriter mb-6 text-2xl font-bold tracking-tight text-[#d4cfc0] uppercase break-words sm:text-4xl md:text-5xl">
         {job.title}
       </h1>
 
