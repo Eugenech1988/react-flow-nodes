@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Archive, Terminal } from 'lucide-react';
+import { Archive } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { cn } from '@/shared/lib';
 import { BLOG_CATEGORIES, BLOG_PAGE_SIZE, BLOG_POSTS } from './constants';
@@ -37,19 +37,15 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
 
   return (
     <section className="relative z-10 mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-      <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <Archive className="h-4 w-4 text-[#2dd4bf]" />
-          <span className="font-mono text-[10px] font-bold tracking-widest text-[#94a3b8] uppercase">
+          <Archive className="h-4 w-4 text-blog-accent" />
+          <span className="font-mono text-[10px] font-bold tracking-widest text-blog-muted uppercase">
             {t('archive.label', { count: filtered.length })}
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[10px] tracking-widest uppercase sm:text-xs">
-          <span className="flex items-center gap-2 text-[#64748b]">
-            <Terminal className="h-3.5 w-3.5" />
-            SYS.FILTER //
-          </span>
+        <div className="flex flex-wrap gap-2">
           {BLOG_CATEGORIES.map((cat) => {
             const isActive = cat.id === active;
             return (
@@ -58,13 +54,17 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
                 type="button"
                 onClick={() => setActive(cat.id)}
                 className={cn(
-                  'cursor-pointer transition-all duration-200',
+                  'cursor-pointer rounded-sm border px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px]',
                   isActive
-                    ? 'font-bold text-[#5eead4] drop-shadow-[0_0_8px_rgba(45,212,191,0.4)]'
-                    : 'text-[#64748b] hover:text-[#94a3b8]',
+                    ? 'border-blog-accent bg-blog-accent/15 text-blog-accent-hover shadow-[inset_0_1px_0_rgba(45,212,191,0.4),0_0_15px_rgba(45,212,191,0.15)]'
+                    : 'border-blog-border bg-blog-panel text-blog-muted shadow-none hover:border-blog-accent/50 hover:text-blog-accent',
                 )}
               >
-                {isActive ? `[ ${t(`categories.${cat.id}`)} ]` : `_ ${t(`categories.${cat.id}`)}`}
+                <span className={isActive ? 'text-blog-accent-hover/70' : 'text-blog-dim'}>
+                  SEC.{cat.code}
+                </span>
+                <span className="mx-1.5 opacity-50">//</span>
+                <span>{t(`categories.${cat.id}`)}</span>
               </button>
             );
           })}
@@ -72,7 +72,7 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
       </div>
 
       {visible.length === 0 ? (
-        <div className="rounded-sm border border-dashed border-[#1E293B] bg-[#050B14] p-12 text-center font-mono text-xs tracking-widest text-[#94a3b8] uppercase">
+        <div className="rounded-sm border border-dashed border-blog-border bg-blog-surface p-12 text-center font-mono text-xs tracking-widest text-blog-muted uppercase">
           {t('empty')}
         </div>
       ) : (

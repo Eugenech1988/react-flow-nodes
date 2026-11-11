@@ -37,20 +37,20 @@ export const TerminalPanel = ({
       className={cn(
         'relative flex h-full w-full flex-col',
         !isBlog &&
-        'rounded-2xl border-2 border-[#4a5c52] bg-linear-to-b from-[#1a2420] to-[#0f1512] p-3 shadow-[inset_0_1px_0_rgba(156,196,176,0.15),0_20px_50px_rgba(0,0,0,0.8)] sm:rounded-3xl sm:p-4',
+        'rounded-2xl border-2 border-[#4a5c52] bg-linear-to-b from-[#1a2420] to-careers-panel p-3 shadow-[inset_0_1px_0_rgba(156,196,176,0.15),0_20px_50px_rgba(0,0,0,0.8)] sm:rounded-3xl sm:p-4',
         isBlog &&
-        'rounded-sm border border-[#1E293B] bg-[#050B14]/95 shadow-[0_8px_32px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(45,212,191,0.1)] backdrop-blur-md',
+        'rounded-sm border border-blog-border bg-blog-surface/95 shadow-[0_8px_32px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(45,212,191,0.1)] backdrop-blur-md',
         className,
       )}
     >
       {isBlog && (
         <>
           <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(45,212,191,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(45,212,191,0.03)_1px,transparent_1px)] bg-size-[16px_16px]" />
-          <div className="pointer-events-none absolute inset-1 border border-[#2dd4bf]/10" />
-          <span className="pointer-events-none absolute top-0 left-0 z-20 h-3 w-3 border-t-2 border-l-2 border-[#2dd4bf]/70" />
-          <span className="pointer-events-none absolute top-0 right-0 z-20 h-3 w-3 border-t-2 border-r-2 border-[#2dd4bf]/70" />
-          <span className="pointer-events-none absolute bottom-0 left-0 z-20 h-3 w-3 border-b-2 border-l-2 border-[#2dd4bf]/70" />
-          <span className="pointer-events-none absolute right-0 bottom-0 z-20 h-3 w-3 border-r-2 border-b-2 border-[#2dd4bf]/70" />
+          <div className="pointer-events-none absolute inset-1 border border-blog-accent/10" />
+          <span className="pointer-events-none absolute top-0 left-0 z-20 h-3 w-3 border-t-2 border-l-2 border-blog-accent/70" />
+          <span className="pointer-events-none absolute top-0 right-0 z-20 h-3 w-3 border-t-2 border-r-2 border-blog-accent/70" />
+          <span className="pointer-events-none absolute bottom-0 left-0 z-20 h-3 w-3 border-b-2 border-l-2 border-blog-accent/70" />
+          <span className="pointer-events-none absolute right-0 bottom-0 z-20 h-3 w-3 border-r-2 border-b-2 border-blog-accent/70" />
         </>
       )}
 
@@ -60,7 +60,7 @@ export const TerminalPanel = ({
         className={cn(
           'relative flex w-full flex-1 flex-col overflow-hidden',
           !isBlog &&
-          'rounded-xl border border-[#2f3d36] bg-[#0a0e0d] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_rgba(111,162,140,0.1)]',
+          'rounded-xl border border-careers-border bg-careers-surface shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_rgba(111,162,140,0.1)]',
           isBlog && 'bg-transparent',
           innerClassName,
         )}
@@ -72,8 +72,8 @@ export const TerminalPanel = ({
         <div
           className={cn(
             'relative z-10 flex shrink-0 items-center justify-between border-b px-4 py-3 sm:px-6',
-            !isBlog && 'border-[#2f3d36] bg-[#0f1512]/80 text-[#6fa28c]',
-            isBlog && 'border-[#1E293B] bg-[#0B1424] text-[#2dd4bf]',
+            !isBlog && 'border-careers-border bg-careers-panel/80 text-careers-accent',
+            isBlog && 'border-blog-border bg-blog-panel text-blog-accent',
             headerClassName,
           )}
         >
@@ -94,8 +94,8 @@ export const TerminalPanel = ({
           <div
             className={cn(
               'relative z-10 shrink-0 border-t px-4 py-2 sm:px-6',
-              !isBlog && 'border-[#2f3d36] bg-[#0f1512]/80',
-              isBlog && 'border-[#1E293B] bg-[#0B1424]',
+              !isBlog && 'border-careers-border bg-careers-panel/80',
+              isBlog && 'border-blog-border bg-blog-panel',
               footerClassName,
             )}
           >

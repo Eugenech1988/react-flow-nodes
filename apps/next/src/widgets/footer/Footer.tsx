@@ -7,11 +7,11 @@ import { cn } from '@/shared/lib';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-interface TFooterProps {
+interface IFooterProps {
   theme?: 'default' | 'careers' | 'blog';
 }
 
-export const Footer = async ({ theme = 'default' }: TFooterProps) => {
+export const Footer = async ({ theme = 'default' }: IFooterProps) => {
   const { t, lng } = await getT('common');
   const FOOTER_COLUMNS = getFooterColumns(lng);
 
@@ -22,7 +22,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
   const dotClasses = cn(
     'h-1 w-1 rounded-full',
     isCareers && 'bg-[#6fa28c]/60 shadow-[0_0_4px_rgba(111,162,140,0.6)]',
-    isBlog && 'bg-[#2dd4bf]/60 shadow-[0_0_4px_rgba(45,212,191,0.6)]',
+    isBlog && 'bg-blog-accent/60 shadow-[0_0_4px_rgba(45,212,191,0.6)]',
     !isThemed && 'bg-teal-400/60 shadow-[0_0_4px_rgba(57,179,155,0.6)]',
   );
 
@@ -30,9 +30,9 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
     <footer className="relative w-full overflow-hidden pt-8 pb-6 md:pt-12">
       {isBlog && (
         <>
-          <div className="absolute top-10 left-1/4 h-1 w-1 animate-pulse rounded-full bg-[#e2e8f0] shadow-[0_0_10px_#e2e8f0] motion-reduce:animate-none" />
-          <div className="absolute right-1/4 bottom-20 h-1 w-1 animate-pulse rounded-full bg-[#2dd4bf] shadow-[0_0_10px_#2dd4bf] motion-reduce:animate-none" style={{ animationDelay: '1.5s' }} />
-          <div className="absolute top-1/2 left-10 h-0.5 w-0.5 animate-pulse rounded-full bg-[#5eead4] shadow-[0_0_6px_#5eead4] motion-reduce:animate-none" style={{ animationDelay: '2.5s' }} />
+          <div className="absolute top-10 left-1/4 h-1 w-1 animate-pulse rounded-full bg-blog-text shadow-[0_0_10px_var(--color-blog-text)] motion-reduce:animate-none" />
+          <div className="absolute right-1/4 bottom-20 h-1 w-1 animate-pulse rounded-full bg-blog-accent shadow-[0_0_10px_var(--color-blog-accent)] motion-reduce:animate-none" style={{ animationDelay: '1.5s' }} />
+          <div className="absolute top-1/2 left-10 h-0.5 w-0.5 animate-pulse rounded-full bg-blog-accent-hover shadow-[0_0_6px_var(--color-blog-accent-hover)] motion-reduce:animate-none" style={{ animationDelay: '2.5s' }} />
         </>
       )}
 
@@ -40,7 +40,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
         className={cn(
           'pointer-events-none absolute bottom-0 left-1/2 h-75 w-150 -translate-x-1/2 rounded-full blur-3xl',
           isCareers && 'bg-[#6fa28c]/5',
-          isBlog && 'bg-[#2dd4bf]/5',
+          isBlog && 'bg-blog-accent/5',
           !isThemed && 'bg-teal-500/5',
         )}
       />
@@ -54,16 +54,16 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
             isCareers &&
             'rounded-sm border-[#4a5c52]/50 bg-[#0a0e0d]/80 after:rounded-sm after:from-[#4a5c52]/20',
             isBlog &&
-            'rounded-sm border border-[#1E293B] bg-[#050B14]/80 shadow-[0_8px_32px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(45,212,191,0.1)] backdrop-blur-xl',
+            'rounded-sm border border-blog-border bg-blog-surface/80 shadow-[0_8px_32px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(45,212,191,0.1)] backdrop-blur-xl',
           )}
         >
           {isBlog && (
             <>
-              <div className="pointer-events-none absolute inset-1 border border-[#2dd4bf]/10" />
-              <span className="pointer-events-none absolute top-0 left-0 h-3 w-3 border-t-2 border-l-2 border-[#2dd4bf]/70" />
-              <span className="pointer-events-none absolute top-0 right-0 h-3 w-3 border-t-2 border-r-2 border-[#2dd4bf]/70" />
-              <span className="pointer-events-none absolute bottom-0 left-0 h-3 w-3 border-b-2 border-l-2 border-[#2dd4bf]/70" />
-              <span className="pointer-events-none absolute right-0 bottom-0 h-3 w-3 border-r-2 border-b-2 border-[#2dd4bf]/70" />
+              <div className="pointer-events-none absolute inset-1 border border-blog-accent/10" />
+              <span className="pointer-events-none absolute top-0 left-0 h-3 w-3 border-t-2 border-l-2 border-blog-accent/70" />
+              <span className="pointer-events-none absolute top-0 right-0 h-3 w-3 border-t-2 border-r-2 border-blog-accent/70" />
+              <span className="pointer-events-none absolute bottom-0 left-0 h-3 w-3 border-b-2 border-l-2 border-blog-accent/70" />
+              <span className="pointer-events-none absolute right-0 bottom-0 h-3 w-3 border-r-2 border-b-2 border-blog-accent/70" />
               <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(45,212,191,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(45,212,191,0.02)_1px,transparent_1px)] bg-size-[20px_20px]" />
             </>
           )}
@@ -72,7 +72,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
             className={cn(
               'pointer-events-none absolute inset-x-4 top-0 h-px bg-linear-to-r from-transparent to-transparent md:inset-x-6',
               isCareers && 'via-[#6fa28c]/50',
-              isBlog && 'via-[#2dd4bf]/50 shadow-[0_0_8px_rgba(45,212,191,0.4)]',
+              isBlog && 'via-blog-accent/50 shadow-[0_0_8px_rgba(45,212,191,0.4)]',
               !isThemed && 'via-teal-300/30',
             )}
           />
@@ -80,7 +80,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
             className={cn(
               'pointer-events-none absolute inset-x-4 bottom-0 h-px bg-linear-to-r from-transparent to-transparent md:inset-x-6',
               isCareers && 'via-[#6fa28c]/30',
-              isBlog && 'via-[#e2e8f0]/20',
+              isBlog && 'via-blog-text/20',
               !isThemed && 'via-teal-400/20',
             )}
           />
@@ -97,7 +97,9 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                   <div
                     className={cn(
                       'flex h-6 w-9 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 md:w-11',
-                      isThemed ? 'text-[#2dd4bf]' : 'text-teal-400',
+                      isCareers && 'text-[#6fa28c]',
+                      isBlog && 'text-blog-accent',
+                      !isThemed && 'text-teal-400',
                     )}
                   >
                     <PipelineLogo
@@ -113,7 +115,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                     className={cn(
                       'truncate bg-clip-text text-sm font-medium tracking-widest whitespace-nowrap text-transparent uppercase transition-colors duration-300 sm:text-base md:text-lg md:tracking-[0.15em]',
                       isCareers && 'bg-linear-to-r from-[#d4cfc0] via-[#d4cfc0] to-[#6fa28c]',
-                      isBlog && 'bg-linear-to-r from-white via-[#e2e8f0] to-[#2dd4bf]',
+                      isBlog && 'bg-linear-to-r from-white via-blog-text to-blog-accent',
                       !isThemed && 'bg-linear-to-r from-white via-neutral-100 to-[#39b39b]',
                     )}
                   >
@@ -124,7 +126,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                   className={cn(
                     'mt-4 max-w-xs text-sm leading-relaxed md:mt-5',
                     isCareers && 'text-[#8a9488]',
-                    isBlog && 'text-[#64748b]',
+                    isBlog && 'text-blog-dim',
                     !isThemed && 'text-neutral-400',
                   )}
                 >
@@ -143,7 +145,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                   className={cn(
                     'relative mb-5 text-[11px] font-bold tracking-[0.15em] uppercase md:mb-6 md:text-xs',
                     isCareers && 'text-[#d4cfc0]',
-                    isBlog && 'text-[#e2e8f0]',
+                    isBlog && 'text-blog-text',
                     !isThemed && 'text-neutral-200',
                   )}
                 >
@@ -152,7 +154,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                     className={cn(
                       'absolute -bottom-2 left-0 h-px w-6',
                       isCareers && 'bg-[#6fa28c]/50 shadow-[0_0_6px_rgba(111,162,140,0.5)]',
-                      isBlog && 'bg-[#2dd4bf]/50 shadow-[0_0_6px_rgba(45,212,191,0.5)]',
+                      isBlog && 'bg-blog-accent/50 shadow-[0_0_6px_rgba(45,212,191,0.5)]',
                       !isThemed && 'bg-teal-400/50 shadow-[0_0_6px_rgba(57,179,155,0.5)]',
                     )}
                   />
@@ -167,7 +169,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                           isCareers &&
                           'text-[#8a9488] after:bg-[#6fa28c] after:shadow-[0_0_6px_rgba(111,162,140,0.8)] hover:text-[#d4cfc0]',
                           isBlog &&
-                          'text-[#64748b] after:bg-[#2dd4bf] after:shadow-[0_0_6px_rgba(45,212,191,0.8)] hover:text-[#2dd4bf]',
+                          'text-blog-dim after:bg-blog-accent after:shadow-[0_0_6px_rgba(45,212,191,0.8)] hover:text-blog-accent',
                           !isThemed &&
                           'text-neutral-400 after:bg-teal-400/80 after:shadow-[0_0_6px_rgba(57,179,155,0.8)] hover:text-white',
                         )}
@@ -188,7 +190,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
                 className={cn(
                   'h-px flex-1 bg-linear-to-r',
                   isCareers && 'from-[#6fa28c]/40 via-[#4a5c52]/30 to-transparent',
-                  isBlog && 'from-[#2dd4bf]/40 via-[#1E293B] to-transparent',
+                  isBlog && 'from-blog-accent/40 via-blog-border to-transparent',
                   !isThemed && 'from-teal-400/40 via-white/10 to-transparent',
                 )}
               />
@@ -199,7 +201,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
               className={cn(
                 'w-full text-center leading-relaxed sm:text-left',
                 isCareers && 'text-[#4a5c52]',
-                isBlog && 'text-[#64748b]',
+                isBlog && 'text-blog-dim',
                 !isThemed && 'text-neutral-500',
               )}
             >
@@ -211,7 +213,7 @@ export const Footer = async ({ theme = 'default' }: TFooterProps) => {
               theme={isBlog ? 'blog' : theme}
               className={cn(
                 isCareers && 'border-[#4a5c52]/50 bg-[#0a0e0d] text-[#8a9488] shadow-none',
-                isBlog && 'border-[#1E293B] bg-[#050B14]/80 text-[#94a3b8] shadow-none',
+                isBlog && 'border-blog-border bg-blog-surface/80 text-blog-muted shadow-none',
               )}
             />
           </div>

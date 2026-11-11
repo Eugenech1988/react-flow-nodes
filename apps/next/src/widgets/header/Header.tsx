@@ -28,7 +28,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
   const navBtnClasses = cn({
     'rounded-sm hover:after:bg-[#6fa28c] hover:after:shadow-[0_0_8px_rgba(111,162,140,0.8)] hover:text-[#e8dcc8]':
     isCareers,
-    'rounded-sm hover:after:bg-[#2dd4bf] hover:after:shadow-[0_0_8px_rgba(45,212,191,0.8)] hover:text-[#5eead4]':
+    'rounded-sm hover:after:bg-blog-accent hover:after:shadow-[0_0_8px_rgba(45,212,191,0.8)] hover:text-blog-accent-hover':
     isBlog,
   });
 
@@ -42,19 +42,19 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
           isCareers &&
           'rounded-sm border-[#4a5c52]/50 bg-[#0a0e0d]/80 after:rounded-sm after:from-[#4a5c52]/20',
           isBlog &&
-          'rounded-sm border border-[#1E293B] bg-[#050B14]/80 shadow-[0_8px_32px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(45,212,191,0.1)] backdrop-blur-xl',
+          'rounded-sm border border-blog-border bg-blog-surface/80 shadow-[0_8px_32px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(45,212,191,0.1)] backdrop-blur-xl',
         )}
       >
         {isBlog && (
           <>
             <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(45,212,191,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(45,212,191,0.03)_1px,transparent_1px)] bg-size-[16px_16px]" />
 
-            <div className="pointer-events-none absolute inset-1 border border-[#2dd4bf]/10" />
+            <div className="pointer-events-none absolute inset-1 border border-blog-accent/10" />
 
-            <span className="pointer-events-none absolute top-0 left-0 h-3 w-3 border-t-2 border-l-2 border-[#2dd4bf]/70" />
-            <span className="pointer-events-none absolute top-0 right-0 h-3 w-3 border-t-2 border-r-2 border-[#2dd4bf]/70" />
-            <span className="pointer-events-none absolute bottom-0 left-0 h-3 w-3 border-b-2 border-l-2 border-[#2dd4bf]/70" />
-            <span className="pointer-events-none absolute right-0 bottom-0 h-3 w-3 border-r-2 border-b-2 border-[#2dd4bf]/70" />
+            <span className="pointer-events-none absolute top-0 left-0 h-3 w-3 border-t-2 border-l-2 border-blog-accent/70" />
+            <span className="pointer-events-none absolute top-0 right-0 h-3 w-3 border-t-2 border-r-2 border-blog-accent/70" />
+            <span className="pointer-events-none absolute bottom-0 left-0 h-3 w-3 border-b-2 border-l-2 border-blog-accent/70" />
+            <span className="pointer-events-none absolute right-0 bottom-0 h-3 w-3 border-r-2 border-b-2 border-blog-accent/70" />
 
             <span className="pointer-events-none absolute top-1/2 left-1/2 h-10 w-[120%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,rgba(45,212,191,0.08),transparent_70%)] blur-md" />
           </>
@@ -64,14 +64,14 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
           className={cn(
             'pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-teal-300/30 to-transparent md:inset-x-5',
             isCareers && 'via-[#6fa28c]/50',
-            isBlog && 'via-[#2dd4bf]/50 shadow-[0_0_8px_rgba(45,212,191,0.4)]',
+            isBlog && 'via-blog-accent/50 shadow-[0_0_8px_rgba(45,212,191,0.4)]',
           )}
         />
         <span
           className={cn(
             'pointer-events-none absolute inset-x-3 bottom-0 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent md:inset-x-5',
             isCareers && 'via-[#6fa28c]/30',
-            isBlog && 'via-[#2dd4bf]/20',
+            isBlog && 'via-blog-accent/20',
           )}
         />
 
@@ -84,14 +84,14 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
               className={cn(
                 'relative flex h-6 w-9 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 md:w-11',
                 isCareers && 'text-[#6fa28c]',
-                isBlog && 'text-[#2dd4bf]',
+                isBlog && 'text-blog-accent',
                 !isThemed && 'text-teal-400',
               )}
             >
               {isBlog && (
                 <>
-                  <span className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 animate-[spin_12s_linear_infinite] rounded-full border border-dashed border-[#2dd4bf]/40" />
-                  <span className="absolute top-1/2 left-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#2dd4bf]/10" />
+                  <span className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 animate-[spin_12s_linear_infinite] rounded-full border border-dashed border-blog-accent/40 motion-reduce:animate-none" />
+                  <span className="absolute top-1/2 left-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blog-accent/10" />
                 </>
               )}
               <PipelineLogo
@@ -107,7 +107,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
               className={cn(
                 'truncate bg-clip-text text-sm font-medium tracking-widest whitespace-nowrap text-transparent uppercase transition-colors duration-300 sm:text-base xl:text-lg xl:tracking-[0.15em]',
                 isCareers && 'bg-linear-to-r from-white via-neutral-100 to-[#9cc4b0]',
-                isBlog && 'bg-linear-to-r from-white via-[#e2e8f0] to-[#2dd4bf]',
+                isBlog && 'bg-linear-to-r from-white via-blog-text to-blog-accent',
                 !isThemed && 'bg-linear-to-r from-white via-neutral-100 to-[#39b39b]',
               )}
             >
@@ -120,7 +120,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
               className={cn(
                 'pointer-events-none absolute -top-1 right-2 left-2 h-px bg-linear-to-r from-transparent via-teal-400/30 to-transparent',
                 isCareers && 'via-[#6fa28c]/40',
-                isBlog && 'via-[#2dd4bf]/40',
+                isBlog && 'via-blog-accent/40',
               )}
             />
             {NAV_LINKS.map((link) => (
@@ -138,7 +138,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
               className={cn(
                 'pointer-events-none absolute right-2 -bottom-1 left-2 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent',
                 isCareers && 'via-[#6fa28c]/30',
-                isBlog && 'via-[#2dd4bf]/20',
+                isBlog && 'via-blog-accent/20',
               )}
             />
           </nav>
@@ -150,13 +150,13 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
               className={cn(
                 'relative h-6 w-px bg-white/10',
                 isCareers && 'bg-[#4a5c52]/50',
-                isBlog && 'bg-[#1E293B]',
+                isBlog && 'bg-blog-border',
               )}
             >
               {isBlog && (
                 <>
-                  <span className="absolute top-0 left-0 h-1.5 w-px bg-[#2dd4bf]/80" />
-                  <span className="absolute bottom-0 left-0 h-1.5 w-px bg-[#2dd4bf]/80" />
+                  <span className="absolute top-0 left-0 h-1.5 w-px bg-blog-accent/80" />
+                  <span className="absolute bottom-0 left-0 h-1.5 w-px bg-blog-accent/80" />
                 </>
               )}
             </div>
@@ -192,7 +192,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
               {
                 'rounded-sm border-[#4a5c52] bg-[#0a0e0d] text-[#9cc4b0] hover:border-[#6fa28c] hover:bg-[#141a16] hover:text-[#e8dcc8]':
                 isCareers,
-                'rounded-sm border-[#1E293B] bg-[#050B14] text-[#2dd4bf] hover:border-[#2dd4bf]/60 hover:bg-[#0B1424]':
+                'rounded-sm border-blog-border bg-blog-surface text-blog-accent hover:border-blog-accent/60 hover:bg-blog-panel':
                 isBlog,
               },
             )}
@@ -208,7 +208,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
               : 'pointer-events-none invisible mt-0 grid-rows-[0fr] opacity-0',
             {
               'rounded-sm border-[#4a5c52]/40 bg-[#0a0e0d]/95': isCareers,
-              'rounded-sm border-[#1E293B] bg-[#050B14]/95': isBlog,
+              'rounded-sm border-blog-border bg-blog-surface/95': isBlog,
             },
           )}
         >
@@ -218,7 +218,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
                 className={cn(
                   'pointer-events-none absolute inset-2 rounded-xl border border-dashed border-teal-400/15 sm:inset-2.5',
                   isThemed && 'rounded-sm border-[#6fa28c]/20',
-                  isBlog && 'border-[#2dd4bf]/30',
+                  isBlog && 'border-blog-accent/30',
                 )}
               />
 
@@ -234,7 +234,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
                     {
                       'rounded-sm hover:bg-[#141a16] hover:text-[#e8dcc8] hover:after:bg-[#6fa28c] hover:after:shadow-[0_0_8px_rgba(111,162,140,0.8)]':
                       isCareers,
-                      'rounded-sm hover:bg-[#0B1424] hover:text-[#5eead4] hover:after:bg-[#2dd4bf] hover:after:shadow-[0_0_8px_rgba(45,212,191,0.8)]':
+                      'rounded-sm hover:bg-blog-panel hover:text-blog-accent-hover hover:after:bg-blog-accent hover:after:shadow-[0_0_8px_rgba(45,212,191,0.8)]':
                       isBlog,
                     },
                   )}
@@ -248,21 +248,21 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
                   className={cn(
                     'h-1 w-1 rounded-full bg-teal-400/60 shadow-[0_0_4px_rgba(57,179,155,0.6)]',
                     isCareers && 'bg-[#6fa28c]/60 shadow-[0_0_4px_rgba(111,162,140,0.6)]',
-                    isBlog && 'bg-[#2dd4bf]/60 shadow-[0_0_4px_rgba(45,212,191,0.6)]',
+                    isBlog && 'bg-blog-accent/60 shadow-[0_0_4px_rgba(45,212,191,0.6)]',
                   )}
                 />
                 <span
                   className={cn(
                     'h-px flex-1 bg-linear-to-r from-teal-400/40 via-white/10 to-transparent',
                     isCareers && 'from-[#6fa28c]/40 via-[#4a5c52]/30',
-                    isBlog && 'from-[#2dd4bf]/40 via-[#1E293B]',
+                    isBlog && 'from-blog-accent/40 via-blog-border',
                   )}
                 />
                 <span
                   className={cn(
                     'h-1 w-1 rounded-full bg-teal-400/60 shadow-[0_0_4px_rgba(57,179,155,0.6)]',
                     isCareers && 'bg-[#6fa28c]/60 shadow-[0_0_4px_rgba(111,162,140,0.6)]',
-                    isBlog && 'bg-[#2dd4bf]/60 shadow-[0_0_4px_rgba(45,212,191,0.6)]',
+                    isBlog && 'bg-blog-accent/60 shadow-[0_0_4px_rgba(45,212,191,0.6)]',
                   )}
                 />
               </div>
@@ -280,7 +280,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
                     {
                       'rounded-sm hover:bg-[#141a16] hover:text-[#e8dcc8] hover:after:bg-[#6fa28c]':
                       isCareers,
-                      'rounded-sm hover:bg-[#0B1424] hover:text-[#5eead4] hover:after:bg-[#2dd4bf]':
+                      'rounded-sm hover:bg-blog-panel hover:text-blog-accent-hover hover:after:bg-blog-accent':
                       isBlog,
                     },
                   )}

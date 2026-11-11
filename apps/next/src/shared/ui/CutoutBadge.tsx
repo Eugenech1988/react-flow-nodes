@@ -9,16 +9,16 @@ export interface ICutoutBadgeProps {
 export const CutoutBadge = ({ children, className, theme = 'default' }: ICutoutBadgeProps) => {
   const borderColor =
     theme === 'careers'
-      ? 'bg-[#6fa28c]/40'
+      ? 'bg-careers-accent/40'
       : theme === 'blog'
-        ? 'bg-[#2dd4bf]/40'
+        ? 'bg-blog-accent/40'
         : 'bg-[#2dd4bf]/30';
 
   const innerBg =
     theme === 'careers'
-      ? 'bg-[#0a0e0d] text-[#6fa28c]'
+      ? 'bg-careers-surface text-careers-accent'
       : theme === 'blog'
-        ? 'bg-[#050B14] text-[#5eead4]'
+        ? 'bg-blog-surface text-blog-accent-hover'
         : 'bg-[#0a1615] text-[#2dd4bf]';
 
   return (

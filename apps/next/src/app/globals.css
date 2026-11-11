@@ -27,6 +27,27 @@ html:has([data-home-page]) {
     --font-typewriter: var(--font-typewriter);
 }
 
+@theme {
+    /* Blog Theme */
+    --color-blog-bg: #02060C;
+    --color-blog-surface: #050B14;
+    --color-blog-panel: #0B1424;
+    --color-blog-border: #1E293B;
+    --color-blog-accent: #2dd4bf;
+    --color-blog-accent-hover: #5eead4;
+    --color-blog-text: #e2e8f0;
+    --color-blog-muted: #94a3b8;
+    --color-blog-dim: #64748b;
+
+    /* Careers Theme */
+    --color-careers-surface: #0a0e0d;
+    --color-careers-panel: #0f1512;
+    --color-careers-border: #2f3d36;
+    --color-careers-accent: #6fa28c;
+    --color-careers-text: #d4cfc0;
+    --color-careers-muted: #8a9488;
+}
+
 @media (prefers-color-scheme: dark) {
     :root {
         --background: #0a0a0a;
