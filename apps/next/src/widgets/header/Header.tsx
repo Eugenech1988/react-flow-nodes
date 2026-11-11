@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import PipelineLogo from '@/assets/logo.svg';
 import { cn } from '@/shared/lib';
@@ -9,6 +9,7 @@ import { useT } from '@/shared/lib/i18n/client';
 import { Menu, X } from 'lucide-react';
 import { NAV_LINKS } from './model';
 import { LanguageSwitcher } from '@/features';
+import { APP_LOGIN_URL } from '@/shared/lib/app-url';
 
 interface THeaderProps {
   theme?: 'default' | 'careers' | 'blog';
@@ -16,7 +17,7 @@ interface THeaderProps {
 
 export const Header = ({ theme = 'default' }: THeaderProps) => {
   const { t, i18n } = useT('common');
-  const lng = i18n.language;
+  const lng = i18n.language || 'en';
   const [isOpen, setIsOpen] = useState(false);
 
   const isBlog = theme === 'blog';
@@ -35,12 +36,10 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
           <>
             <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(var(--theme-accent)_1px,transparent_1px),linear-gradient(90deg,var(--theme-accent)_1px,transparent_1px)] bg-size-[16px_16px] opacity-[0.03]" />
             <div className="pointer-events-none absolute inset-1 rounded-sm border border-theme-accent/10" />
-
             <span className="pointer-events-none absolute top-0 left-0 h-3 w-3 border-t-2 border-l-2 border-theme-accent/70" />
             <span className="pointer-events-none absolute top-0 right-0 h-3 w-3 border-t-2 border-r-2 border-theme-accent/70" />
             <span className="pointer-events-none absolute bottom-0 left-0 h-3 w-3 border-b-2 border-l-2 border-theme-accent/70" />
             <span className="pointer-events-none absolute right-0 bottom-0 h-3 w-3 border-r-2 border-b-2 border-theme-accent/70" />
-
             <span className="pointer-events-none absolute top-1/2 left-1/2 h-10 w-[120%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,var(--theme-accent)_0%,transparent_70%)] opacity-[0.08] blur-md" />
           </>
         )}
@@ -72,7 +71,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
               <AppButton
                 key={link.id}
                 isLink
-                linkTo={`/${lng}${link.href}`}
+                linkTo={`/${lng}/${link.href}`}
                 variant="nav"
                 className={cn(
                   'text-theme-muted hover:bg-theme-panel hover:text-theme-fg hover:after:bg-theme-accent hover:after:shadow-[0_0_8px_var(--theme-accent)]',
@@ -85,24 +84,13 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
           </nav>
 
           <div className="hidden items-center gap-4 xl:flex">
-            <Suspense
-              fallback={
-                <div
-                  className={cn('h-9.5 w-22.5 animate-pulse bg-theme-panel', {
-                    'rounded-sm': isTechnical,
-                    'rounded-xl': !isTechnical,
-                  })}
-                />
-              }
-            >
-              <LanguageSwitcher theme={theme} />
-            </Suspense>
+            <LanguageSwitcher locale={lng} theme={theme} />
 
             <div className="h-6 w-px bg-theme-line" />
 
             <AppButton
               isLink
-              linkTo="http://localhost:5173/login"
+              linkTo={APP_LOGIN_URL}
               variant="nav"
               className={cn(
                 'text-sm font-medium text-theme-muted hover:text-theme-fg',
@@ -120,7 +108,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
                 'rounded-xl': !isTechnical,
               })}
               newTab={false}
-              linkTo="http://localhost:5173/login"
+              linkTo={APP_LOGIN_URL}
               size="sm"
             >
               {t('header.getStarted')}
@@ -175,22 +163,11 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
               </div>
 
               <div className="flex flex-col gap-3 pt-1 pb-1">
-                <Suspense
-                  fallback={
-                    <div
-                      className={cn('h-9.5 w-full animate-pulse bg-theme-panel', {
-                        'rounded-sm': isTechnical,
-                        'rounded-xl': !isTechnical,
-                      })}
-                    />
-                  }
-                >
-                  <LanguageSwitcher theme={theme} isMobile />
-                </Suspense>
+                <LanguageSwitcher locale={lng} theme={theme} isMobile />
 
                 <AppButton
                   isLink
-                  linkTo="http://localhost:5173/login"
+                  linkTo={APP_LOGIN_URL}
                   onClick={() => setIsOpen(false)}
                   variant="nav"
                   className={cn(
@@ -203,7 +180,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
 
                 <AppButton
                   isLink
-                  linkTo="http://localhost:5173/login"
+                  linkTo={APP_LOGIN_URL}
                   onClick={() => setIsOpen(false)}
                   size="sm"
                   variant="primary"

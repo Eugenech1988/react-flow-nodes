@@ -4,16 +4,14 @@ import { CareersBackground } from './careers/_components';
 
 interface ICareersLayoutProps {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
 }
 
-const CareersLayout = async ({ children, params }: ICareersLayoutProps) => {
-  const { locale } = await params;
+const CareersLayout = async ({ children }: ICareersLayoutProps) => {
 
   return (
     <div data-theme="careers" className="contents">
       <CareersBackground/>
-      <Header theme="careers" locale={locale} />
+      <Header theme="careers" />
       <main className="flex-1">{children}</main>
       <Footer theme="careers" />
     </div>

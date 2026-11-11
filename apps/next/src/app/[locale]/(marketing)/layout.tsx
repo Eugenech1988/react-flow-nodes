@@ -3,12 +3,9 @@ import { Footer } from '@/widgets/footer';
 
 interface IMarketingLayoutProps {
   children: React.ReactNode;
-  // params: Promise<{ locale: string }>;
 }
 
-const MarketingLayout = async ({ children, params }: IMarketingLayoutProps) => {
-  // const { locale } = await params;
-
+const MarketingLayout = async ({ children }: IMarketingLayoutProps) => {
   return (
     <>
       <Header />
