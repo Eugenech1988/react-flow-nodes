@@ -3,7 +3,7 @@ import { createDatabaseNodeInputSchema } from '@pipeline/contracts';
 import { router, protectedProcedure } from '@/trpc/init';
 import type { DatabaseNodesService } from './database-nodes.service';
 
-export function createDatabaseNodesRouter(databaseNodesService: DatabaseNodesService) {
+export const createDatabaseNodesRouter = (databaseNodesService: DatabaseNodesService) => {
   return router({
     createRecord: protectedProcedure
       .input(createDatabaseNodeInputSchema)
@@ -19,4 +19,4 @@ export function createDatabaseNodesRouter(databaseNodesService: DatabaseNodesSer
       .input(z.object({ pipelineId: z.string() }))
       .query(({ input }) => databaseNodesService.findByPipelineId(input.pipelineId)),
   });
-}
+};

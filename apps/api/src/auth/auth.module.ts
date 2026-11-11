@@ -37,7 +37,6 @@ import { RolesGuard } from '@/common/guards/roles.guard';
     JwtAccessStrategy,
     GoogleStrategy,
     GithubStrategy,
-    MailService,
     RolesGuard,
   ],
   exports: [RolesGuard],

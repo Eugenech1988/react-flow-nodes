@@ -12,6 +12,7 @@ import { extname } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { ApplicationsService } from './applications.service';
 import { jobApplicationInputSchema } from '@pipeline/contracts';
+import { createApplicationsStorage } from './multer.config';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -24,27 +25,7 @@ export class ApplicationsController {
         { name: 'resume', maxCount: 1 },
         { name: 'coverLetterFile', maxCount: 1 },
       ],
-      {
-        storage: diskStorage({
-          destination: (req, file, cb) => {
-            const jobId = req.body.jobId || 'unknown';
-            const type = file.fieldname === 'resume' ? 'cvs' : 'covers';
-            const path = `./uploads/applications/${jobId}/${type}`;
-
-            try {
-              mkdirSync(path, { recursive: true });
-              cb(null, path);
-            } catch (error) {
-              cb(error as Error, path);
-            }
-          },
-          filename: (req, file, cb) => {
-            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-            const ext = extname(file.originalname);
-            cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
-          },
-        }),
-      },
+      { storage: createApplicationsStorage() },
     ),
   )
   async create(

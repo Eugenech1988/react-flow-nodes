@@ -8,7 +8,7 @@ export type TDescriptionSafe = PrismaSubscription;
 
 export type TProfileSafe = PrismaProfile;
 
-export type TUserSafe = Omit<PrismaUser, 'password'> & {
+export type TUserSafe = Omit<PrismaUser, 'password' | 'twoFactorSecret' | 'recoveryCodes'> & {
   profile: TProfileSafe | null;
 };
 

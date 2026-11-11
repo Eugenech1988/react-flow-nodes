@@ -96,7 +96,7 @@ Create a .env file in the apps/api directory based on the .env.example provided.
 | **Database**                 |                                                                                                         |
 | `DATABASE_URL`               | PostgreSQL connection string                                                                            |
 | **App & Client URLs**        |                                                                                                         |
-| `FRONTEND_URL`               | Frontend URL for Stripe redirects (e.g., `http://localhost:5173`)                                       |
+| `CLIENT_URL`                 | Frontend URL for Stripe redirects (e.g., `http://localhost:5173`)                                       |
 | `API_URL`                    | Base URL of the API (used to generate absolute links for uploaded files, e.g., `http://localhost:3000`) |
 | `ADMIN_EMAIL`                | Email address where inquiries and job applications are sent                                             |
 | `CSRF_SECRET`                | Secret key for CSRF protection (used in `main.ts`)                                                      |

@@ -19,10 +19,28 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request = require('supertest');
 import cookieParser = require('cookie-parser');
+import * as fs from 'node:fs';
+import { createExpressMiddleware } from '@trpc/server/adapters/express';
+import { JwtService } from '@nestjs/jwt';
+
 import { AppModule } from '@/app.module';
 import { PrismaService } from '@/prisma/prisma.service';
 
-describe('Auth & Users (e2e)', () => {
+import { UsersService } from '@/users/users.service';
+import { AuthService } from '@/auth/auth.service';
+import { AiService } from '@/ai/ai.service';
+import { BillingService } from '@/billing/billing.service';
+import { PipelinesService } from '@/pipelines/pipelines.service';
+import { ProfileService } from '@/profile/profile.service';
+import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
+import { ExecutionsService } from '@/executions/executions.service';
+import { JobsService } from '@/jobs/jobs.service';
+import { MailService } from '@/mail/mail.service';
+import { ApplicationsService } from '@/applications/applications.service';
+import { createAppRouter } from '@/trpc/app-router';
+import { createContext } from '@/trpc/context';
+
+describe('App (e2e)', () => {
   let app: INestApplication;
   let prismaService: PrismaService;
 
@@ -35,16 +53,54 @@ describe('Auth & Users (e2e)', () => {
 
   let accessTokenCookie: string;
   let refreshTokenCookie: string;
+  let testPipelineId: string;
+  let testJobId: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(MailService)
+      .useValue({
+        sendRecoveryEmail: jest.fn().mockResolvedValue(undefined),
+        sendInquiryEmail: jest.fn().mockResolvedValue(undefined),
+        sendApplicationEmail: jest.fn().mockResolvedValue(undefined),
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
-
     app.use(cookieParser());
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+    const usersService = app.get(UsersService);
+    const authService = app.get(AuthService);
+    const jwtService = app.get(JwtService);
+
+    const trpcRouter = createAppRouter({
+      authService,
+      aiService: app.get(AiService),
+      billingService: app.get(BillingService),
+      pipelinesService: app.get(PipelinesService),
+      profileService: app.get(ProfileService),
+      usersService,
+      databaseNodesService: app.get(DatabaseNodesService),
+      executionsService: app.get(ExecutionsService),
+      jobsService: app.get(JobsService),
+      mailService: app.get(MailService),
+      applicationsService: app.get(ApplicationsService),
+    });
+
+    app
+      .getHttpAdapter()
+      .getInstance()
+      .use(
+        '/trpc',
+        createExpressMiddleware({
+          router: trpcRouter,
+          createContext: ({ req, res }) =>
+            createContext({ req, res }, { jwtService, usersService, authService }),
+        }),
+      );
 
     await app.init();
 
@@ -56,9 +112,22 @@ describe('Auth & Users (e2e)', () => {
   });
 
   afterAll(async () => {
+    await prismaService.jobApplication.deleteMany({
+      where: { jobId: testJobId },
+    });
+    await prismaService.job.deleteMany({
+      where: { id: testJobId },
+    });
+    await prismaService.pipeline.deleteMany({
+      where: { id: testPipelineId },
+    });
     await prismaService.user.deleteMany({
       where: { email: testUser.email },
     });
+
+    if (fs.existsSync('./uploads/applications')) {
+      fs.rmSync('./uploads/applications', { recursive: true, force: true });
+    }
 
     await app.close();
   });
@@ -144,6 +213,99 @@ describe('Auth & Users (e2e)', () => {
       expect(newCookies).toBeDefined();
 
       accessTokenCookie = newCookies?.find((c) => c.startsWith('accessToken='))!;
+    });
+  });
+
+  describe('tRPC API', () => {
+    beforeAll(async () => {
+      const user = await prismaService.user.findUnique({
+        where: { email: testUser.email },
+      });
+
+      const pipeline = await prismaService.pipeline.create({
+        data: {
+          name: 'E2E Test Pipeline',
+          status: 'DRAFT',
+          userId: user!.id,
+        },
+      });
+      testPipelineId = pipeline.id;
+    });
+
+    it('should reject tRPC protected route without auth (UNAUTHORIZED)', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/trpc/users.updatePassword?batch=1')
+        .send({ 0: { newPassword: 'test123' } })
+        .expect(401);
+
+      expect(res.body[0].error).toBeDefined();
+
+      const errorCode = res.body[0].error.json?.data?.code ?? res.body[0].error.data?.code;
+
+      expect(errorCode).toBe('UNAUTHORIZED');
+    });
+
+    it('should allow access to tRPC protected route with valid cookie', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/trpc/users.setCurrentPipeline?batch=1')
+        .set('Cookie', [accessTokenCookie])
+        .send({ 0: { id: testPipelineId } })
+        .expect(200);
+
+      expect(res.body[0].result).toBeDefined();
+      expect(res.body[0].result.data).toHaveProperty('id');
+      expect(res.body[0].result.data.currentPipelineId).toBe(testPipelineId);
+    });
+  });
+
+  describe('POST /applications (File Upload)', () => {
+    beforeAll(async () => {
+      const job = await prismaService.job.create({
+        data: {
+          slug: 'test-e2e-job',
+          status: 'PUBLISHED',
+          department: 'ENGINEERING',
+          level: 'MID',
+          type: 'FULL_TIME',
+          location: 'Remote',
+          views: 0,
+          applications: 0,
+        },
+      });
+      testJobId = job.id;
+    });
+
+    it('should upload a resume and create an application', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/applications')
+        .field('jobId', testJobId)
+        .field('name', 'Test Applicant')
+        .field('email', 'applicant@example.com')
+        .field('company', 'Acme Corp')
+        .field('position', 'Engineer')
+        .field('message', 'I am a great fit.')
+        .attach('resume', Buffer.from('fake pdf content'), 'resume.pdf')
+        .expect(201);
+
+      expect(res.body).toHaveProperty('id');
+      expect(res.body.resumeUrl).toContain(`/uploads/applications/${testJobId}/cvs/`);
+
+      const updatedJob = await prismaService.job.findUnique({
+        where: { id: testJobId },
+      });
+      expect(updatedJob?.applications).toBe(1);
+    });
+
+    it('should reject application without resume (400 Bad Request)', async () => {
+      await request(app.getHttpServer())
+        .post('/applications')
+        .field('jobId', testJobId)
+        .field('name', 'Test Applicant')
+        .field('email', 'applicant@example.com')
+        .field('company', 'Acme Corp')
+        .field('position', 'Engineer')
+        .field('message', 'I am a great fit.')
+        .expect(400);
     });
   });
 

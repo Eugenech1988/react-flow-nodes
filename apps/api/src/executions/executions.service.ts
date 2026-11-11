@@ -46,7 +46,7 @@ export class ExecutionsService {
         status: data.status,
         triggeredBy: data.triggeredBy,
         logs: (data.logs as Prisma.InputJsonValue) ?? Prisma.JsonNull,
-        nodesExecuted: data.nodesExecuted ?? 0,
+        nodesExecuted: data.nodesExecuted,
       },
       include: {
         pipeline: {

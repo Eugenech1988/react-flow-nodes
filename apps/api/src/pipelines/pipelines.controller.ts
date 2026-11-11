@@ -14,9 +14,16 @@ import { PipelinesService } from '@/pipelines/pipelines.service';
 import type { TCreatePipelineInputData, TUpdatePipelineInputData } from '@pipeline/contracts';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname } from 'node:path';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { screenshotFilename } from './pipelines.helpers';
+
+const screenshotUploadOptions = {
+  storage: diskStorage({
+    destination: './uploads/screenshots',
+    filename: screenshotFilename,
+  }),
+};
 
 @Controller('pipelines')
 @UseGuards(JwtAuthGuard)
@@ -24,18 +31,7 @@ export class PipelinesController {
   constructor(private readonly pipelinesService: PipelinesService) {}
 
   @Post()
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads/screenshots',
-        filename: (req, file, callback) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          callback(null, `${uniqueSuffix}${ext}`);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file', screenshotUploadOptions))
   async create(
     @CurrentUser('id') userId: string,
     @Body() dto: TCreatePipelineInputData,
@@ -50,18 +46,7 @@ export class PipelinesController {
   }
 
   @Patch(':id')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads/screenshots',
-        filename: (req, file, callback) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = extname(file.originalname);
-          callback(null, `${uniqueSuffix}${ext}`);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file', screenshotUploadOptions))
   async update(
     @Param('id') id: string,
     @CurrentUser('id') userId: string,

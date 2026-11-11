@@ -3,8 +3,8 @@ import { router, protectedProcedure } from '@/trpc/init';
 import { toSafeUser } from './users.helpers';
 import type { UsersService } from './users.service';
 
-export function createUsersRouter(usersService: UsersService) {
-  return router({
+export const createUsersRouter = (usersService: UsersService) =>
+  router({
     updatePassword: protectedProcedure
       .input(updatePasswordInputSchema)
       .mutation(async ({ ctx, input }) => {
@@ -24,4 +24,3 @@ export function createUsersRouter(usersService: UsersService) {
         return toSafeUser(updatedUser);
       }),
   });
-}

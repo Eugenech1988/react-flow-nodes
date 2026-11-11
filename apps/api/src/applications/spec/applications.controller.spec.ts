@@ -1,7 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
+import type { JobApplication } from '@prisma/client';
 import { ApplicationsController } from '../applications.controller';
 import { ApplicationsService } from '../applications.service';
+
+const createMockApplication = (overrides: Partial<JobApplication> = {}): JobApplication => ({
+  id: 'app_123',
+  jobId: 'job_123',
+  name: 'John Doe',
+  email: 'john@example.com',
+  company: 'Acme Corp',
+  position: 'Engineer',
+  message: 'Hello',
+  resumeUrl: 'http://localhost:3000/uploads/resume.pdf',
+  coverLetterUrl: null,
+  createdAt: new Date(),
+  ...overrides,
+});
 
 describe('ApplicationsController', () => {
   let controller: ApplicationsController;
@@ -53,8 +68,11 @@ describe('ApplicationsController', () => {
   describe('create', () => {
     it('should successfully create an application with resume and cover letter', async () => {
       const expectedUrl = 'http://localhost:3000/uploads/applications/job_123';
-      const mockResult = { id: 'app_123' };
-      service.create.mockResolvedValue(mockResult as any);
+      const mockResult = createMockApplication({
+        resumeUrl: `${expectedUrl}/cvs/resume-123.pdf`,
+        coverLetterUrl: `${expectedUrl}/covers/cover-123.pdf`,
+      });
+      service.create.mockResolvedValue(mockResult);
 
       const result = await controller.create(mockBody, {
         resume: [mockResumeFile],
@@ -71,8 +89,10 @@ describe('ApplicationsController', () => {
 
     it('should successfully create an application with only a resume', async () => {
       const expectedUrl = 'http://localhost:3000/uploads/applications/job_123';
-      const mockResult = { id: 'app_123' };
-      service.create.mockResolvedValue(mockResult as any);
+      const mockResult = createMockApplication({
+        resumeUrl: `${expectedUrl}/cvs/resume-123.pdf`,
+      });
+      service.create.mockResolvedValue(mockResult);
 
       await controller.create(mockBody, {
         resume: [mockResumeFile],

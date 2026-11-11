@@ -130,6 +130,10 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "./coverage",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "\\.module\\.ts$"
+    ],
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",

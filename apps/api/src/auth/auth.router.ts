@@ -13,7 +13,7 @@ import { toSafeUser } from '@/users/users.helpers';
 import { setTokenCookies } from '@/trpc/helpers';
 import type { AuthService } from './auth.service';
 
-export function createAuthRouter(authService: AuthService) {
+export const createAuthRouter = (authService: AuthService) => {
   return router({
     me: publicProcedure.query(({ ctx }) => (ctx.user ? toSafeUser(ctx.user) : null)),
 
@@ -93,4 +93,4 @@ export function createAuthRouter(authService: AuthService) {
       return authService.publicResetPassword(input);
     }),
   });
-}
+};

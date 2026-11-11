@@ -19,11 +19,10 @@ import { DatabaseNodesService } from '@/database-nodes/database-nodes.service';
 import { doubleCsrf } from 'csrf-csrf';
 import { ExecutionsService } from '@/executions/executions.service';
 import { JobsService } from '@/jobs/jobs.service';
-import { BlogService } from '@/blog/blog.service';
 import { MailService } from '@/mail/mail.service';
 import { ApplicationsService } from '@/applications/applications.service';
 
-async function bootstrap() {
+export async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
 
   app.enableCors({
@@ -91,7 +90,6 @@ async function bootstrap() {
     databaseNodesService: app.get(DatabaseNodesService),
     executionsService: app.get(ExecutionsService),
     jobsService: app.get(JobsService),
-    blogService: app.get(BlogService),
     mailService: app.get(MailService),
     applicationsService: app.get(ApplicationsService),
   });
@@ -125,4 +123,8 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+
+/* istanbul ignore next */
+if (process.env.NODE_ENV !== 'test') {
+  bootstrap();
+}

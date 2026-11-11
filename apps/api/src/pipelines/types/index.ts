@@ -41,3 +41,5 @@ export interface IFlowGraphState {
   nodes: TAppNode[];
   edges: TAppEdge[];
 }
+
+export type TUploadCallback = (error: Error | null, filename: string) => void;

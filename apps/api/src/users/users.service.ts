@@ -63,7 +63,7 @@ export class UsersService {
 
     const isLocal = !provider || provider === 'local';
     const hasPassword = isLocal && Boolean(password);
-    const hashedPassword = hasPassword ? await hash(password!) : null;
+    const hashedPassword = hasPassword && password ? await hash(password) : null;
 
     let nickName = createUserDto.nickName;
     if (!nickName) {

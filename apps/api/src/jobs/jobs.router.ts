@@ -7,7 +7,7 @@ import {
 import { router, publicProcedure, contentManagerProcedure } from '@/trpc/init';
 import type { JobsService } from './jobs.service';
 
-export function createJobsRouter(jobsService: JobsService) {
+export const createJobsRouter = (jobsService: JobsService) => {
   return router({
     list: publicProcedure
       .input(
@@ -78,4 +78,4 @@ export function createJobsRouter(jobsService: JobsService) {
         return jobsService.incrementApplications(input.id);
       }),
   });
-}
+};

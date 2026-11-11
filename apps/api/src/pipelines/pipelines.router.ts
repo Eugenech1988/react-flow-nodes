@@ -2,7 +2,7 @@ import { updatePipelineInputSchema, removePipelineInputSchema } from '@pipeline/
 import { router, protectedProcedure } from '@/trpc/init';
 import type { PipelinesService } from './pipelines.service';
 
-export function createPipelinesRouter(pipelinesService: PipelinesService) {
+export const createPipelinesRouter = (pipelinesService: PipelinesService) => {
   return router({
     list: protectedProcedure.query(({ ctx }) => pipelinesService.findAllByUserId(ctx.user.id)),
 
@@ -15,4 +15,4 @@ export function createPipelinesRouter(pipelinesService: PipelinesService) {
       return pipelinesService.update(id, ctx.user.id, dto);
     }),
   });
-}
+};

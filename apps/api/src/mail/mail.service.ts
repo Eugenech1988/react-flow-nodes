@@ -22,30 +22,27 @@ export class MailService {
       to,
       subject: 'Password Recovery',
       template: 'recovery',
-      context: {
-        link,
-      },
+      context: { link },
     });
   }
 
   async sendInquiryEmail(dto: TSendInquiryInputData): Promise<void> {
     const adminEmail = process.env.ADMIN_EMAIL || 'sales@example.com';
-    const inquiryType = dto.type || 'demo';
-    const subjectText = INQUIRY_SUBJECTS[inquiryType];
+    const subjectText = INQUIRY_SUBJECTS[dto.type];
 
     await this.mailerService.sendMail({
       to: adminEmail,
       replyTo: dto.email,
-      subject: `${subjectText} from ${dto.name} (${dto.company || 'N/A'})`,
+      subject: `${subjectText} from ${dto.name} (${dto.company})`,
       template: 'request',
       context: {
         title: subjectText,
         name: dto.name,
         email: dto.email,
-        company: dto.company || 'Not specified',
-        position: dto.position || 'Not specified',
-        message: dto.message || 'No description provided',
-        type: inquiryType,
+        company: dto.company,
+        position: dto.position,
+        message: dto.message,
+        type: dto.type,
       },
     });
   }

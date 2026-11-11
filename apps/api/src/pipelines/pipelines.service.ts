@@ -15,6 +15,15 @@ import type { TCreatePipelineInputData, TUpdatePipelineInputData } from '@pipeli
 export class PipelinesService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private isUniqueConstraintViolation(error: unknown): boolean {
+    return (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      (error as { code?: unknown }).code === 'P2002'
+    );
+  }
+
   private async deleteFile(relativePath: string | null) {
     if (!relativePath) return;
     try {
@@ -38,8 +47,8 @@ export class PipelinesService {
           userId,
         },
       });
-    } catch (error: any) {
-      if (error.code === 'P2002') {
+    } catch (error) {
+      if (this.isUniqueConstraintViolation(error)) {
         throw new BadRequestException('Pipeline with this name already exists');
       }
       console.error('Failed to create pipeline:', error);
@@ -108,12 +117,12 @@ export class PipelinesService {
       }
 
       return updatedPipeline;
-    } catch (error: any) {
+    } catch (error) {
       if (newScreenshotUrl) {
         await this.deleteFile(newScreenshotUrl);
       }
 
-      if (error.code === 'P2002') {
+      if (this.isUniqueConstraintViolation(error)) {
         throw new BadRequestException('Pipeline with this name already exists');
       }
       console.error('Failed to update pipeline:', error);

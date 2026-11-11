@@ -3,16 +3,16 @@ import type { Request, Response } from 'express';
 import { UsersService, type UserWithRelations } from '@/users/users.service';
 import { AuthService } from '@/auth/auth.service';
 
-export interface TrpcServices {
+export interface ITrpcServices {
   jwtService: JwtService;
   usersService: UsersService;
   authService: AuthService;
 }
 
-export async function createContext(
+export const createContext = async (
   { req, res }: { req: Request; res: Response },
-  services: TrpcServices,
-) {
+  services: ITrpcServices,
+) => {
   const accessToken = req.cookies?.accessToken as string | undefined;
 
   let user: UserWithRelations | null = null;
@@ -30,6 +30,6 @@ export async function createContext(
   }
 
   return { req, res, user };
-}
+};
 
 export type TrpcContext = Awaited<ReturnType<typeof createContext>>;

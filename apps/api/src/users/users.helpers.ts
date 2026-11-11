@@ -1,4 +1,4 @@
-export function toSafeUser<T extends Record<string, unknown>>(user: T) {
+export const toSafeUser = <T extends Record<string, unknown>>(user: T) => {
   const {
     password: _password,
     twoFactorSecret: _twoFactorSecret,
@@ -6,4 +6,4 @@ export function toSafeUser<T extends Record<string, unknown>>(user: T) {
     ...safeUser
   } = user;
   return safeUser;
-}
+};

@@ -3,7 +3,7 @@ import { createExecutionInputSchema, updateExecutionInputSchema } from '@pipelin
 import { router, protectedProcedure } from '@/trpc/init';
 import type { ExecutionsService } from './executions.service';
 
-export function createExecutionsRouter(executionsService: ExecutionsService) {
+export const createExecutionsRouter = (executionsService: ExecutionsService) => {
   return router({
     create: protectedProcedure
       .input(createExecutionInputSchema)
@@ -56,4 +56,4 @@ export function createExecutionsRouter(executionsService: ExecutionsService) {
       return executionsService.remove(input.id);
     }),
   });
-}
+};

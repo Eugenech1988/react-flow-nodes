@@ -13,9 +13,8 @@ import { existsSync } from 'node:fs';
       useFactory: (configService: ConfigService) => {
         const port = Number(configService.getOrThrow<number>('MAIL_PORT'));
 
-        const distTemplatesDir = join(__dirname, 'templates');
-        const srcTemplatesDir = join(__dirname, 'templates');
-
+        const distTemplatesDir = join(process.cwd(), 'dist/mail/templates');
+        const srcTemplatesDir = join(process.cwd(), 'src/mail/templates');
         const templatesDir = existsSync(distTemplatesDir) ? distTemplatesDir : srcTemplatesDir;
 
         return {

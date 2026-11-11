@@ -39,9 +39,9 @@ export class AuthService {
     return codes;
   }
 
-  private sanitizeUser(user: Record<string, any>): TUserSafe {
+  private sanitizeUser(user: UserWithRelations): TUserSafe {
     const { password, twoFactorSecret, recoveryCodes, ...safeUser } = user;
-    return safeUser as TUserSafe;
+    return safeUser as unknown as TUserSafe;
   }
 
   async validateUser(email: string, pass: string): Promise<TUserSafe | null> {
@@ -295,13 +295,11 @@ export class AuthService {
     const hashedPassword = await hash(dto.password);
 
     await this.prisma.$transaction(async (tx) => {
-      await this.usersService.update(payload.userId, {
-        password: hashedPassword,
+      await tx.user.update({
+        where: { id: payload.userId },
+        data: { password: hashedPassword },
       });
-
-      await tx.refreshToken.deleteMany({
-        where: { userId: payload.userId },
-      });
+      await tx.refreshToken.deleteMany({ where: { userId: payload.userId } });
     });
   }
 
@@ -453,7 +451,7 @@ export class AuthService {
   async authenticateWith2Fa(tempToken: string, code: string) {
     let payload: { userId: string; purpose: string };
     try {
-      payload = this.jwtService.verify(tempToken, {
+      payload = this.jwtService.verify<{ userId: string; purpose: string }>(tempToken, {
         secret: this.configService.getOrThrow<string>('JWT_ACCESS_SECRET'),
       });
     } catch {

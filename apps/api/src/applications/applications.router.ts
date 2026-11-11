@@ -2,7 +2,7 @@ import { router, contentManagerProcedure } from '@/trpc/init';
 import { applicationIdInputSchema, applicationListFilterInputSchema } from '@pipeline/contracts';
 import type { ApplicationsService } from './applications.service';
 
-export function createApplicationsRouter(applicationsService: ApplicationsService) {
+export const createApplicationsRouter = (applicationsService: ApplicationsService) => {
   return router({
     list: contentManagerProcedure
       .input(applicationListFilterInputSchema)
@@ -16,4 +16,4 @@ export function createApplicationsRouter(applicationsService: ApplicationsServic
       .input(applicationIdInputSchema)
       .mutation(({ input }) => applicationsService.remove(input.id)),
   });
-}
+};

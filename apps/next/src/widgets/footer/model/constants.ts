@@ -1,5 +1,4 @@
-import type { TFooterColumn, } from './types';
-
+import type { TFooterColumn } from './types';
 
 export const getFooterColumns = (lng: string): TFooterColumn[] => [
   {

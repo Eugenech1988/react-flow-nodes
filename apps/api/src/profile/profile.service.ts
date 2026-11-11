@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { TUpdateProfileInputData } from '@pipeline/contracts';
+import { AVATAR_UPLOAD_DIR, ensureAvatarDir } from './profile.helpers';
 
 @Injectable()
 export class ProfileService {
@@ -21,19 +22,16 @@ export class ProfileService {
     let finalAvatarUrl = input.avatarUrl ?? user.profile?.avatarUrl;
 
     if (input.avatarUrl && input.avatarUrl.startsWith('data:image')) {
-      const uploadDir = './uploads/avatars';
-      if (!existsSync(uploadDir)) {
-        mkdirSync(uploadDir, { recursive: true });
-      }
+      ensureAvatarDir();
 
       const match = input.avatarUrl.match(/^data:image\/(\w+);base64,/);
       const ext = match ? `.${match[1]}` : '.jpg';
       const base64Data = input.avatarUrl.replace(/^data:image\/\w+;base64,/, '');
       const buffer = Buffer.from(base64Data, 'base64');
 
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
       const filename = `${uniqueSuffix}${ext}`;
-      const filePath = join(uploadDir, filename);
+      const filePath = join(AVATAR_UPLOAD_DIR, filename);
 
       writeFileSync(filePath, buffer);
       finalAvatarUrl = `/uploads/avatars/${filename}`;

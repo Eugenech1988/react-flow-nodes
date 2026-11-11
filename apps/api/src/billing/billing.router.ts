@@ -2,7 +2,7 @@ import { planSchema } from '@pipeline/contracts';
 import { router, protectedProcedure } from '@/trpc/init';
 import type { BillingService } from './billing.service';
 
-export function createBillingRouter(billingService: BillingService) {
+export const createBillingRouter = (billingService: BillingService) => {
   return router({
     subscription: protectedProcedure.query(({ ctx }) =>
       billingService.getSubscriptionByUserId(ctx.user.id),
@@ -20,4 +20,4 @@ export function createBillingRouter(billingService: BillingService) {
       billingService.cancelSubscription(ctx.user.id),
     ),
   });
-}
+};
