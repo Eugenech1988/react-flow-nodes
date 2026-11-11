@@ -13,5 +13,5 @@ export * from './MonitorFrame';
 export * from './TerminalPanel';
 export * from './TornPaperCard';
 export * from './StickyNoteCard';
-export * from './ChamberedCard';
+export * from './ChamferedCard';
 export * from './SocialLinks';

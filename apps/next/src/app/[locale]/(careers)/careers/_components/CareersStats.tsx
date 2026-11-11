@@ -3,7 +3,7 @@
 import { useT } from '@/shared/lib/i18n/client';
 import { CAREERS_STATS } from '../constants';
 import { Odometer } from './CareersOdometer';
-import { ChamberedCard } from '@/shared/ui';
+import { ChamferedCard } from '@/shared/ui';
 
 export function CareersStats() {
   const { t } = useT('careers');
@@ -17,7 +17,7 @@ export function CareersStats() {
 
           return (
             <div key={stat.id}>
-              <ChamberedCard>
+              <ChamferedCard>
                 <div className="flex h-14 w-full items-center justify-center rounded-md border border-theme-line bg-theme-surface/50 shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
                   <div className="absolute top-1/2 left-2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-theme-rivet shadow-[inset_0_1px_2px_color-mix(in_oklab,var(--theme-accent-hover)_30%,transparent),0_1px_1px_rgba(0,0,0,0.8)]" />
                   <div className="absolute top-1/2 right-2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-theme-rivet shadow-[inset_0_1px_2px_color-mix(in_oklab,var(--theme-accent-hover)_30%,transparent),0_1px_1px_rgba(0,0,0,0.8)]" />
@@ -33,7 +33,7 @@ export function CareersStats() {
                     {t(`stats.list.${stat.id}.label`)}
                   </span>
                 </div>
-              </ChamberedCard>
+              </ChamferedCard>
             </div>
           );
         })}

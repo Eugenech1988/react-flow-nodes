@@ -45,7 +45,7 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
       <Reveal>
         <Link
           href={`/${locale}/careers`}
-          className="mb-8 inline-flex items-center gap-2 font-mono text-[10px] tracking-widest text-[#8a9488] uppercase transition-colors hover:text-[#9cc4b0]"
+          className="mb-8 inline-flex items-center gap-2 font-mono text-[10px] tracking-widest text-careers-muted uppercase transition-colors hover:text-[#9cc4b0]"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('details.returnToOpenings')}
@@ -60,9 +60,9 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
               headerIcon={Activity}
               headerTitle={`SYS.DOSSIER // ${job.slug.toUpperCase()}`}
               footer={
-                <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-widest text-[#8a9488] uppercase">
+                <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-widest text-careers-muted uppercase">
                   <span className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6fa28c]" />
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-careers-accent" />
                     FILE DECRYPTED
                   </span>
                   <span>PAGE 01 / 01</span>
