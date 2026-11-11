@@ -23,9 +23,9 @@ export const getFooterColumns = (lng: string): TFooterColumn[] => [
     id: 'company',
     links: [
       { id: 'about', href: `/${lng}/about` },
-      { id: 'blog', href: '/${lng}/blog' },
+      { id: 'blog', href: `/${lng}/blog` },
       { id: 'careers', href: `/${lng}/careers` },
-      { id: 'contact', href: './${lng}/contacts' },
+      { id: 'contact', href: `/${lng}/contacts` },
     ],
   },
   {

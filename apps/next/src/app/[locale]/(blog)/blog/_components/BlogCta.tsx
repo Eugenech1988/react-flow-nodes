@@ -10,7 +10,7 @@ export const BlogCta = () => {
   const { t } = useT('blog');
 
   return (
-    <section className="relative z-10 mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24">
+    <section className="relative z-10 mx-auto max-w-4xl px-4 pb-6">
       <Reveal>
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(45,212,191,0.15),transparent_65%)] blur-2xl" />
 

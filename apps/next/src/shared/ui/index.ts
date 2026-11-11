@@ -10,7 +10,6 @@ export * from './Reveal';
 export * from './TechCard';
 export * from './TechLabel';
 export * from './MonitorFrame';
-export * from './SteampunkBackground';
 export * from './TerminalPanel';
 export * from './TornPaperCard';
 export * from './StickyNoteCard';

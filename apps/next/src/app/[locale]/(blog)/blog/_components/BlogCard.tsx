@@ -21,7 +21,7 @@ export const BlogCard = ({ id, slug, category, date, readTime, locale }: IBlogCa
   return (
     <Link
       href={`/${locale}/blog/${slug}`}
-      className="group relative flex flex-col overflow-hidden rounded-sm border border-[#1E293B] bg-[#050B14] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#2dd4bf]/60 hover:bg-[#0B1424] hover:shadow-[0_8px_24px_rgba(0,0,0,0.5),0_0_20px_rgba(45,212,191,0.15)]"
+      className="group relative flex flex-col overflow-hidden rounded-sm border border-[#1E293B] bg-[#050B14]/95 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#2dd4bf]/60 hover:bg-[#0B1424] hover:shadow-[0_8px_24px_rgba(0,0,0,0.5),0_0_20px_rgba(45,212,191,0.15)]"
     >
       <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-[#2dd4bf]/50 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
@@ -35,8 +35,8 @@ export const BlogCard = ({ id, slug, category, date, readTime, locale }: IBlogCa
             {t(`categories.${category}`)}
           </span>
         </div>
-        <span className="font-mono text-[9px] tracking-widest text-[#64748b]">
-          ●{t('card.online')}
+        <span className="font-mono text-[9px] tracking-widest text-[#94a3b8]">
+          <span className="text-[#2dd4bf]">●</span>{t('card.online')}
         </span>
       </div>
 

@@ -49,7 +49,7 @@ export const BlogPagination = ({
                 'rounded-sm border font-mono text-[10px] font-bold tracking-widest transition-all',
                 isActive
                   ? 'border-[#2dd4bf] bg-[#2dd4bf]/15 text-[#5eead4] shadow-[inset_0_1px_0_rgba(94,234,212,0.2),0_0_12px_rgba(45,212,191,0.2)]'
-                  : 'border-[#1E293B] bg-[#0B1424] text-[#64748b] hover:border-[#2dd4bf]/60 hover:bg-[#050B14] hover:text-[#2dd4bf]',
+                  : 'border-[#1E293B] bg-[#050B14]/80 text-[#94a3b8] hover:border-[#2dd4bf]/60 hover:bg-[#0B1424] hover:text-[#2dd4bf]',
               )}
             >
               {String(page).padStart(2, '0')}

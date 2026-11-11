@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode, ElementType } from 'react';
 import { Activity } from 'lucide-react';
 import { Rivets } from './Rivets';
 import { cn } from '@/shared/lib';
@@ -6,7 +6,7 @@ import { cn } from '@/shared/lib';
 interface ITerminalPanelProps {
   children: ReactNode;
   headerTitle: ReactNode;
-  headerIcon?: React.ElementType;
+  headerIcon?: ElementType;
   headerClassName?: string;
   footer?: ReactNode;
   footerClassName?: string;
@@ -36,9 +36,10 @@ export const TerminalPanel = ({
     <div
       className={cn(
         'relative flex h-full w-full flex-col',
-        !isBlog && 'rounded-2xl border-2 border-[#4a5c52] bg-linear-to-b from-[#1a2420] to-[#0f1512] p-3 shadow-[inset_0_1px_0_rgba(156,196,176,0.15),0_20px_50px_rgba(0,0,0,0.8)] sm:rounded-3xl sm:p-4',
+        !isBlog &&
+        'rounded-2xl border-2 border-[#4a5c52] bg-linear-to-b from-[#1a2420] to-[#0f1512] p-3 shadow-[inset_0_1px_0_rgba(156,196,176,0.15),0_20px_50px_rgba(0,0,0,0.8)] sm:rounded-3xl sm:p-4',
         isBlog &&
-        'rounded-sm border border-[#1E293B] bg-[#050B14]/80 shadow-[0_8px_32px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(45,212,191,0.1)] backdrop-blur-md', // Убран p-2/p-3
+        'rounded-sm border border-[#1E293B] bg-[#050B14]/95 shadow-[0_8px_32px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(45,212,191,0.1)] backdrop-blur-md',
         className,
       )}
     >
@@ -58,8 +59,9 @@ export const TerminalPanel = ({
       <div
         className={cn(
           'relative flex w-full flex-1 flex-col overflow-hidden',
-          !isBlog && 'rounded-xl border border-[#2f3d36] bg-[#0a0e0d] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_rgba(111,162,140,0.1)]',
-          isBlog && 'bg-transparent', // Прозрачный фон, так как он уже есть на родителе
+          !isBlog &&
+          'rounded-xl border border-[#2f3d36] bg-[#0a0e0d] shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_rgba(111,162,140,0.1)]',
+          isBlog && 'bg-transparent',
           innerClassName,
         )}
       >
@@ -79,10 +81,10 @@ export const TerminalPanel = ({
             <Icon className="h-4 w-4" />
             <span>{headerTitle}</span>
           </div>
-          <div className="flex gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-red-500/50" />
-            <span className="h-2 w-2 rounded-full bg-yellow-500/50" />
-            <span className="h-2 w-2 rounded-full bg-green-500/50 shadow-[0_0_5px_#22c55e]" />
+          <div className="mr-1 flex gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-red-500/80" />
+            <span className="h-2 w-2 rounded-full bg-yellow-500/80" />
+            <span className="h-2 w-2 rounded-full bg-green-500/80 shadow-[0_0_5px_#22c55e]" />
           </div>
         </div>
 

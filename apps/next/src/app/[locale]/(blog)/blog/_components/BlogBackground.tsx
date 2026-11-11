@@ -68,19 +68,17 @@ const SIZE_MAP = {
 };
 
 export const BlogBackground = () => (
-  <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_3px,rgba(45,212,191,0.02)_3px,rgba(45,212,191,0.02)_4px)]" />
+  <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#02060C]">
+    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_3px,rgba(226,232,240,0.015)_3px,rgba(226,232,240,0.015)_4px)]" />
+    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,rgba(2,6,12,0.95)_100%)]" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#1E293B_1px,transparent_0)] bg-size-[22px_22px] opacity-20" />
 
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(5,11,20,0.7)_100%)]" />
+    <div className="absolute top-[-20%] left-[-10%] h-150 w-150 rounded-full bg-[#1E293B]/10 blur-[120px]" />
+    <div className="absolute right-[-15%] bottom-[-10%] h-175 w-175 rounded-full bg-[#2dd4bf]/4 blur-[140px]" />
+    <div className="absolute top-1/2 left-1/3 h-100 w-225 -translate-y-1/2 -rotate-12 rounded-full bg-[#e2e8f0]/2 blur-[100px]" />
 
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#2dd4bf_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.05]" />
-
-    <div className="absolute top-[-20%] left-[-10%] h-150 w-150 rounded-full bg-[#1E293B]/20 blur-[120px]" />
-    <div className="absolute right-[-15%] bottom-[-10%] h-175 w-175 rounded-full bg-[#2dd4bf]/8 blur-[140px]" />
-    <div className="absolute top-1/2 left-1/3 h-100 w-225 -translate-y-1/2 -rotate-12 rounded-full bg-[#e2e8f0]/3 blur-[100px]" />
-
-    <div className="absolute inset-0 opacity-30">
-      <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent_40%,rgba(226,232,240,0.06)_48%,rgba(226,232,240,0.03)_52%,transparent_60%)]" />
+    <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent_40%,rgba(226,232,240,0.03)_48%,rgba(226,232,240,0.015)_52%,transparent_60%)]" />
     </div>
 
     {STARS.map((star, i) => {
@@ -97,7 +95,7 @@ export const BlogBackground = () => (
     {CONSTELLATIONS.map((c) => (
       <svg
         key={c.id}
-        className="absolute h-40 w-40 text-[#2dd4bf]/40 sm:h-52 sm:w-52"
+        className="absolute h-40 w-40 text-[#2dd4bf]/30 sm:h-52 sm:w-52"
         viewBox="-10 -20 100 80"
         style={{ top: c.top, left: c.left }}
         aria-hidden
@@ -128,7 +126,7 @@ export const BlogBackground = () => (
         }}
       >
         <div
-          className="absolute inset-0 rounded-full border border-dashed border-[#2dd4bf]/20"
+          className="absolute inset-0 rounded-full border border-dashed border-[#2dd4bf]/10"
           style={{ animation: `orbit-drift ${orbit.duration} linear infinite` }}
         />
         <div
@@ -146,7 +144,7 @@ export const BlogBackground = () => (
       </div>
     ))}
 
-    <div className="absolute inset-x-0 top-1/3 opacity-60 motion-reduce:hidden">
+    <div className="absolute inset-x-0 top-1/3 opacity-40 motion-reduce:hidden">
       <div className="absolute h-px w-32 animate-[comet-fly_16s_linear_infinite] bg-linear-to-r from-transparent via-[#e2e8f0] to-transparent shadow-[0_0_6px_rgba(226,232,240,0.6)]" />
       <div
         className="absolute h-px w-24 animate-[comet-fly_22s_linear_infinite] bg-linear-to-r from-transparent via-[#e2e8f0]/70 to-transparent shadow-[0_0_4px_rgba(226,232,240,0.4)]"
@@ -155,17 +153,17 @@ export const BlogBackground = () => (
     </div>
 
     <div className="absolute bottom-0 left-1/2 h-200 w-200 -translate-x-1/2 translate-y-1/2">
-      <div className="absolute inset-0 rounded-full border border-[#2dd4bf]/12" />
-      <div className="absolute inset-24 rounded-full border border-[#2dd4bf]/10" />
-      <div className="absolute inset-48 rounded-full border border-[#2dd4bf]/8" />
-      <div className="absolute inset-72 rounded-full border border-[#2dd4bf]/6" />
-      <div className="absolute inset-0 animate-[discovery-sweep_14s_linear_infinite] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,rgba(45,212,191,0.12)_24deg,rgba(45,212,191,0.02)_48deg,transparent_72deg)] motion-reduce:hidden" />
+      <div className="absolute inset-0 rounded-full border border-[#2dd4bf]/8" />
+      <div className="absolute inset-24 rounded-full border border-[#2dd4bf]/6" />
+      <div className="absolute inset-48 rounded-full border border-[#2dd4bf]/4" />
+      <div className="absolute inset-72 rounded-full border border-[#2dd4bf]/2" />
+      <div className="absolute inset-0 animate-[discovery-sweep_14s_linear_infinite] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,rgba(45,212,191,0.08)_24deg,rgba(45,212,191,0.01)_48deg,transparent_72deg)] motion-reduce:hidden" />
     </div>
 
     <div className="absolute top-1/4 right-0 h-125 w-125 translate-x-1/3 -translate-y-1/3">
-      <div className="absolute inset-0 rounded-full border border-[#2dd4bf]/8" />
-      <div className="absolute inset-20 rounded-full border border-[#2dd4bf]/6" />
-      <div className="absolute inset-0 animate-[discovery-sweep_20s_linear_infinite_reverse] rounded-full bg-[conic-gradient(from_180deg,transparent_0deg,rgba(45,212,191,0.08)_20deg,transparent_44deg)] motion-reduce:hidden" />
+      <div className="absolute inset-0 rounded-full border border-[#2dd4bf]/6" />
+      <div className="absolute inset-20 rounded-full border border-[#2dd4bf]/4" />
+      <div className="absolute inset-0 animate-[discovery-sweep_20s_linear_infinite_reverse] rounded-full bg-[conic-gradient(from_180deg,transparent_0deg,rgba(45,212,191,0.05)_20deg,transparent_44deg)] motion-reduce:hidden" />
     </div>
 
     {DISCOVERY_BLIPS.map((blip, i) => {
@@ -188,7 +186,7 @@ export const BlogBackground = () => (
       );
     })}
 
-    <div className="absolute top-2/3 left-1/2 h-150 w-150 -translate-x-1/2 -translate-y-1/2 opacity-30">
+    <div className="absolute top-2/3 left-1/2 h-150 w-150 -translate-x-1/2 -translate-y-1/2 opacity-20">
       <div className="absolute inset-0 animate-[discovery-pulse_8s_ease-out_infinite] rounded-full border border-[#2dd4bf]/40 motion-reduce:hidden" />
       <div
         className="absolute inset-0 animate-[discovery-pulse_8s_ease-out_infinite] rounded-full border border-[#2dd4bf]/40 motion-reduce:hidden"
@@ -202,19 +200,19 @@ export const BlogBackground = () => (
 
     {CROSSHAIRS.map((pos) => (
       <div key={pos} className={`absolute ${pos} h-4 w-4`}>
-        <div className="absolute top-1/2 left-0 h-px w-full bg-[#2dd4bf]/30" />
-        <div className="absolute top-0 left-1/2 h-full w-px bg-[#2dd4bf]/30" />
+        <div className="absolute top-1/2 left-0 h-px w-full bg-[#2dd4bf]/20" />
+        <div className="absolute top-0 left-1/2 h-full w-px bg-[#2dd4bf]/20" />
       </div>
     ))}
 
-    <div className="absolute top-1/2 left-3 -translate-y-1/2 rotate-180 font-mono text-[8px] tracking-[0.3em] text-[#2dd4bf]/20 uppercase [writing-mode:vertical-rl]">
+    <div className="absolute top-1/2 left-3 -translate-y-1/2 rotate-180 font-mono text-[8px] tracking-[0.3em] text-[#2dd4bf]/15 uppercase [writing-mode:vertical-rl]">
       0x7F.DEEP.SPACE //// SECTOR.07
     </div>
-    <div className="absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[8px] tracking-[0.3em] text-[#2dd4bf]/20 uppercase [writing-mode:vertical-rl]">
+    <div className="absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[8px] tracking-[0.3em] text-[#2dd4bf]/15 uppercase [writing-mode:vertical-rl]">
       RA 14h39m36s // DEC -60°50′02″
     </div>
 
-    <div className="absolute bottom-2 left-1/2 hidden -translate-x-1/2 items-center gap-3 font-mono text-[8px] tracking-widest text-[#2dd4bf]/30 uppercase md:flex">
+    <div className="absolute bottom-2 left-1/2 hidden -translate-x-1/2 items-center gap-3 font-mono text-[8px] tracking-widest text-[#2dd4bf]/20 uppercase md:flex">
       <span className="flex items-center gap-1.5">
         <span className="h-1 w-1 animate-pulse rounded-full bg-[#e2e8f0] shadow-[0_0_4px_rgba(226,232,240,0.8)]" />
         SCAN.ACTIVE

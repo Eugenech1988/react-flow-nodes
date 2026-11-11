@@ -11,14 +11,14 @@ export const CutoutBadge = ({ children, className, theme = 'default' }: ICutoutB
     theme === 'careers'
       ? 'bg-[#6fa28c]/40'
       : theme === 'blog'
-        ? 'bg-[#6fa28c]/40'
+        ? 'bg-[#2dd4bf]/40'
         : 'bg-[#2dd4bf]/30';
 
   const innerBg =
     theme === 'careers'
       ? 'bg-[#0a0e0d] text-[#6fa28c]'
       : theme === 'blog'
-        ? 'bg-[#071316] text-[#9cc4b0]'
+        ? 'bg-[#050B14] text-[#5eead4]'
         : 'bg-[#0a1615] text-[#2dd4bf]';
 
   return (

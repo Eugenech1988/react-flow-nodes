@@ -5,3 +5,4 @@ export * from './CareersConsole';
 export * from './CareersPerks';
 export * from './CareersProcess';
 export * from './CareersCta';
+export * from './CareersBackground';
