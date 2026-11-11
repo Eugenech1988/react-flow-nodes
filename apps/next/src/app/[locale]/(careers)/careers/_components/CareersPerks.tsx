@@ -16,9 +16,9 @@ export const CareersPerks = () => {
         title={t('perks.heading.title')}
         description={t('perks.heading.description')}
         isMain={false}
-        gradientColors="from-[#9cc4b0] via-[#6fa28c] to-[#4a6d5e]"
-        titleColor="text-[#d4cfc0]"
-        descriptionColor="text-[#8a9488]"
+        gradientColors="from-theme-accent-hover via-theme-accent to-theme-accent-deep"
+        titleColor="text-theme-fg"
+        descriptionColor="text-theme-muted"
       />
 
       <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-14 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">

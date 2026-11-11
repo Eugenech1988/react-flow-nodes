@@ -2,13 +2,7 @@ import type { Metadata } from 'next';
 import type { TPageProps } from '@/shared/lib';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
 import { getT } from '@/shared/lib/i18n/server';
-import {
-  BlogHero,
-  BlogFeatured,
-  BlogGrid,
-  BlogCta,
-  BLOG_POSTS,
-} from './_components';
+import { BlogHero, BlogFeatured, BlogGrid, BlogCta, BLOG_POSTS } from './_components';
 
 export const generateMetadata = async ({ params }: TPageProps): Promise<Metadata> => {
   const { locale } = await params;

@@ -11,8 +11,8 @@ function OdometerDigit({ value, isActive }: { value: number; isActive: boolean }
   const targetY = -(targetDigitIndex / totalDigits) * 100;
 
   return (
-    <span className="relative mx-0.5 inline-flex h-[1.15em] w-[0.7em] shrink-0 items-center justify-center rounded-sm bg-[#3a4842] p-px shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
-      <span className="relative flex h-full w-full overflow-hidden rounded-[3px] bg-linear-to-b from-[#0a0e0d] via-[#1a2420] to-[#0a0e0d] shadow-[inset_0_2px_6px_rgba(0,0,0,0.9),inset_0_-2px_6px_rgba(0,0,0,0.9)]">
+    <span className="bg-theme-rivet relative mx-0.5 inline-flex h-[1.15em] w-[0.7em] shrink-0 items-center justify-center rounded-sm p-px shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+      <span className="from-theme-bg via-theme-surface to-theme-bg relative flex h-full w-full overflow-hidden rounded-[3px] bg-linear-to-b shadow-[inset_0_2px_6px_rgba(0,0,0,0.9),inset_0_-2px_6px_rgba(0,0,0,0.9)]">
         <div
           className="absolute top-0 left-0 flex w-full flex-col items-center"
           style={{
@@ -24,8 +24,11 @@ function OdometerDigit({ value, isActive }: { value: number; isActive: boolean }
             DIGITS.map((digit) => (
               <span
                 key={`${repIndex}-${digit}`}
-                className="flex h-[1.15em] w-full items-center justify-center font-serif leading-none font-bold text-[#9cc4b0]"
-                style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 4px rgba(156,196,176,0.3)' }}
+                className="text-theme-accent-hover flex h-[1.15em] w-full items-center justify-center font-serif leading-none font-bold"
+                style={{
+                  textShadow:
+                    '0 1px 2px rgba(0,0,0,0.8), 0 0 4px color-mix(in oklab, var(--theme-accent-hover) 30%, transparent)',
+                }}
               >
                 {digit}
               </span>
@@ -34,8 +37,11 @@ function OdometerDigit({ value, isActive }: { value: number; isActive: boolean }
           {DIGITS.slice(0, value + 1).map((digit, index) => (
             <span
               key={`final-${digit}-${index}`}
-              className="flex h-[1.15em] w-full items-center justify-center font-serif leading-none font-bold text-[#9cc4b0]"
-              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 0 4px rgba(156,196,176,0.3)' }}
+              className="text-theme-accent-hover flex h-[1.15em] w-full items-center justify-center font-serif leading-none font-bold"
+              style={{
+                textShadow:
+                  '0 1px 2px rgba(0,0,0,0.8), 0 0 4px color-mix(in oklab, var(--theme-accent-hover) 30%, transparent)',
+              }}
             >
               {digit}
             </span>
@@ -87,7 +93,10 @@ export function Odometer({ value }: { value: string }) {
       {chars.map((char, index) => {
         if (isNaN(parseInt(char, 10))) {
           return (
-            <span key={index} className="mx-1 font-serif text-3xl font-bold text-[#9cc4b0]">
+            <span
+              key={index}
+              className="text-theme-accent-hover mx-1 font-serif text-3xl font-bold"
+            >
               {char}
             </span>
           );

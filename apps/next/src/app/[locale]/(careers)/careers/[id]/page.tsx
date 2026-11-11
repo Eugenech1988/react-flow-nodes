@@ -28,14 +28,14 @@ const JobContent = async ({ params }: TPageWithIdProps) => {
   if (!job) notFound();
 
   return (
-    <div className="relative bg-[#0a0805] text-[#d4cfc0]">
+    <div className="bg-theme-bg text-theme-fg relative">
       <JobDetailView job={job} locale={locale} />
     </div>
   );
 };
 
 const JobPage = ({ params }: TPageWithIdProps) => (
-  <Suspense fallback={<div className="min-h-screen bg-[#0a0805]" />}>
+  <Suspense fallback={<div className="bg-theme-bg min-h-screen" />}>
     <JobContent params={params} />
   </Suspense>
 );

@@ -27,7 +27,7 @@ export const HeroActions = () => {
           size="lg"
           icon={Play}
           iconClassName="fill-current text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_60%,transparent)]"
-          className="group w-full border border-theme-line bg-theme-surface font-semibold text-theme-muted shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-300 hover:border-theme-accent/30 hover:bg-theme-panel hover:text-theme-fg hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_0_15px_color-mix(in_oklab,var(--theme-accent)_20%,transparent)] sm:w-auto"
+          className="group border-theme-line bg-theme-surface text-theme-muted hover:border-theme-accent/30 hover:bg-theme-panel hover:text-theme-fg w-full border font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-300 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),inset_0_-1px_0_rgba(0,0,0,0.25),0_0_15px_color-mix(in_oklab,var(--theme-accent)_20%,transparent)] sm:w-auto"
         >
           {t('hero.cta.demo')}
         </AppButton>

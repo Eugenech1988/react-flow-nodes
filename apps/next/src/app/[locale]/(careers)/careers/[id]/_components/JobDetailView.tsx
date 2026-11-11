@@ -45,7 +45,7 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
       <Reveal>
         <Link
           href={`/${locale}/careers`}
-          className="mb-8 inline-flex items-center gap-2 font-mono text-[10px] tracking-widest text-careers-muted uppercase transition-colors hover:text-[#9cc4b0]"
+          className="text-theme-muted hover:text-theme-accent-hover mb-8 inline-flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           {t('details.returnToOpenings')}
@@ -60,9 +60,9 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
               headerIcon={Activity}
               headerTitle={`SYS.DOSSIER // ${job.slug.toUpperCase()}`}
               footer={
-                <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-widest text-careers-muted uppercase">
+                <div className="text-theme-muted flex w-full items-center justify-between font-mono text-[10px] tracking-widest uppercase">
                   <span className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-careers-accent" />
+                    <span className="bg-theme-accent h-1.5 w-1.5 animate-pulse rounded-full" />
                     FILE DECRYPTED
                   </span>
                   <span>PAGE 01 / 01</span>
@@ -70,7 +70,7 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
               }
             >
               <div className="relative overflow-hidden p-5 sm:p-10">
-                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(111,162,140,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(111,162,140,0.03)_1px,transparent_1px)] bg-size-[30px_30px]" />
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(color-mix(in_oklab,var(--theme-accent)_3%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--theme-accent)_3%,transparent)_1px,transparent_1px)] bg-size-[30px_30px]" />
 
                 <div className="relative z-10">
                   <JobHeader

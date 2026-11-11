@@ -65,10 +65,10 @@ export const SocialLinks = ({
 
   const themeClasses = {
     default:
-      'border-[#2dd4bf]/20 bg-[#040a09] text-slate-400 hover:border-[#2dd4bf]/50 hover:bg-[#2dd4bf]/10 hover:text-[#2dd4bf] hover:shadow-[0_0_15px_rgba(45,212,191,0.2)]',
+      'border-theme-accent/20 bg-theme-bg text-theme-muted hover:border-theme-accent/50 hover:bg-theme-accent/10 hover:text-theme-accent hover:shadow-theme-glow',
     careers:
-      'border-[#4a5c52]/40 bg-[#0a0e0d] text-[#8a9488] hover:border-[#6fa28c]/60 hover:bg-[#6fa28c]/10 hover:text-[#d4cfc0] hover:shadow-[0_0_15px_rgba(111,162,140,0.2)]',
-    blog: 'border-[#4a5c52]/40 bg-[#0a1a1e] text-[#8a9488] hover:border-[#6fa28c]/60 hover:bg-[#6fa28c]/10 hover:text-[#d4ccb8] hover:shadow-[0_0_15px_rgba(212,204,184,0.15)]',
+      'border-theme-line/40 bg-theme-bg text-theme-muted hover:border-theme-accent/60 hover:bg-theme-accent/10 hover:text-theme-fg hover:shadow-theme-glow',
+    blog: 'border-theme-line/40 bg-theme-surface text-theme-muted hover:border-theme-accent/60 hover:bg-theme-accent/10 hover:text-theme-fg hover:shadow-theme-glow',
   };
 
   return (
@@ -76,10 +76,7 @@ export const SocialLinks = ({
       {title && (
         <div
           className={cn(
-            'mb-4 font-mono text-[10px] tracking-widest uppercase',
-            theme === 'careers' && 'text-[#6fa28c]/70',
-            theme === 'blog' && 'text-[#6fa28c]/70',
-            theme === 'default' && 'text-[#2dd4bf]/50',
+            'mb-4 font-mono text-[10px] tracking-widest text-theme-accent/60 uppercase',
             align === 'center' && 'text-center',
             align === 'end' && 'text-right',
           )}

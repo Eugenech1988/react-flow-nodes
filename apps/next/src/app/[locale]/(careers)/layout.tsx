@@ -7,10 +7,9 @@ interface ICareersLayoutProps {
 }
 
 const CareersLayout = async ({ children }: ICareersLayoutProps) => {
-
   return (
     <div data-theme="careers" className="contents">
-      <CareersBackground/>
+      <CareersBackground />
       <Header theme="careers" />
       <main className="flex-1">{children}</main>
       <Footer theme="careers" />

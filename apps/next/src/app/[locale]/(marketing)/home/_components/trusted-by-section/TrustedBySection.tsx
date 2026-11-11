@@ -39,7 +39,7 @@ export const TrustedBySection = () => {
           </div>
 
           <div className="relative z-20 flex w-full overflow-hidden mask-[linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] py-4">
-            <div className="hover:[animation-play-state:paused] flex w-max animate-[marquee_30s_linear_infinite] items-center gap-4 px-4 motion-reduce:animate-none sm:gap-12 sm:px-6">
+            <div className="flex w-max animate-[marquee_30s_linear_infinite] items-center gap-4 px-4 hover:[animation-play-state:paused] motion-reduce:animate-none sm:gap-12 sm:px-6">
               {duplicatedCompanies.map((company, index) => {
                 const Icon = company.icon;
                 return (

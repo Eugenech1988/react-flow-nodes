@@ -40,8 +40,8 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
     <section className="relative z-10 mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <Archive className="h-4 w-4 text-blog-accent" />
-          <span className="font-mono text-[10px] font-bold tracking-widest text-blog-muted uppercase">
+          <Archive className="text-theme-accent h-4 w-4" />
+          <span className="text-theme-muted font-mono text-[10px] font-bold tracking-widest uppercase">
             {t('archive.label', { count: filtered.length })}
           </span>
         </div>
@@ -57,11 +57,11 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
                 className={cn(
                   'cursor-pointer rounded-sm border px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px]',
                   isActive
-                    ? 'border-blog-accent bg-blog-accent/15 text-blog-accent-hover shadow-[inset_0_1px_0_rgba(45,212,191,0.4),0_0_15px_rgba(45,212,191,0.15)]'
-                    : 'border-blog-border bg-blog-panel text-blog-muted shadow-none hover:border-blog-accent/50 hover:text-blog-accent',
+                    ? 'border-theme-accent bg-theme-accent/15 text-theme-accent-hover shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent)_40%,transparent),0_0_15px_color-mix(in_oklab,var(--theme-accent)_15%,transparent)]'
+                    : 'border-theme-line bg-theme-panel text-theme-muted hover:border-theme-accent/50 hover:text-theme-accent shadow-none',
                 )}
               >
-                <span className={isActive ? 'text-blog-accent-hover/70' : 'text-blog-dim'}>
+                <span className={isActive ? 'text-theme-accent-hover/70' : 'text-theme-dim'}>
                   SEC.{cat.code}
                 </span>
                 <span className="mx-1.5 opacity-50">//</span>
@@ -73,7 +73,7 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
       </div>
 
       {visible.length === 0 ? (
-        <div className="rounded-sm border border-dashed border-blog-border bg-blog-surface p-12 text-center font-mono text-xs tracking-widest text-blog-muted uppercase">
+        <div className="border-theme-line bg-theme-surface text-theme-muted rounded-sm border border-dashed p-12 text-center font-mono text-xs tracking-widest uppercase">
           {t('empty')}
         </div>
       ) : (

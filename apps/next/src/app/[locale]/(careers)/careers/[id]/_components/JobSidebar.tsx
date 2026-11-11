@@ -30,7 +30,7 @@ export const JobSidebar = ({ job, Icon, scrollToForm }: IJobSidebarProps) => {
           headerIcon={Radio}
           headerTitle="TRANSMIT.DATA"
           footer={
-            <div className="flex items-center gap-2 font-mono text-[9px] tracking-widest text-[#6fa28c] uppercase">
+            <div className="text-theme-accent flex items-center gap-2 font-mono text-[9px] tracking-widest uppercase">
               <ShieldAlert className="h-3 w-3" />
               SECURE CHANNEL
             </div>
@@ -38,37 +38,37 @@ export const JobSidebar = ({ job, Icon, scrollToForm }: IJobSidebarProps) => {
         >
           <div className="flex flex-col p-6">
             <div className="mb-6 flex items-center gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-[#4a5c52] bg-[#0a0e0d] text-[#6fa28c] shadow-[inset_0_0_15px_rgba(111,162,140,0.1)]">
+              <div className="border-theme-line bg-theme-bg text-theme-accent flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border shadow-[inset_0_0_15px_color-mix(in_oklab,var(--theme-accent)_10%,transparent)]">
                 <Icon className="h-8 w-8" />
               </div>
 
-              <div className="flex h-fit items-center rounded border border-[#6fa28c]/40 bg-[#6fa28c]/10 px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest text-[#9cc4b0] uppercase shadow-[inset_0_1px_0_rgba(156,196,176,0.2)]">
+              <div className="border-theme-accent/40 bg-theme-accent/10 text-theme-accent-hover flex h-fit items-center rounded border px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest uppercase shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent-hover)_20%,transparent)]">
                 {deptLabel}
               </div>
             </div>
 
-            <h3 className="font-typewriter mb-2 text-lg font-bold text-[#d4cfc0]">
+            <h3 className="font-typewriter text-theme-fg mb-2 text-lg font-bold">
               {t('details.sidebar.title')}
             </h3>
-            <p className="mb-6 font-mono text-xs leading-relaxed text-[#8a9488]">
+            <p className="text-theme-muted mb-6 font-mono text-xs leading-relaxed">
               {t('details.sidebar.description')}
             </p>
 
-            <div className="mb-8 space-y-4 rounded-lg border border-[#2f3d36]/50 bg-[#0a0e0d]/30 p-4">
-              <div className="flex items-center gap-3 font-mono text-xs text-[#8a9488]">
-                <MapPin className="h-4 w-4 shrink-0 text-[#6fa28c]" />
+            <div className="border-theme-line/50 bg-theme-bg/30 mb-8 space-y-4 rounded-lg border p-4">
+              <div className="text-theme-muted flex items-center gap-3 font-mono text-xs">
+                <MapPin className="text-theme-accent h-4 w-4 shrink-0" />
                 <span>{job.location}</span>
               </div>
-              <div className="flex items-center gap-3 font-mono text-xs text-[#8a9488]">
-                <Target className="h-4 w-4 shrink-0 text-[#6fa28c]" />
+              <div className="text-theme-muted flex items-center gap-3 font-mono text-xs">
+                <Target className="text-theme-accent h-4 w-4 shrink-0" />
                 <span>{levelLabel}</span>
               </div>
-              <div className="flex items-center gap-3 font-mono text-xs text-[#8a9488]">
-                <Eye className="h-4 w-4 shrink-0 text-[#6fa28c]" />
+              <div className="text-theme-muted flex items-center gap-3 font-mono text-xs">
+                <Eye className="text-theme-accent h-4 w-4 shrink-0" />
                 <span>{t('details.views', { count: job.views ?? 0 })}</span>
               </div>
-              <div className="flex items-center gap-3 font-mono text-xs text-[#8a9488]">
-                <FileText className="h-4 w-4 shrink-0 text-[#6fa28c]" />
+              <div className="text-theme-muted flex items-center gap-3 font-mono text-xs">
+                <FileText className="text-theme-accent h-4 w-4 shrink-0" />
                 <span>{t('details.applications', { count: job.applications ?? 0 })}</span>
               </div>
             </div>
@@ -77,11 +77,11 @@ export const JobSidebar = ({ job, Icon, scrollToForm }: IJobSidebarProps) => {
               {t('details.initiateApplication')}
             </AppButton>
 
-            <div className="mt-6 border-t border-[#2f3d36] pt-4 text-center font-mono text-[10px] tracking-widest text-[#4a5c52]">
+            <div className="border-theme-line text-theme-dim mt-6 border-t pt-4 text-center font-mono text-[10px] tracking-widest">
               {t('details.sidebar.orSendTo')}
               <a
                 href="mailto:careers@example.com"
-                className="mt-1 block text-[#6fa28c] hover:text-[#9cc4b0] hover:underline"
+                className="text-theme-accent hover:text-theme-accent-hover mt-1 block hover:underline"
               >
                 CAREERS@EXAMPLE.COM
               </a>

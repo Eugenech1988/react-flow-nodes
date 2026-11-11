@@ -18,10 +18,10 @@ interface IJobApplicationFormProps {
 }
 
 export const JobApplicationForm = ({
-                                     job,
-                                     locale,
-                                     setApplicationsCount,
-                                   }: IJobApplicationFormProps) => {
+  job,
+  locale,
+  setApplicationsCount,
+}: IJobApplicationFormProps) => {
   const { t } = useT('careers');
   const [isSuccess, setIsSuccess] = useState(false);
   const [coverLetterMode, setCoverLetterMode] = useState<'write' | 'upload'>('write');
@@ -94,18 +94,18 @@ export const JobApplicationForm = ({
   };
 
   const inputBaseStyles =
-    'rounded-sm font-typewriter shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] bg-[#0a0e0d]/50';
+    'rounded-sm font-typewriter shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] bg-theme-bg/50';
   const inputErrorStyles =
-    'border-[#c25a5a] text-[#c25a5a] placeholder:text-[#c25a5a]/60 focus-visible:border-[#c25a5a] focus-visible:ring-[#c25a5a]/50';
+    'border-theme-danger text-theme-danger placeholder:text-theme-danger/60 focus-visible:border-theme-danger focus-visible:ring-theme-danger/50';
   const inputDefaultStyles =
-    'border-[#2f3d36] text-[#d4cfc0] placeholder:text-[#4a5c52] focus-visible:border-[#6fa28c] focus-visible:ring-[#6fa28c]/50';
+    'border-theme-line text-theme-fg placeholder:text-theme-dim focus-visible:border-theme-accent focus-visible:ring-theme-accent/50';
 
   const getInputStyles = (hasError: boolean) =>
     `${inputBaseStyles} ${hasError ? inputErrorStyles : inputDefaultStyles}`;
 
   const fileInputStyles = (hasError: boolean) =>
-    `block w-full cursor-pointer truncate rounded-sm border bg-[#0a0e0d]/50 p-2 font-mono text-xs text-[#8a9488] file:mr-0 file:mb-2 file:block file:w-full file:cursor-pointer file:rounded file:border-0 file:bg-[#6fa28c]/20 file:px-4 file:py-2 file:font-bold file:text-[#6fa28c] file:uppercase hover:file:bg-[#6fa28c]/30 focus:outline-none sm:file:mr-4 sm:file:mb-0 sm:file:inline-block sm:file:w-auto ${
-      hasError ? 'border-[#c25a5a]' : 'border-[#2f3d36]'
+    `block w-full cursor-pointer truncate rounded-sm border bg-theme-bg/50 p-2 font-mono text-xs text-theme-muted file:mr-0 file:mb-2 file:block file:w-full file:cursor-pointer file:rounded file:border-0 file:bg-theme-accent/20 file:px-4 file:py-2 file:font-bold file:text-theme-accent file:uppercase hover:file:bg-theme-accent/30 focus:outline-none sm:file:mr-4 sm:file:mb-0 sm:file:inline-block sm:file:w-auto ${
+      hasError ? 'border-theme-danger' : 'border-theme-line'
     }`;
 
   return (
@@ -114,9 +114,9 @@ export const JobApplicationForm = ({
       headerIcon={Terminal}
       headerTitle="APPLICATION.FORM"
       footer={
-        <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-widest text-[#8a9488] uppercase">
+        <div className="text-theme-muted flex w-full items-center justify-between font-mono text-[10px] tracking-widest uppercase">
           <span className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6fa28c]" />
+            <span className="bg-theme-accent h-1.5 w-1.5 animate-pulse rounded-full" />
             AWAITING INPUT
           </span>
         </div>
@@ -125,27 +125,27 @@ export const JobApplicationForm = ({
       <div className="p-5 sm:p-10">
         {isSuccess ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-[#6fa28c]/50 bg-[#6fa28c]/10 shadow-[0_0_30px_rgba(111,162,140,0.25)]">
-              <CheckCircle2 className="h-10 w-10 text-[#6fa28c]" />
+            <div className="border-theme-accent/50 bg-theme-accent/10 mb-6 flex h-20 w-20 items-center justify-center rounded-full border shadow-[0_0_30px_color-mix(in_oklab,var(--theme-accent)_25%,transparent)]">
+              <CheckCircle2 className="text-theme-accent h-10 w-10" />
             </div>
-            <h3 className="font-typewriter text-xl font-bold text-[#d4cfc0]">
+            <h3 className="font-typewriter text-theme-fg text-xl font-bold">
               {t('applicationForm.successTitle')}
             </h3>
-            <p className="mt-2 font-mono text-sm text-[#8a9488]">
+            <p className="text-theme-muted mt-2 font-mono text-sm">
               {t('applicationForm.successDescription')}
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
             {errorMsg && (
-              <div className="rounded-md border border-[#c25a5a]/50 bg-[#c25a5a]/10 p-3 font-mono text-sm text-[#c25a5a]">
+              <div className="border-theme-danger/50 bg-theme-danger/10 text-theme-danger rounded-md border p-3 font-mono text-sm">
                 {errorMsg}
               </div>
             )}
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="flex flex-col gap-2">
-                <AppLabel className="font-typewriter text-[10px] tracking-widest text-[#6fa28c] uppercase">
+                <AppLabel className="font-typewriter text-theme-accent text-[10px] tracking-widest uppercase">
                   {t('applicationForm.labels.name')}
                 </AppLabel>
                 <AppInput
@@ -155,12 +155,12 @@ export const JobApplicationForm = ({
                   {...register('name')}
                 />
                 {errors.name && (
-                  <p className="font-mono text-xs text-[#c25a5a]">{errors.name.message}</p>
+                  <p className="text-theme-danger font-mono text-xs">{errors.name.message}</p>
                 )}
               </div>
 
               <div className="flex flex-col gap-2">
-                <AppLabel className="font-typewriter text-[10px] tracking-widest text-[#6fa28c] uppercase">
+                <AppLabel className="font-typewriter text-theme-accent text-[10px] tracking-widest uppercase">
                   {t('applicationForm.labels.email')}
                 </AppLabel>
                 <AppInput
@@ -171,14 +171,14 @@ export const JobApplicationForm = ({
                   {...register('email')}
                 />
                 {errors.email && (
-                  <p className="font-mono text-xs text-[#c25a5a]">{errors.email.message}</p>
+                  <p className="text-theme-danger font-mono text-xs">{errors.email.message}</p>
                 )}
               </div>
             </div>
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="flex flex-col gap-2">
-                <AppLabel className="font-typewriter text-[10px] tracking-widest text-[#6fa28c] uppercase">
+                <AppLabel className="font-typewriter text-theme-accent text-[10px] tracking-widest uppercase">
                   {t('applicationForm.labels.position')}
                 </AppLabel>
                 <AppInput
@@ -187,12 +187,12 @@ export const JobApplicationForm = ({
                   {...register('position')}
                 />
                 {errors.position && (
-                  <p className="font-mono text-xs text-[#c25a5a]">{errors.position.message}</p>
+                  <p className="text-theme-danger font-mono text-xs">{errors.position.message}</p>
                 )}
               </div>
 
               <div className="flex flex-col gap-2">
-                <AppLabel className="font-typewriter text-[10px] tracking-widest text-[#6fa28c] uppercase">
+                <AppLabel className="font-typewriter text-theme-accent text-[10px] tracking-widest uppercase">
                   {t('applicationForm.labels.company')}
                 </AppLabel>
                 <AppInput
@@ -202,13 +202,13 @@ export const JobApplicationForm = ({
                   {...register('company')}
                 />
                 {errors.company && (
-                  <p className="font-mono text-xs text-[#c25a5a]">{errors.company.message}</p>
+                  <p className="text-theme-danger font-mono text-xs">{errors.company.message}</p>
                 )}
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <AppLabel className="font-typewriter text-[10px] tracking-widest text-[#6fa28c] uppercase">
+              <AppLabel className="font-typewriter text-theme-accent text-[10px] tracking-widest uppercase">
                 {t('applicationForm.labels.resume')}
               </AppLabel>
               <div className="relative">
@@ -220,24 +220,24 @@ export const JobApplicationForm = ({
                 />
               </div>
               {errors.resume && (
-                <p className="font-mono text-xs text-[#c25a5a]">{errors.resume.message}</p>
+                <p className="text-theme-danger font-mono text-xs">{errors.resume.message}</p>
               )}
             </div>
 
             <div className="flex flex-col gap-3">
               <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                <AppLabel className="font-typewriter text-[10px] tracking-widest text-[#6fa28c] uppercase">
+                <AppLabel className="font-typewriter text-theme-accent text-[10px] tracking-widest uppercase">
                   {t('applicationForm.labels.coverLetter')}
                 </AppLabel>
 
-                <div className="flex w-full rounded-md border border-[#2f3d36] bg-[#0a0e0d]/50 p-1 sm:w-auto">
+                <div className="border-theme-line bg-theme-bg/50 flex w-full rounded-md border p-1 sm:w-auto">
                   <button
                     type="button"
                     onClick={() => setCoverLetterMode('write')}
                     className={`flex flex-1 items-center justify-center px-3 py-1.5 text-center font-mono text-[10px] uppercase transition-colors sm:flex-none ${
                       coverLetterMode === 'write'
-                        ? 'rounded bg-[#6fa28c]/20 text-[#9cc4b0]'
-                        : 'text-[#8a9488] hover:text-[#9cc4b0]'
+                        ? 'bg-theme-accent/20 text-theme-accent-hover rounded'
+                        : 'text-theme-muted hover:text-theme-accent-hover'
                     }`}
                   >
                     {t('applicationForm.buttons.write')}
@@ -247,8 +247,8 @@ export const JobApplicationForm = ({
                     onClick={() => setCoverLetterMode('upload')}
                     className={`flex flex-1 items-center justify-center px-3 py-1.5 text-center font-mono text-[10px] uppercase transition-colors sm:flex-none ${
                       coverLetterMode === 'upload'
-                        ? 'rounded bg-[#6fa28c]/20 text-[#9cc4b0]'
-                        : 'text-[#8a9488] hover:text-[#9cc4b0]'
+                        ? 'bg-theme-accent/20 text-theme-accent-hover rounded'
+                        : 'text-theme-muted hover:text-theme-accent-hover'
                     }`}
                   >
                     {t('applicationForm.buttons.upload')}
@@ -276,7 +276,7 @@ export const JobApplicationForm = ({
               )}
             </div>
 
-            <div className="mt-4 flex justify-end border-t border-[#2f3d36]/50 pt-5">
+            <div className="border-theme-line/50 mt-4 flex justify-end border-t pt-5">
               <AppButton
                 type="submit"
                 variant="careers"

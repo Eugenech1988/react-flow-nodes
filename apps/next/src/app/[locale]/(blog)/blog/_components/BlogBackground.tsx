@@ -35,20 +35,56 @@ const CONSTELLATIONS = [
     id: 'c1',
     top: '14%',
     left: '58%',
-    points: [[0, 0], [28, 14], [46, -6], [72, 8], [58, 38]],
+    points: [
+      [0, 0],
+      [28, 14],
+      [46, -6],
+      [72, 8],
+      [58, 38],
+    ],
   },
   {
     id: 'c2',
     top: '62%',
     left: '16%',
-    points: [[0, 0], [18, 22], [42, 16], [36, -10], [64, 4]],
+    points: [
+      [0, 0],
+      [18, 22],
+      [42, 16],
+      [36, -10],
+      [64, 4],
+    ],
   },
 ];
 
 const ORBITS = [
-  { top: '50%', left: '50%', w: 1100, h: 380, tilt: -18, duration: '60s', satellite: '#e2e8f0' },
-  { top: '30%', left: '78%', w: 620, h: 240, tilt: 34, duration: '45s', satellite: '#2dd4bf' },
-  { top: '74%', left: '22%', w: 480, h: 200, tilt: -50, duration: '38s', satellite: '#e2e8f0' },
+  {
+    top: '50%',
+    left: '50%',
+    w: 1100,
+    h: 380,
+    tilt: -18,
+    duration: '60s',
+    satellite: 'var(--theme-fg)',
+  },
+  {
+    top: '30%',
+    left: '78%',
+    w: 620,
+    h: 240,
+    tilt: 34,
+    duration: '45s',
+    satellite: 'var(--theme-accent)',
+  },
+  {
+    top: '74%',
+    left: '22%',
+    w: 480,
+    h: 200,
+    tilt: -50,
+    duration: '38s',
+    satellite: 'var(--theme-fg)',
+  },
 ];
 
 const DISCOVERY_BLIPS = [
@@ -68,17 +104,17 @@ const SIZE_MAP = {
 };
 
 export const BlogBackground = () => (
-  <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#02060C]">
-    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_3px,rgba(226,232,240,0.015)_3px,rgba(226,232,240,0.015)_4px)]" />
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,rgba(2,6,12,0.95)_100%)]" />
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#1E293B_1px,transparent_0)] bg-size-[22px_22px] opacity-20" />
+  <div className="bg-theme-bg pointer-events-none fixed inset-0 z-0 overflow-hidden">
+    <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_3px,color-mix(in_oklab,var(--theme-fg)_1.5%,transparent)_3px,color-mix(in_oklab,var(--theme-fg)_1.5%,transparent)_4px)]" />
+    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,color-mix(in_oklab,var(--theme-bg)_95%,transparent)_100%)]" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,var(--theme-line)_1px,transparent_0)] bg-size-[22px_22px] opacity-20" />
 
-    <div className="absolute top-[-20%] left-[-10%] h-150 w-150 rounded-full bg-[#1E293B]/10 blur-[120px]" />
-    <div className="absolute right-[-15%] bottom-[-10%] h-175 w-175 rounded-full bg-[#2dd4bf]/4 blur-[140px]" />
-    <div className="absolute top-1/2 left-1/3 h-100 w-225 -translate-y-1/2 -rotate-12 rounded-full bg-[#e2e8f0]/2 blur-[100px]" />
+    <div className="bg-theme-line/10 absolute top-[-20%] left-[-10%] h-150 w-150 rounded-full blur-[120px]" />
+    <div className="bg-theme-accent/5 absolute right-[-15%] bottom-[-10%] h-175 w-175 rounded-full blur-[140px]" />
+    <div className="bg-theme-fg/5 absolute top-1/2 left-1/3 h-100 w-225 -translate-y-1/2 -rotate-12 rounded-full blur-[100px]" />
 
     <div className="absolute inset-0 opacity-20">
-      <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent_40%,rgba(226,232,240,0.03)_48%,rgba(226,232,240,0.015)_52%,transparent_60%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent_40%,color-mix(in_oklab,var(--theme-fg)_3%,transparent)_48%,color-mix(in_oklab,var(--theme-fg)_1.5%,transparent)_52%,transparent_60%)]" />
     </div>
 
     {STARS.map((star, i) => {
@@ -86,7 +122,7 @@ export const BlogBackground = () => (
       return (
         <span
           key={`star-${i}`}
-          className={`absolute rounded-full bg-[#e2e8f0] shadow-[0_0_3px_rgba(226,232,240,0.6)] animate-[star-twinkle_6s_ease-in-out_infinite] motion-reduce:opacity-60 ${s.dot}`}
+          className={`bg-theme-fg absolute animate-[star-twinkle_6s_ease-in-out_infinite] rounded-full shadow-[0_0_3px_color-mix(in_oklab,var(--theme-fg)_60%,transparent)] motion-reduce:opacity-60 ${s.dot}`}
           style={{ top: star.top, left: star.left, animationDelay: star.twinkle }}
         />
       );
@@ -95,7 +131,7 @@ export const BlogBackground = () => (
     {CONSTELLATIONS.map((c) => (
       <svg
         key={c.id}
-        className="absolute h-40 w-40 text-[#2dd4bf]/30 sm:h-52 sm:w-52"
+        className="text-theme-accent/30 absolute h-40 w-40 sm:h-52 sm:w-52"
         viewBox="-10 -20 100 80"
         style={{ top: c.top, left: c.left }}
         aria-hidden
@@ -108,7 +144,7 @@ export const BlogBackground = () => (
           strokeDasharray="1 2"
         />
         {c.points.map(([x, y], idx) => (
-          <circle key={idx} cx={x} cy={y} r="0.8" fill="#e2e8f0" opacity="0.85" />
+          <circle key={idx} cx={x} cy={y} r="0.8" fill="var(--theme-fg)" opacity="0.85" />
         ))}
       </svg>
     ))}
@@ -126,7 +162,7 @@ export const BlogBackground = () => (
         }}
       >
         <div
-          className="absolute inset-0 rounded-full border border-dashed border-[#2dd4bf]/10"
+          className="border-theme-accent/10 absolute inset-0 rounded-full border border-dashed"
           style={{ animation: `orbit-drift ${orbit.duration} linear infinite` }}
         />
         <div
@@ -137,7 +173,7 @@ export const BlogBackground = () => (
             className="absolute top-1/2 left-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
             style={{
               backgroundColor: orbit.satellite,
-              boxShadow: `0 0 8px ${orbit.satellite}, 0 0 16px ${orbit.satellite}80`,
+              boxShadow: `0 0 8px ${orbit.satellite}, 0 0 16px ${orbit.satellite}`,
             }}
           />
         </div>
@@ -145,25 +181,25 @@ export const BlogBackground = () => (
     ))}
 
     <div className="absolute inset-x-0 top-1/3 opacity-40 motion-reduce:hidden">
-      <div className="absolute h-px w-32 animate-[comet-fly_16s_linear_infinite] bg-linear-to-r from-transparent via-[#e2e8f0] to-transparent shadow-[0_0_6px_rgba(226,232,240,0.6)]" />
+      <div className="via-theme-fg absolute h-px w-32 animate-[comet-fly_16s_linear_infinite] bg-linear-to-r from-transparent to-transparent shadow-[0_0_6px_color-mix(in_oklab,var(--theme-fg)_60%,transparent)]" />
       <div
-        className="absolute h-px w-24 animate-[comet-fly_22s_linear_infinite] bg-linear-to-r from-transparent via-[#e2e8f0]/70 to-transparent shadow-[0_0_4px_rgba(226,232,240,0.4)]"
+        className="via-theme-fg/70 absolute h-px w-24 animate-[comet-fly_22s_linear_infinite] bg-linear-to-r from-transparent to-transparent shadow-[0_0_4px_color-mix(in_oklab,var(--theme-fg)_40%,transparent)]"
         style={{ animationDelay: '8s', top: '120px' }}
       />
     </div>
 
     <div className="absolute bottom-0 left-1/2 h-200 w-200 -translate-x-1/2 translate-y-1/2">
-      <div className="absolute inset-0 rounded-full border border-[#2dd4bf]/8" />
-      <div className="absolute inset-24 rounded-full border border-[#2dd4bf]/6" />
-      <div className="absolute inset-48 rounded-full border border-[#2dd4bf]/4" />
-      <div className="absolute inset-72 rounded-full border border-[#2dd4bf]/2" />
-      <div className="absolute inset-0 animate-[discovery-sweep_14s_linear_infinite] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,rgba(45,212,191,0.08)_24deg,rgba(45,212,191,0.01)_48deg,transparent_72deg)] motion-reduce:hidden" />
+      <div className="border-theme-accent/10 absolute inset-0 rounded-full border" />
+      <div className="border-theme-accent/10 absolute inset-24 rounded-full border" />
+      <div className="border-theme-accent/10 absolute inset-48 rounded-full border" />
+      <div className="border-theme-accent/10 absolute inset-72 rounded-full border" />
+      <div className="absolute inset-0 animate-[discovery-sweep_14s_linear_infinite] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,color-mix(in_oklab,var(--theme-accent)_8%,transparent)_24deg,color-mix(in_oklab,var(--theme-accent)_1%,transparent)_48deg,transparent_72deg)] motion-reduce:hidden" />
     </div>
 
     <div className="absolute top-1/4 right-0 h-125 w-125 translate-x-1/3 -translate-y-1/3">
-      <div className="absolute inset-0 rounded-full border border-[#2dd4bf]/6" />
-      <div className="absolute inset-20 rounded-full border border-[#2dd4bf]/4" />
-      <div className="absolute inset-0 animate-[discovery-sweep_20s_linear_infinite_reverse] rounded-full bg-[conic-gradient(from_180deg,transparent_0deg,rgba(45,212,191,0.05)_20deg,transparent_44deg)] motion-reduce:hidden" />
+      <div className="border-theme-accent/10 absolute inset-0 rounded-full border" />
+      <div className="border-theme-accent/10 absolute inset-20 rounded-full border" />
+      <div className="absolute inset-0 animate-[discovery-sweep_20s_linear_infinite_reverse] rounded-full bg-[conic-gradient(from_180deg,transparent_0deg,color-mix(in_oklab,var(--theme-accent)_5%,transparent)_20deg,transparent_44deg)] motion-reduce:hidden" />
     </div>
 
     {DISCOVERY_BLIPS.map((blip, i) => {
@@ -171,15 +207,15 @@ export const BlogBackground = () => (
       return (
         <div key={i} className="absolute" style={{ top: blip.top, left: blip.left }}>
           <span
-            className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e2e8f0] shadow-[0_0_8px_rgba(226,232,240,0.7),0_0_16px_rgba(226,232,240,0.35)] animate-[discovery-blink_8s_ease-in-out_infinite] motion-reduce:opacity-40 ${s.dot}`}
+            className={`bg-theme-fg absolute -translate-x-1/2 -translate-y-1/2 animate-[discovery-blink_8s_ease-in-out_infinite] rounded-full shadow-[0_0_8px_color-mix(in_oklab,var(--theme-fg)_70%,transparent),0_0_16px_color-mix(in_oklab,var(--theme-fg)_35%,transparent)] motion-reduce:opacity-40 ${s.dot}`}
             style={{ animationDelay: blip.delay }}
           />
           <span
-            className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#e2e8f0]/50 animate-[discovery-ping_8s_ease-out_infinite] motion-reduce:hidden ${s.ring}`}
+            className={`border-theme-fg/50 absolute -translate-x-1/2 -translate-y-1/2 animate-[discovery-ping_8s_ease-out_infinite] rounded-full border motion-reduce:hidden ${s.ring}`}
             style={{ animationDelay: blip.delay }}
           />
           <span
-            className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#2dd4bf]/30 animate-[discovery-ping_8s_ease-out_infinite] motion-reduce:hidden ${s.ring}`}
+            className={`border-theme-accent/30 absolute -translate-x-1/2 -translate-y-1/2 animate-[discovery-ping_8s_ease-out_infinite] rounded-full border motion-reduce:hidden ${s.ring}`}
             style={{ animationDelay: `calc(${blip.delay} + 0.6s)` }}
           />
         </div>
@@ -187,41 +223,41 @@ export const BlogBackground = () => (
     })}
 
     <div className="absolute top-2/3 left-1/2 h-150 w-150 -translate-x-1/2 -translate-y-1/2 opacity-20">
-      <div className="absolute inset-0 animate-[discovery-pulse_8s_ease-out_infinite] rounded-full border border-[#2dd4bf]/40 motion-reduce:hidden" />
+      <div className="border-theme-accent/40 absolute inset-0 animate-[discovery-pulse_8s_ease-out_infinite] rounded-full border motion-reduce:hidden" />
       <div
-        className="absolute inset-0 animate-[discovery-pulse_8s_ease-out_infinite] rounded-full border border-[#2dd4bf]/40 motion-reduce:hidden"
+        className="border-theme-accent/40 absolute inset-0 animate-[discovery-pulse_8s_ease-out_infinite] rounded-full border motion-reduce:hidden"
         style={{ animationDelay: '2.6s' }}
       />
       <div
-        className="absolute inset-0 animate-[discovery-pulse_8s_ease-out_infinite] rounded-full border border-[#2dd4bf]/40 motion-reduce:hidden"
+        className="border-theme-accent/40 absolute inset-0 animate-[discovery-pulse_8s_ease-out_infinite] rounded-full border motion-reduce:hidden"
         style={{ animationDelay: '5.2s' }}
       />
     </div>
 
     {CROSSHAIRS.map((pos) => (
       <div key={pos} className={`absolute ${pos} h-4 w-4`}>
-        <div className="absolute top-1/2 left-0 h-px w-full bg-[#2dd4bf]/20" />
-        <div className="absolute top-0 left-1/2 h-full w-px bg-[#2dd4bf]/20" />
+        <div className="bg-theme-accent/20 absolute top-1/2 left-0 h-px w-full" />
+        <div className="bg-theme-accent/20 absolute top-0 left-1/2 h-full w-px" />
       </div>
     ))}
 
-    <div className="absolute top-1/2 left-3 -translate-y-1/2 rotate-180 font-mono text-[8px] tracking-[0.3em] text-[#2dd4bf]/15 uppercase [writing-mode:vertical-rl]">
+    <div className="text-theme-accent/15 absolute top-1/2 left-3 -translate-y-1/2 rotate-180 font-mono text-[8px] tracking-[0.3em] uppercase [writing-mode:vertical-rl]">
       0x7F.DEEP.SPACE //// SECTOR.07
     </div>
-    <div className="absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[8px] tracking-[0.3em] text-[#2dd4bf]/15 uppercase [writing-mode:vertical-rl]">
+    <div className="text-theme-accent/15 absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[8px] tracking-[0.3em] uppercase [writing-mode:vertical-rl]">
       RA 14h39m36s // DEC -60°50′02″
     </div>
 
-    <div className="absolute bottom-2 left-1/2 hidden -translate-x-1/2 items-center gap-3 font-mono text-[8px] tracking-widest text-[#2dd4bf]/20 uppercase md:flex">
+    <div className="text-theme-accent/20 absolute bottom-2 left-1/2 hidden -translate-x-1/2 items-center gap-3 font-mono text-[8px] tracking-widest uppercase md:flex">
       <span className="flex items-center gap-1.5">
-        <span className="h-1 w-1 animate-pulse rounded-full bg-[#e2e8f0] shadow-[0_0_4px_rgba(226,232,240,0.8)]" />
+        <span className="bg-theme-fg h-1 w-1 animate-pulse rounded-full shadow-[0_0_4px_color-mix(in_oklab,var(--theme-fg)_80%,transparent)]" />
         SCAN.ACTIVE
       </span>
-      <span className="h-1 w-1 rounded-full bg-[#1E293B]" />
+      <span className="bg-theme-line h-1 w-1 rounded-full" />
       <span>6 SIGNALS IN RANGE</span>
-      <span className="h-1 w-1 rounded-full bg-[#1E293B]" />
+      <span className="bg-theme-line h-1 w-1 rounded-full" />
       <span>FREQ 14.250 MHz</span>
-      <span className="h-1 w-1 rounded-full bg-[#1E293B]" />
+      <span className="bg-theme-line h-1 w-1 rounded-full" />
       <span>DIST 42.7 AU</span>
     </div>
   </div>

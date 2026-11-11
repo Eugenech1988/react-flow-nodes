@@ -13,20 +13,20 @@ export const BlogHero = ({ t, total, lastUpdate }: IBlogHeroProps) => (
       isMain
       title={t('hero.title')}
       description={t('hero.description')}
-      titleClassName="text-4xl sm:text-5xl md:text-7xl drop-shadow-[0_0_30px_rgba(45,212,191,0.25)]"
-      gradientColors="from-[#e2e8f0] via-[#5eead4] to-[#2dd4bf]"
-      titleColor="text-[#e2e8f0]"
-      descriptionColor="text-[#94a3b8]"
+      titleClassName="text-4xl sm:text-5xl md:text-7xl drop-shadow-[0_0_30px_color-mix(in_oklab,var(--theme-accent)_25%,transparent)]"
+      gradientColors="from-theme-fg via-theme-accent-hover to-theme-accent"
+      titleColor="text-theme-fg"
+      descriptionColor="text-theme-muted"
     />
 
-    <div className="mt-8 flex flex-wrap items-center justify-center gap-3 font-mono text-[10px] font-bold tracking-[0.3em] text-[#2dd4bf] uppercase sm:gap-5">
+    <div className="text-theme-accent mt-8 flex flex-wrap items-center justify-center gap-3 font-mono text-[10px] font-bold tracking-[0.3em] uppercase sm:gap-5">
       <span className="flex items-center gap-2">
-        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#2dd4bf] shadow-[0_0_6px_#2dd4bf]" />
+        <span className="bg-theme-accent h-1.5 w-1.5 animate-pulse rounded-full shadow-[0_0_6px_var(--theme-accent)]" />
         {t('hero.status')}
       </span>
-      <span className="h-1 w-1 rounded-full bg-[#1E293B]" />
+      <span className="bg-theme-line h-1 w-1 rounded-full" />
       <span>{t('hero.entries', { count: total })}</span>
-      <span className="h-1 w-1 rounded-full bg-[#1E293B]" />
+      <span className="bg-theme-line h-1 w-1 rounded-full" />
       <span>
         {t('hero.lastUpdate')}: {lastUpdate}
       </span>

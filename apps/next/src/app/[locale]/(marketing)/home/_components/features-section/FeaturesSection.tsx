@@ -14,14 +14,14 @@ export const FeaturesSection = () => {
     <section
       id="features"
       ref={wrapperRef}
-      className="relative w-full bg-theme-bg lg:h-(--scroll-height)"
+      className="bg-theme-bg relative w-full lg:h-(--scroll-height)"
       style={{ '--scroll-height': `${TOTAL_STEPS * 150}vh` } as React.CSSProperties}
     >
-      <div className="relative flex w-full flex-col overflow-hidden border-t border-theme-accent/20 py-16 text-theme-fg sm:py-24 lg:sticky lg:top-0 lg:h-dvh lg:min-h-dvh lg:justify-center lg:py-0">
+      <div className="border-theme-accent/20 text-theme-fg relative flex w-full flex-col overflow-hidden border-t py-16 sm:py-24 lg:sticky lg:top-0 lg:h-dvh lg:min-h-dvh lg:justify-center lg:py-0">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,var(--theme-accent-hover)_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.05]" />
 
-        <div className="pointer-events-none absolute top-0 left-1/2 h-175 w-175 -translate-x-1/2 rounded-full bg-theme-accent/[0.07] blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 left-1/2 h-100 w-150 -translate-x-1/2 rounded-full bg-theme-accent/[0.04] blur-3xl" />
+        <div className="bg-theme-accent/[0.07] pointer-events-none absolute top-0 left-1/2 h-175 w-175 -translate-x-1/2 rounded-full blur-3xl" />
+        <div className="bg-theme-accent/[0.04] pointer-events-none absolute bottom-0 left-1/2 h-100 w-150 -translate-x-1/2 rounded-full blur-3xl" />
 
         <BackgroundArtifacts />
 
@@ -49,7 +49,7 @@ export const FeaturesSection = () => {
                     key={i}
                     aria-hidden={!isActive}
                     inert={!isActive}
-                    className={`col-start-1 row-start-1 flex items-center justify-center transition-all duration-500 motion-reduce:transition-none ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    className={`col-start-1 row-start-1 flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
                       isActive
                         ? 'blur-0 z-10 translate-y-0 scale-100 opacity-100'
                         : isPast
@@ -85,23 +85,26 @@ export const FeaturesSection = () => {
                     <button
                       type="button"
                       onClick={() => goToStep(i)}
-                      className={`flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 font-mono text-[10px] font-bold transition-all duration-300 ease-out outline-none motion-reduce:transition-none hover:scale-110 active:scale-95 sm:h-10 sm:w-10 sm:text-xs ${
+                      className={`flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 font-mono text-[10px] font-bold transition-all duration-300 ease-out outline-none hover:scale-110 active:scale-95 motion-reduce:transition-none sm:h-10 sm:w-10 sm:text-xs ${
                         isActive
-                          ? 'scale-110 border-theme-accent-hover bg-theme-accent/20 text-theme-accent-hover shadow-[0_0_15px_var(--theme-accent)]'
+                          ? 'border-theme-accent-hover bg-theme-accent/20 text-theme-accent-hover scale-110 shadow-[0_0_15px_var(--theme-accent)]'
                           : isPassed
                             ? 'border-theme-accent/60 bg-theme-accent/10 text-theme-accent'
-                            : 'border-theme-accent/20 bg-transparent text-theme-accent/50 hover:border-theme-accent-hover/80 hover:bg-theme-accent/15 hover:text-theme-accent-hover'
+                            : 'border-theme-accent/20 text-theme-accent/50 hover:border-theme-accent-hover/80 hover:bg-theme-accent/15 hover:text-theme-accent-hover bg-transparent'
                       }`}
-                      aria-label={t('features.stepLabel', { defaultValue: 'Go to step {{n}}', n: i + 1 })}
+                      aria-label={t('features.stepLabel', {
+                        defaultValue: 'Go to step {{n}}',
+                        n: i + 1,
+                      })}
                       aria-current={isActive ? 'step' : undefined}
                     >
                       {String(i + 1).padStart(2, '0')}
                     </button>
 
                     {i < TOTAL_STEPS - 1 && (
-                      <div className="relative h-0.5 flex-1 overflow-hidden bg-theme-accent/15">
+                      <div className="bg-theme-accent/15 relative h-0.5 flex-1 overflow-hidden">
                         <div
-                          className="absolute inset-y-0 left-0 bg-theme-accent transition-[width] duration-300 ease-out"
+                          className="bg-theme-accent absolute inset-y-0 left-0 transition-[width] duration-300 ease-out"
                           style={{ width: isPassed ? '100%' : '0%' }}
                         />
                       </div>

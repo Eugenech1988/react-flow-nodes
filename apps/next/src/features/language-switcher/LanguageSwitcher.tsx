@@ -14,7 +14,11 @@ const LANGS = [
   { code: 'ua', label: 'UA' },
 ] as const;
 
-export function LanguageSwitcher({ locale, isMobile = false, theme = 'default' }: LanguageSwitcherProps) {
+export function LanguageSwitcher({
+  locale,
+  isMobile = false,
+  theme = 'default',
+}: LanguageSwitcherProps) {
   const { i18n } = useT('common');
   const router = useRouter();
 
@@ -48,12 +52,12 @@ export function LanguageSwitcher({ locale, isMobile = false, theme = 'default' }
 
   return (
     <div
-      className={`relative flex items-center gap-1 border border-theme-line bg-theme-surface/80 p-1 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] backdrop-blur-sm ${roundingClass} ${
+      className={`border-theme-line bg-theme-surface/80 relative flex items-center gap-1 border p-1 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] backdrop-blur-sm ${roundingClass} ${
         isMobile ? 'w-full' : ''
       }`}
     >
-      <span className="absolute top-1.5 left-1.5 h-1 w-1 rounded-full bg-theme-rivet shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]" />
-      <span className="absolute right-1.5 bottom-1.5 h-1 w-1 rounded-full bg-theme-rivet shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]" />
+      <span className="bg-theme-rivet absolute top-1.5 left-1.5 h-1 w-1 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]" />
+      <span className="bg-theme-rivet absolute right-1.5 bottom-1.5 h-1 w-1 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]" />
 
       {LANGS.map(({ code, label }) => {
         const isActive = current === code || (code === 'ua' && current === 'uk');
@@ -65,7 +69,7 @@ export function LanguageSwitcher({ locale, isMobile = false, theme = 'default' }
             key={code}
             type="button"
             onClick={() => switchLanguage(code)}
-            className={`relative flex h-7 items-center justify-center font-mono text-[10px] uppercase tracking-widest transition-all duration-300 sm:text-xs ${
+            className={`relative flex h-7 items-center justify-center font-mono text-[10px] tracking-widest uppercase transition-all duration-300 sm:text-xs ${
               isMobile ? 'flex-1 px-2' : 'px-3.5 sm:px-4'
             } ${isActive ? activeClasses : inactiveClasses}`}
           >

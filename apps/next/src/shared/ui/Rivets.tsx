@@ -26,7 +26,7 @@ export const Rivets = ({ className, compact = false }: IRivetsProps) => {
             'absolute z-20 h-1.5 w-1.5 rounded-full shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]',
             pos,
             !compact && 'sm:h-2 sm:w-2',
-            className || 'bg-slate-600',
+            className || 'bg-theme-rivet',
           )}
         />
       ))}

@@ -14,50 +14,52 @@ interface IJobHeaderProps {
 }
 
 export const JobHeader = ({
-                            job,
-                            deptLabel,
-                            typeLabel,
-                            levelLabel,
-                            applicationsCount,
-                          }: IJobHeaderProps) => {
+  job,
+  deptLabel,
+  typeLabel,
+  levelLabel,
+  applicationsCount,
+}: IJobHeaderProps) => {
   const { t } = useT('careers');
 
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        <Badge variant="hex" theme="careers">{deptLabel}</Badge>
-        <span className="font-mono text-[10px] tracking-widest text-[#4a5c52] uppercase">
+        <Badge variant="hex" theme="careers">
+          {deptLabel}
+        </Badge>
+        <span className="text-theme-dim font-mono text-[10px] tracking-widest uppercase">
           {t('details.ref', { length: job.slug.length })}
         </span>
       </div>
 
-      <h1 className="font-typewriter mb-6 text-2xl font-bold tracking-tight text-[#d4cfc0] uppercase break-words sm:text-4xl md:text-5xl">
+      <h1 className="font-typewriter text-theme-fg mb-6 text-2xl font-bold tracking-tight break-words uppercase sm:text-4xl md:text-5xl">
         {job.title}
       </h1>
 
-      <div className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-2 border-y border-dashed border-[#2f3d36] py-4 font-mono text-[10px] tracking-widest text-[#8a9488] uppercase sm:gap-x-4 sm:text-xs">
+      <div className="border-theme-line text-theme-muted mb-8 flex flex-wrap items-center gap-x-3 gap-y-2 border-y border-dashed py-4 font-mono text-[10px] tracking-widest uppercase sm:gap-x-4 sm:text-xs">
         <span className="flex items-center gap-1.5">
-          <MapPin className="h-3.5 w-3.5 text-[#6fa28c]" />
+          <MapPin className="text-theme-accent h-3.5 w-3.5" />
           {job.location}
         </span>
-        <span className="hidden text-[#2f3d36] sm:inline">/</span>
+        <span className="text-theme-dim hidden sm:inline">/</span>
         <span className="flex items-center gap-1.5">
-          <Clock className="h-3.5 w-3.5 text-[#6fa28c]" />
+          <Clock className="text-theme-accent h-3.5 w-3.5" />
           {typeLabel}
         </span>
-        <span className="hidden text-[#2f3d36] sm:inline">/</span>
+        <span className="text-theme-dim hidden sm:inline">/</span>
         <span className="flex items-center gap-1.5">
-          <Target className="h-3.5 w-3.5 text-[#6fa28c]" />
+          <Target className="text-theme-accent h-3.5 w-3.5" />
           {levelLabel}
         </span>
-        <span className="hidden text-[#2f3d36] sm:inline">/</span>
+        <span className="text-theme-dim hidden sm:inline">/</span>
         <span className="flex items-center gap-1.5">
-          <Eye className="h-3.5 w-3.5 text-[#6fa28c]" />
+          <Eye className="text-theme-accent h-3.5 w-3.5" />
           {t('details.views', { count: job.views ?? 0 })}
         </span>
-        <span className="hidden text-[#2f3d36] sm:inline">/</span>
+        <span className="text-theme-dim hidden sm:inline">/</span>
         <span className="flex items-center gap-1.5">
-          <FileText className="h-3.5 w-3.5 text-[#6fa28c]" />
+          <FileText className="text-theme-accent h-3.5 w-3.5" />
           {t('details.applications', { count: applicationsCount })}
         </span>
       </div>

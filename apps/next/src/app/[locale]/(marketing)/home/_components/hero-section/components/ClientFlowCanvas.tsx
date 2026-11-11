@@ -86,23 +86,23 @@ const CustomNode = ({ data }: NodeProps<TCustomNodeType>) => {
   const hasSource = data.hasSource ?? true;
 
   return (
-    <div className="relative flex cursor-grab items-center gap-3 rounded-xl border border-theme-accent/40 bg-theme-surface/90 px-4 py-3 shadow-[0_0_20px_color-mix(in_oklab,var(--theme-accent)_15%,transparent)]">
+    <div className="border-theme-accent/40 bg-theme-surface/90 relative flex cursor-grab items-center gap-3 rounded-xl border px-4 py-3 shadow-[0_0_20px_color-mix(in_oklab,var(--theme-accent)_15%,transparent)]">
       {hasTarget && (
         <Handle
           type="target"
           position={Position.Left}
           isConnectable={false}
-          className="-left-1.5 h-3 w-3 rounded-full border-2 border-theme-surface bg-theme-accent shadow-[0_0_8px_var(--theme-accent)]"
+          className="border-theme-surface bg-theme-accent -left-1.5 h-3 w-3 rounded-full border-2 shadow-[0_0_8px_var(--theme-accent)]"
         />
       )}
 
-      <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-theme-accent/30 bg-theme-accent/10 text-theme-accent">
+      <div className="border-theme-accent/30 bg-theme-accent/10 text-theme-accent flex h-9 w-9 items-center justify-center rounded-lg border">
         <Icon className="h-5 w-5" />
       </div>
       <div>
-        <div className="font-mono text-xs font-bold text-theme-fg">{data.label}</div>
-        <div className="flex items-center gap-1.5 font-mono text-[9px] text-theme-accent/80">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-theme-accent motion-reduce:animate-none" />
+        <div className="text-theme-fg font-mono text-xs font-bold">{data.label}</div>
+        <div className="text-theme-accent/80 flex items-center gap-1.5 font-mono text-[9px]">
+          <span className="bg-theme-accent h-1.5 w-1.5 animate-pulse rounded-full motion-reduce:animate-none" />
           {data.status}
         </div>
       </div>
@@ -112,7 +112,7 @@ const CustomNode = ({ data }: NodeProps<TCustomNodeType>) => {
           type="source"
           position={Position.Right}
           isConnectable={false}
-          className="-right-1.5 h-3 w-3 rounded-full border-2 border-theme-surface bg-theme-accent shadow-[0_0_8px_var(--theme-accent)]"
+          className="border-theme-surface bg-theme-accent -right-1.5 h-3 w-3 rounded-full border-2 shadow-[0_0_8px_var(--theme-accent)]"
         />
       )}
     </div>
@@ -150,8 +150,8 @@ export const ClientFlowCanvas = () => {
   return (
     <div className="relative flex h-full w-full items-center justify-center">
       {isLoading && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-theme-bg/80 text-theme-accent/40 backdrop-blur-xs">
-          <Cpu className="h-8 w-8 animate-pulse text-theme-accent motion-reduce:animate-none sm:h-16 sm:w-16" />
+        <div className="bg-theme-bg/80 text-theme-accent/40 absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 backdrop-blur-xs">
+          <Cpu className="text-theme-accent h-8 w-8 animate-pulse motion-reduce:animate-none sm:h-16 sm:w-16" />
           <span className="font-mono text-[8px] tracking-widest uppercase sm:text-xs">
             INITIALIZING_CANVAS_NODES...
           </span>

@@ -19,9 +19,9 @@ export const CareersCta = () => {
           headerClassName="text-theme-danger"
           headerTitle="System Alert // Priority Red"
           footer={
-            <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-widest text-theme-dim uppercase">
+            <div className="text-theme-dim flex w-full items-center justify-between font-mono text-[10px] tracking-widest uppercase">
               <span className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-theme-danger motion-reduce:animate-none shadow-[0_0_5px_var(--theme-danger)]" />
+                <span className="bg-theme-danger h-1.5 w-1.5 animate-pulse rounded-full shadow-[0_0_5px_var(--theme-danger)] motion-reduce:animate-none" />
                 Awaiting Input
               </span>
               <span>SYS.READY</span>
@@ -29,26 +29,26 @@ export const CareersCta = () => {
           }
         >
           <div className="relative px-6 py-10 sm:px-12 sm:py-14">
-            <div className="font-typewriter absolute top-6 right-6 z-0 -rotate-12 rounded border-2 border-theme-danger/30 px-3 py-1 text-lg font-bold tracking-widest text-theme-danger/30 sm:top-10 sm:right-12 sm:text-2xl">
+            <div className="font-typewriter border-theme-danger/30 text-theme-danger/30 absolute top-6 right-6 z-0 -rotate-12 rounded border-2 px-3 py-1 text-lg font-bold tracking-widest sm:top-10 sm:right-12 sm:text-2xl">
               CLASSIFIED
             </div>
 
             <div className="relative z-10 flex flex-col items-center gap-8 sm:flex-row sm:items-start sm:gap-12">
-              <div className="relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full border border-theme-danger/30 bg-theme-danger/5 shadow-[inset_0_0_20px_color-mix(in_oklab,var(--theme-danger)_15%,transparent)] sm:h-32 sm:w-32">
-                <div className="absolute inset-2 animate-[spin_10s_linear_infinite] motion-reduce:animate-none rounded-full border border-dashed border-theme-danger/20" />
+              <div className="border-theme-danger/30 bg-theme-danger/5 relative flex h-24 w-24 shrink-0 items-center justify-center rounded-full border shadow-[inset_0_0_20px_color-mix(in_oklab,var(--theme-danger)_15%,transparent)] sm:h-32 sm:w-32">
+                <div className="border-theme-danger/20 absolute inset-2 animate-[spin_10s_linear_infinite] rounded-full border border-dashed motion-reduce:animate-none" />
                 <ShieldAlert
-                  className="h-10 w-10 text-theme-danger/80 sm:h-14 sm:w-14"
+                  className="text-theme-danger/80 h-10 w-10 sm:h-14 sm:w-14"
                   strokeWidth={1.5}
                 />
               </div>
 
               <div className="flex-1 text-center sm:text-left">
-                <h2 className="font-typewriter text-2xl font-bold tracking-tight text-theme-fg uppercase sm:text-3xl md:text-4xl">
+                <h2 className="font-typewriter text-theme-fg text-2xl font-bold tracking-tight uppercase sm:text-3xl md:text-4xl">
                   {t('cta.title')}
                 </h2>
 
-                <div className="mt-4 border-l-2 border-theme-danger/50 pl-4 sm:pl-5">
-                  <p className="font-typewriter text-sm leading-relaxed text-theme-muted sm:text-base">
+                <div className="border-theme-danger/50 mt-4 border-l-2 pl-4 sm:pl-5">
+                  <p className="font-typewriter text-theme-muted text-sm leading-relaxed sm:text-base">
                     {t('cta.description')}
                   </p>
                 </div>

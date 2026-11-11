@@ -7,7 +7,6 @@ interface IBlogLayoutProps {
 }
 
 const BlogLayout = async ({ children }: IBlogLayoutProps) => {
-
   return (
     <div data-theme="blog" className="contents">
       <BlogBackground />

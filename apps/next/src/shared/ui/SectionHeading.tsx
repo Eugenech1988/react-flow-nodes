@@ -19,9 +19,9 @@ export const SectionHeading = ({
                                  className = '',
                                  titleClassName = '',
                                  gradientDirection = 'right',
-                                 gradientColors = 'from-[#5eead4] via-[#2dd4bf] to-[#0d9488]',
-                                 titleColor = 'text-[#d1faf5]',
-                                 descriptionColor = 'text-[#8db8b4]',
+                                 gradientColors = 'from-theme-accent-hover via-theme-accent to-theme-accent-deep',
+                                 titleColor = 'text-theme-fg',
+                                 descriptionColor = 'text-theme-muted',
                                }: ISectionHeadingProps) => {
   const isCenter = align === 'center';
   const Tag = isMain ? 'h1' : 'h2';
@@ -48,7 +48,7 @@ export const SectionHeading = ({
         } ${titleClassName}`}
       >
         <span
-          className={`${directionClass} ${gradientColors} bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(111,162,140,0.2)]`}
+          className={`${directionClass} ${gradientColors} bg-clip-text text-transparent drop-shadow-[0_4px_20px_color-mix(in_oklab,var(--theme-accent)_20%,transparent)]`}
         >
           {title}
         </span>

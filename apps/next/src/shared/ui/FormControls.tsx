@@ -14,7 +14,7 @@ export const AppLabel = ({ className, theme = 'default', ...props }: IAppLabelPr
   <Label
     className={cn(
       'text-[10px] tracking-widest uppercase',
-      'text-theme-accent/80', // Цвет берется из темы, меняется только прозрачность
+      'text-theme-accent/80',
       theme === 'careers' && 'font-typewriter',
       theme === 'blog' && 'font-mono',
       className,
@@ -32,10 +32,10 @@ export const AppInput = ({ className, error, theme = 'default', ...props }: IApp
   <Input
     className={cn(
       'w-full transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
-      'border-theme-line bg-theme-bg text-theme-fg', // Базовые цвета для всех
+      'border-theme-line bg-theme-bg text-theme-fg',
 
       theme === 'default' && 'h-12 rounded-xl px-4 py-3 text-sm',
-      theme === 'careers' && 'h-10 rounded-sm px-3 py-2 font-typewriter text-sm',
+      theme === 'careers' && 'font-typewriter h-10 rounded-sm px-3 py-2 text-sm',
       theme === 'blog' && 'h-10 rounded-sm px-3 py-2 font-mono text-sm',
 
       error
@@ -52,14 +52,19 @@ interface IAppTextareaProps extends ComponentProps<typeof Textarea> {
   theme?: TFormTheme;
 }
 
-export const AppTextarea = ({ className, error, theme = 'default', ...props }: IAppTextareaProps) => (
+export const AppTextarea = ({
+  className,
+  error,
+  theme = 'default',
+  ...props
+}: IAppTextareaProps) => (
   <Textarea
     className={cn(
       'min-h-30 w-full resize-none transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
       'border-theme-line bg-theme-bg text-theme-fg',
 
       theme === 'default' && 'rounded-xl p-4 text-sm',
-      theme === 'careers' && 'rounded-sm p-3 font-typewriter text-sm',
+      theme === 'careers' && 'font-typewriter rounded-sm p-3 text-sm',
       theme === 'blog' && 'rounded-sm p-3 font-mono text-sm',
 
       error

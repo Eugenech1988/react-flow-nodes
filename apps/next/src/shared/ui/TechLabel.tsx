@@ -6,16 +6,11 @@ interface ITechLabelProps {
   theme?: 'default' | 'careers' | 'blog';
 }
 
-export const TechLabel = ({ children, className, theme = 'default' }: ITechLabelProps) => {
-  const colorClass =
-    theme === 'careers'
-      ? 'text-[#6fa28c]/70'
-      : theme === 'blog'
-        ? 'text-[#6fa28c]/70'
-        : 'text-[#2dd4bf]/70';
-
+export const TechLabel = ({ children, className, theme: _theme = 'default' }: ITechLabelProps) => {
   return (
-    <span className={cn('font-mono text-[10px] tracking-widest uppercase', colorClass, className)}>
+    <span
+      className={cn('font-mono text-[10px] tracking-widest text-theme-accent/70 uppercase', className)}
+    >
       {children}
     </span>
   );

@@ -37,7 +37,7 @@ export const HeroSection = async () => {
           footer={
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center gap-1 font-mono text-[7px] text-slate-500 sm:gap-2 sm:text-[10px]">
-                <span className="h-1 w-1 animate-pulse rounded-full bg-theme-accent sm:h-1.5 sm:w-1.5" />
+                <span className="bg-theme-accent h-1 w-1 animate-pulse rounded-full sm:h-1.5 sm:w-1.5" />
                 {t('hero.canvas.status')}
               </div>
               <div className="flex items-center gap-2 sm:gap-4">
@@ -46,7 +46,7 @@ export const HeroSection = async () => {
                     {t('hero.canvas.nodes', { count: 3 })}
                   </span>
                   <div className="hidden h-1.5 w-16 overflow-hidden rounded-full bg-slate-800 sm:block">
-                    <div className="h-full w-[40%] bg-theme-accent" />
+                    <div className="bg-theme-accent h-full w-[40%]" />
                   </div>
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2">
@@ -54,10 +54,10 @@ export const HeroSection = async () => {
                     {t('hero.canvas.edges', { count: 2 })}
                   </span>
                   <div className="hidden h-1.5 w-16 overflow-hidden rounded-full bg-slate-800 sm:block">
-                    <div className="h-full w-[60%] bg-theme-accent" />
+                    <div className="bg-theme-accent h-full w-[60%]" />
                   </div>
                 </div>
-                <Gauge className="hidden h-4 w-4 text-theme-accent sm:block" />
+                <Gauge className="text-theme-accent hidden h-4 w-4 sm:block" />
               </div>
             </div>
           }

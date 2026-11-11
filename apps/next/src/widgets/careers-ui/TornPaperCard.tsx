@@ -32,7 +32,9 @@ export const TornPaperCard = ({ title, description, number, Icon, badge }: ITorn
     <div className="px-5 pt-5 pb-8">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-baseline gap-2">
-          <span className="font-serif text-3xl leading-none font-bold text-[#8a2e2e]">{number}</span>
+          <span className="font-serif text-3xl leading-none font-bold text-[#8a2e2e]">
+            {number}
+          </span>
           <span className="font-mono text-[9px] tracking-[0.2em] text-[#8a7a5c] uppercase">
             {badge}
           </span>
@@ -40,7 +42,9 @@ export const TornPaperCard = ({ title, description, number, Icon, badge }: ITorn
         <Icon className="h-5 w-5 text-[#4a3f2e]/70" />
       </div>
 
-      <h3 className="font-serif text-lg font-bold tracking-wide text-[#2a2218] sm:text-xl">{title}</h3>
+      <h3 className="font-serif text-lg font-bold tracking-wide text-[#2a2218] sm:text-xl">
+        {title}
+      </h3>
       <p className="mt-2 font-serif text-sm leading-relaxed text-[#4a3f2e]/85">{description}</p>
     </div>
   </PaperCard>

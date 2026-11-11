@@ -9,30 +9,30 @@ import {
   CareersConsole,
   CareersPerks,
   CareersProcess,
-  CareersCta
+  CareersCta,
 } from './_components';
 
-export const generateMetadata = async ({params}: TPageProps): Promise<Metadata> => {
-  const {locale} = await params;
+export const generateMetadata = async ({ params }: TPageProps): Promise<Metadata> => {
+  const { locale } = await params;
   return getPageMetadata(locale, 'careers', '/careers');
 };
 
-const CareersPage = async ({params}: TPageProps) => {
-  const {locale} = await params;
+const CareersPage = async ({ params }: TPageProps) => {
+  const { locale } = await params;
 
-  const [jobs, {t}] = await Promise.all([
+  const [jobs, { t }] = await Promise.all([
     getPublishedJobs(locale),
-    getT('careers', {lng: locale})
+    getT('careers', { lng: locale }),
   ]);
 
   return (
     <>
-      <CareersHero total={jobs.length} t={t}/>
-      <CareersStats/>
-      <CareersConsole jobs={jobs} locale={locale}/>
-      <CareersPerks/>
-      <CareersProcess/>
-      <CareersCta/>
+      <CareersHero total={jobs.length} t={t} />
+      <CareersStats />
+      <CareersConsole jobs={jobs} locale={locale} />
+      <CareersPerks />
+      <CareersProcess />
+      <CareersCta />
     </>
   );
 };

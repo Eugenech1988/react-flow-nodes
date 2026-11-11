@@ -8,15 +8,15 @@ export const BackgroundArtifacts = () => (
 
     {CROSSHAIRS.map((pos) => (
       <div key={pos} className={`absolute ${pos} h-4 w-4`}>
-        <div className="absolute top-1/2 left-0 h-px w-full bg-theme-accent/30" />
-        <div className="absolute top-0 left-1/2 h-full w-px bg-theme-accent/30" />
+        <div className="bg-theme-accent/30 absolute top-1/2 left-0 h-px w-full" />
+        <div className="bg-theme-accent/30 absolute top-0 left-1/2 h-full w-px" />
       </div>
     ))}
 
     {GLITCH_BARS_H.map((bar, i) => (
       <div
         key={`gh-${i}`}
-        className="absolute h-px animate-pulse bg-theme-accent/40 motion-reduce:animate-none"
+        className="bg-theme-accent/40 absolute h-px animate-pulse motion-reduce:animate-none"
         style={{
           top: bar.top,
           left: bar.left,
@@ -30,7 +30,7 @@ export const BackgroundArtifacts = () => (
     {GLITCH_BARS_V.map((bar, i) => (
       <div
         key={`gv-${i}`}
-        className="absolute w-px animate-pulse bg-theme-accent/30 motion-reduce:animate-none"
+        className="bg-theme-accent/30 absolute w-px animate-pulse motion-reduce:animate-none"
         style={{
           left: bar.left,
           right: bar.right,
@@ -44,7 +44,7 @@ export const BackgroundArtifacts = () => (
     {SIGNAL_DOTS.map((dot, i) => (
       <div
         key={`sd-${i}`}
-        className="absolute h-1 w-1 animate-pulse rounded-full bg-theme-accent/60 motion-reduce:animate-none"
+        className="bg-theme-accent/60 absolute h-1 w-1 animate-pulse rounded-full motion-reduce:animate-none"
         style={{
           top: dot.top,
           left: dot.left,
@@ -56,22 +56,22 @@ export const BackgroundArtifacts = () => (
 
     {/* Анимированный луч */}
     <div
-      className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-theme-accent/40 to-transparent motion-reduce:hidden"
+      className="via-theme-accent/40 absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent motion-reduce:hidden"
       style={{ animation: 'artifact-scanline 9s linear infinite' }}
     />
 
-    <div className="absolute top-1/2 left-3 -translate-y-1/2 rotate-180 font-mono text-[8px] tracking-[0.3em] text-theme-accent/25 uppercase [writing-mode:vertical-rl]">
+    <div className="text-theme-accent/25 absolute top-1/2 left-3 -translate-y-1/2 rotate-180 font-mono text-[8px] tracking-[0.3em] uppercase [writing-mode:vertical-rl]">
       0x7F.SYS.001 //// SIGNAL.LOCKED
     </div>
-    <div className="absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[8px] tracking-[0.3em] text-theme-accent/25 uppercase [writing-mode:vertical-rl]">
+    <div className="text-theme-accent/25 absolute top-1/2 right-3 -translate-y-1/2 font-mono text-[8px] tracking-[0.3em] uppercase [writing-mode:vertical-rl]">
       0x7F.SYS.002 //// DATA.STREAM
     </div>
 
-    <div className="absolute bottom-2 left-1/2 hidden -translate-x-1/2 items-center gap-3 font-mono text-[8px] tracking-widest text-theme-accent/30 uppercase md:flex">
+    <div className="text-theme-accent/30 absolute bottom-2 left-1/2 hidden -translate-x-1/2 items-center gap-3 font-mono text-[8px] tracking-widest uppercase md:flex">
       <span>LAT 47.3769</span>
-      <span className="h-1 w-1 rounded-full bg-theme-accent/40" />
+      <span className="bg-theme-accent/40 h-1 w-1 rounded-full" />
       <span>LON 8.5417</span>
-      <span className="h-1 w-1 rounded-full bg-theme-accent/40" />
+      <span className="bg-theme-accent/40 h-1 w-1 rounded-full" />
       <span>ALT 408M</span>
     </div>
   </div>

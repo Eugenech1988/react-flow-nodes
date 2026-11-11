@@ -1,14 +1,7 @@
 'use client';
 
 import { Lock, Network, Factory, Activity } from 'lucide-react';
-import {
-  Section,
-  SectionDecorator,
-  TechCard,
-  Reveal,
-  Badge,
-  SectionHeading,
-} from '@/shared/ui';
+import { Section, SectionDecorator, TechCard, Reveal, Badge, SectionHeading } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { USE_CASES } from './constants';
 

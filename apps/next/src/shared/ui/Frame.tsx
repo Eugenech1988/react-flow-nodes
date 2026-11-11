@@ -21,20 +21,20 @@ export interface IFrameProps {
 }
 
 export const Frame = ({
-                        children,
-                        headerTitle,
-                        headerIcon: Icon = Activity,
-                        headerClassName,
-                        footer,
-                        footerClassName,
-                        className,
-                        innerClassName,
-                        toolbar,
-                        theme,
-                        withRivets = true,
-                        variant = 'monitor',
-                        hasHazardStripes = false,
-                      }: IFrameProps) => {
+  children,
+  headerTitle,
+  headerIcon: Icon = Activity,
+  headerClassName,
+  footer,
+  footerClassName,
+  className,
+  innerClassName,
+  toolbar,
+  theme,
+  withRivets = true,
+  variant = 'monitor',
+  hasHazardStripes = false,
+}: IFrameProps) => {
   const isCareers = theme === 'careers';
   const isBlog = theme === 'blog';
   const isDefault = !isCareers && !isBlog;
@@ -46,23 +46,23 @@ export const Frame = ({
       {...themeScope(theme)}
       className={cn(
         'relative flex w-full flex-col backdrop-blur-md',
-        isBlog && 'rounded-sm border border-theme-line bg-theme-surface/95 shadow-theme-panel',
+        isBlog && 'border-theme-line bg-theme-surface/95 shadow-theme-panel rounded-sm border',
         useThickFrame &&
-        'rounded-2xl border-2 border-theme-line-strong bg-linear-to-b from-theme-raised to-theme-panel p-3 shadow-theme-frame sm:rounded-3xl sm:p-4',
+          'border-theme-line-strong from-theme-raised to-theme-panel shadow-theme-frame rounded-2xl border-2 bg-linear-to-b p-3 sm:rounded-3xl sm:p-4',
         isDefault &&
-        !useThickFrame &&
-        'rounded-3xl border border-theme-accent/30 bg-theme-surface/60 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] sm:p-2',
+          !useThickFrame &&
+          'border-theme-accent/30 bg-theme-surface/60 rounded-3xl border p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] sm:p-2',
         className,
       )}
     >
       {isBlog && (
         <>
           <span className="theme-grid pointer-events-none absolute inset-0 bg-size-[16px_16px]" />
-          <div className="pointer-events-none absolute inset-1 border border-theme-accent/10" />
-          <span className="pointer-events-none absolute top-0 left-0 z-20 h-3 w-3 border-t-2 border-l-2 border-theme-accent/70" />
-          <span className="pointer-events-none absolute top-0 right-0 z-20 h-3 w-3 border-t-2 border-r-2 border-theme-accent/70" />
-          <span className="pointer-events-none absolute bottom-0 left-0 z-20 h-3 w-3 border-b-2 border-l-2 border-theme-accent/70" />
-          <span className="pointer-events-none absolute right-0 bottom-0 z-20 h-3 w-3 border-r-2 border-b-2 border-theme-accent/70" />
+          <div className="border-theme-accent/10 pointer-events-none absolute inset-1 border" />
+          <span className="border-theme-accent/70 pointer-events-none absolute top-0 left-0 z-20 h-3 w-3 border-t-2 border-l-2" />
+          <span className="border-theme-accent/70 pointer-events-none absolute top-0 right-0 z-20 h-3 w-3 border-t-2 border-r-2" />
+          <span className="border-theme-accent/70 pointer-events-none absolute bottom-0 left-0 z-20 h-3 w-3 border-b-2 border-l-2" />
+          <span className="border-theme-accent/70 pointer-events-none absolute right-0 bottom-0 z-20 h-3 w-3 border-r-2 border-b-2" />
         </>
       )}
 
@@ -75,8 +75,8 @@ export const Frame = ({
           'relative flex w-full flex-1 flex-col overflow-hidden',
           isBlog && 'bg-transparent',
           useThickFrame &&
-          'rounded-xl border border-theme-line bg-theme-surface shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_color-mix(in_oklab,var(--theme-accent)_10%,transparent)]',
-          isDefault && !useThickFrame && 'rounded-[1.4rem] border border-theme-line bg-theme-bg/90',
+            'border-theme-line bg-theme-surface rounded-xl border shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_color-mix(in_oklab,var(--theme-accent)_10%,transparent)]',
+          isDefault && !useThickFrame && 'border-theme-line bg-theme-bg/90 rounded-[1.4rem] border',
           innerClassName,
         )}
       >
@@ -86,7 +86,7 @@ export const Frame = ({
 
         <div
           className={cn(
-            'relative z-10 flex shrink-0 items-center justify-between border-b border-theme-line px-4 py-3 sm:px-6',
+            'border-theme-line relative z-10 flex shrink-0 items-center justify-between border-b px-4 py-3 sm:px-6',
             headerBg,
             isDefault ? 'text-theme-accent/80' : 'text-theme-accent',
             headerClassName,
@@ -108,7 +108,7 @@ export const Frame = ({
         {footer && (
           <div
             className={cn(
-              'relative z-10 shrink-0 border-t border-theme-line px-4 py-2 sm:px-6',
+              'border-theme-line relative z-10 shrink-0 border-t px-4 py-2 sm:px-6',
               headerBg,
               footerClassName,
             )}

@@ -48,7 +48,7 @@ export const PricingSection = () => {
             const buttonClassName = cn(
               'w-full',
               !isPopular &&
-              'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white',
+                'border border-slate-700 bg-slate-800/50 hover:bg-slate-700 hover:text-white',
             );
 
             return (

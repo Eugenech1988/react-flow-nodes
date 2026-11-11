@@ -23,28 +23,20 @@ export const TechCard = ({
   return (
     <div
       className={cn(
-        'group relative flex flex-col overflow-hidden rounded-2xl backdrop-blur-md transition-all duration-300',
+        'group relative flex flex-col overflow-hidden backdrop-blur-md transition-all duration-300',
         isCareers &&
-        'border border-[#4a5c52]/40 bg-[#0a0e0d]/80 shadow-[inset_0_1px_0_rgba(156,196,176,0.1),0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-1 hover:border-[#6fa28c]/50 hover:shadow-[0_15px_40px_rgba(111,162,140,0.15)]',
+        'rounded-2xl border border-theme-line/50 bg-theme-bg/80 shadow-theme-panel hover:-translate-y-1 hover:border-theme-accent/50 hover:shadow-theme-glow',
         isBlog &&
-        'rounded-sm border border-[#1E293B] bg-[#050B14] shadow-[inset_0_1px_0_rgba(45,212,191,0.08),0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 hover:border-[#2dd4bf]/60 hover:bg-[#0B1424] hover:shadow-[0_15px_40px_rgba(45,212,191,0.15)]',
-        !isCareers &&
-        !isBlog &&
-        'hover:-translate-y-1.5 hover:border-[#2dd4bf]/50 hover:shadow-[0_15px_40px_rgba(45,212,191,0.15)]',
+        'rounded-sm border border-theme-line bg-theme-surface shadow-theme-panel hover:-translate-y-0.5 hover:border-theme-accent/60 hover:bg-theme-panel hover:shadow-theme-glow',
         !isCareers &&
         !isBlog &&
         (popular
-          ? 'border-2 border-[#2dd4bf]/60 bg-linear-to-br from-[#0d1f1e] via-[#0a1615] to-[#06100f] shadow-[0_0_40px_rgba(45,212,191,0.15)] md:-translate-y-4'
-          : 'border border-[#2dd4bf]/20 bg-[#0d1f1e]/80 shadow-[inset_0_1px_0_rgba(45,212,191,0.1),0_10px_30px_rgba(0,0,0,0.5)]'),
+          ? 'rounded-2xl border-2 border-theme-accent/60 bg-linear-to-br from-theme-raised via-theme-surface to-theme-bg shadow-theme-glow-lg hover:-translate-y-1.5 md:-translate-y-4'
+          : 'rounded-2xl border border-theme-accent/20 bg-theme-surface/80 shadow-theme-panel hover:-translate-y-1.5 hover:border-theme-accent/50 hover:shadow-theme-glow'),
         className,
       )}
     >
-      {rivets && (
-        <Rivets
-          compact
-          className={isCareers ? 'bg-[#6fa28c]/40' : isBlog ? 'bg-[#1E293B]' : 'bg-[#2dd4bf]/40'}
-        />
-      )}
+      {rivets && <Rivets compact className="bg-theme-rivet" />}
       {children}
     </div>
   );
