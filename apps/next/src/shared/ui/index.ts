@@ -10,7 +10,4 @@ export * from './Reveal';
 export * from './TechCard';
 export * from './TechLabel';
 export * from './Frame';
-export * from './TornPaperCard';
-export * from './StickyNoteCard';
-export * from './ChamferedCard';
 export * from './SocialLinks';

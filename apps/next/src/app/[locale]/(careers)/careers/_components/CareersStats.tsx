@@ -3,7 +3,7 @@
 import { useT } from '@/shared/lib/i18n/client';
 import { CAREERS_STATS } from '../constants';
 import { Odometer } from './CareersOdometer';
-import { ChamferedCard } from '@/shared/ui';
+import { ChamferedCard } from '@/widgets/careers-ui';
 
 export function CareersStats() {
   const { t } = useT('careers');

@@ -1,8 +1,9 @@
 'use client';
 
-import { SectionHeading, TornPaperCard, Reveal } from '@/shared/ui';
+import { SectionHeading, Reveal } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { PERKS } from '../constants';
+import { TornPaperCard } from '@/widgets/careers-ui';
 
 const ROTATIONS = ['-rotate-1', 'rotate-1', '-rotate-2', 'rotate-2', '-rotate-1', 'rotate-1'];
 
