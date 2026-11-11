@@ -1,0 +1,25 @@
+@theme inline {
+    --color-theme-header: var(--theme-header);
+
+    --color-bg: var(--theme-bg);
+    --color-surface: var(--theme-surface);
+    --color-panel: var(--theme-panel);
+    --color-raised: var(--theme-raised);
+
+    --color-line: var(--theme-line);
+    --color-line-strong: var(--theme-line-strong);
+
+    --color-accent: var(--theme-accent);
+    --color-accent-hover: var(--theme-accent-hover);
+    --color-accent-deep: var(--theme-accent-deep);
+
+    --color-fg: var(--theme-fg);
+    --color-muted: var(--theme-muted);
+    --color-dim: var(--theme-dim);
+
+    --color-danger: var(--theme-danger);
+
+    /* Отключено до появления необходимости: */
+    /* --color-success: var(--theme-success); */
+    /* --color-warning: var(--theme-warning); */
+}

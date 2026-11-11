@@ -1,7 +1,63 @@
 @import "tailwindcss";
-
+@import "./styles/tokens.css";
+@import "./styles/themes/main.css";
+@import "./styles/themes/blog.css";
+@import "./styles/themes/careers.css";
 @plugin 'tailwindcss-animate';
 
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-roboto);
+    --font-mono: var(--font-roboto-mono);
+    --font-caveat: var(--font-caveat);
+    --font-typewriter: var(--font-typewriter);
+
+    /* Старые theme-* токены, на которых пока живут Header/Footer/Frame */
+    --color-theme-bg: var(--theme-bg);
+    --color-theme-surface: var(--theme-surface);
+    --color-theme-panel: var(--theme-panel);
+    --color-theme-raised: var(--theme-raised);
+    --color-theme-line: var(--theme-line);
+    --color-theme-line-strong: var(--theme-line-strong);
+    --color-theme-accent: var(--theme-accent);
+    --color-theme-accent-hover: var(--theme-accent-hover);
+    --color-theme-accent-deep: var(--theme-accent-deep);
+    --color-theme-fg: var(--theme-fg);
+    --color-theme-muted: var(--theme-muted);
+    --color-theme-dim: var(--theme-dim);
+    --color-theme-danger: var(--theme-danger);
+    --color-theme-rivet: var(--theme-rivet);
+
+    /* Старые тени для Frame */
+    --shadow-theme-glow-sm: 0 0 8px color-mix(in oklab, var(--theme-accent) 20%, transparent);
+    --shadow-theme-glow: 0 0 15px color-mix(in oklab, var(--theme-accent) 15%, transparent);
+    --shadow-theme-glow-lg: 0 0 30px color-mix(in oklab, var(--theme-accent) 25%, transparent);
+    --shadow-theme-frame: inset 0 1px 0 color-mix(in oklab, var(--theme-accent-hover) 15%, transparent), 0 20px 50px rgba(0, 0, 0, 0.8);
+    --shadow-theme-panel: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 color-mix(in oklab, var(--theme-accent) 10%, transparent);
+}
+
+@theme {
+    /* DEPRECATED: оставлено для компонентов вне этого набора (Header/Footer/InquiryModal). */
+    /* Blog Theme */
+    --color-blog-bg: #02060C;
+    --color-blog-surface: #050B14;
+    --color-blog-panel: #0B1424;
+    --color-blog-border: #1E293B;
+    --color-blog-accent: #2dd4bf;
+    --color-blog-accent-hover: #5eead4;
+    --color-blog-text: #e2e8f0;
+    --color-blog-muted: #94a3b8;
+    --color-blog-dim: #64748b;
+
+    /* Careers Theme */
+    --color-careers-surface: #0a0e0d;
+    --color-careers-panel: #0f1512;
+    --color-careers-border: #2f3d36;
+    --color-careers-accent: #6fa28c;
+    --color-careers-text: #d4cfc0;
+    --color-careers-muted: #8a9488;
+}
 
 :root {
     --background: #040a09;
@@ -17,6 +73,14 @@ html:has([data-home-page]) {
         scroll-behavior: auto !important;
     }
 }
+
+body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-roboto), Arial, sans-serif;
+}
+
+/* Дальше идут твои @keyframes, @property --num, @utility theme-grid и т.д. — оставляешь их как было */
 
 @theme inline {
     --color-background: var(--background);

@@ -1,0 +1,22 @@
+[data-theme="blog"] {
+    --theme-header: #050b14;
+    --theme-bg: #02060c;
+    --theme-surface: #050b14;
+    --theme-panel: #0b1424;
+    --theme-raised: #0f1b30;
+
+    --theme-line: #1e293b;
+    --theme-line-strong: #334155;
+
+    --theme-accent: #2dd4bf;
+    --theme-accent-hover: #5eead4;
+    --theme-accent-deep: #0d9488;
+
+    --theme-fg: #e2e8f0;
+    --theme-muted: #94a3b8;
+    --theme-dim: #64748b;
+
+    --theme-danger: #ef4444;
+    --theme-success: #22c55e;
+    --theme-warning: #f59e0b;
+}

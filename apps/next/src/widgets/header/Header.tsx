@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import PipelineLogo from '@/assets/logo.svg';
 import { cn } from '@/shared/lib';
@@ -9,179 +9,107 @@ import { useT } from '@/shared/lib/i18n/client';
 import { Menu, X } from 'lucide-react';
 import { NAV_LINKS } from './model';
 import { LanguageSwitcher } from '@/features';
-import { APP_LOGIN_URL } from '@/shared/lib/app-url';
 
-interface IHeaderProps {
-  locale: string;
-  theme?: 'default' | 'careers' | 'blog';
+interface THeaderProps {
+  theme?: 'default' | 'careers';
 }
 
-export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
-  const { t } = useT('common');
+export const Header = ({ theme = 'default' }: THeaderProps) => {
+  const { t, i18n } = useT('common');
+  const lng = i18n.language;
   const [isOpen, setIsOpen] = useState(false);
 
   const isCareers = theme === 'careers';
-  const isBlog = theme === 'blog';
-  const isThemed = isCareers || isBlog;
-
-  const btnVariant = isCareers ? 'careers' : isBlog ? 'blog' : 'primary';
-
-  const navBtnClasses = cn({
-    'rounded-sm hover:after:bg-[#6fa28c] hover:after:shadow-[0_0_8px_rgba(111,162,140,0.8)] hover:text-[#e8dcc8]':
-    isCareers,
-    'rounded-sm hover:after:bg-blog-accent hover:after:shadow-[0_0_8px_rgba(45,212,191,0.8)] hover:text-blog-accent-hover':
-    isBlog,
-  });
 
   return (
     <header className="fixed top-4 left-1/2 z-50 w-[95%] max-w-7xl -translate-x-1/2 transition-all duration-300">
       <div
         className={cn(
-          'relative w-full px-5 py-2.5 sm:px-8 xl:px-10',
-          !isBlog &&
-          'rounded-2xl border border-white/10 bg-white/6 shadow-[0_8px_32px_0_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md after:absolute after:inset-0 after:-z-10 after:rounded-2xl after:bg-linear-to-b after:from-white/5 after:to-transparent after:opacity-50',
-          isCareers &&
-          'rounded-sm border-[#4a5c52]/50 bg-[#0a0e0d]/80 after:rounded-sm after:from-[#4a5c52]/20',
-          isBlog &&
-          'rounded-sm border border-blog-border bg-blog-surface/80 shadow-[0_8px_32px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(45,212,191,0.1)] backdrop-blur-xl',
+          'relative w-full border border-theme-line bg-theme-header/80 px-5 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl sm:px-8 xl:px-10',
+          isCareers ? 'rounded-sm' : 'rounded-3xl',
         )}
       >
-        {isBlog && (
-          <>
-            <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(45,212,191,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(45,212,191,0.03)_1px,transparent_1px)] bg-size-[16px_16px]" />
-
-            <div className="pointer-events-none absolute inset-1 border border-blog-accent/10" />
-
-            <span className="pointer-events-none absolute top-0 left-0 h-3 w-3 border-t-2 border-l-2 border-blog-accent/70" />
-            <span className="pointer-events-none absolute top-0 right-0 h-3 w-3 border-t-2 border-r-2 border-blog-accent/70" />
-            <span className="pointer-events-none absolute bottom-0 left-0 h-3 w-3 border-b-2 border-l-2 border-blog-accent/70" />
-            <span className="pointer-events-none absolute right-0 bottom-0 h-3 w-3 border-r-2 border-b-2 border-blog-accent/70" />
-
-            <span className="pointer-events-none absolute top-1/2 left-1/2 h-10 w-[120%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,rgba(45,212,191,0.08),transparent_70%)] blur-md" />
-          </>
-        )}
-
-        <span
-          className={cn(
-            'pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-teal-300/30 to-transparent md:inset-x-5',
-            isCareers && 'via-[#6fa28c]/50',
-            isBlog && 'via-blog-accent/50 shadow-[0_0_8px_rgba(45,212,191,0.4)]',
-          )}
-        />
-        <span
-          className={cn(
-            'pointer-events-none absolute inset-x-3 bottom-0 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent md:inset-x-5',
-            isCareers && 'via-[#6fa28c]/30',
-            isBlog && 'via-blog-accent/20',
-          )}
-        />
+        <span className="pointer-events-none absolute inset-x-4 top-0 h-px bg-linear-to-r from-transparent via-theme-accent/30 to-transparent md:inset-x-8 md:via-theme-accent/60 md:shadow-[0_0_8px_var(--theme-accent)]" />
+        <span className="pointer-events-none absolute inset-x-4 bottom-0 h-px bg-linear-to-r from-transparent via-theme-accent/25 to-transparent md:inset-x-8 md:via-theme-accent/50" />
 
         <div className="relative z-10 flex items-center justify-between gap-2">
           <Link
-            href={`/${locale}`}
-            className="group flex min-w-0 flex-1 items-center gap-2.5 text-lg font-semibold tracking-tight text-white xl:flex-none xl:gap-3"
+            href={`/${lng}`}
+            className="group flex min-w-0 flex-1 items-center gap-2.5 xl:flex-none xl:gap-3"
           >
-            <div
-              className={cn(
-                'relative flex h-6 w-9 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 md:w-11',
-                isCareers && 'text-[#6fa28c]',
-                isBlog && 'text-blog-accent',
-                !isThemed && 'text-teal-400',
-              )}
-            >
-              {isBlog && (
-                <>
-                  <span className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 animate-[spin_12s_linear_infinite] rounded-full border border-dashed border-blog-accent/40 motion-reduce:animate-none" />
-                  <span className="absolute top-1/2 left-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blog-accent/10" />
-                </>
-              )}
-              <PipelineLogo
-                className={cn(
-                  'relative z-10 h-full w-full stroke-current',
-                  isCareers && 'drop-shadow-[0_0_8px_rgba(111,162,140,0.6)]',
-                  isBlog && 'drop-shadow-[0_0_8px_rgba(45,212,191,0.6)]',
-                  !isThemed && 'drop-shadow-[0_0_8px_rgba(57,179,155,0.4)]',
-                )}
-              />
+            <div className="flex h-6 w-9 shrink-0 items-center justify-center text-theme-accent transition-transform duration-300 group-hover:scale-110 md:w-11">
+              <PipelineLogo className="h-full w-full stroke-current drop-shadow-[0_0_8px_var(--theme-accent)]" />
             </div>
-            <span
-              className={cn(
-                'truncate bg-clip-text text-sm font-medium tracking-widest whitespace-nowrap text-transparent uppercase transition-colors duration-300 sm:text-base xl:text-lg xl:tracking-[0.15em]',
-                isCareers && 'bg-linear-to-r from-white via-neutral-100 to-[#9cc4b0]',
-                isBlog && 'bg-linear-to-r from-white via-blog-text to-blog-accent',
-                !isThemed && 'bg-linear-to-r from-white via-neutral-100 to-[#39b39b]',
-              )}
-            >
+            <span className="truncate bg-linear-to-r from-white via-white to-theme-accent bg-clip-text text-sm font-medium tracking-widest uppercase whitespace-nowrap text-transparent sm:text-base xl:text-lg xl:tracking-[0.15em]">
               pipeline studio
             </span>
           </Link>
 
-          <nav className="relative hidden items-center gap-1 xl:flex">
-            <span
-              className={cn(
-                'pointer-events-none absolute -top-1 right-2 left-2 h-px bg-linear-to-r from-transparent via-teal-400/30 to-transparent',
-                isCareers && 'via-[#6fa28c]/40',
-                isBlog && 'via-blog-accent/40',
-              )}
-            />
+          <nav className="hidden items-center gap-1 xl:flex">
             {NAV_LINKS.map((link) => (
               <AppButton
                 key={link.id}
                 isLink
-                linkTo={`/${locale}${link.href}`}
-                className={navBtnClasses}
+                linkTo={`/${lng}${link.href}`}
                 variant="nav"
+                className={cn(
+                  'text-theme-muted hover:bg-theme-panel hover:text-theme-fg hover:after:bg-theme-accent hover:after:shadow-[0_0_8px_var(--theme-accent)]',
+                  isCareers ? 'rounded-sm' : 'rounded-xl'
+                )}
               >
                 {t(`header.nav.${link.id}`)}
               </AppButton>
             ))}
-            <span
-              className={cn(
-                'pointer-events-none absolute right-2 -bottom-1 left-2 h-px bg-linear-to-r from-transparent via-teal-400/20 to-transparent',
-                isCareers && 'via-[#6fa28c]/30',
-                isBlog && 'via-blog-accent/20',
-              )}
-            />
           </nav>
 
+          {/* Правая часть (Desktop) */}
           <div className="hidden items-center gap-4 xl:flex">
-            <LanguageSwitcher locale={locale} theme={theme} />
-
-            <div
-              className={cn(
-                'relative h-6 w-px bg-white/10',
-                isCareers && 'bg-[#4a5c52]/50',
-                isBlog && 'bg-blog-border',
-              )}
+            <Suspense
+              fallback={
+                <div
+                  className={cn('h-9.5 w-22.5 animate-pulse bg-theme-panel', {
+                    'rounded-sm': isCareers,
+                    'rounded-xl': !isCareers,
+                  })}
+                />
+              }
             >
-              {isBlog && (
-                <>
-                  <span className="absolute top-0 left-0 h-1.5 w-px bg-blog-accent/80" />
-                  <span className="absolute bottom-0 left-0 h-1.5 w-px bg-blog-accent/80" />
-                </>
-              )}
-            </div>
+              <LanguageSwitcher theme={theme as any} />
+            </Suspense>
 
+            {/* Разделитель */}
+            <div className="h-6 w-px bg-theme-line" />
+
+            {/* Кнопка Sing In */}
             <AppButton
               isLink
-              linkTo={APP_LOGIN_URL}
+              linkTo="http://localhost:5173/login"
               variant="nav"
-              className={cn('text-sm font-medium text-neutral-300 hover:text-white', navBtnClasses)}
+              className={cn(
+                'text-sm font-medium text-theme-muted hover:text-theme-fg',
+                isCareers ? 'rounded-sm' : 'rounded-xl'
+              )}
             >
               {t('header.signIn')}
             </AppButton>
+
+            {/* Кнопка Get Started */}
             <AppButton
               isLink
-              variant={btnVariant}
-              className={cn({ 'rounded-sm capitalize': isThemed })}
+              variant="primary"
+              className={cn({
+                'rounded-sm capitalize': isCareers,
+                'rounded-xl': !isCareers,
+              })}
               newTab={false}
-              linkTo={APP_LOGIN_URL}
+              linkTo="http://localhost:5173/login"
               size="sm"
             >
               {t('header.getStarted')}
             </AppButton>
           </div>
 
+          {/* Кнопка мобильного меню (Бургер) */}
           <AppButton
             variant="ghost"
             size="xs"
@@ -189,112 +117,88 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
             iconClassName="h-5 w-5"
             onClick={() => setIsOpen(!isOpen)}
             className={cn(
-              'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 p-0 text-white hover:bg-white/5 hover:text-white xl:hidden',
-              {
-                'rounded-sm border-[#4a5c52] bg-[#0a0e0d] text-[#9cc4b0] hover:border-[#6fa28c] hover:bg-[#141a16] hover:text-[#e8dcc8]':
-                isCareers,
-                'rounded-sm border-blog-border bg-blog-surface text-blog-accent hover:border-blog-accent/60 hover:bg-blog-panel':
-                isBlog,
-              },
+              'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center border border-theme-line p-0 text-theme-fg hover:bg-theme-panel xl:hidden',
+              isCareers ? 'rounded-sm' : 'rounded-xl'
             )}
             aria-label={t('header.toggleMenu')}
           />
         </div>
 
+        {/* Мобильное меню */}
         <div
           className={cn(
-            'grid rounded-2xl border border-white/5 bg-black/40 backdrop-blur-lg transition-all duration-300 ease-in-out xl:hidden',
+            'grid border border-theme-line bg-theme-header/95 backdrop-blur-lg transition-all duration-300 ease-in-out xl:hidden',
             isOpen
               ? 'pointer-events-auto visible my-2 grid-rows-[1fr] opacity-100'
               : 'pointer-events-none invisible mt-0 grid-rows-[0fr] opacity-0',
-            {
-              'rounded-sm border-[#4a5c52]/40 bg-[#0a0e0d]/95': isCareers,
-              'rounded-sm border-blog-border bg-blog-surface/95': isBlog,
-            },
+            isCareers ? 'rounded-sm' : 'rounded-2xl'
           )}
         >
           <div className="overflow-hidden">
             <div className="relative flex flex-col gap-1 p-4 sm:p-5">
-              <span
-                className={cn(
-                  'pointer-events-none absolute inset-2 rounded-xl border border-dashed border-teal-400/15 sm:inset-2.5',
-                  isThemed && 'rounded-sm border-[#6fa28c]/20',
-                  isBlog && 'border-blog-accent/30',
-                )}
-              />
 
+              {/* Ссылки навигации */}
               {NAV_LINKS.map((link) => (
                 <AppButton
                   key={link.id}
                   isLink
-                  linkTo={`/${locale}${link.href}`}
+                  linkTo={`/${lng}${link.href}`}
                   onClick={() => setIsOpen(false)}
                   variant="nav"
                   className={cn(
-                    'h-auto w-full justify-start px-3 py-2.5 text-base text-neutral-300 hover:bg-white/5 hover:text-white',
-                    {
-                      'rounded-sm hover:bg-[#141a16] hover:text-[#e8dcc8] hover:after:bg-[#6fa28c] hover:after:shadow-[0_0_8px_rgba(111,162,140,0.8)]':
-                      isCareers,
-                      'rounded-sm hover:bg-blog-panel hover:text-blog-accent-hover hover:after:bg-blog-accent hover:after:shadow-[0_0_8px_rgba(45,212,191,0.8)]':
-                      isBlog,
-                    },
+                    'h-auto w-full justify-start px-3 py-2.5 text-base text-theme-muted hover:bg-theme-panel hover:text-theme-fg',
+                    isCareers ? 'rounded-sm' : 'rounded-xl'
                   )}
                 >
                   {t(`header.nav.${link.id}`)}
                 </AppButton>
               ))}
 
+              {/* Декоративный разделитель */}
               <div className="my-2 flex items-center gap-2 px-3">
-                <span
-                  className={cn(
-                    'h-1 w-1 rounded-full bg-teal-400/60 shadow-[0_0_4px_rgba(57,179,155,0.6)]',
-                    isCareers && 'bg-[#6fa28c]/60 shadow-[0_0_4px_rgba(111,162,140,0.6)]',
-                    isBlog && 'bg-blog-accent/60 shadow-[0_0_4px_rgba(45,212,191,0.6)]',
-                  )}
-                />
-                <span
-                  className={cn(
-                    'h-px flex-1 bg-linear-to-r from-teal-400/40 via-white/10 to-transparent',
-                    isCareers && 'from-[#6fa28c]/40 via-[#4a5c52]/30',
-                    isBlog && 'from-blog-accent/40 via-blog-border',
-                  )}
-                />
-                <span
-                  className={cn(
-                    'h-1 w-1 rounded-full bg-teal-400/60 shadow-[0_0_4px_rgba(57,179,155,0.6)]',
-                    isCareers && 'bg-[#6fa28c]/60 shadow-[0_0_4px_rgba(111,162,140,0.6)]',
-                    isBlog && 'bg-blog-accent/60 shadow-[0_0_4px_rgba(45,212,191,0.6)]',
-                  )}
-                />
+                <span className="h-1 w-1 rounded-full bg-theme-accent/60" />
+                <span className="h-px flex-1 bg-linear-to-r from-theme-accent/40 via-theme-line to-transparent" />
+                <span className="h-1 w-1 rounded-full bg-theme-accent/60" />
               </div>
 
+              {/* Кнопки и переключатель в мобильном меню */}
               <div className="flex flex-col gap-3 pt-1 pb-1">
-                <LanguageSwitcher locale={locale} theme={theme} isMobile />
+                <Suspense
+                  fallback={
+                    <div
+                      className={cn('h-9.5 w-full animate-pulse bg-theme-panel', {
+                        'rounded-sm': isCareers,
+                        'rounded-xl': !isCareers,
+                      })}
+                    />
+                  }
+                >
+                  <LanguageSwitcher theme={theme as any} isMobile />
+                </Suspense>
 
                 <AppButton
                   isLink
-                  linkTo={APP_LOGIN_URL}
+                  linkTo="http://localhost:5173/login"
                   onClick={() => setIsOpen(false)}
                   variant="nav"
                   className={cn(
-                    'h-auto w-full text-center text-sm font-medium text-neutral-300 hover:text-white',
-                    {
-                      'rounded-sm hover:bg-[#141a16] hover:text-[#e8dcc8] hover:after:bg-[#6fa28c]':
-                      isCareers,
-                      'rounded-sm hover:bg-blog-panel hover:text-blog-accent-hover hover:after:bg-blog-accent':
-                      isBlog,
-                    },
+                    'h-auto w-full text-center text-sm font-medium text-theme-muted hover:text-theme-fg',
+                    isCareers ? 'rounded-sm' : 'rounded-xl'
                   )}
                 >
                   {t('header.signIn')}
                 </AppButton>
+
                 <AppButton
                   isLink
-                  linkTo={APP_LOGIN_URL}
+                  linkTo="http://localhost:5173/login"
                   onClick={() => setIsOpen(false)}
-                  size="md"
-                  variant={btnVariant}
-                  className={cn({ 'rounded-sm capitalize': isThemed })}
+                  size="sm"
+                  variant="primary"
+                  className={cn({
+                    'rounded-sm capitalize': isCareers,
+                    'rounded-xl': !isCareers,
+                  })}
                 >
                   {t('header.getStarted')}
                 </AppButton>

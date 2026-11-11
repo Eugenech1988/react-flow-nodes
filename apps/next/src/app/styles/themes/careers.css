@@ -1,0 +1,22 @@
+[data-theme="careers"] {
+    --theme-header: #0a0e0d;
+    --theme-bg: #0a0e0d;
+    --theme-surface: #0f1512;
+    --theme-panel: #1a2420;
+    --theme-raised: #22342d;
+
+    --theme-line: #2f3d36;
+    --theme-line-strong: #4a5c52;
+
+    --theme-accent: #6fa28c;
+    --theme-accent-hover: #9cc4b0;
+    --theme-accent-deep: #4a6d5e;
+
+    --theme-fg: #d4cfc0;
+    --theme-muted: #8a9488;
+    --theme-dim: #4a5c52;
+
+    --theme-danger: #c25a5a;
+    --theme-success: #6fa28c;
+    --theme-warning: #c9a55c;
+}
