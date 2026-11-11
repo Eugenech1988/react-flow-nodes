@@ -14,9 +14,9 @@ export const AppLabel = ({ className, theme = 'default', ...props }: IAppLabelPr
   <Label
     className={cn(
       'text-[10px] tracking-widest uppercase',
-      theme === 'default' && 'text-[#2dd4bf]/80',
-      theme === 'careers' && 'text-[#6fa28c]/80',
-      theme === 'blog' && 'text-[#2dd4bf]/80',
+      'text-theme-accent/80', // Цвет берется из темы, меняется только прозрачность
+      theme === 'careers' && 'font-typewriter',
+      theme === 'blog' && 'font-mono',
       className,
     )}
     {...props}
@@ -32,16 +32,15 @@ export const AppInput = ({ className, error, theme = 'default', ...props }: IApp
   <Input
     className={cn(
       'w-full transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
-      theme === 'default' && 'h-12 rounded-xl border bg-[#040a09] px-4 py-3 text-sm',
-      theme === 'careers' && 'h-10 rounded-sm border bg-[#0a0e0d]/50 px-3 py-2 font-typewriter text-sm',
-      theme === 'blog' && 'h-10 rounded-sm border bg-[#0B1424] px-3 py-2 font-mono text-sm',
+      'border-theme-line bg-theme-bg text-theme-fg', // Базовые цвета для всех
+
+      theme === 'default' && 'h-12 rounded-xl px-4 py-3 text-sm',
+      theme === 'careers' && 'h-10 rounded-sm px-3 py-2 font-typewriter text-sm',
+      theme === 'blog' && 'h-10 rounded-sm px-3 py-2 font-mono text-sm',
+
       error
-        ? 'border-red-500/50 text-red-400 focus-visible:ring-red-500/50'
-        : theme === 'careers'
-          ? 'border-[#2f3d36] text-[#d4cfc0] focus-visible:ring-[#6fa28c]/50'
-          : theme === 'blog'
-            ? 'border-[#1E293B] text-[#e2e8f0] focus-visible:ring-[#2dd4bf]/50'
-            : 'border-slate-800 text-[#d1faf5] focus-visible:ring-[#2dd4bf]/50',
+        ? 'border-theme-danger text-theme-danger focus-visible:ring-theme-danger/50'
+        : 'focus-visible:border-theme-accent focus-visible:ring-theme-accent/50',
       className,
     )}
     {...props}
@@ -57,16 +56,15 @@ export const AppTextarea = ({ className, error, theme = 'default', ...props }: I
   <Textarea
     className={cn(
       'min-h-30 w-full resize-none transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
-      theme === 'default' && 'rounded-xl border bg-[#040a09] p-4 text-sm',
-      theme === 'careers' && 'rounded-sm border bg-[#0a0e0d]/50 p-3 font-typewriter text-sm',
-      theme === 'blog' && 'rounded-sm border bg-[#0B1424] p-3 font-mono text-sm',
+      'border-theme-line bg-theme-bg text-theme-fg',
+
+      theme === 'default' && 'rounded-xl p-4 text-sm',
+      theme === 'careers' && 'rounded-sm p-3 font-typewriter text-sm',
+      theme === 'blog' && 'rounded-sm p-3 font-mono text-sm',
+
       error
-        ? 'border-red-500/50 text-red-400 focus-visible:ring-red-500/50'
-        : theme === 'careers'
-          ? 'border-[#2f3d36] text-[#d4cfc0] focus-visible:ring-[#6fa28c]/50'
-          : theme === 'blog'
-            ? 'border-[#1E293B] text-[#e2e8f0] focus-visible:ring-[#2dd4bf]/50'
-            : 'border-slate-800 text-[#d1faf5] focus-visible:ring-[#2dd4bf]/50',
+        ? 'border-theme-danger text-theme-danger focus-visible:ring-theme-danger/50'
+        : 'focus-visible:border-theme-accent focus-visible:ring-theme-accent/50',
       className,
     )}
     {...props}

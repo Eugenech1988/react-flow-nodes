@@ -52,16 +52,24 @@ const variantStyles: Record<ButtonVariant, string> = {
   primary:
     'relative text-white bg-theme-accent-deep hover:bg-theme-accent transition-colors duration-200 active:scale-[0.98]',
 
-  nav: 'relative rounded-xl px-5 py-3.5 text-sm text-theme-muted bg-transparent hover:bg-theme-panel hover:text-theme-fg transition-colors cursor-pointer font-normal shadow-none after:absolute after:bottom-0.75 after:left-1/2 after:h-[1.5px] after:w-0 after:-translate-x-1/2 after:bg-theme-accent after:shadow-[0_0_8px_var(--theme-accent)] after:transition-all hover:after:w-1/2',
+  nav: 'relative px-5 py-3.5 text-sm text-theme-muted bg-transparent hover:bg-theme-panel hover:text-theme-fg transition-colors cursor-pointer font-normal shadow-none after:absolute after:bottom-0.75 after:left-1/2 after:h-[1.5px] after:w-0 after:-translate-x-1/2 after:bg-theme-accent after:shadow-[0_0_8px_var(--theme-accent)] after:transition-all hover:after:w-1/2',
 
   ghost:
     'text-theme-muted hover:text-theme-fg hover:bg-theme-panel border border-transparent bg-transparent shadow-none transition-colors active:scale-[0.98]',
 
+  // Стиль активной кнопки языка в careers
   careers:
-    'group relative overflow-hidden border border-theme-line bg-theme-surface/50 font-mono text-xs uppercase tracking-widest text-theme-muted transition-all duration-150 ease-out hover:border-theme-accent hover:text-theme-accent hover:bg-theme-panel active:translate-y-[1px]',
+    'group relative overflow-hidden border border-theme-accent bg-theme-accent/20 font-typewriter text-xs uppercase tracking-widest text-theme-accent font-bold transition-all duration-150 ease-out hover:bg-theme-accent/30 hover:text-theme-accent-hover active:scale-[0.98] cursor-pointer',
+
+  // Контурная кнопка в стиле careers
+  'careers-outline':
+    'relative overflow-hidden border border-theme-line bg-transparent font-typewriter text-xs uppercase tracking-widest text-theme-muted transition-all duration-150 ease-out hover:border-theme-accent hover:bg-theme-panel hover:text-theme-fg active:scale-[0.98] cursor-pointer',
 
   blog:
-    'group relative overflow-hidden border border-theme-accent/40 bg-theme-accent/10 text-sm font-medium text-theme-accent transition-all duration-150 ease-out hover:border-theme-accent hover:bg-theme-accent/20 active:translate-y-px',
+    'group relative overflow-hidden border border-theme-accent/40 bg-theme-accent/10 text-sm font-medium text-theme-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150 ease-out hover:border-theme-accent hover:bg-theme-accent/20 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] active:translate-y-px cursor-pointer',
+
+  'blog-outline':
+    'relative overflow-hidden border border-theme-line bg-transparent text-sm font-medium text-theme-muted transition-all duration-150 ease-out hover:border-theme-accent hover:text-theme-accent active:translate-y-px cursor-pointer',
 
   secondary:
     'relative text-theme-fg border border-theme-line bg-theme-surface/80 hover:bg-theme-panel transition-all duration-150 active:scale-[0.98]',
@@ -70,26 +78,21 @@ const variantStyles: Record<ButtonVariant, string> = {
     'relative bg-theme-accent text-white font-bold transition-all duration-200 hover:bg-theme-accent-hover hover:scale-[1.02] active:scale-[0.98] cursor-pointer',
 
   danger:
-    'relative text-white bg-rose-600 hover:bg-rose-500 transition-colors duration-200 active:scale-[0.98]',
+    'relative font-typewriter text-theme-fg bg-rose-600 hover:bg-rose-500 transition-colors duration-200 active:scale-[0.98]',
 
   regular:
-    'relative text-theme-fg border border-theme-line bg-theme-surface hover:bg-theme-panel transition-colors active:scale-[0.98]',
-
-  'careers-outline':
-    'relative overflow-hidden border border-theme-line bg-transparent text-theme-muted transition-all duration-150 ease-out hover:border-theme-accent hover:text-theme-accent active:translate-y-[1px]',
-
-  'blog-outline':
-    'relative overflow-hidden border border-theme-line bg-transparent text-theme-muted transition-all duration-150 ease-out hover:border-theme-accent hover:text-theme-accent active:translate-y-px',
+    'relative font-typewriter text-theme-fg border border-theme-line bg-theme-surface hover:bg-theme-panel transition-colors active:scale-[0.98]',
 };
 
 const sizeStyles: Record<ButtonSize, { button: string; icon: string }> = {
-  xs: { button: 'px-3 py-1 text-xs rounded-xl min-h-8', icon: 'w-3.5 h-3.5' },
-  sm: { button: 'px-3.5 py-1.5 text-xs rounded-xl min-h-9', icon: 'w-4 h-4' },
-  md: { button: 'px-4 py-2 text-sm rounded-xl min-h-10', icon: 'w-4 h-4' },
-  lg: { button: 'px-8 py-4 text-sm rounded-xl min-h-12', icon: 'w-5 h-5' },
+  xs: { button: 'px-3 py-1 text-xs min-h-8', icon: 'w-3.5 h-3.5' },
+  sm: { button: 'px-3.5 py-1.5 text-xs min-h-9', icon: 'w-4 h-4' },
+  md: { button: 'px-4 py-2 text-sm min-h-10', icon: 'w-4 h-4' },
+  lg: { button: 'px-8 py-4 text-sm min-h-12', icon: 'w-5 h-5' },
 };
 
 const BLOG_VARIANTS: ButtonVariant[] = ['blog', 'blog-outline'];
+const SHARP_VARIANTS: ButtonVariant[] = ['careers', 'careers-outline', 'blog', 'blog-outline'];
 
 export const AppButton = ({
                             text,
@@ -113,6 +116,7 @@ export const AppButton = ({
                           }: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
   const isBlog = BLOG_VARIANTS.includes(variant);
+  const isSharp = SHARP_VARIANTS.includes(variant);
 
   const currentSize =
     variant === 'nav'
@@ -133,8 +137,9 @@ export const AppButton = ({
 
   const sharedClasses = cn(
     'inline-flex cursor-pointer items-center justify-center gap-2 font-medium outline-none focus-visible:ring-2 disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed shrink-0 box-border',
-    variantStyles[variant],
     variant !== 'nav' && currentSize.button,
+    isSharp ? 'rounded-sm' : 'rounded-xl',
+    variantStyles[variant],
     className,
   );
 

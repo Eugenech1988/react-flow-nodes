@@ -102,7 +102,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
 
             <AppButton
               isLink
-              variant="primary"
+              variant={isCareers ? 'careers' : 'primary'}
               className={cn({
                 'rounded-sm capitalize': isTechnical,
                 'rounded-xl': !isTechnical,
@@ -183,7 +183,7 @@ export const Header = ({ theme = 'default' }: THeaderProps) => {
                   linkTo={APP_LOGIN_URL}
                   onClick={() => setIsOpen(false)}
                   size="sm"
-                  variant="primary"
+                  variant={isCareers ? 'careers' : 'primary'}
                   className={cn({
                     'rounded-sm capitalize': isTechnical,
                     'rounded-xl': !isTechnical,
