@@ -6,7 +6,7 @@ import {
   SectionDecorator,
   TechCard,
   Reveal,
-  CutoutBadge,
+  Badge,
   SectionHeading,
 } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
@@ -60,9 +60,9 @@ export const UseCasesSection = () => {
                           </div>
                         </div>
                       </div>
-                      <CutoutBadge className="text-[10px] sm:text-xs">
+                      + <Badge variant="hex" className="text-[10px] sm:text-xs">
                         {t(`useCases.list.${item.id}.category`)}
-                      </CutoutBadge>
+                      </Badge>
                     </div>
 
                     <div className="relative z-10 mb-6 sm:mb-8">

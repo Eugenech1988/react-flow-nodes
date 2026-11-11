@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import PipelineLogo from '@/assets/logo.svg';
-import { InfoBadge, Rivets, SocialLinks } from '@/shared/ui';
+import { Badge, Rivets, SocialLinks } from '@/shared/ui';
 import { getT } from '@/shared/lib/i18n/server';
 import { getFooterColumns } from './model';
 import { cn } from '@/shared/lib';
@@ -208,14 +208,16 @@ export const Footer = async ({ theme = 'default' }: IFooterProps) => {
               {t('footer.copyright', { year: CURRENT_YEAR })}
             </p>
 
-            <InfoBadge
-              text={t('footer.badge')}
+            <Badge
+              variant="pill"
               theme={isBlog ? 'blog' : theme}
               className={cn(
                 isCareers && 'border-[#4a5c52]/50 bg-[#0a0e0d] text-[#8a9488] shadow-none',
                 isBlog && 'border-blog-border bg-blog-surface/80 text-blog-muted shadow-none',
               )}
-            />
+            >
+              {t('footer.badge')}
+            </Badge>
           </div>
         </div>
       </div>

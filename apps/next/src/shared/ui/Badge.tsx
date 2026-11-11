@@ -1,12 +1,62 @@
+import type { ReactNode } from 'react';
 import { cn } from '@/shared/lib';
 
-interface IInfoBadgeProps {
-  text?: string;
+export type TBadgeVariant = 'hex' | 'pill';
+export type TBadgeTheme = 'default' | 'careers' | 'blog';
+
+export interface IBadgeProps {
+  children: ReactNode;
+  variant: TBadgeVariant;
   className?: string;
-  theme?: 'default' | 'careers' | 'blog';
+  theme?: TBadgeTheme;
 }
 
-export const InfoBadge = ({ text, className, theme = 'default' }: IInfoBadgeProps) => {
+const HEX_CLIP =
+  '[clip-path:polygon(6px_0,calc(100%-6px)_0,100%_50%,calc(100%-6px)_100%,6px_100%,0_50%)]';
+
+const HEX_BORDER: Record<TBadgeTheme, string> = {
+  default: 'bg-[#2dd4bf]/30',
+  careers: 'bg-careers-accent/40',
+  blog: 'bg-blog-accent/40',
+};
+
+const HEX_INNER: Record<TBadgeTheme, string> = {
+  default: 'bg-[#0a1615] text-[#2dd4bf]',
+  careers: 'bg-careers-surface text-careers-accent',
+  blog: 'bg-blog-surface text-blog-accent-hover',
+};
+
+const HexBadge = ({
+                    children,
+                    className,
+                    theme,
+                  }: {
+  children: ReactNode;
+  className?: string;
+  theme: TBadgeTheme;
+}) => (
+  <div className={cn('relative shrink-0 p-px', HEX_CLIP, HEX_BORDER[theme], className)}>
+    <div
+      className={cn(
+        'flex items-center justify-center px-4 py-1 font-mono text-[10px] tracking-widest uppercase',
+        HEX_CLIP,
+        HEX_INNER[theme],
+      )}
+    >
+      {children}
+    </div>
+  </div>
+);
+
+const PillBadge = ({
+                     children,
+                     className,
+                     theme,
+                   }: {
+  children: ReactNode;
+  className?: string;
+  theme: TBadgeTheme;
+}) => {
   const isCareers = theme === 'careers';
   const isBlog = theme === 'blog';
   const isThemed = isCareers || isBlog;
@@ -34,7 +84,6 @@ export const InfoBadge = ({ text, className, theme = 'default' }: IInfoBadgeProp
           background: `radial-gradient(circle at 50% 120%, ${accentGlow.replace('1)', '0.15)')}, transparent 60%)`,
         }}
       />
-
       <span
         className={cn(
           'pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent to-transparent',
@@ -89,7 +138,7 @@ export const InfoBadge = ({ text, className, theme = 'default' }: IInfoBadgeProp
             'font-typewriter text-[#d4ccb8] drop-shadow-[0_0_4px_rgba(212,204,184,0.4)]': isBlog,
           })}
         >
-          {text}
+          {children}
         </span>
 
         <span className="relative flex h-1.5 w-1.5 items-center justify-center">
@@ -106,3 +155,14 @@ export const InfoBadge = ({ text, className, theme = 'default' }: IInfoBadgeProp
     </div>
   );
 };
+
+export const Badge = ({ children, className, theme = 'default', variant }: IBadgeProps) =>
+  variant === 'pill' ? (
+    <PillBadge className={className} theme={theme}>
+      {children}
+    </PillBadge>
+  ) : (
+    <HexBadge className={className} theme={theme}>
+      {children}
+    </HexBadge>
+  );

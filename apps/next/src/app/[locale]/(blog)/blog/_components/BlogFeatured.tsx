@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Archive, Calendar, ChevronRight, Clock, User } from 'lucide-react';
-import { Frame, CutoutBadge, AppButton } from '@/shared/ui';
+import { Frame, AppButton, Badge } from '@/shared/ui';
 import type { TFunction } from 'i18next';
 import { CATEGORY_ICONS, DEFAULT_CATEGORY_ICON } from './constants';
 
@@ -57,8 +57,8 @@ export const BlogFeatured = ({
 
             <div className="flex-1">
               <div className="mb-3 flex flex-wrap items-center gap-3">
-                <CutoutBadge theme="blog">{t(`categories.${category}`)}</CutoutBadge>
-                <CutoutBadge theme="blog">● {t('featured.badge')}</CutoutBadge>
+                <Badge variant="hex" theme="blog">{t(`categories.${category}`)}</Badge>
+                <Badge variant="hex" theme="blog">● {t('featured.badge')}</Badge>
               </div>
 
               <h2 className="text-2xl leading-tight font-bold text-blog-text transition-colors group-hover:text-blog-accent-hover sm:text-3xl md:text-4xl">

@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import { Rivets, CutoutBadge, TechLabel } from '@/shared/ui';
+import { Rivets, Badge, TechLabel } from '@/shared/ui';
 
 interface IFeaturePlaqueProps {
   title: string;
@@ -32,7 +32,7 @@ export const FeaturePlaque = ({ title, badge, description, Icon, number }: IFeat
         </div>
 
         <div className="flex">
-          <CutoutBadge className="text-[10px] sm:text-xs">{badge}</CutoutBadge>
+          <Badge variant="hex" className="text-[10px] sm:text-xs">{badge}</Badge>
         </div>
       </div>
 

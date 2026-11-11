@@ -1,6 +1,5 @@
 export * from './AppButton';
-export * from './InfoBadge';
-export * from './CutoutBadge';
+export * from './Badge';
 export * from './SectionHeading';
 export * from './SectionDecorator';
 export * from './FormControls';
@@ -10,4 +9,5 @@ export * from './Reveal';
 export * from './TechCard';
 export * from './TechLabel';
 export * from './Frame';
+export * from './Badge';
 export * from './SocialLinks';

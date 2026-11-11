@@ -1,7 +1,7 @@
 'use client';
 
 import { MapPin, Clock, Target, Eye, FileText } from 'lucide-react';
-import { CutoutBadge } from '@/shared/ui';
+import { Badge } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import type { TPublicJob } from '@/shared/api';
 
@@ -25,7 +25,7 @@ export const JobHeader = ({
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center gap-3">
-        <CutoutBadge theme="careers">{deptLabel}</CutoutBadge>
+        <Badge variant="hex" theme="careers">{deptLabel}</Badge>
         <span className="font-mono text-[10px] tracking-widest text-[#4a5c52] uppercase">
           {t('details.ref', { length: job.slug.length })}
         </span>
