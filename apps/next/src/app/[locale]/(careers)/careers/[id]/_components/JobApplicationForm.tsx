@@ -9,7 +9,7 @@ import { useT } from '@/shared/lib/i18n/client';
 import { submitJobApplication } from '@/shared/api/applications';
 import { jobApplicationInputSchema } from '@pipeline/contracts';
 import type { TPublicJob } from '@/shared/api';
-import { AppButton, MonitorFrame, AppInput, AppLabel, AppTextarea } from '@/shared/ui';
+import { AppButton, Frame, AppInput, AppLabel, AppTextarea } from '@/shared/ui';
 
 interface IJobApplicationFormProps {
   job: TPublicJob;
@@ -109,7 +109,7 @@ export const JobApplicationForm = ({
     }`;
 
   return (
-    <MonitorFrame
+    <Frame
       theme="careers"
       headerIcon={Terminal}
       headerTitle="APPLICATION.FORM"
@@ -292,6 +292,6 @@ export const JobApplicationForm = ({
           </form>
         )}
       </div>
-    </MonitorFrame>
+    </Frame>
   );
 };

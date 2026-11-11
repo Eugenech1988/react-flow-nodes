@@ -1,7 +1,7 @@
 'use client';
 
 import { Mail, ShieldAlert, Siren } from 'lucide-react';
-import { AppButton, Reveal, TerminalPanel } from '@/shared/ui';
+import { AppButton, Reveal, Frame } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryModal } from '@/features';
 
@@ -13,7 +13,7 @@ export const CareersCta = () => {
       <Reveal>
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--theme-danger)_15%,transparent),transparent_65%)] blur-2xl" />
 
-        <TerminalPanel
+        <Frame
           hasHazardStripes
           headerIcon={Siren}
           headerClassName="text-theme-danger"
@@ -75,7 +75,7 @@ export const CareersCta = () => {
               </AppButton>
             </div>
           </div>
-        </TerminalPanel>
+        </Frame>
       </Reveal>
     </section>
   );

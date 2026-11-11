@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Archive, Calendar, ChevronRight, Clock, User } from 'lucide-react';
-import { MonitorFrame, CutoutBadge, AppButton } from '@/shared/ui';
+import { Frame, CutoutBadge, AppButton } from '@/shared/ui';
 import type { TFunction } from 'i18next';
 import { CATEGORY_ICONS, DEFAULT_CATEGORY_ICON } from './constants';
 
@@ -29,7 +29,7 @@ export const BlogFeatured = ({
     <div className="relative">
       <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(45,212,191,0.15),transparent_65%)] blur-2xl" />
 
-      <MonitorFrame
+      <Frame
         theme="blog"
         headerIcon={Archive}
         headerTitle={`SYS.ARCHIVE // ENTRY.${t('featured.code')}`}
@@ -100,7 +100,7 @@ export const BlogFeatured = ({
             </div>
           </div>
         </Link>
-      </MonitorFrame>
+      </Frame>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { Mail, Radio } from 'lucide-react';
-import { AppButton, AppInput, Reveal, TerminalPanel } from '@/shared/ui';
+import { AppButton, AppInput, Reveal, Frame } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 
 const SIGNAL_BARS = [40, 60, 80, 100, 70];
@@ -14,7 +14,7 @@ export const BlogCta = () => {
       <Reveal>
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,rgba(45,212,191,0.15),transparent_65%)] blur-2xl" />
 
-        <TerminalPanel
+        <Frame
           theme="blog"
           headerIcon={Radio}
           headerClassName="text-[#2dd4bf]"
@@ -66,7 +66,7 @@ export const BlogCta = () => {
               </form>
             </div>
           </div>
-        </TerminalPanel>
+        </Frame>
       </Reveal>
     </section>
   );

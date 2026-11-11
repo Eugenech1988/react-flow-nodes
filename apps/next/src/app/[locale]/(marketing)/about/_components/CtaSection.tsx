@@ -1,7 +1,7 @@
 'use client';
 
 import { Activity, Gauge, RadioTower, Radio } from 'lucide-react';
-import { AppButton, MonitorFrame, Reveal } from '@/shared/ui';
+import { AppButton, Frame, Reveal } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 
 const SIGNAL_BARS = [40, 60, 80, 100, 70];
@@ -13,7 +13,7 @@ export const CtaSection = () => {
   return (
     <>
       <Reveal className="relative">
-        <MonitorFrame
+        <Frame
           headerIcon={Activity}
           headerTitle={
             <>
@@ -125,7 +125,7 @@ export const CtaSection = () => {
               </div>
             </div>
           </div>
-        </MonitorFrame>
+        </Frame>
       </Reveal>
     </>
   );

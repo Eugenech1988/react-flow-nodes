@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Gauge, Activity, Loader2, ShieldCheck } from 'lucide-react';
-import { Section, SectionDecorator, MonitorFrame, SectionHeading, AppButton } from '@/shared/ui';
+import { Section, SectionDecorator, Frame, SectionHeading, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { HOW_IT_WORKS_STEPS } from './constants';
 import { APP_LOGIN_URL } from '@/shared/lib/app-url';
@@ -96,7 +96,7 @@ export const HowItWorksSection = () => {
             </div>
           </div>
 
-          <MonitorFrame
+          <Frame
             headerTitle={`SYS.WORKSPACE // ${t(`howItWorks.steps.${HOW_IT_WORKS_STEPS[activeStep].id}.subtitle`).toUpperCase()}`}
             className="lg:h-full"
           >
@@ -191,7 +191,7 @@ export const HowItWorksSection = () => {
                 ))}
               </div>
             </div>
-          </MonitorFrame>
+          </Frame>
         </div>
 
         <div className="mt-10 text-center sm:mt-16 lg:mt-20">

@@ -24,7 +24,7 @@ import {
   resolveJobIcon,
   type TDepartment,
 } from '../constants';
-import { SectionHeading, MonitorFrame } from '@/shared/ui';
+import { SectionHeading, Frame } from '@/shared/ui';
 
 interface ICareersConsoleProps {
   jobs: TPublicJob[];
@@ -93,7 +93,7 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
           descriptionColor="text-[#8a9488]"
         />
 
-        <MonitorFrame
+        <Frame
           theme="careers"
           className="h-100 sm:h-130"
           headerIcon={Power}
@@ -237,7 +237,7 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
               </button>
             )}
           </div>
-        </MonitorFrame>
+        </Frame>
       </div>
     </section>
   );

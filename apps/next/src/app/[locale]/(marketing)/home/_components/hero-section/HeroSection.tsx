@@ -1,4 +1,4 @@
-import { SectionHeading, MonitorFrame } from '@/shared/ui';
+import { SectionHeading, Frame } from '@/shared/ui';
 import { Gauge } from 'lucide-react';
 import { getT } from '@/shared/lib/i18n/server';
 import { HeroActions, LazyHeroCanvas } from './components';
@@ -23,7 +23,7 @@ export const HeroSection = async () => {
 
         <HeroActions />
 
-        <MonitorFrame
+        <Frame
           className="mt-8 w-full max-w-5xl rounded-2xl sm:mt-16 sm:rounded-3xl"
           innerClassName="rounded-xl sm:rounded-[1.4rem]"
           headerClassName="px-2 py-1.5 sm:px-6 sm:py-3"
@@ -66,7 +66,7 @@ export const HeroSection = async () => {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.08)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
             <LazyHeroCanvas />
           </div>
-        </MonitorFrame>
+        </Frame>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { RadioTower, Send, ShieldCheck } from 'lucide-react';
-import { MonitorFrame, TechCard, Reveal, Rivets } from '@/shared/ui';
+import { Frame, TechCard, Reveal, Rivets } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryForm } from '@/entities/inquiry/InquiryForm';
 import { SocialLinks } from '@/shared/ui';
@@ -43,7 +43,7 @@ export const ContactsContent = () => {
           </div>
 
           <Reveal delay={300}>
-            <MonitorFrame
+            <Frame
               headerIcon={RadioTower}
               headerTitle={t('radar.title')}
               className="h-70 sm:h-80"
@@ -73,7 +73,7 @@ export const ContactsContent = () => {
                   />
                 ))}
               </div>
-            </MonitorFrame>
+            </Frame>
           </Reveal>
         </div>
 

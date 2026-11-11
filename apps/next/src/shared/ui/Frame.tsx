@@ -4,7 +4,7 @@ import { Rivets } from './Rivets';
 import { cn } from '@/shared/lib';
 import { themeScope, type TUiTheme } from './theme';
 
-interface IMonitorFrameProps {
+export interface IFrameProps {
   children: ReactNode;
   headerTitle: ReactNode;
   headerIcon?: ElementType;
@@ -14,37 +14,43 @@ interface IMonitorFrameProps {
   className?: string;
   innerClassName?: string;
   toolbar?: ReactNode;
-  /** Структурный вариант рамки + область темы. Без пропса цвета наследуются от предка. */
   theme?: TUiTheme;
   withRivets?: boolean;
+  variant?: 'monitor' | 'terminal';
+  hasHazardStripes?: boolean;
 }
 
-export const MonitorFrame = ({
-                               children,
-                               headerTitle,
-                               headerIcon: Icon = Activity,
-                               headerClassName,
-                               footer,
-                               footerClassName,
-                               className,
-                               innerClassName,
-                               toolbar,
-                               withRivets,
-                               theme,
-                             }: IMonitorFrameProps) => {
+export const Frame = ({
+                        children,
+                        headerTitle,
+                        headerIcon: Icon = Activity,
+                        headerClassName,
+                        footer,
+                        footerClassName,
+                        className,
+                        innerClassName,
+                        toolbar,
+                        theme,
+                        withRivets = true,
+                        variant = 'monitor',
+                        hasHazardStripes = false,
+                      }: IFrameProps) => {
   const isCareers = theme === 'careers';
   const isBlog = theme === 'blog';
   const isDefault = !isCareers && !isBlog;
+  const useThickFrame = !isBlog && (variant === 'terminal' || isCareers);
+  const headerBg = isCareers || variant === 'terminal' ? 'bg-theme-panel/80' : 'bg-theme-panel';
 
   return (
     <div
       {...themeScope(theme)}
       className={cn(
         'relative flex w-full flex-col backdrop-blur-md',
-        isCareers &&
-        'rounded-2xl border-2 border-theme-line-strong bg-linear-to-b from-theme-raised to-theme-panel p-3 shadow-theme-frame sm:rounded-3xl sm:p-4',
         isBlog && 'rounded-sm border border-theme-line bg-theme-surface/95 shadow-theme-panel',
+        useThickFrame &&
+        'rounded-2xl border-2 border-theme-line-strong bg-linear-to-b from-theme-raised to-theme-panel p-3 shadow-theme-frame sm:rounded-3xl sm:p-4',
         isDefault &&
+        !useThickFrame &&
         'rounded-3xl border border-theme-accent/30 bg-theme-surface/60 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] sm:p-2',
         className,
       )}
@@ -60,24 +66,28 @@ export const MonitorFrame = ({
         </>
       )}
 
-      {!isBlog && withRivets !== false && <Rivets className="bg-theme-rivet" />}
+      {!isBlog && withRivets && <Rivets className="bg-theme-rivet" />}
 
       {toolbar && <div className="relative z-10 mb-3 w-full px-1">{toolbar}</div>}
 
       <div
         className={cn(
           'relative flex w-full flex-1 flex-col overflow-hidden',
-          isCareers &&
-          'rounded-xl border border-theme-line bg-theme-surface shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_color-mix(in_oklab,var(--theme-accent)_10%,transparent)]',
           isBlog && 'bg-transparent',
-          isDefault && 'rounded-[1.4rem] border border-theme-line bg-theme-bg/90',
+          useThickFrame &&
+          'rounded-xl border border-theme-line bg-theme-surface shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_color-mix(in_oklab,var(--theme-accent)_10%,transparent)]',
+          isDefault && !useThickFrame && 'rounded-[1.4rem] border border-theme-line bg-theme-bg/90',
           innerClassName,
         )}
       >
+        {hasHazardStripes && (
+          <div className="h-2 w-full shrink-0 bg-[repeating-linear-gradient(-45deg,var(--theme-danger),var(--theme-danger)_10px,var(--theme-bg)_10px,var(--theme-bg)_20px)] opacity-80" />
+        )}
+
         <div
           className={cn(
             'relative z-10 flex shrink-0 items-center justify-between border-b border-theme-line px-4 py-3 sm:px-6',
-            isCareers ? 'bg-theme-panel/80' : 'bg-theme-panel',
+            headerBg,
             isDefault ? 'text-theme-accent/80' : 'text-theme-accent',
             headerClassName,
           )}
@@ -99,7 +109,7 @@ export const MonitorFrame = ({
           <div
             className={cn(
               'relative z-10 shrink-0 border-t border-theme-line px-4 py-2 sm:px-6',
-              isCareers ? 'bg-theme-panel/80' : 'bg-theme-panel',
+              headerBg,
               footerClassName,
             )}
           >

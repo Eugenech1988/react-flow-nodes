@@ -9,6 +9,7 @@ import { useT } from '@/shared/lib/i18n/client';
 import { Menu, X } from 'lucide-react';
 import { NAV_LINKS } from './model';
 import { LanguageSwitcher } from '@/features';
+import { APP_LOGIN_URL } from '@/shared/lib/app-url';
 
 interface IHeaderProps {
   locale: string;
@@ -163,7 +164,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
 
             <AppButton
               isLink
-              linkTo="http://localhost:5173/login"
+              linkTo={APP_LOGIN_URL}
               variant="nav"
               className={cn('text-sm font-medium text-neutral-300 hover:text-white', navBtnClasses)}
             >
@@ -174,7 +175,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
               variant={btnVariant}
               className={cn({ 'rounded-sm capitalize': isThemed })}
               newTab={false}
-              linkTo="http://localhost:5173/login"
+              linkTo={APP_LOGIN_URL}
               size="sm"
             >
               {t('header.getStarted')}
@@ -272,7 +273,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
 
                 <AppButton
                   isLink
-                  linkTo="http://localhost:5173/login"
+                  linkTo={APP_LOGIN_URL}
                   onClick={() => setIsOpen(false)}
                   variant="nav"
                   className={cn(
@@ -289,7 +290,7 @@ export const Header = ({ locale, theme = 'default' }: IHeaderProps) => {
                 </AppButton>
                 <AppButton
                   isLink
-                  linkTo="http://localhost:5173/login"
+                  linkTo={APP_LOGIN_URL}
                   onClick={() => setIsOpen(false)}
                   size="md"
                   variant={btnVariant}

@@ -28,8 +28,7 @@ export function NotFoundClient({ locale }: { locale: string }) {
           <div className="relative flex flex-col items-center overflow-hidden rounded-[1.4rem] border border-red-500/20 bg-[#0a0707] px-6 py-12 sm:px-12 sm:py-16">
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(239,68,68,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(239,68,68,0.05)_1px,transparent_1px)] bg-size-[2rem_2rem]" />
 
-            {/* Иконка: бесконечная анимация (wobble) */}
-            <div className="animate-wobble relative mb-6 flex h-24 w-24 items-center justify-center rounded-full border-2 border-red-500/50 bg-red-500/10 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
+            <div className="animate-pulse relative mb-6 flex h-24 w-24 items-center justify-center rounded-full border-2 border-red-500/50 bg-red-500/10 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
               <ShieldAlert className="h-10 w-10 text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.6)]" />
               <div className="absolute -top-1 -right-1 h-4 w-4 animate-pulse rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]" />
             </div>

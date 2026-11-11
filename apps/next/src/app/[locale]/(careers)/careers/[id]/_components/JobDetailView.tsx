@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Activity, ArrowLeft } from 'lucide-react';
-import { Reveal, MonitorFrame } from '@/shared/ui';
+import { Reveal, Frame } from '@/shared/ui';
 import type { TPublicJob } from '@/shared/api';
 import { useT } from '@/shared/lib/i18n/client';
 import { LEVEL_LABELS, TYPE_LABELS, resolveJobIcon } from '../../constants';
@@ -55,7 +55,7 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
       <div className="flex flex-col gap-12">
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
           <Reveal className="relative">
-            <MonitorFrame
+            <Frame
               theme="careers"
               headerIcon={Activity}
               headerTitle={`SYS.DOSSIER // ${job.slug.toUpperCase()}`}
@@ -84,7 +84,7 @@ export const JobDetailView = ({ job, locale }: IJobDetailProps) => {
                   <JobBody job={job} scrollToForm={scrollToForm} />
                 </div>
               </div>
-            </MonitorFrame>
+            </Frame>
           </Reveal>
 
           <JobSidebar job={job} Icon={Icon} scrollToForm={scrollToForm} />

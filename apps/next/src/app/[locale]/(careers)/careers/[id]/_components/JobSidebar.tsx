@@ -1,7 +1,7 @@
 'use client';
 
 import { ShieldAlert, Radio, MapPin, Target, Eye, FileText } from 'lucide-react';
-import { MonitorFrame, Reveal, AppButton } from '@/shared/ui';
+import { Frame, Reveal, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import type { TPublicJob } from '@/shared/api';
 import { LEVEL_LABELS } from '../../constants';
@@ -25,7 +25,7 @@ export const JobSidebar = ({ job, Icon, scrollToForm }: IJobSidebarProps) => {
   return (
     <div className="hidden lg:sticky lg:top-24 lg:block">
       <Reveal delay={150}>
-        <MonitorFrame
+        <Frame
           theme="careers"
           headerIcon={Radio}
           headerTitle="TRANSMIT.DATA"
@@ -87,7 +87,7 @@ export const JobSidebar = ({ job, Icon, scrollToForm }: IJobSidebarProps) => {
               </a>
             </div>
           </div>
-        </MonitorFrame>
+        </Frame>
       </Reveal>
     </div>
   );
