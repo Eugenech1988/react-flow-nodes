@@ -5,10 +5,22 @@ import { useRef, useLayoutEffect, useState } from 'react';
 const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const REPEATS = 3;
 
-function OdometerDigit({ value, isActive }: { value: number; isActive: boolean }) {
+interface IOdometerDigitProps {
+  value: number;
+  isActive: boolean;
+}
+
+const OdometerDigit = ({ value, isActive }: IOdometerDigitProps) => {
   const targetDigitIndex = REPEATS * 10 + value;
   const totalDigits = targetDigitIndex + 1;
   const targetY = -(targetDigitIndex / totalDigits) * 100;
+
+  const digitClass =
+    'text-theme-accent-hover flex h-[1.15em] w-full items-center justify-center font-serif leading-none font-bold';
+  const digitStyle = {
+    textShadow:
+      '0 1px 2px rgba(0,0,0,0.8), 0 0 4px color-mix(in oklab, var(--theme-accent-hover) 30%, transparent)',
+  };
 
   return (
     <span className="bg-theme-rivet relative mx-0.5 inline-flex h-[1.15em] w-[0.7em] shrink-0 items-center justify-center rounded-sm p-px shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
@@ -22,27 +34,13 @@ function OdometerDigit({ value, isActive }: { value: number; isActive: boolean }
         >
           {Array.from({ length: REPEATS }).map((_, repIndex) =>
             DIGITS.map((digit) => (
-              <span
-                key={`${repIndex}-${digit}`}
-                className="text-theme-accent-hover flex h-[1.15em] w-full items-center justify-center font-serif leading-none font-bold"
-                style={{
-                  textShadow:
-                    '0 1px 2px rgba(0,0,0,0.8), 0 0 4px color-mix(in oklab, var(--theme-accent-hover) 30%, transparent)',
-                }}
-              >
+              <span key={`${repIndex}-${digit}`} className={digitClass} style={digitStyle}>
                 {digit}
               </span>
             )),
           )}
           {DIGITS.slice(0, value + 1).map((digit, index) => (
-            <span
-              key={`final-${digit}-${index}`}
-              className="text-theme-accent-hover flex h-[1.15em] w-full items-center justify-center font-serif leading-none font-bold"
-              style={{
-                textShadow:
-                  '0 1px 2px rgba(0,0,0,0.8), 0 0 4px color-mix(in oklab, var(--theme-accent-hover) 30%, transparent)',
-              }}
-            >
+            <span key={`final-${digit}-${index}`} className={digitClass} style={digitStyle}>
               {digit}
             </span>
           ))}
@@ -54,9 +52,9 @@ function OdometerDigit({ value, isActive }: { value: number; isActive: boolean }
       </span>
     </span>
   );
-}
+};
 
-export function Odometer({ value }: { value: string }) {
+export const Odometer = ({ value }: { value: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -106,4 +104,4 @@ export function Odometer({ value }: { value: string }) {
       })}
     </div>
   );
-}
+};

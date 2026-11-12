@@ -21,16 +21,16 @@ export const ContactsContent = () => {
                 <Reveal key={channel.id} delay={index * 100}>
                   <TechCard className="group w-full overflow-hidden rounded-2xl p-4 sm:p-6">
                     <div className="flex w-full flex-row items-center gap-4 text-left sm:gap-5">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#2dd4bf]/30 bg-[#0a1210] text-[#2dd4bf] shadow-[inset_0_0_15px_rgba(45,212,191,0.1)] transition-colors group-hover:border-[#2dd4bf]/60 group-hover:bg-[#2dd4bf]/10 sm:h-12 sm:w-12">
+                      <div className="border-theme-accent/30 bg-theme-bg text-theme-accent group-hover:border-theme-accent/60 group-hover:bg-theme-accent/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border shadow-[inset_0_0_15px_color-mix(in_oklab,var(--theme-accent)_10%,transparent)] transition-colors sm:h-12 sm:w-12">
                         <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
                       </div>
                       <div className="flex min-w-0 flex-1 flex-col items-start">
-                        <div className="font-mono text-[8px] tracking-widest text-[#2dd4bf]/50 uppercase sm:text-[9px]">
+                        <div className="text-theme-accent/50 font-mono text-[8px] tracking-widest uppercase sm:text-[9px]">
                           {t(`channels.${channel.id}.label`)}
                         </div>
                         <a
                           href={channel.href}
-                          className="mt-1 block w-full truncate text-sm font-semibold text-[#d1faf5] transition-colors hover:text-[#5eead4] sm:text-base"
+                          className="text-theme-fg hover:text-theme-accent-hover mt-1 block w-full truncate text-sm font-semibold transition-colors sm:text-base"
                         >
                           {t(`channels.${channel.id}.value`)}
                         </a>
@@ -48,27 +48,27 @@ export const ContactsContent = () => {
               headerTitle={t('radar.title')}
               className="h-70 sm:h-80"
               footer={
-                <div className="flex w-full items-center justify-between font-mono text-[8px] tracking-widest text-slate-500 uppercase sm:text-[9px]">
+                <div className="text-theme-muted flex w-full items-center justify-between font-mono text-[8px] tracking-widest uppercase sm:text-[9px]">
                   <span className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#2dd4bf]" />
+                    <span className="bg-theme-accent h-1.5 w-1.5 animate-pulse rounded-full" />
                     {t('radar.signal')}
                   </span>
                   <span>{t('radar.coordinates')}</span>
                 </div>
               }
             >
-              <div className="relative h-full w-full overflow-hidden bg-[#040a09]">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(45,212,191,0.1)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
+              <div className="bg-theme-bg relative h-full w-full overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,color-mix(in_oklab,var(--theme-accent)_10%,transparent)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
                 <div className="absolute top-1/2 left-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2">
-                  <div className="absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#2dd4bf]/20 sm:h-64 sm:w-64" />
-                  <div className="absolute top-1/2 left-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#2dd4bf]/30 sm:h-40 sm:w-40" />
-                  <div className="absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite] rounded-full bg-[conic-gradient(from_0deg,rgba(45,212,191,0.3),transparent_60deg)] sm:h-64 sm:w-64" />
+                  <div className="border-theme-accent/20 absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full border sm:h-64 sm:w-64" />
+                  <div className="border-theme-accent/30 absolute top-1/2 left-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 rounded-full border sm:h-40 sm:w-40" />
+                  <div className="absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 animate-[spin_4s_linear_infinite] rounded-full bg-[conic-gradient(from_0deg,color-mix(in_oklab,var(--theme-accent)_30%,transparent),transparent_60deg)] sm:h-64 sm:w-64" />
                 </div>
 
                 {RADAR_BLIPS.map((blip, i) => (
                   <div
                     key={i}
-                    className="absolute h-1.5 w-1.5 animate-ping rounded-full bg-[#2dd4bf] shadow-[0_0_10px_#2dd4bf]"
+                    className="bg-theme-accent absolute h-1.5 w-1.5 animate-ping rounded-full shadow-[0_0_10px_var(--theme-accent)]"
                     style={{ top: blip.top, left: blip.left, animationDelay: blip.delay }}
                   />
                 ))}
@@ -78,21 +78,21 @@ export const ContactsContent = () => {
         </div>
 
         <Reveal delay={150} className="relative">
-          <div className="relative flex flex-col overflow-hidden rounded-3xl border border-[#2dd4bf]/20 bg-[#0a1210]/60 p-5 shadow-[inset_0_1px_0_rgba(45,212,191,0.1),0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:p-8">
-            <Rivets className="bg-[#5eead4]/40" />
+          <div className="border-theme-accent/20 bg-theme-surface/60 relative flex flex-col overflow-hidden rounded-3xl border p-5 shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent)_10%,transparent),0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-md sm:p-8">
+            <Rivets className="bg-theme-accent-hover/40" />
 
             <div className="mb-6 flex items-center justify-between sm:mb-8">
               <div>
-                <h3 className="text-lg font-bold text-[#d1faf5] sm:text-xl">{t('form.title')}</h3>
-                <p className="mt-1 text-xs text-[#8db8b4] sm:text-sm">{t('form.description')}</p>
+                <h3 className="text-theme-fg text-lg font-bold sm:text-xl">{t('form.title')}</h3>
+                <p className="text-theme-muted mt-1 text-xs sm:text-sm">{t('form.description')}</p>
               </div>
-              <ShieldCheck className="hidden h-8 w-8 text-[#2dd4bf]/40 sm:block" />
+              <ShieldCheck className="text-theme-accent/40 hidden h-8 w-8 sm:block" />
             </div>
 
             <InquiryForm type="contact" submitIcon={Send} />
 
-            <div className="mt-8 border-t border-[#2dd4bf]/10 pt-6 pb-2 sm:mt-10">
-              <div className="mb-4 font-mono text-[9px] tracking-widest text-[#2dd4bf]/50 uppercase sm:text-[10px]">
+            <div className="border-theme-accent/10 mt-8 border-t pt-6 pb-2 sm:mt-10">
+              <div className="text-theme-accent/50 mb-4 font-mono text-[9px] tracking-widest uppercase sm:text-[10px]">
                 {t('socials.title')}
               </div>
               <div className="flex items-center gap-3">

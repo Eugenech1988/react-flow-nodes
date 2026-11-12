@@ -14,6 +14,7 @@ export const CareersCta = () => {
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[3rem] bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--theme-danger)_15%,transparent),transparent_65%)] blur-2xl" />
 
         <Frame
+          theme="careers"
           hasHazardStripes
           headerIcon={Siren}
           headerClassName="text-theme-danger"

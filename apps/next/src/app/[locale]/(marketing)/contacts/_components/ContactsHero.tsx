@@ -13,7 +13,7 @@ export const ContactsHero = async () => {
           defaultValue:
             'Open a secure channel with our command center. Whether you need technical support, sales inquiries, or just want to say hi.',
         })}
-        titleClassName="text-3xl sm:text-5xl md:text-6xl drop-shadow-[0_0_30px_rgba(45,212,191,0.25)]"
+        titleClassName="text-3xl sm:text-5xl md:text-6xl drop-shadow-[0_0_30px_color-mix(in_oklab,var(--theme-accent)_25%,transparent)]"
       />
     </section>
   );

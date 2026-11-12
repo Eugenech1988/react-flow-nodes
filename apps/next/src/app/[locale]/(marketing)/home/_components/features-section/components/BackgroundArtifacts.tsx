@@ -54,7 +54,6 @@ export const BackgroundArtifacts = () => (
       />
     ))}
 
-    {/* Анимированный луч */}
     <div
       className="via-theme-accent/40 absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent motion-reduce:hidden"
       style={{ animation: 'artifact-scanline 9s linear infinite' }}

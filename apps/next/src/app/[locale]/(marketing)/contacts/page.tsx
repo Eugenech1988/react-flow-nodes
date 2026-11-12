@@ -9,7 +9,7 @@ export const generateMetadata = async ({ params }: TPageProps): Promise<Metadata
 };
 
 const ContactsPage = () => (
-  <div className="relative min-h-screen overflow-hidden bg-[#040a09] text-[#d1faf5]">
+  <div className="bg-theme-bg text-theme-fg relative min-h-screen overflow-hidden">
     <ContactsBackground />
     <ContactsHero />
     <ContactsContent />

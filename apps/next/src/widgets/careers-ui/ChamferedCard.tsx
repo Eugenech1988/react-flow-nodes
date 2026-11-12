@@ -13,18 +13,18 @@ interface IChamferedCardProps {
 export const ChamferedCard = ({ children, className }: IChamferedCardProps) => (
   <div className={className}>
     <div
-      className="bg-linear-to-b from-[#4a5c52] via-[#2f3d36] to-[#1a2420] p-px"
+      className="from-theme-line-strong via-theme-line to-theme-panel bg-linear-to-b p-px"
       style={{ clipPath: CHAMFER_OUTER }}
     >
       <div
-        className="relative flex flex-col items-center justify-center overflow-hidden bg-linear-to-b from-[#141a16] to-[#0a0e0d] px-4 py-6 sm:py-7"
+        className="from-theme-surface to-theme-bg relative flex flex-col items-center justify-center overflow-hidden bg-linear-to-b px-4 py-6 sm:py-7"
         style={{ clipPath: CHAMFER_INNER }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent_0,transparent_2px,rgba(111,162,140,0.04)_2px,rgba(111,162,140,0.04)_3px)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent_0,transparent_2px,color-mix(in_oklab,var(--theme-accent)_4%,transparent)_2px,color-mix(in_oklab,var(--theme-accent)_4%,transparent)_3px)]" />
         <div className="relative z-10 w-full">{children}</div>
-        <div className="pointer-events-none absolute top-3 right-3 h-3 w-3 border-t border-r border-dashed border-[#6fa28c]/40" />
-        <div className="pointer-events-none absolute bottom-3 left-3 h-3 w-3 border-b border-l border-dashed border-[#6fa28c]/40" />
-        <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-linear-to-r from-transparent via-[#9cc4b0]/30 to-transparent" />
+        <div className="border-theme-accent/40 pointer-events-none absolute top-3 right-3 h-3 w-3 border-t border-r border-dashed" />
+        <div className="border-theme-accent/40 pointer-events-none absolute bottom-3 left-3 h-3 w-3 border-b border-l border-dashed" />
+        <div className="via-theme-accent-hover/30 pointer-events-none absolute inset-x-4 top-0 h-px bg-linear-to-r from-transparent to-transparent" />
       </div>
     </div>
   </div>

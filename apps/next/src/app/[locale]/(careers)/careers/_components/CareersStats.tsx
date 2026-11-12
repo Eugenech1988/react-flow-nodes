@@ -5,7 +5,7 @@ import { CAREERS_STATS } from '../constants';
 import { Odometer } from './CareersOdometer';
 import { ChamferedCard } from '@/widgets/careers-ui';
 
-export function CareersStats() {
+export const CareersStats = () => {
   const { t } = useT('careers');
 
   return (
@@ -40,4 +40,4 @@ export function CareersStats() {
       </div>
     </section>
   );
-}
+};

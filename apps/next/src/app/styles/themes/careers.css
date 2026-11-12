@@ -19,4 +19,15 @@
     --theme-danger: #c25a5a;
     --theme-success: #6fa28c;
     --theme-warning: #c9a55c;
+    --theme-rivet: #3a4842;
+
+    --theme-paper-bg: #e8dcc8;
+    --theme-paper-surface: #f5f0e0;
+    --theme-paper-panel: #d4c9b0;
+    --theme-paper-fg: #2a2218;
+    --theme-paper-ink: #1a2530;
+    --theme-paper-body: #2a3540;
+    --theme-paper-muted: #4a3f2e;
+    --theme-paper-soft: #8a7e5c;
+    --theme-paper-accent: #8a2e2e;
 }

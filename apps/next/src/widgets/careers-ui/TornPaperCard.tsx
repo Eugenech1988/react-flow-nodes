@@ -14,17 +14,17 @@ interface ITornPaperCardProps {
 
 export const TornPaperCard = ({ title, description, number, Icon, badge }: ITornPaperCardProps) => (
   <PaperCard
-    className="bg-[#e8dcc8] text-[#2a2218]"
+    className="bg-paper-bg text-paper-fg"
     clipPath={TORN_BOTTOM}
     decor={
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(138,122,92,0.15),transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,color-mix(in_oklab,var(--theme-paper-soft)_15%,transparent),transparent_60%)]" />
     }
   >
-    <div className="flex justify-around border-b border-dashed border-[#8a7a5c]/40 bg-[#d4c9b0] px-3 py-1.5">
+    <div className="border-paper-soft/40 bg-paper-panel flex justify-around border-b border-dashed px-3 py-1.5">
       {Array.from({ length: 10 }).map((_, j) => (
         <span
           key={j}
-          className="h-1.5 w-1.5 rounded-full bg-[#4a3f2e] shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
+          className="bg-paper-muted h-1.5 w-1.5 rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)]"
         />
       ))}
     </div>
@@ -32,20 +32,20 @@ export const TornPaperCard = ({ title, description, number, Icon, badge }: ITorn
     <div className="px-5 pt-5 pb-8">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-baseline gap-2">
-          <span className="font-serif text-3xl leading-none font-bold text-[#8a2e2e]">
+          <span className="text-paper-accent font-serif text-3xl leading-none font-bold">
             {number}
           </span>
-          <span className="font-mono text-[9px] tracking-[0.2em] text-[#8a7a5c] uppercase">
+          <span className="text-paper-soft font-mono text-[9px] tracking-[0.2em] uppercase">
             {badge}
           </span>
         </div>
-        <Icon className="h-5 w-5 text-[#4a3f2e]/70" />
+        <Icon className="text-paper-muted/70 h-5 w-5" />
       </div>
 
-      <h3 className="font-serif text-lg font-bold tracking-wide text-[#2a2218] sm:text-xl">
+      <h3 className="text-paper-fg font-serif text-lg font-bold tracking-wide sm:text-xl">
         {title}
       </h3>
-      <p className="mt-2 font-serif text-sm leading-relaxed text-[#4a3f2e]/85">{description}</p>
+      <p className="text-paper-muted/85 mt-2 font-serif text-sm leading-relaxed">{description}</p>
     </div>
   </PaperCard>
 );

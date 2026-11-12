@@ -26,6 +26,7 @@ export const InquiryForm = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const isCareers = submitVariant === 'careers' || submitVariant === 'careers-outline';
+  const formTheme = isCareers ? 'careers' : 'default';
 
   const localizedSchema = sendInquiryInputSchema.extend({
     name: z.string().min(2, { message: t('form.errors.name') }),
@@ -59,84 +60,52 @@ export const InquiryForm = ({
     if (success) {
       setIsSuccess(true);
     } else {
-      setErrorMsg('Failed to send request. Please try again.');
+      setErrorMsg(
+        t('form.errors.submitFailed', {
+          defaultValue: 'Failed to send request. Please try again.',
+        }),
+      );
     }
   };
 
   if (isSuccess) {
     return (
       <div className="animate-in fade-in zoom-in-95 relative z-10 flex flex-col items-center justify-center py-12 text-center duration-300">
-        <div
-          className={`mb-6 flex h-20 w-20 items-center justify-center rounded-full border shadow-[0_0_30px_rgba(45,212,191,0.2)] ${
-            isCareers
-              ? 'border-[#6fa28c]/50 bg-[#6fa28c]/10'
-              : 'border-[#2dd4bf]/50 bg-[#2dd4bf]/10'
-          }`}
-        >
-          <CheckCircle2
-            className={`h-10 w-10 ${isCareers ? 'text-[#6fa28c]' : 'text-[#2dd4bf]'}`}
-          />
+        <div className="border-theme-accent/50 bg-theme-accent/10 mb-6 flex h-20 w-20 items-center justify-center rounded-full border shadow-[0_0_30px_color-mix(in_oklab,var(--theme-accent)_20%,transparent)]">
+          <CheckCircle2 className="text-theme-accent h-10 w-10" />
         </div>
-        <h3
-          className={`text-xl font-bold ${
-            isCareers ? 'font-typewriter text-[#d4cfc0]' : 'text-[#d1faf5]'
-          }`}
-        >
-          {t(`form.modes.${type}.success`)}
-        </h3>
+        <h3 className="text-theme-fg text-xl font-bold">{t(`form.modes.${type}.success`)}</h3>
       </div>
     );
   }
 
-  const inputBaseStyles = isCareers
-    ? 'rounded-sm font-typewriter shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] bg-[#0a0e0d]/50'
-    : '';
-
-  const inputErrorStyles = isCareers
-    ? 'border-[#c25a5a] text-[#c25a5a] placeholder:text-[#c25a5a]/60 focus-visible:border-[#c25a5a] focus-visible:ring-[#c25a5a]/50'
-    : '';
-
-  const inputDefaultStyles = isCareers
-    ? 'border-[#2f3d36] text-[#d4cfc0] placeholder:text-[#4a5c52] focus-visible:border-[#6fa28c] focus-visible:ring-[#6fa28c]/50'
-    : '';
-
-  const getInputStyles = (hasError: boolean) =>
-    `${inputBaseStyles} ${hasError ? inputErrorStyles : inputDefaultStyles}`;
-
-  const labelStyles = isCareers
-    ? 'font-typewriter text-[10px] tracking-widest text-[#6fa28c] uppercase'
-    : '';
-
-  const iconStyles = isCareers ? 'text-[#4a5c52]' : 'text-slate-500';
-
-  const errorStyles = isCareers
-    ? 'font-typewriter text-xs text-[#c25a5a]'
-    : 'font-mono text-xs text-red-400';
-
   const iconClass = (hasError: boolean) =>
     `absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 ${
-      hasError ? (isCareers ? 'text-[#c25a5a]' : 'text-red-400') : iconStyles
+      hasError ? 'text-theme-danger' : 'text-theme-dim'
     }`;
+
+  const errorStyles = 'text-theme-danger font-mono text-xs';
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative z-10 flex flex-col gap-5">
       {errorMsg && (
-        <div className="rounded-md border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-500">
+        <div className="border-theme-danger/50 bg-theme-danger/10 text-theme-danger rounded-md border p-3 text-sm">
           {errorMsg}
         </div>
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
         <div className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500">
-          <AppLabel htmlFor="name" className={labelStyles}>
+          <AppLabel htmlFor="name" theme={formTheme}>
             {t('form.name')}
           </AppLabel>
           <div className="relative">
             <User className={iconClass(!!errors.name)} />
             <AppInput
               id="name"
+              theme={formTheme}
               placeholder={t('form.placeholderName')}
-              className={`pl-10 ${getInputStyles(!!errors.name)}`}
+              className="pl-10"
               error={!!errors.name}
               {...register('name')}
             />
@@ -148,7 +117,7 @@ export const InquiryForm = ({
           className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500"
           style={{ animationDelay: '50ms', animationFillMode: 'both' }}
         >
-          <AppLabel htmlFor="email" className={labelStyles}>
+          <AppLabel htmlFor="email" theme={formTheme}>
             {t('form.email')}
           </AppLabel>
           <div className="relative">
@@ -156,8 +125,9 @@ export const InquiryForm = ({
             <AppInput
               id="email"
               type="email"
+              theme={formTheme}
               placeholder={t('form.placeholderEmail')}
-              className={`pl-10 ${getInputStyles(!!errors.email)}`}
+              className="pl-10"
               error={!!errors.email}
               {...register('email')}
             />
@@ -171,15 +141,16 @@ export const InquiryForm = ({
           className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500"
           style={{ animationDelay: '100ms', animationFillMode: 'both' }}
         >
-          <AppLabel htmlFor="company" className={labelStyles}>
+          <AppLabel htmlFor="company" theme={formTheme}>
             {t('form.company')}
           </AppLabel>
           <div className="relative">
             <Building2 className={iconClass(!!errors.company)} />
             <AppInput
               id="company"
+              theme={formTheme}
               placeholder={t('form.placeholderCompany')}
-              className={`pl-10 ${getInputStyles(!!errors.company)}`}
+              className="pl-10"
               error={!!errors.company}
               {...register('company')}
             />
@@ -191,15 +162,16 @@ export const InquiryForm = ({
           className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500"
           style={{ animationDelay: '150ms', animationFillMode: 'both' }}
         >
-          <AppLabel htmlFor="position" className={labelStyles}>
+          <AppLabel htmlFor="position" theme={formTheme}>
             {t('form.position')}
           </AppLabel>
           <div className="relative">
             <Briefcase className={iconClass(!!errors.position)} />
             <AppInput
               id="position"
+              theme={formTheme}
               placeholder={t('form.placeholderPosition')}
-              className={`pl-10 ${getInputStyles(!!errors.position)}`}
+              className="pl-10"
               error={!!errors.position}
               {...register('position')}
             />
@@ -212,14 +184,14 @@ export const InquiryForm = ({
         className="animate-in fade-in slide-in-from-left-4 flex flex-col gap-2 duration-500"
         style={{ animationDelay: '200ms', animationFillMode: 'both' }}
       >
-        <AppLabel htmlFor="message" className={labelStyles}>
+        <AppLabel htmlFor="message" theme={formTheme}>
           {t('form.message')}
         </AppLabel>
         <AppTextarea
           id="message"
           rows={3}
+          theme={formTheme}
           placeholder={t(`form.modes.${type}.placeholderMessage`)}
-          className={getInputStyles(!!errors.message)}
           error={!!errors.message}
           {...register('message')}
         />
@@ -227,9 +199,7 @@ export const InquiryForm = ({
       </div>
 
       <div
-        className={`animate-in fade-in slide-in-from-left-4 flex justify-end pt-5 duration-500 ${
-          isCareers ? 'border-t border-[#2f3d36]/50' : ''
-        }`}
+        className="animate-in fade-in slide-in-from-left-4 flex justify-end pt-5 duration-500"
         style={{ animationDelay: '250ms', animationFillMode: 'both' }}
       >
         <AppButton

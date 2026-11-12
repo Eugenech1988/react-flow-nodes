@@ -18,6 +18,20 @@
     --color-dim: var(--theme-dim);
 
     --color-danger: var(--theme-danger);
+    --color-success: var(--theme-success);
+    --color-warning: var(--theme-warning);
+
+    --color-rivet: var(--theme-rivet);
+
+    --color-paper-bg: var(--theme-paper-bg);
+    --color-paper-surface: var(--theme-paper-surface);
+    --color-paper-panel: var(--theme-paper-panel);
+    --color-paper-fg: var(--theme-paper-fg);
+    --color-paper-ink: var(--theme-paper-ink);
+    --color-paper-body: var(--theme-paper-body);
+    --color-paper-muted: var(--theme-paper-muted);
+    --color-paper-soft: var(--theme-paper-soft);
+    --color-paper-accent: var(--theme-paper-accent);
 
     /* Отключено до появления необходимости: */
     /* --color-success: var(--theme-success); */

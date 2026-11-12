@@ -18,20 +18,20 @@ export const CrewSection = () => {
       <div className="mt-12 grid gap-5 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3">
         {CREW.map((member, index) => (
           <Reveal key={member.id} delay={(index % 3) * 100}>
-            <div className="group relative h-full overflow-hidden rounded-2xl border border-[#2dd4bf]/15 bg-[#0b1715]/40 p-5 backdrop-blur-sm transition-all duration-300 hover:border-[#2dd4bf]/40 hover:bg-[#0b1715]/80 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-              <div className="absolute top-0 left-0 h-0.5 w-full bg-[#2dd4bf]/20">
-                <div className="h-full w-1/3 bg-[#2dd4bf] shadow-[0_0_10px_#2dd4bf] transition-all duration-500 group-hover:w-full" />
+            <div className="group border-theme-accent/15 bg-theme-surface/40 hover:border-theme-accent/40 hover:bg-theme-surface/80 relative h-full overflow-hidden rounded-2xl border p-5 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+              <div className="bg-theme-accent/20 absolute top-0 left-0 h-0.5 w-full">
+                <div className="bg-theme-accent h-full w-1/3 shadow-[0_0_10px_var(--theme-accent)] transition-all duration-500 group-hover:w-full" />
               </div>
 
               <div className="flex items-start justify-between">
-                <span className="font-mono text-[9px] tracking-widest text-[#2dd4bf]/50">
+                <span className="text-theme-accent/50 font-mono text-[9px] tracking-widest">
                   ID: 00{member.id}-A
                 </span>
-                <Fingerprint className="h-4 w-4 text-[#2dd4bf]/30 transition-colors group-hover:text-[#2dd4bf]" />
+                <Fingerprint className="text-theme-accent/30 group-hover:text-theme-accent h-4 w-4 transition-colors" />
               </div>
 
               <div className="mt-6 flex items-center gap-4">
-                <div className="relative h-16 w-16 shrink-0 rounded-xl border border-[#2dd4bf]/30 bg-[#040a09] p-1 shadow-[inset_0_0_15px_rgba(0,0,0,0.9)] transition-colors group-hover:border-[#2dd4bf]">
+                <div className="border-theme-accent/30 bg-theme-bg group-hover:border-theme-accent relative h-16 w-16 shrink-0 rounded-xl border p-1 shadow-[inset_0_0_15px_rgba(0,0,0,0.9)] transition-colors">
                   <div className="relative h-full w-full overflow-hidden rounded-lg">
                     <Image
                       src={member.avatar}
@@ -40,27 +40,27 @@ export const CrewSection = () => {
                       sizes="64px"
                       className="object-cover grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
                     />
-                    <div className="absolute inset-0 bg-[#2dd4bf]/10 mix-blend-overlay transition-opacity group-hover:opacity-0" />
+                    <div className="bg-theme-accent/10 absolute inset-0 mix-blend-overlay transition-opacity group-hover:opacity-0" />
                   </div>
-                  <span className="absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full border border-[#0b1715] bg-[#2dd4bf]">
-                    <ScanLine className="h-2 w-2 text-[#0b1715]" />
+                  <span className="border-theme-surface bg-theme-accent absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full border">
+                    <ScanLine className="text-theme-bg h-2 w-2" />
                   </span>
                 </div>
 
                 <div className="min-w-0">
-                  <h3 className="truncate text-base font-bold text-[#d1faf5] transition-colors group-hover:text-white">
+                  <h3 className="text-theme-fg truncate text-base font-bold transition-colors group-hover:text-white">
                     {t(`crew.list.${member.id}.name`)}
                   </h3>
-                  <p className="mt-1 truncate font-mono text-[10px] tracking-widest text-[#2dd4bf]/60 uppercase">
+                  <p className="text-theme-accent/60 mt-1 truncate font-mono text-[10px] tracking-widest uppercase">
                     {t(`crew.list.${member.id}.role`)}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-6 flex items-end justify-between border-t border-[#2dd4bf]/10 pt-4">
+              <div className="border-theme-accent/10 mt-6 flex items-end justify-between border-t pt-4">
                 <div className="flex flex-col gap-1">
-                  <span className="font-mono text-[8px] text-slate-500 uppercase">Status</span>
-                  <span className="flex items-center gap-1.5 font-mono text-[9px] text-[#2dd4bf] uppercase">
+                  <span className="text-theme-dim font-mono text-[8px] uppercase">Status</span>
+                  <span className="text-theme-accent flex items-center gap-1.5 font-mono text-[9px] uppercase">
                     <CircleDot className="h-3 w-3 animate-pulse" /> Active
                   </span>
                 </div>
@@ -69,7 +69,7 @@ export const CrewSection = () => {
                   {BARCODE.map((w, i) => (
                     <div
                       key={i}
-                      className="bg-[#2dd4bf]"
+                      className="bg-theme-accent"
                       style={{ width: `${w}px`, height: '100%' }}
                     />
                   ))}
