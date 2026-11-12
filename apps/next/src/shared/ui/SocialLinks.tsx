@@ -3,6 +3,7 @@
 import type { SVGProps } from 'react';
 import { useT } from '@/shared/lib/i18n/client';
 import { cn } from '@/shared/lib';
+import { themeScope, type TUiTheme } from './theme';
 
 export const GithubIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
@@ -40,7 +41,7 @@ interface ISocialLinksProps {
   iconClassName?: string;
   align?: 'start' | 'center' | 'end';
   size?: 'sm' | 'md';
-  theme?: 'default' | 'careers' | 'blog';
+  theme?: TUiTheme;
 }
 
 export const SOCIAL_NODES = [
@@ -49,30 +50,32 @@ export const SOCIAL_NODES = [
   { id: 'twitter', icon: XTwitterIcon, href: 'https://twitter.com' },
 ];
 
+const THEME_CLASSES: Record<TUiTheme, string> = {
+  default:
+    'border-theme-accent/20 bg-theme-bg text-theme-muted hover:border-theme-accent/50 hover:bg-theme-accent/10 hover:text-theme-accent hover:shadow-theme-glow',
+  careers:
+    'border-theme-line/40 bg-theme-bg text-theme-muted hover:border-theme-accent/60 hover:bg-theme-accent/10 hover:text-theme-fg hover:shadow-theme-glow',
+  blog: 'border-theme-line/40 bg-theme-surface text-theme-muted hover:border-theme-accent/60 hover:bg-theme-accent/10 hover:text-theme-fg hover:shadow-theme-glow',
+};
+
+const SIZE_CLASSES = {
+  sm: { container: 'h-9 w-9 rounded-lg', icon: 'h-4 w-4' },
+  md: { container: 'h-11 w-11 rounded-xl', icon: 'h-5 w-5' },
+} as const;
+
 export const SocialLinks = ({
-  title,
-  className,
-  align = 'start',
-  size = 'md',
-  theme = 'default',
-}: ISocialLinksProps) => {
+                              title,
+                              className,
+                              align = 'start',
+                              size = 'md',
+                              theme,
+                            }: ISocialLinksProps) => {
   const { t } = useT('common');
 
-  const sizeClasses = {
-    sm: { container: 'h-9 w-9 rounded-lg', icon: 'h-4 w-4' },
-    md: { container: 'h-11 w-11 rounded-xl', icon: 'h-5 w-5' },
-  };
-
-  const themeClasses = {
-    default:
-      'border-theme-accent/20 bg-theme-bg text-theme-muted hover:border-theme-accent/50 hover:bg-theme-accent/10 hover:text-theme-accent hover:shadow-theme-glow',
-    careers:
-      'border-theme-line/40 bg-theme-bg text-theme-muted hover:border-theme-accent/60 hover:bg-theme-accent/10 hover:text-theme-fg hover:shadow-theme-glow',
-    blog: 'border-theme-line/40 bg-theme-surface text-theme-muted hover:border-theme-accent/60 hover:bg-theme-accent/10 hover:text-theme-fg hover:shadow-theme-glow',
-  };
+  const effectiveTheme: TUiTheme = theme ?? 'default';
 
   return (
-    <div className={cn('flex flex-col', className)}>
+    <div {...themeScope(theme)} className={cn('flex flex-col', className)}>
       {title && (
         <div
           className={cn(
@@ -104,11 +107,11 @@ export const SocialLinks = ({
               aria-label={t(`socials.${node.id}`, { defaultValue: node.id })}
               className={cn(
                 'group flex items-center justify-center border transition-all duration-300',
-                sizeClasses[size].container,
-                themeClasses[theme],
+                SIZE_CLASSES[size].container,
+                THEME_CLASSES[effectiveTheme],
               )}
             >
-              <Icon className={sizeClasses[size].icon} />
+              <Icon className={SIZE_CLASSES[size].icon} />
             </a>
           );
         })}
@@ -116,3 +119,4 @@ export const SocialLinks = ({
     </div>
   );
 };
+

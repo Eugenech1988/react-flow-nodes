@@ -132,7 +132,10 @@
     "coverageDirectory": "./coverage",
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "\\.module\\.ts$"
+      "\\.module\\.ts$",
+      "/src/main\\.ts$",
+      "/src/trpc/",
+      "\\.helpers\\.(t|j)s$"
     ],
     "testEnvironment": "node",
     "moduleNameMapper": {

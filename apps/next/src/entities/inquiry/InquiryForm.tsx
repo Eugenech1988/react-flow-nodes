@@ -25,7 +25,7 @@ export const InquiryForm = ({
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const isCareers = submitVariant === 'careers' || submitVariant === 'careers-outline';
+  const isCareers = submitVariant === 'careers';
   const formTheme = isCareers ? 'careers' : 'default';
 
   const localizedSchema = sendInquiryInputSchema.extend({

@@ -3,11 +3,10 @@ import { Input } from '@pipeline/ui/input';
 import { Textarea } from '@pipeline/ui/textarea';
 import { Label } from '@pipeline/ui/label';
 import { cn } from '@/shared/lib';
-
-type TFormTheme = 'default' | 'careers' | 'blog';
+import type { TUiTheme } from './theme';
 
 interface IAppLabelProps extends ComponentProps<typeof Label> {
-  theme?: TFormTheme;
+  theme?: TUiTheme;
 }
 
 export const AppLabel = ({ className, theme = 'default', ...props }: IAppLabelProps) => (
@@ -25,7 +24,7 @@ export const AppLabel = ({ className, theme = 'default', ...props }: IAppLabelPr
 
 interface IAppInputProps extends ComponentProps<typeof Input> {
   error?: boolean;
-  theme?: TFormTheme;
+  theme?: TUiTheme;
 }
 
 export const AppInput = ({ className, error, theme = 'default', ...props }: IAppInputProps) => (
@@ -40,7 +39,7 @@ export const AppInput = ({ className, error, theme = 'default', ...props }: IApp
       theme === 'blog' && 'h-10 rounded-sm px-3 py-2 font-mono text-sm',
 
       error
-        ? 'border-theme-danger text-theme-danger focus-visible:ring-theme-danger/50'
+        ? 'border-theme-danger text-theme-danger placeholder:text-theme-danger/60 focus-visible:ring-theme-danger/50'
         : 'placeholder:text-theme-dim focus-visible:border-theme-accent focus-visible:ring-theme-accent/50',
       className,
     )}
@@ -50,7 +49,7 @@ export const AppInput = ({ className, error, theme = 'default', ...props }: IApp
 
 interface IAppTextareaProps extends ComponentProps<typeof Textarea> {
   error?: boolean;
-  theme?: TFormTheme;
+  theme?: TUiTheme;
 }
 
 export const AppTextarea = ({
@@ -70,7 +69,7 @@ export const AppTextarea = ({
       theme === 'blog' && 'rounded-sm p-3 font-mono text-sm',
 
       error
-        ? 'border-theme-danger text-theme-danger focus-visible:ring-theme-danger/50'
+        ? 'border-theme-danger text-theme-danger placeholder:text-theme-danger/60 focus-visible:ring-theme-danger/50'
         : 'placeholder:text-theme-dim focus-visible:border-theme-accent focus-visible:ring-theme-accent/50',
       className,
     )}

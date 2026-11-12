@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import type { TPageProps } from '@/shared/lib';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
 import { getT } from '@/shared/lib/i18n/server';
@@ -17,9 +18,7 @@ export const generateMetadata = async ({ params }: TPageProps): Promise<Metadata
   return getPageMetadata(locale, 'careers', '/careers');
 };
 
-const CareersPage = async ({ params }: TPageProps) => {
-  const { locale } = await params;
-
+const CareersContent = async ({ locale }: { locale: string }) => {
   const [jobs, { t }] = await Promise.all([
     getPublishedJobs(locale),
     getT('careers', { lng: locale }),
@@ -34,6 +33,16 @@ const CareersPage = async ({ params }: TPageProps) => {
       <CareersProcess />
       <CareersCta />
     </>
+  );
+};
+
+const CareersPage = async ({ params }: TPageProps) => {
+  const { locale } = await params;
+
+  return (
+    <Suspense fallback={null}>
+      <CareersContent locale={locale} />
+    </Suspense>
   );
 };
 

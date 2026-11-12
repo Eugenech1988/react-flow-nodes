@@ -4,6 +4,7 @@ import type { ElementType, ComponentPropsWithoutRef, ComponentProps, ReactNode }
 import { Loader2 } from 'lucide-react';
 import { Button } from '@pipeline/ui/button';
 import { cn } from '@/shared/lib';
+import { themeScope, type TUiTheme } from './theme';
 
 export type ButtonVariant =
   | 'primary'
@@ -48,6 +49,13 @@ export interface IAppButtonProps extends Omit<
   ariaLabel?: string;
 }
 
+const BUTTON_THEME: Partial<Record<ButtonVariant, TUiTheme>> = {
+  careers: 'careers',
+  'careers-outline': 'careers',
+  blog: 'blog',
+  'blog-outline': 'blog',
+};
+
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
     'relative text-white bg-theme-accent-deep hover:bg-theme-accent transition-colors duration-200 active:scale-[0.98]',
@@ -63,10 +71,10 @@ const variantStyles: Record<ButtonVariant, string> = {
   'careers-outline':
     'relative overflow-hidden border border-theme-line bg-transparent font-typewriter text-xs uppercase tracking-widest text-theme-muted transition-all duration-150 ease-out hover:border-theme-accent hover:bg-theme-panel hover:text-theme-fg active:scale-[0.98] cursor-pointer',
 
-  blog: 'group relative overflow-hidden border border-theme-accent/40 bg-theme-accent/10 text-sm font-medium text-theme-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150 ease-out hover:border-theme-accent hover:bg-theme-accent/20 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] active:translate-y-px cursor-pointer',
+  blog: 'group relative overflow-hidden border border-theme-accent/40 bg-theme-accent/10 font-medium text-theme-accent shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-150 ease-out hover:border-theme-accent hover:bg-theme-accent/20 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] active:translate-y-px cursor-pointer',
 
   'blog-outline':
-    'relative overflow-hidden border border-theme-line bg-transparent text-sm font-medium text-theme-muted transition-all duration-150 ease-out hover:border-theme-accent hover:text-theme-accent active:translate-y-px cursor-pointer',
+    'relative overflow-hidden border border-theme-line bg-transparent font-medium text-theme-muted transition-all duration-150 ease-out hover:border-theme-accent hover:text-theme-accent active:translate-y-px cursor-pointer',
 
   secondary:
     'relative text-theme-fg border border-theme-line bg-theme-surface/80 hover:bg-theme-panel transition-all duration-150 active:scale-[0.98]',
@@ -91,42 +99,43 @@ const BLOG_VARIANTS: ButtonVariant[] = ['blog', 'blog-outline'];
 const SHARP_VARIANTS: ButtonVariant[] = ['careers', 'careers-outline', 'blog', 'blog-outline'];
 
 export const AppButton = ({
-  text,
-  children,
-  variant = 'primary',
-  size = 'md',
-  icon: Icon,
-  iconClassName,
-  isPending = false,
-  pendingText,
-  isDisabled = false,
-  type = 'button',
-  onClick,
-  className,
-  isLink = false,
-  linkTo = '#',
-  newTab,
-  ariaLabel,
-  'aria-label': nativeAriaLabel,
-  ...props
-}: IAppButtonProps) => {
+                            text,
+                            children,
+                            variant = 'primary',
+                            size = 'md',
+                            icon: Icon,
+                            iconClassName,
+                            isPending = false,
+                            pendingText,
+                            isDisabled = false,
+                            type = 'button',
+                            onClick,
+                            className,
+                            isLink = false,
+                            linkTo = '#',
+                            newTab,
+                            ariaLabel,
+                            'aria-label': nativeAriaLabel,
+                            ...props
+                          }: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
   const isBlog = BLOG_VARIANTS.includes(variant);
   const isSharp = SHARP_VARIANTS.includes(variant);
+  const scope = themeScope(BUTTON_THEME[variant]);
 
   const currentSize =
     variant === 'nav'
       ? { button: '', icon: 'w-4 h-4' }
       : isBlog
         ? {
-            button:
-              size === 'sm'
-                ? 'h-8 px-3 text-xs'
-                : size === 'lg'
-                  ? 'h-11 px-6 text-sm'
-                  : 'h-9 px-4 text-sm',
-            icon: size === 'lg' ? 'w-4 h-4' : 'w-3.5 h-3.5',
-          }
+          button:
+            size === 'sm'
+              ? 'h-8 px-3 text-xs'
+              : size === 'lg'
+                ? 'h-11 px-6 text-sm'
+                : 'h-9 px-4 text-sm',
+          icon: size === 'lg' ? 'w-4 h-4' : 'w-3.5 h-3.5',
+        }
         : sizeStyles[size];
 
   const effectiveAriaLabel = ariaLabel || nativeAriaLabel;
@@ -173,6 +182,7 @@ export const AppButton = ({
 
     return (
       <Button
+        {...scope}
         aria-label={effectiveAriaLabel}
         render={(buttonProps) => {
           const { ref: ignoredRef, ...linkProps } = buttonProps as Record<string, unknown>;
@@ -197,6 +207,7 @@ export const AppButton = ({
 
   return (
     <Button
+      {...scope}
       type={type}
       disabled={disabled}
       aria-label={effectiveAriaLabel}

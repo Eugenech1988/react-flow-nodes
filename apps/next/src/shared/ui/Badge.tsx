@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/shared/lib';
+import type { TUiTheme } from './theme';
 
 export type TBadgeVariant = 'hex' | 'pill';
-export type TBadgeTheme = 'default' | 'careers' | 'blog';
+export type TBadgeTheme = TUiTheme;
 
 export interface IBadgeProps {
   children: ReactNode;
