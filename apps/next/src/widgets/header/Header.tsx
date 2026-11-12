@@ -126,7 +126,8 @@ export const Header = ({ theme = 'default' }: IHeaderProps) => {
               isTechnical ? 'rounded-sm' : 'rounded-lg',
             )}
             aria-label={t('header.toggleMenu')}
-            arie-controls='mogile-menu'
+            // aria-expanded='mobile-menu'
+            aria-controls='mobile-menu'
           />
         </div>
 
@@ -139,7 +140,6 @@ export const Header = ({ theme = 'default' }: IHeaderProps) => {
               : 'pointer-events-none invisible mt-0 grid-rows-[0fr] opacity-0',
             isTechnical ? 'rounded-sm' : 'rounded-2xl',
           )}
-          aria-opened={isOpen}
         >
           <div className="overflow-hidden">
             <div className="relative flex flex-col gap-1 p-4 sm:p-5">

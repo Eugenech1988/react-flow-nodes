@@ -6,8 +6,8 @@ import {
   MapPin,
   Clock,
   ChevronRight,
-  Gauge,
-  Power,
+  // Gauge,
+  // Power,
   ChevronDown,
   Eye,
   FileText,
@@ -96,53 +96,31 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
         <Frame
           theme="careers"
           className="h-100 sm:h-130"
-          headerIcon={Power}
-          headerTitle={
-            <div className="flex items-center gap-4">
-              <span>SYS.OPENINGS // {t(`openings.filters.${activeDept}`)}</span>
-              <span className="text-theme-muted flex items-center gap-1.5">
-                <Gauge className="h-3.5 w-3.5" />
-                {String(filtered.length).padStart(2, '0')}
-              </span>
-            </div>
-          }
           toolbar={
-            <div className="flex flex-wrap gap-1.5 sm:gap-2">
-              {DEPARTMENTS.map((dept) => {
+            <div className="flex w-full">
+              {DEPARTMENTS.map((dept, idx) => {
                 const isActive = dept.id === activeDept;
+                const isFirst = idx === 0;
                 return (
                   <button
                     key={dept.id}
                     type="button"
                     onClick={() => setActiveDept(dept.id)}
-                    className={`group relative flex min-w-0 flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-md border px-3 py-2 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px] ${
+                    className={`group relative flex flex-1 cursor-pointer items-center justify-center overflow-hidden border-y border-r border-theme-line px-3 py-2.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px] ${
+                      isFirst ? 'border-l' : ''
+                    } ${
                       isActive
                         ? 'border-theme-accent-hover from-theme-accent-deep to-theme-accent-deep/80 text-theme-bg bg-linear-to-b shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent-hover)_40%,transparent),0_0_15px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]'
-                        : 'border-theme-line from-theme-surface to-theme-bg text-theme-muted hover:border-theme-accent/50 hover:text-theme-accent-hover bg-linear-to-b shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent-hover)_8%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.5)]'
+                        : 'from-theme-surface to-theme-bg text-theme-muted hover:border-theme-accent/50 hover:text-theme-accent-hover bg-linear-to-b shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent-hover)_8%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.5)]'
                     }`}
                   >
-                    <span
-                      className={`absolute top-0.5 left-0.5 h-1 w-1 rounded-full ${isActive ? 'bg-theme-fg/40' : 'bg-theme-rivet'}`}
-                    />
-                    <span
-                      className={`absolute right-0.5 bottom-0.5 h-1 w-1 rounded-full ${isActive ? 'bg-theme-fg/40' : 'bg-theme-rivet'}`}
-                    />
                     <span className="relative z-10">{t(`openings.filters.${dept.id}`)}</span>
                     {isActive && (
-                      <span className="bg-theme-accent-hover absolute top-1/2 right-1.5 h-1 w-1 -translate-y-1/2 animate-pulse rounded-full shadow-[0_0_5px_var(--theme-accent-hover)]" />
+                      <span className="bg-theme-accent-hover absolute top-1/2 right-3 h-1 w-1 -translate-y-1/2 animate-pulse rounded-full shadow-[0_0_5px_var(--theme-accent-hover)]" />
                     )}
                   </button>
                 );
               })}
-            </div>
-          }
-          footer={
-            <div className="flex w-full items-center justify-between font-mono text-[10px] tracking-widest uppercase">
-              <span className="text-theme-muted flex items-center gap-2">
-                <span className="bg-theme-accent h-1.5 w-1.5 animate-pulse rounded-full shadow-[0_0_5px_var(--theme-accent)]" />
-                SYS.ONLINE
-              </span>
-              <span className="text-theme-dim">v1.2.0</span>
             </div>
           }
         >

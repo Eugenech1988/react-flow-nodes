@@ -3,6 +3,7 @@ import type { TPageProps } from '@/shared/lib';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
 import { getT } from '@/shared/lib/i18n/server';
 import { BlogHero, BlogFeatured, BlogGrid, BlogCta, BLOG_POSTS } from './_components';
+import { JsonLd } from '@/shared/lib/seo/JsonLd';
 
 export const generateMetadata = async ({params}: TPageProps): Promise<Metadata> => {
   const {locale} = await params;
@@ -43,14 +44,8 @@ const BlogPage = async ({params}: TPageProps) => {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{__html: JSON.stringify(breadcrumbs)}}
-      />
+      <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbs} />
       <div className="relative z-10">
         <BlogHero t={t} total={BLOG_POSTS.length} lastUpdate={featured?.date ?? ''}/>
         {featured && (

@@ -6,6 +6,7 @@ import { getPageMetadata } from '@/shared/lib/seo/metadata';
 import { getT } from '@/shared/lib/i18n/server';
 import { getJobBySlug } from '@/shared/api';
 import { JobDetailView } from './_components';
+import { JsonLd } from '@/shared/lib/seo/JsonLd';
 
 export const generateMetadata = async ({ params }: TPageWithIdProps): Promise<Metadata> => {
   const { locale, id } = await params;
@@ -50,10 +51,7 @@ const JobContent = async ({ params }: TPageWithIdProps) => {
 
   return (
     <div className="bg-theme-bg text-theme-fg relative">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <JobDetailView job={job} locale={locale} />
     </div>
   );
