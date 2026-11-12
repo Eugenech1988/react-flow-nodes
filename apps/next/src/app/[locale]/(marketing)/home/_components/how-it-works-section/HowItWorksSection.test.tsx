@@ -1,10 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: vi.fn() }),
-}));
+import type { ReactNode } from 'react';
 
 vi.mock('@/shared/lib/i18n/client', () => ({
   useT: () => ({ t: (key: string) => key }),
@@ -12,6 +9,21 @@ vi.mock('@/shared/lib/i18n/client', () => ({
 
 vi.mock('@/shared/lib/app-url', () => ({
   APP_LOGIN_URL: 'https://login.test',
+}));
+
+vi.mock('@/shared/ui', () => ({
+  Section: ({ children }: { children: ReactNode }) => <section>{children}</section>,
+  SectionDecorator: () => null,
+  SectionHeading: ({ title }: { title: string }) => <h2>{title}</h2>,
+  AppButton: ({ children, isLink, linkTo }: any) =>
+    isLink ? <a href={linkTo}>{children}</a> : <button>{children}</button>,
+  Frame: ({ children, headerTitle, footer }: any) => (
+    <div>
+      <div>{headerTitle}</div>
+      {children}
+      {footer}
+    </div>
+  ),
 }));
 
 import { HowItWorksSection } from './HowItWorksSection';
