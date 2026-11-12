@@ -7,7 +7,6 @@ import { WorkflowExecutionControl } from './components/WorkflowExecutionControl'
 import { ShareDialog } from '@/widgets';
 import { useUser } from '@/shared/hooks';
 import { useStore } from '@/entities';
-import { SidebarToggle } from '@/widgets/sidebar/components/SidebarToggle';
 
 export const Header = () => {
   const location = useLocation();
@@ -43,8 +42,6 @@ export const Header = () => {
         <Link to="/">
           <img className="h-6 w-auto object-contain" src={logo} alt="Pipeline logo" />
         </Link>
-
-        <SidebarToggle />
 
         {isAdmin && (
           <>
