@@ -1,13 +1,15 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { getApiUrl } from './trpc';
 
-export const submitJobApplication = async (formData: FormData, slug: string, locale: string) => {
-  const apiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
-
-  if (!apiUrl) {
-    return false;
-  }
+export const submitJobApplication = async (
+  formData: FormData,
+  slug: string,
+  locale: string,
+): Promise<boolean> => {
+  const apiUrl = getApiUrl();
+  if (!apiUrl) return false;
 
   try {
     const res = await fetch(`${apiUrl}/applications`, {

@@ -1,8 +1,8 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-
-const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
+import { z } from 'zod';
+import { trpcFetch } from './trpc';
 
 export type TPublicJob = {
   id: string;
@@ -22,50 +22,38 @@ export type TPublicJob = {
   applications: number;
 };
 
-type TRawTranslation = {
-  id: string;
-  jobId: string;
-  locale: string;
-  title: string;
-  description: string;
-  responsibilities: string[];
-  requirements: string[];
-  metaTitle: string | null;
-  metaDescription: string | null;
-};
+const rawTranslationSchema = z.object({
+  id: z.string(),
+  jobId: z.string(),
+  locale: z.string(),
+  title: z.string(),
+  description: z.string(),
+  responsibilities: z.array(z.string()).nullish().transform((v) => v ?? []),
+  requirements: z.array(z.string()).nullish().transform((v) => v ?? []),
+  metaTitle: z.string().nullable(),
+  metaDescription: z.string().nullable(),
+});
 
-type TRawJob = {
-  id: string;
-  slug: string;
-  status: string;
-  department: string;
-  level: string;
-  type: string;
-  location: string;
-  icon: string | null;
-  authorId: string | null;
-  publishedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  translations: TRawTranslation[];
-  views: number | string;
-  applications: number | string;
-};
+const rawJobSchema = z.object({
+  id: z.string(),
+  slug: z.string(),
+  status: z.string(),
+  department: z.string(),
+  level: z.string(),
+  type: z.string(),
+  location: z.string(),
+  icon: z.string().nullable(),
+  authorId: z.string().nullable(),
+  publishedAt: z.string().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  translations: z.array(rawTranslationSchema),
+  views: z.union([z.number(), z.string()]).catch(0),
+  applications: z.union([z.number(), z.string()]).catch(0),
+});
 
-const extractData = <T>(payload: unknown): T | null => {
-  if (!Array.isArray(payload) || payload.length === 0) return null;
-
-  const first = payload[0];
-  if (!first || typeof first !== 'object' || !('result' in first)) return null;
-
-  const data = (first as { result?: { data?: unknown } }).result?.data;
-
-  if (data && typeof data === 'object' && 'json' in data) {
-    return (data as { json: T }).json ?? null;
-  }
-
-  return (data as T) ?? null;
-};
+type TRawTranslation = z.infer<typeof rawTranslationSchema>;
+type TRawJob = z.infer<typeof rawJobSchema>;
 
 const localeCandidates = (locale: string): string[] => {
   if (locale === 'ua' || locale === 'uk') return ['ua', 'uk'];
@@ -89,8 +77,8 @@ const localizeJob = (raw: TRawJob, locale: string): TPublicJob | null => {
     slug: raw.slug,
     title: translation.title,
     description: translation.description,
-    responsibilities: translation.responsibilities ?? [],
-    requirements: translation.requirements ?? [],
+    responsibilities: translation.responsibilities,
+    requirements: translation.requirements,
     department: raw.department,
     level: raw.level,
     type: raw.type,
@@ -103,45 +91,29 @@ const localizeJob = (raw: TRawJob, locale: string): TPublicJob | null => {
   };
 };
 
-const buildTrpcUrl = (path: string, input: unknown): string => {
-  const encoded = encodeURIComponent(JSON.stringify({ 0: input }));
-  return `${API_URL}/trpc/${path}?batch=1&input=${encoded}`;
-};
-
-const assertApiUrl = (): string | null => {
-  if (!API_URL) {
-    console.error('[careers] API_URL is not set (expected API_URL or NEXT_PUBLIC_API_URL)');
-    return null;
-  }
-  return API_URL;
-};
-
 export const getPublishedJobs = async (locale: string): Promise<TPublicJob[]> => {
-  if (!assertApiUrl()) return [];
+  const result = await trpcFetch('jobs.list', {}, {
+    schema: z.array(z.unknown()),
+    next: { revalidate: 60, tags: ['jobs'] },
+  });
 
-  const url = buildTrpcUrl('jobs.list', {});
+  if (!result.ok) return [];
 
-  try {
-    const res = await fetch(url, {
-      next: { revalidate: 60, tags: ['jobs'] },
-    });
+  const jobs: TPublicJob[] = [];
 
-    if (!res.ok) {
-      console.error('[careers] jobs.list: bad status', res.status, url);
-      return [];
+  for (const item of result.data) {
+    const parsed = rawJobSchema.safeParse(item);
+    if (!parsed.success) {
+      console.warn('[careers] skipping malformed job', parsed.error);
+      continue;
     }
+    if (parsed.data.status !== 'PUBLISHED') continue;
 
-    const payload = await res.json();
-    const raw = extractData<TRawJob[]>(payload) ?? [];
-
-    return raw
-      .filter((j) => j.status === 'PUBLISHED')
-      .map((j) => localizeJob(j, locale))
-      .filter((j): j is TPublicJob => j !== null);
-  } catch (err) {
-    console.error('[careers] jobs.list: fetch failed:', err);
-    return [];
+    const localized = localizeJob(parsed.data, locale);
+    if (localized) jobs.push(localized);
   }
+
+  return jobs;
 };
 
 export const getJobBySlug = async (locale: string, slug: string): Promise<TPublicJob | null> => {
@@ -154,65 +126,10 @@ export const incrementJobViews = async (
   slug: string,
   locale: string,
 ): Promise<boolean> => {
-  const baseUrl = assertApiUrl();
-  if (!baseUrl) return false;
+  const result = await trpcFetch('jobs.incrementViews', { id }, { method: 'POST' });
+  if (!result.ok) return false;
 
-  try {
-    const res = await fetch(`${baseUrl}/trpc/jobs.incrementViews?batch=1`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 0: { id } }),
-      cache: 'no-store',
-    });
-
-    const data = await res.json();
-
-    if (data?.[0]?.error) {
-      console.error('[careers] incrementViews tRPC error:', data[0].error);
-      return false;
-    }
-
-    if (!res.ok) {
-      console.error('[careers] jobs.incrementViews: bad status', res.status);
-      return false;
-    }
-
-    revalidateTag('jobs', 'max');
-    revalidatePath(`/${locale}/careers/${slug}`);
-    return true;
-  } catch (err) {
-    console.error('[careers] jobs.incrementViews: fetch failed:', err);
-    return false;
-  }
-};
-
-export const incrementJobApplications = async (id: string): Promise<boolean> => {
-  const baseUrl = assertApiUrl();
-  if (!baseUrl) return false;
-
-  try {
-    const res = await fetch(`${baseUrl}/trpc/jobs.incrementApplications?batch=1`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 0: { id } }),
-      cache: 'no-store',
-    });
-
-    const data = await res.json();
-    if (data?.[0]?.error) {
-      console.error('[careers] incrementApplications tRPC error:', data[0].error);
-      return false;
-    }
-
-    if (!res.ok) {
-      console.error('[careers] jobs.incrementApplications: bad status', res.status);
-      return false;
-    }
-
-    revalidateTag('jobs', 'max');
-    return true;
-  } catch (err) {
-    console.error('[careers] jobs.incrementApplications: fetch failed:', err);
-    return false;
-  }
+  revalidateTag('jobs', 'max');
+  revalidatePath(`/${locale}/careers/${slug}`);
+  return true;
 };

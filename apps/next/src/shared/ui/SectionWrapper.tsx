@@ -1,21 +1,14 @@
 import { cn } from '@/shared/lib';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface ISectionProps {
   id?: string;
   children: ReactNode;
   className?: string;
   noBorder?: boolean;
-  theme?: 'default' | 'careers' | 'blog';
 }
 
-export const Section = ({
-  id,
-  children,
-  className,
-  noBorder,
-  theme: _theme = 'default',
-}: ISectionProps) => {
+export const Section = ({ id, children, className, noBorder }: ISectionProps) => {
   return (
     <section
       id={id}

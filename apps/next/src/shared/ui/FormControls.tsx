@@ -35,12 +35,13 @@ export const AppInput = ({ className, error, theme = 'default', ...props }: IApp
       'border-theme-line bg-theme-bg text-theme-fg',
 
       theme === 'default' && 'h-12 rounded-xl px-4 py-3 text-sm',
-      theme === 'careers' && 'font-typewriter h-10 rounded-sm px-3 py-2 text-sm',
+      theme === 'careers' &&
+      'font-typewriter h-10 rounded-sm px-3 py-2 text-sm shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]',
       theme === 'blog' && 'h-10 rounded-sm px-3 py-2 font-mono text-sm',
 
       error
         ? 'border-theme-danger text-theme-danger focus-visible:ring-theme-danger/50'
-        : 'focus-visible:border-theme-accent focus-visible:ring-theme-accent/50',
+        : 'placeholder:text-theme-dim focus-visible:border-theme-accent focus-visible:ring-theme-accent/50',
       className,
     )}
     {...props}
@@ -53,23 +54,24 @@ interface IAppTextareaProps extends ComponentProps<typeof Textarea> {
 }
 
 export const AppTextarea = ({
-  className,
-  error,
-  theme = 'default',
-  ...props
-}: IAppTextareaProps) => (
+                              className,
+                              error,
+                              theme = 'default',
+                              ...props
+                            }: IAppTextareaProps) => (
   <Textarea
     className={cn(
       'min-h-30 w-full resize-none transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
       'border-theme-line bg-theme-bg text-theme-fg',
 
       theme === 'default' && 'rounded-xl p-4 text-sm',
-      theme === 'careers' && 'font-typewriter rounded-sm p-3 text-sm',
+      theme === 'careers' &&
+      'font-typewriter rounded-sm p-3 text-sm shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]',
       theme === 'blog' && 'rounded-sm p-3 font-mono text-sm',
 
       error
         ? 'border-theme-danger text-theme-danger focus-visible:ring-theme-danger/50'
-        : 'focus-visible:border-theme-accent focus-visible:ring-theme-accent/50',
+        : 'placeholder:text-theme-dim focus-visible:border-theme-accent focus-visible:ring-theme-accent/50',
       className,
     )}
     {...props}

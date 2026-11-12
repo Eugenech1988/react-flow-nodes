@@ -11,6 +11,18 @@ export interface IBadgeProps {
   theme?: TBadgeTheme;
 }
 
+interface IHexBadgeProps {
+  children: ReactNode;
+  className?: string;
+  theme: TBadgeTheme;
+}
+
+interface IPillBadgeProps {
+  children: ReactNode;
+  className?: string;
+  theme: TBadgeTheme;
+}
+
 const HEX_CLIP =
   '[clip-path:polygon(6px_0,calc(100%-6px)_0,100%_50%,calc(100%-6px)_100%,6px_100%,0_50%)]';
 
@@ -26,15 +38,7 @@ const HEX_INNER: Record<TBadgeTheme, string> = {
   blog: 'bg-theme-surface text-theme-accent-hover',
 };
 
-const HexBadge = ({
-  children,
-  className,
-  theme,
-}: {
-  children: ReactNode;
-  className?: string;
-  theme: TBadgeTheme;
-}) => (
+const HexBadge = ({ children, className, theme }: IHexBadgeProps) => (
   <div className={cn('relative shrink-0 p-px', HEX_CLIP, HEX_BORDER[theme], className)}>
     <div
       className={cn(
@@ -48,15 +52,14 @@ const HexBadge = ({
   </div>
 );
 
-const PillBadge = ({
-  children,
-  className,
-  theme,
-}: {
-  children: ReactNode;
-  className?: string;
-  theme: TBadgeTheme;
-}) => {
+const PILL_RIVET_POSITIONS = [
+  'top-[5px] left-[5px]',
+  'top-[5px] right-[5px]',
+  'bottom-[5px] left-[5px]',
+  'bottom-[5px] right-[5px]',
+] as const;
+
+const PillBadge = ({ children, className, theme }: IPillBadgeProps) => {
   const isCareers = theme === 'careers';
   const isBlog = theme === 'blog';
   const isThemed = isCareers || isBlog;
@@ -80,12 +83,7 @@ const PillBadge = ({
       <span className="via-theme-accent/40 pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent to-transparent" />
       <span className="via-theme-accent/20 pointer-events-none absolute inset-x-3 bottom-0 h-px bg-linear-to-r from-transparent to-transparent" />
 
-      {[
-        'top-1.25 left-1.25',
-        'top-1.25 right-1.25',
-        'bottom-1.25 left-1.25',
-        'bottom-1.25 right-1.25',
-      ].map((pos) => (
+      {PILL_RIVET_POSITIONS.map((pos) => (
         <span
           key={pos}
           className={cn(
@@ -109,11 +107,11 @@ const PillBadge = ({
           className={cn(
             'text-[10px] font-bold tracking-[0.15em] uppercase',
             !isThemed &&
-              'text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
+            'text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
             isCareers &&
-              'font-typewriter text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
+            'font-typewriter text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
             isBlog &&
-              'font-typewriter text-theme-accent-hover drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent-hover)_40%,transparent)]',
+            'font-typewriter text-theme-accent-hover drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent-hover)_40%,transparent)]',
           )}
         >
           {children}
