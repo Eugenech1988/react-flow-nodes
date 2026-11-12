@@ -108,11 +108,11 @@ const PillBadge = ({ children, className, theme }: IPillBadgeProps) => {
           className={cn(
             'text-[10px] font-bold tracking-[0.15em] uppercase',
             !isThemed &&
-            'text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
+              'text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
             isCareers &&
-            'font-typewriter text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
+              'font-typewriter text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
             isBlog &&
-            'font-typewriter text-theme-accent-hover drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent-hover)_40%,transparent)]',
+              'font-typewriter text-theme-accent-hover drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent-hover)_40%,transparent)]',
           )}
         >
           {children}

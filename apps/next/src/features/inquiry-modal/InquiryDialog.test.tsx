@@ -16,7 +16,9 @@ vi.mock('@/entities/inquiry/InquiryForm', () => ({
 vi.mock('@pipeline/ui/dialog', () => ({
   Dialog: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DialogContent: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div data-testid="dialog-content" {...props}>{children}</div>
+    <div data-testid="dialog-content" {...props}>
+      {children}
+    </div>
   ),
   DialogTitle: ({ children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h2 {...props}>{children}</h2>
@@ -30,7 +32,15 @@ vi.mock('@pipeline/ui/dialog', () => ({
 }));
 
 vi.mock('@/shared/ui/AppModal', () => ({
-  AppModal: ({ children, title, description }: { children: ReactNode; title: string; description: string }) => (
+  AppModal: ({
+    children,
+    title,
+    description,
+  }: {
+    children: ReactNode;
+    title: string;
+    description: string;
+  }) => (
     <div data-testid="app-modal" data-title={title} data-description={description}>
       {children}
     </div>
@@ -79,7 +89,9 @@ describe('InquiryDialog', () => {
     });
 
     it('does not render InquiryForm when closed', () => {
-      render(<InquiryDialog isOpen={false} onOpenChange={vi.fn()} type="contact" theme="careers" />);
+      render(
+        <InquiryDialog isOpen={false} onOpenChange={vi.fn()} type="contact" theme="careers" />,
+      );
       expect(screen.queryByTestId('inquiry-form')).not.toBeInTheDocument();
     });
   });

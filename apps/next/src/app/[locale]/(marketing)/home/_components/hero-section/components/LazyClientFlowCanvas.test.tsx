@@ -36,7 +36,7 @@ describe('LazyHeroCanvas', () => {
     window.cancelIdleCallback = vi.fn();
 
     render(<LazyHeroCanvas />);
-    
+
     await act(async () => {
       await Promise.resolve();
     });
@@ -51,7 +51,7 @@ describe('LazyHeroCanvas', () => {
     window.cancelIdleCallback = cancelIdleMock;
 
     const { unmount } = render(<LazyHeroCanvas />);
-    
+
     await act(async () => {
       await Promise.resolve();
     });
@@ -76,7 +76,7 @@ describe('LazyHeroCanvas', () => {
     });
 
     expect(screen.getByTestId('canvas')).toBeInTheDocument();
-    
+
     unmount();
   });
 });

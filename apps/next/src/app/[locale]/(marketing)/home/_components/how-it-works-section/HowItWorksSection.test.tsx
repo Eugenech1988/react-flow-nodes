@@ -49,12 +49,14 @@ describe('HowItWorksSection', () => {
     });
 
     const activeButtons = screen.getAllByRole('button', { pressed: true });
-    expect(activeButtons.some((btn) => btn.textContent?.includes('howItWorks.steps.deploy.title'))).toBe(true);
+    expect(
+      activeButtons.some((btn) => btn.textContent?.includes('howItWorks.steps.deploy.title')),
+    ).toBe(true);
   });
 
   it('clears previous timeout when clicking another step quickly', () => {
     render(<HowItWorksSection />);
-    
+
     const deployBtn = screen.getAllByText('howItWorks.steps.deploy.title')[0].closest('button')!;
     const monitorBtn = screen.getAllByText('howItWorks.steps.monitor.title')[0].closest('button')!;
 
@@ -62,7 +64,7 @@ describe('HowItWorksSection', () => {
     expect(screen.getByText('Initializing Module...')).toBeInTheDocument();
 
     fireEvent.click(monitorBtn);
-    
+
     act(() => {
       vi.advanceTimersByTime(600);
     });
@@ -78,9 +80,7 @@ describe('HowItWorksSection', () => {
     const designTitle = screen.getAllByText('howItWorks.steps.design.title')[0];
     fireEvent.click(designTitle.closest('button')!);
 
-    const loaderContainer = screen
-      .getByText('Initializing Module...')
-      .closest('[aria-hidden]');
+    const loaderContainer = screen.getByText('Initializing Module...').closest('[aria-hidden]');
     expect(loaderContainer).toHaveAttribute('aria-hidden', 'true');
   });
 

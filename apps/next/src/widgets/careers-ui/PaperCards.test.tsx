@@ -19,9 +19,7 @@ describe('PaperCard', () => {
   });
 
   it('applies clipPath style', () => {
-    const { container } = render(
-      <PaperCard clipPath="polygon(0 0, 100% 100%)">x</PaperCard>,
-    );
+    const { container } = render(<PaperCard clipPath="polygon(0 0, 100% 100%)">x</PaperCard>);
     expect(container.firstChild).toHaveStyle({ clipPath: 'polygon(0 0, 100% 100%)' });
   });
 

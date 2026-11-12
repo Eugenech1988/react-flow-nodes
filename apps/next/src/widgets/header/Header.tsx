@@ -126,13 +126,13 @@ export const Header = ({ theme = 'default' }: IHeaderProps) => {
               isTechnical ? 'rounded-sm' : 'rounded-lg',
             )}
             aria-label={t('header.toggleMenu')}
-            ariaExpanded={isOpen ? 'true' : 'false'}
-            aria-controls='mobile-menu'
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
           />
         </div>
 
         <div
-          id='mobile-menu'
+          id="mobile-menu"
           className={cn(
             'border-theme-line bg-theme-header/95 grid border backdrop-blur-lg transition-all duration-300 ease-in-out xl:hidden',
             isOpen

@@ -28,8 +28,14 @@ const rawTranslationSchema = z.object({
   locale: z.string(),
   title: z.string(),
   description: z.string(),
-  responsibilities: z.array(z.string()).nullish().transform((v) => v ?? []),
-  requirements: z.array(z.string()).nullish().transform((v) => v ?? []),
+  responsibilities: z
+    .array(z.string())
+    .nullish()
+    .transform((v) => v ?? []),
+  requirements: z
+    .array(z.string())
+    .nullish()
+    .transform((v) => v ?? []),
   metaTitle: z.string().nullable(),
   metaDescription: z.string().nullable(),
 });
@@ -92,10 +98,14 @@ const localizeJob = (raw: TRawJob, locale: string): TPublicJob | null => {
 };
 
 export const getPublishedJobs = async (locale: string): Promise<TPublicJob[]> => {
-  const result = await trpcFetch('jobs.list', {}, {
-    schema: z.array(z.unknown()),
-    next: { revalidate: 60, tags: ['jobs'] },
-  });
+  const result = await trpcFetch(
+    'jobs.list',
+    {},
+    {
+      schema: z.array(z.unknown()),
+      next: { revalidate: 60, tags: ['jobs'] },
+    },
+  );
 
   if (!result.ok) return [];
 

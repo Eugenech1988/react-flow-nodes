@@ -64,9 +64,7 @@ describe('Frame', () => {
 
   it('does not render hazard stripes when hasHazardStripes is false', () => {
     const { container } = render(<Frame {...baseProps}>body</Frame>);
-    expect(
-      container.querySelector('[class*="repeating-linear-gradient"]'),
-    ).not.toBeInTheDocument();
+    expect(container.querySelector('[class*="repeating-linear-gradient"]')).not.toBeInTheDocument();
   });
 
   it('uses terminal variant headerBg style', () => {

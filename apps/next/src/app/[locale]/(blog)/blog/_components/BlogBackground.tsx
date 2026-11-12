@@ -57,8 +57,8 @@ export const BlogBackground = () => (
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,var(--theme-line)_1px,transparent_0)] bg-size-[22px_22px] opacity-20" />
 
     {/* Безопасные фоновые пятна без критического выхода за экран на мобилках */}
-    <div className="bg-theme-line/10 absolute top-[-10%] left-[-10%] h-80 w-80 sm:h-125 sm:w-125 rounded-full blur-[100px]" />
-    <div className="bg-theme-accent/5 absolute right-[-10%] bottom-[-10%] h-96 w-96 sm:h-150 sm:w-150 rounded-full blur-[120px]" />
+    <div className="bg-theme-line/10 absolute top-[-10%] left-[-10%] h-80 w-80 rounded-full blur-[100px] sm:h-125 sm:w-125" />
+    <div className="bg-theme-accent/5 absolute right-[-10%] bottom-[-10%] h-96 w-96 rounded-full blur-[120px] sm:h-150 sm:w-150" />
 
     {/* Звезды */}
     {STARS.map((star, i) => {
@@ -103,7 +103,7 @@ export const BlogBackground = () => (
     ))}
 
     {/* Сканирующие радары (скрыты на малых экранах или оптимизированы) */}
-    <div className="absolute bottom-0 left-1/2 h-125 w-125 sm:h-175 sm:w-175 -translate-x-1/2 translate-y-1/2">
+    <div className="absolute bottom-0 left-1/2 h-125 w-125 -translate-x-1/2 translate-y-1/2 sm:h-175 sm:w-175">
       <div className="border-theme-accent/10 absolute inset-0 rounded-full border" />
       <div className="border-theme-accent/10 absolute inset-16 rounded-full border" />
       <div className="absolute inset-0 animate-[discovery-sweep_14s_linear_infinite] rounded-full bg-[conic-gradient(from_0deg,transparent_0deg,color-mix(in_oklab,var(--theme-accent)_8%,transparent)_24deg,transparent_72deg)] motion-reduce:hidden" />

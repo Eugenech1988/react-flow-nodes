@@ -64,12 +64,12 @@ const SIZE_CLASSES = {
 } as const;
 
 export const SocialLinks = ({
-                              title,
-                              className,
-                              align = 'start',
-                              size = 'md',
-                              theme,
-                            }: ISocialLinksProps) => {
+  title,
+  className,
+  align = 'start',
+  size = 'md',
+  theme,
+}: ISocialLinksProps) => {
   const { t } = useT('common');
 
   const effectiveTheme: TUiTheme = theme ?? 'default';
@@ -119,4 +119,3 @@ export const SocialLinks = ({
     </div>
   );
 };
-

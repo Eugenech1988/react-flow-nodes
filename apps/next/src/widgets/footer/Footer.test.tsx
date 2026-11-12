@@ -4,8 +4,18 @@ import '@testing-library/jest-dom/vitest';
 import type { ReactNode } from 'react';
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: { href: string; children: ReactNode; [k: string]: unknown }) => (
-    <a href={href} {...props}>{children}</a>
+  default: ({
+    href,
+    children,
+    ...props
+  }: {
+    href: string;
+    children: ReactNode;
+    [k: string]: unknown;
+  }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 
@@ -14,7 +24,9 @@ vi.mock('@/assets/logo.svg', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  Badge: ({ children }: { children: React.ReactNode }) => <span data-testid="badge">{children}</span>,
+  Badge: ({ children }: { children: React.ReactNode }) => (
+    <span data-testid="badge">{children}</span>
+  ),
   Rivets: () => <span data-testid="rivets" />,
   SocialLinks: () => <div data-testid="social-links" />,
 }));

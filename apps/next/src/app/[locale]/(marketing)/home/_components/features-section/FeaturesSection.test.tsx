@@ -49,7 +49,10 @@ describe('FeaturesSection', () => {
 
   it('highlights the first step by default', () => {
     render(<FeaturesSection />);
-    expect(screen.getAllByRole('button', { name: /features.stepLabel/ })[0]).toHaveAttribute('aria-current', 'step');
+    expect(screen.getAllByRole('button', { name: /features.stepLabel/ })[0]).toHaveAttribute(
+      'aria-current',
+      'step',
+    );
   });
 
   it('renders active slide content', () => {
@@ -65,16 +68,26 @@ describe('FeaturesSection', () => {
   });
 
   it('applies lg:opacity-0 when not ready', () => {
-    mockUseFeaturesScroll.mockReturnValue({ wrapperRef: { current: null }, index: 0, ready: false, goToStep: mockGoToStep });
+    mockUseFeaturesScroll.mockReturnValue({
+      wrapperRef: { current: null },
+      index: 0,
+      ready: false,
+      goToStep: mockGoToStep,
+    });
     const { container } = render(<FeaturesSection />);
     expect(container.querySelector('.lg\\:opacity-0')).toBeInTheDocument();
   });
 
   it('renders past states and CTA slide when index > 0', () => {
-    mockUseFeaturesScroll.mockReturnValue({ wrapperRef: { current: null }, index: TOTAL_STEPS - 1, ready: true, goToStep: mockGoToStep });
+    mockUseFeaturesScroll.mockReturnValue({
+      wrapperRef: { current: null },
+      index: TOTAL_STEPS - 1,
+      ready: true,
+      goToStep: mockGoToStep,
+    });
     render(<FeaturesSection />);
     expect(screen.getByTestId('cta-plaque')).toBeInTheDocument();
-    
+
     const pastElements = document.querySelectorAll('.-translate-y-30');
     expect(pastElements.length).toBeGreaterThanOrEqual(1);
   });

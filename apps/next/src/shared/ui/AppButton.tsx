@@ -100,26 +100,26 @@ const BLOG_VARIANTS: ButtonVariant[] = ['blog', 'blog-outline'];
 const SHARP_VARIANTS: ButtonVariant[] = ['careers', 'careers-outline', 'blog', 'blog-outline'];
 
 export const AppButton = ({
-                            text,
-                            children,
-                            variant = 'primary',
-                            size = 'md',
-                            icon: Icon,
-                            iconClassName,
-                            isPending = false,
-                            pendingText,
-                            isDisabled = false,
-                            type = 'button',
-                            onClick,
-                            className,
-                            isLink = false,
-                            linkTo = '#',
-                            newTab,
-                            ariaLabel,
-                            ariaExpanded,
-                            'aria-label': nativeAriaLabel,
-                            ...props
-                          }: IAppButtonProps) => {
+  text,
+  children,
+  variant = 'primary',
+  size = 'md',
+  icon: Icon,
+  iconClassName,
+  isPending = false,
+  pendingText,
+  isDisabled = false,
+  type = 'button',
+  onClick,
+  className,
+  isLink = false,
+  linkTo = '#',
+  newTab,
+  ariaLabel,
+  ariaExpanded,
+  'aria-label': nativeAriaLabel,
+  ...props
+}: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
   const isBlog = BLOG_VARIANTS.includes(variant);
   const isSharp = SHARP_VARIANTS.includes(variant);
@@ -130,14 +130,14 @@ export const AppButton = ({
       ? { button: '', icon: 'w-4 h-4' }
       : isBlog
         ? {
-          button:
-            size === 'sm'
-              ? 'h-8 px-3 text-xs'
-              : size === 'lg'
-                ? 'h-11 px-6 text-sm'
-                : 'h-9 px-4 text-sm',
-          icon: size === 'lg' ? 'w-4 h-4' : 'w-3.5 h-3.5',
-        }
+            button:
+              size === 'sm'
+                ? 'h-8 px-3 text-xs'
+                : size === 'lg'
+                  ? 'h-11 px-6 text-sm'
+                  : 'h-9 px-4 text-sm',
+            icon: size === 'lg' ? 'w-4 h-4' : 'w-3.5 h-3.5',
+          }
         : sizeStyles[size];
 
   const effectiveAriaLabel = ariaLabel || nativeAriaLabel;

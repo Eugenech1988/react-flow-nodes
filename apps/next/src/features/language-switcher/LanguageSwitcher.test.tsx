@@ -102,10 +102,7 @@ describe('LanguageSwitcher', () => {
   it('falls back to / when join result is empty', async () => {
     window.history.pushState({}, '', '/en/some-page');
     const realJoin = Array.prototype.join;
-    vi.spyOn(Array.prototype, 'join').mockImplementation(function (
-      this: unknown[],
-      sep?: string,
-    ) {
+    vi.spyOn(Array.prototype, 'join').mockImplementation(function (this: unknown[], sep?: string) {
       if (sep === '/' && Array.isArray(this) && this.length === 3 && this[1] === 'uk') {
         return '';
       }

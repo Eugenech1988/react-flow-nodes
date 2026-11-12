@@ -6,16 +6,16 @@ import { AppButton } from './AppButton';
 
 vi.mock('@pipeline/ui/button', () => ({
   Button: ({
-             render: renderFn,
-             children,
-             ...props
-           }: {
+    render: renderFn,
+    children,
+    ...props
+  }: {
     render?: (p: Record<string, unknown>) => React.ReactNode;
     children?: React.ReactNode;
     [key: string]: unknown;
   }) => {
-    if (typeof renderFn === 'function') return renderFn({...props, ref: undefined});
-    const {type, disabled, ...rest} = props as Record<string, unknown>;
+    if (typeof renderFn === 'function') return renderFn({ ...props, ref: undefined });
+    const { type, disabled, ...rest } = props as Record<string, unknown>;
     return (
       <button
         type={type as 'button' | 'submit' | 'reset' | undefined}
@@ -25,19 +25,19 @@ vi.mock('@pipeline/ui/button', () => ({
         {children}
       </button>
     );
-  }
+  },
 }));
 
 describe('AppButton', () => {
   describe('rendering: children / text', () => {
     it('renders children when text is absent', () => {
       render(<AppButton>Only children</AppButton>);
-      expect(screen.getByRole('button', {name: 'Only children'})).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Only children' })).toBeInTheDocument();
     });
 
     it('renders text when children are absent', () => {
-      render(<AppButton text="Only text"/>);
-      expect(screen.getByRole('button', {name: 'Only text'})).toBeInTheDocument();
+      render(<AppButton text="Only text" />);
+      expect(screen.getByRole('button', { name: 'Only text' })).toBeInTheDocument();
     });
 
     it('text wins over children', () => {
@@ -50,10 +50,10 @@ describe('AppButton', () => {
 
   describe('isPending branch (Loader2 + fallback chain)', () => {
     it('renders loader icon when isPending', () => {
-      const {container} = render(
+      const { container } = render(
         <AppButton isPending pendingText="Loading">
           Submit
-        </AppButton>
+        </AppButton>,
       );
       expect(container.querySelector('.animate-spin')).toBeInTheDocument();
     });
@@ -62,23 +62,23 @@ describe('AppButton', () => {
       render(
         <AppButton isPending pendingText="Pending">
           Child
-        </AppButton>
+        </AppButton>,
       );
-      expect(screen.getByRole('button', {name: 'Pending'})).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Pending' })).toBeInTheDocument();
     });
 
     it('falls back to text when pendingText is missing', () => {
       render(
         <AppButton isPending text="Fallback text">
           Child
-        </AppButton>
+        </AppButton>,
       );
-      expect(screen.getByRole('button', {name: 'Fallback text'})).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Fallback text' })).toBeInTheDocument();
     });
 
     it('falls back to children when pendingText and text are missing', () => {
       render(<AppButton isPending>Fallback child</AppButton>);
-      expect(screen.getByRole('button', {name: 'Fallback child'})).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Fallback child' })).toBeInTheDocument();
     });
 
     it('is disabled when isPending', () => {
@@ -89,25 +89,25 @@ describe('AppButton', () => {
 
   describe('non-pending branch: icon', () => {
     it('renders icon when icon prop is passed', () => {
-      const Icon = () => <svg data-testid="btn-icon"/>;
+      const Icon = () => <svg data-testid="btn-icon" />;
       render(<AppButton icon={Icon}>Label</AppButton>);
       expect(screen.getByTestId('btn-icon')).toBeInTheDocument();
     });
 
     it('renders icon and children side by side', () => {
-      const Icon = () => <svg data-testid="btn-icon"/>;
+      const Icon = () => <svg data-testid="btn-icon" />;
       render(<AppButton icon={Icon}>Label</AppButton>);
       expect(screen.getByTestId('btn-icon')).toBeInTheDocument();
       expect(screen.getByRole('button')).toHaveTextContent('Label');
     });
 
     it('does not render icon when icon is null', () => {
-      const {container} = render(<AppButton icon={null}>Label</AppButton>);
+      const { container } = render(<AppButton icon={null}>Label</AppButton>);
       expect(container.querySelector('svg')).not.toBeInTheDocument();
     });
 
     it('does not render icon when icon is undefined', () => {
-      const {container} = render(<AppButton>Label</AppButton>);
+      const { container } = render(<AppButton>Label</AppButton>);
       expect(container.querySelector('svg')).not.toBeInTheDocument();
     });
   });
@@ -117,7 +117,7 @@ describe('AppButton', () => {
       render(
         <AppButton isLink linkTo="/about">
           Go
-        </AppButton>
+        </AppButton>,
       );
       const link = screen.getByRole('link');
       expect(link).toHaveAttribute('href', '/about');
@@ -128,7 +128,7 @@ describe('AppButton', () => {
       render(
         <AppButton isLink linkTo="https://x.com" newTab>
           Go
-        </AppButton>
+        </AppButton>,
       );
       const link = screen.getByRole('link');
       expect(link).toHaveAttribute('target', '_blank');
@@ -139,7 +139,7 @@ describe('AppButton', () => {
       render(
         <AppButton isLink linkTo="/x" isDisabled>
           X
-        </AppButton>
+        </AppButton>,
       );
       expect(screen.getByRole('button')).toBeDisabled();
     });
@@ -148,7 +148,7 @@ describe('AppButton', () => {
       render(
         <AppButton isLink linkTo="">
           X
-        </AppButton>
+        </AppButton>,
       );
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
@@ -179,7 +179,7 @@ describe('AppButton', () => {
       ['danger', 'bg-rose-600'],
       ['regular', 'bg-theme-surface'],
       ['secondary', 'bg-theme-surface/80'],
-      ['teal', 'bg-theme-accent']
+      ['teal', 'bg-theme-accent'],
     ] as const)('variant "%s" → %s', (variant, expectedClass) => {
       render(<AppButton variant={variant}>V</AppButton>);
       expect(screen.getByRole('button')).toHaveClass(expectedClass);
@@ -191,7 +191,7 @@ describe('AppButton', () => {
       ['xs', 'min-h-8'],
       ['sm', 'min-h-9'],
       ['md', 'min-h-10'],
-      ['lg', 'min-h-12']
+      ['lg', 'min-h-12'],
     ] as const)('size "%s" → %s', (size, expected) => {
       render(<AppButton size={size}>V</AppButton>);
       expect(screen.getByRole('button')).toHaveClass(expected);
@@ -201,12 +201,12 @@ describe('AppButton', () => {
   describe('a11y', () => {
     it('applies ariaLabel', () => {
       render(<AppButton ariaLabel="Label">X</AppButton>);
-      expect(screen.getByRole('button', {name: 'Label'})).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Label' })).toBeInTheDocument();
     });
 
     it('applies native aria-label', () => {
       render(<AppButton aria-label="Native">X</AppButton>);
-      expect(screen.getByRole('button', {name: 'Native'})).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Native' })).toBeInTheDocument();
     });
   });
 
@@ -223,7 +223,11 @@ describe('AppButton', () => {
 
 describe('blog variant: currentSize', () => {
   it.each(['blog', 'blog-outline'] as const)('%s + size="sm" → h-8 px-3 text-xs', (variant) => {
-    render(<AppButton variant={variant} size="sm">V</AppButton>);
+    render(
+      <AppButton variant={variant} size="sm">
+        V
+      </AppButton>,
+    );
     const button = screen.getByRole('button');
     expect(button).toHaveClass('h-8');
     expect(button).toHaveClass('px-3');
@@ -231,7 +235,11 @@ describe('blog variant: currentSize', () => {
   });
 
   it.each(['blog', 'blog-outline'] as const)('%s + size="lg" → h-11 px-6 text-sm', (variant) => {
-    render(<AppButton variant={variant} size="lg">V</AppButton>);
+    render(
+      <AppButton variant={variant} size="lg">
+        V
+      </AppButton>,
+    );
     const button = screen.getByRole('button');
     expect(button).toHaveClass('h-11');
     expect(button).toHaveClass('px-6');
@@ -239,7 +247,11 @@ describe('blog variant: currentSize', () => {
   });
 
   it.each(['blog', 'blog-outline'] as const)('%s + size="md" → h-9 px-4 text-sm', (variant) => {
-    render(<AppButton variant={variant} size="md">V</AppButton>);
+    render(
+      <AppButton variant={variant} size="md">
+        V
+      </AppButton>,
+    );
     const button = screen.getByRole('button');
     expect(button).toHaveClass('h-9');
     expect(button).toHaveClass('px-4');

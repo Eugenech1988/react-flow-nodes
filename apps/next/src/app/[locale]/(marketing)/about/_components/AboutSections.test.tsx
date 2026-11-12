@@ -31,9 +31,8 @@ vi.mock('@/shared/ui', () => ({
     </div>
   ),
   TechCard: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  AppButton: ({ children, linkTo, isLink }: any) => (
-    isLink ? <a href={linkTo}>{children}</a> : <button>{children}</button>
-  ),
+  AppButton: ({ children, linkTo, isLink }: any) =>
+    isLink ? <a href={linkTo}>{children}</a> : <button>{children}</button>,
   Frame: ({ children, headerTitle, footer }: any) => (
     <div>
       <div>{headerTitle}</div>

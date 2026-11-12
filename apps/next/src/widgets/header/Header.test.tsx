@@ -5,8 +5,18 @@ import '@testing-library/jest-dom/vitest';
 import type { ReactNode } from 'react';
 
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: { href: string; children: ReactNode; [k: string]: unknown }) => (
-    <a href={href} {...props}>{children}</a>
+  default: ({
+    href,
+    children,
+    ...props
+  }: {
+    href: string;
+    children: ReactNode;
+    [k: string]: unknown;
+  }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
   ),
 }));
 
@@ -20,7 +30,12 @@ vi.mock('@/shared/lib/i18n/client', () => ({
 
 vi.mock('@/shared/ui', () => ({
   AppButton: ({
-    children, icon: Icon, isLink, linkTo, onClick, ...rest
+    children,
+    icon: Icon,
+    isLink,
+    linkTo,
+    onClick,
+    ...rest
   }: {
     children?: ReactNode;
     icon?: React.ComponentType;
@@ -29,9 +44,23 @@ vi.mock('@/shared/ui', () => ({
     onClick?: () => void;
     [k: string]: unknown;
   }) => {
-    const content = <>{Icon ? <Icon data-testid="btn-icon" /> : null}{children}</>;
-    if (isLink) return <a href={linkTo} onClick={onClick} {...rest}>{content}</a>;
-    return <button onClick={onClick} {...rest}>{content}</button>;
+    const content = (
+      <>
+        {Icon ? <Icon data-testid="btn-icon" /> : null}
+        {children}
+      </>
+    );
+    if (isLink)
+      return (
+        <a href={linkTo} onClick={onClick} {...rest}>
+          {content}
+        </a>
+      );
+    return (
+      <button onClick={onClick} {...rest}>
+        {content}
+      </button>
+    );
   },
 }));
 
@@ -58,10 +87,18 @@ describe('Header', () => {
 
   it('renders navigation links', () => {
     render(<Header />);
-    expect(screen.getAllByRole('link', { name: 'header.nav.about' }).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByRole('link', { name: 'header.nav.blog' }).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByRole('link', { name: 'header.nav.careers' }).length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByRole('link', { name: 'header.nav.contacts' }).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByRole('link', { name: 'header.nav.about' }).length).toBeGreaterThanOrEqual(
+      1,
+    );
+    expect(screen.getAllByRole('link', { name: 'header.nav.blog' }).length).toBeGreaterThanOrEqual(
+      1,
+    );
+    expect(
+      screen.getAllByRole('link', { name: 'header.nav.careers' }).length,
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getAllByRole('link', { name: 'header.nav.contacts' }).length,
+    ).toBeGreaterThanOrEqual(1);
   });
 
   it('renders sign in link', () => {

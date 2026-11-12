@@ -11,7 +11,7 @@ const BlogLayout = async ({ children }: IBlogLayoutProps) => {
     <div data-theme="blog" className="contents">
       <BlogBackground />
       <Header theme="blog" />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 overflow-x-hidden">{children}</main>
       <Footer theme="blog" />
     </div>
   );

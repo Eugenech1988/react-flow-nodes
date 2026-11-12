@@ -106,7 +106,7 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
                     key={dept.id}
                     type="button"
                     onClick={() => setActiveDept(dept.id)}
-                    className={`group relative flex flex-1 cursor-pointer items-center justify-center overflow-hidden border-y border-r border-theme-line px-3 py-2.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px] ${
+                    className={`group border-theme-line relative flex flex-1 cursor-pointer items-center justify-center overflow-hidden border-y border-r px-3 py-2.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px] ${
                       isFirst ? 'border-l' : ''
                     } ${
                       isActive

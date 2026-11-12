@@ -108,9 +108,7 @@ describe('getPublishedJobs', () => {
   it('treats uk as ua', async () => {
     vi.mocked(trpcFetch).mockResolvedValueOnce({
       ok: true,
-      data: [
-        makeJob({ translations: [makeTranslation({ locale: 'ua', title: 'UA Title' })] }),
-      ],
+      data: [makeJob({ translations: [makeTranslation({ locale: 'ua', title: 'UA Title' })] })],
     });
     const jobs = await getPublishedJobs('uk');
     expect(jobs[0].title).toBe('UA Title');
@@ -119,9 +117,7 @@ describe('getPublishedJobs', () => {
   it('falls back to en when target locale missing', async () => {
     vi.mocked(trpcFetch).mockResolvedValueOnce({
       ok: true,
-      data: [
-        makeJob({ translations: [makeTranslation({ locale: 'en', title: 'EN Title' })] }),
-      ],
+      data: [makeJob({ translations: [makeTranslation({ locale: 'en', title: 'EN Title' })] })],
     });
     const jobs = await getPublishedJobs('de');
     expect(jobs[0].title).toBe('EN Title');

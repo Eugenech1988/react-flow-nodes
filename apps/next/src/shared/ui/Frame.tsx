@@ -17,22 +17,24 @@ export interface IFrameProps {
   theme?: TUiTheme;
   withRivets?: boolean;
   variant?: 'monitor' | 'terminal';
+  hasHazardStripes?: boolean;
 }
 
 export const Frame = ({
-                        children,
-                        headerTitle,
-                        headerIcon: Icon = Activity,
-                        headerClassName,
-                        footer,
-                        footerClassName,
-                        className,
-                        innerClassName,
-                        toolbar,
-                        theme,
-                        withRivets = false,
-                        variant = 'monitor',
-                      }: IFrameProps) => {
+  children,
+  headerTitle,
+  headerIcon: Icon = Activity,
+  headerClassName,
+  footer,
+  footerClassName,
+  className,
+  innerClassName,
+  toolbar,
+  theme,
+  withRivets = false,
+  variant = 'monitor',
+  hasHazardStripes = false,
+}: IFrameProps) => {
   const isCareers = theme === 'careers';
   const isBlog = theme === 'blog';
   const isDefault = !isCareers && !isBlog;
@@ -46,10 +48,10 @@ export const Frame = ({
         'relative flex w-full flex-col backdrop-blur-md',
         isBlog && 'border-theme-line bg-theme-surface/95 shadow-theme-panel rounded-sm border',
         useThickFrame &&
-        'border-theme-line-strong from-theme-raised to-theme-panel shadow-theme-frame rounded-2xl border-2 bg-linear-to-b p-3 sm:rounded-3xl sm:p-4',
+          'border-theme-line-strong from-theme-raised to-theme-panel shadow-theme-frame rounded-2xl border-2 bg-linear-to-b p-3 sm:rounded-3xl sm:p-4',
         isDefault &&
-        !useThickFrame &&
-        'border-theme-accent/30 bg-theme-surface/60 rounded-3xl border p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] sm:p-2',
+          !useThickFrame &&
+          'border-theme-accent/30 bg-theme-surface/60 rounded-3xl border p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] sm:p-2',
         className,
       )}
     >
@@ -71,11 +73,16 @@ export const Frame = ({
           'relative flex w-full flex-1 flex-col overflow-hidden',
           isBlog && 'bg-transparent',
           useThickFrame &&
-          'bg-theme-surface shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_color-mix(in_oklab,var(--theme-accent)_10%,transparent)] rounded-lg',
+            'bg-theme-surface rounded-lg shadow-[inset_0_0_40px_rgba(0,0,0,0.9),inset_0_0_8px_color-mix(in_oklab,var(--theme-accent)_10%,transparent)]',
           isDefault && !useThickFrame && 'border-theme-line bg-theme-bg/90 rounded-[1.4rem] border',
           innerClassName,
         )}
       >
+        {/* ВОЗВРАЩАЕМ БЛОК ПОЛОС ОПАСНОСТИ */}
+        {hasHazardStripes && (
+          <div className="h-2 w-full shrink-0 bg-[repeating-linear-gradient(-45deg,var(--theme-danger),var(--theme-danger)_10px,var(--theme-bg)_10px,var(--theme-bg)_20px)] opacity-80" />
+        )}
+
         {toolbar && (
           <div className="border-theme-line bg-theme-panel/50 relative z-10 w-full border-b">
             {toolbar}

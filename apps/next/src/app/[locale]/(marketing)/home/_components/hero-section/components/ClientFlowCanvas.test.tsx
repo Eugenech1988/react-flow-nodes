@@ -82,7 +82,7 @@ describe('ClientFlowCanvas', () => {
 
   it('handles media query changes for interactivity (covers lines 85-86)', () => {
     render(<ClientFlowCanvas />);
-    
+
     const addEventListenerCall = mockMedia.addEventListener.mock.calls[0];
     expect(addEventListenerCall).toBeDefined();
     const [eventName, callback] = addEventListenerCall;

@@ -13,13 +13,7 @@ vi.mock('next/cache', () => ({
   cacheLife: vi.fn(),
 }));
 
-import {
-  SITE_NAME,
-  SITE_URL,
-  buildMetadata,
-  getPageMetadata,
-  getRootMetadata,
-} from './metadata';
+import { SITE_NAME, SITE_URL, buildMetadata, getPageMetadata, getRootMetadata } from './metadata';
 import { getT } from '@/shared/lib/i18n/server';
 
 type TFunction = (key: string, opts?: { defaultValue?: string }) => string;

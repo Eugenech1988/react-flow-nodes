@@ -22,7 +22,15 @@ vi.mock('@/shared/lib/i18n/client', () => ({
 }));
 
 vi.mock('@/features', () => ({
-  InquiryModal: ({ children, isOpen, onOpenChange }: { children?: ReactNode; isOpen?: boolean; onOpenChange?: (open: boolean) => void }) => {
+  InquiryModal: ({
+    children,
+    isOpen,
+    onOpenChange,
+  }: {
+    children?: ReactNode;
+    isOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
+  }) => {
     if (isOpen === undefined) {
       return <div data-testid="footer-inquiry-modal">{children}</div>;
     }
@@ -43,9 +51,8 @@ vi.mock('@/shared/ui', () => ({
   SectionHeading: ({ title }: { title: string }) => <h2>{title}</h2>,
   TechCard: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   Reveal: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  AppButton: ({ children, onClick, isLink, linkTo }: any) => (
-    isLink ? <a href={linkTo}>{children}</a> : <button onClick={onClick}>{children}</button>
-  ),
+  AppButton: ({ children, onClick, isLink, linkTo }: any) =>
+    isLink ? <a href={linkTo}>{children}</a> : <button onClick={onClick}>{children}</button>,
 }));
 
 import { PricingSection } from './PricingSection';
@@ -68,14 +75,14 @@ describe('PricingSection', () => {
 
   it('opens and closes enterprise inquiry modal (covers onClick)', () => {
     render(<PricingSection />);
-    
+
     expect(screen.queryByText('close-modal')).not.toBeInTheDocument();
-    
+
     const enterpriseBtn = screen.getByRole('button', { name: 'pricing.tiers.enterprise.cta' });
     fireEvent.click(enterpriseBtn);
-    
+
     expect(screen.getByText('close-modal')).toBeInTheDocument();
-    
+
     fireEvent.click(screen.getByText('close-modal'));
     expect(screen.queryByText('close-modal')).not.toBeInTheDocument();
   });

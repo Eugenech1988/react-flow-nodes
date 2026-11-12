@@ -56,9 +56,17 @@ describe('useFeaturesScroll', () => {
     mockMedia = createMockMedia(true);
     window.matchMedia = vi.fn().mockReturnValue(mockMedia);
 
-    Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 500 });
+    Object.defineProperty(window, 'innerHeight', {
+      writable: true,
+      configurable: true,
+      value: 500,
+    });
     Object.defineProperty(window, 'scrollY', { writable: true, configurable: true, value: 0 });
-    Object.defineProperty(document, 'readyState', { writable: true, configurable: true, value: 'complete' });
+    Object.defineProperty(document, 'readyState', {
+      writable: true,
+      configurable: true,
+      value: 'complete',
+    });
   });
 
   afterEach(() => {
@@ -170,9 +178,9 @@ describe('useFeaturesScroll', () => {
   it('handles media query change from desktop to mobile', () => {
     const { result } = renderHook(() => useFeaturesScroll());
 
-    const onChange = vi.mocked(mockMedia.addEventListener).mock.calls.find(
-      ([event]) => event === 'change'
-    )?.[1] as (e: MediaQueryListEvent) => void;
+    const onChange = vi
+      .mocked(mockMedia.addEventListener)
+      .mock.calls.find(([event]) => event === 'change')?.[1] as (e: MediaQueryListEvent) => void;
 
     act(() => {
       onChange({ matches: false } as MediaQueryListEvent);

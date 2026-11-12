@@ -20,8 +20,12 @@ vi.mock('@/shared/lib/app-url', () => ({
 
 vi.mock('@/shared/ui', () => ({
   Rivets: () => <div data-testid="rivets" />,
-  Badge: ({ children }: { children: React.ReactNode }) => <span data-testid="badge">{children}</span>,
-  TechLabel: ({ children }: { children: React.ReactNode }) => <span data-testid="tech-label">{children}</span>,
+  Badge: ({ children }: { children: React.ReactNode }) => (
+    <span data-testid="badge">{children}</span>
+  ),
+  TechLabel: ({ children }: { children: React.ReactNode }) => (
+    <span data-testid="tech-label">{children}</span>
+  ),
   AppButton: ({ children, linkTo, isLink }: any) =>
     isLink ? <a href={linkTo}>{children}</a> : <button>{children}</button>,
 }));
@@ -61,7 +65,7 @@ describe('Feature Plaques', () => {
       expect(screen.getByText('features.cta.subtitle')).toBeInTheDocument();
       expect(screen.getByText('features.cta.title')).toBeInTheDocument();
       expect(screen.getByText('features.cta.description')).toBeInTheDocument();
-      
+
       const link = screen.getByRole('link', { name: 'features.cta.button' });
       expect(link).toHaveAttribute('href', 'https://login.test');
     });
@@ -70,10 +74,10 @@ describe('Feature Plaques', () => {
   describe('BackgroundArtifacts', () => {
     it('renders all visual elements', () => {
       const { container } = render(<BackgroundArtifacts />);
-      
+
       expect(screen.getByText('0x7F.SYS.001 //// SIGNAL.LOCKED')).toBeInTheDocument();
       expect(screen.getByText('0x7F.SYS.002 //// DATA.STREAM')).toBeInTheDocument();
-      
+
       expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
       expect(container.querySelectorAll('.bg-theme-accent\\/60').length).toBeGreaterThan(0);
     });

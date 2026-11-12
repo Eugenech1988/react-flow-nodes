@@ -11,7 +11,7 @@ const CareersLayout = async ({ children }: ICareersLayoutProps) => {
     <div data-theme="careers" className="contents">
       <CareersBackground />
       <Header theme="careers" />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 overflow-x-hidden">{children}</main>
       <Footer theme="careers" />
     </div>
   );

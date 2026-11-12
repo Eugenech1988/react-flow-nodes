@@ -26,7 +26,6 @@ vi.mock('@pipeline/contracts', async () => {
 });
 
 vi.mock('@/shared/ui', async () => {
-
   return {
     AppInput: forwardRef<HTMLInputElement, Record<string, unknown>>((props, ref) => {
       const { error: _error, theme: _theme, ...rest } = props;
@@ -204,9 +203,7 @@ describe('InquiryForm', () => {
       fireEvent.submit(getForm());
 
       await waitFor(() => {
-        expect(
-          screen.getByText('Failed to send request. Please try again.'),
-        ).toBeInTheDocument();
+        expect(screen.getByText('Failed to send request. Please try again.')).toBeInTheDocument();
       });
 
       expect(screen.getByLabelText('form.name')).toBeInTheDocument();
@@ -220,9 +217,7 @@ describe('InquiryForm', () => {
       fireEvent.submit(getForm());
 
       await waitFor(() => {
-        expect(
-          screen.getByRole('button', { name: 'form.modes.demo.submitting' }),
-        ).toBeDisabled();
+        expect(screen.getByRole('button', { name: 'form.modes.demo.submitting' })).toBeDisabled();
       });
     });
   });
