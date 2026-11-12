@@ -53,6 +53,17 @@ describe('SITE_URL construction', () => {
   });
 });
 
+describe('SITE_URL fallback', () => {
+  it('falls back to hardcoded default when env vars are missing', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', '');
+    vi.stubEnv('BASE_URL', '');
+    vi.resetModules();
+    const mod = await import('./metadata');
+    expect(mod.SITE_URL).toBe('https://pipelinestudios.com');
+    vi.unstubAllEnvs();
+  });
+});
+
 describe('buildMetadata', () => {
   it('builds canonical url from locale + path', () => {
     const meta = buildMetadata({ locale: 'en', path: '/about' });

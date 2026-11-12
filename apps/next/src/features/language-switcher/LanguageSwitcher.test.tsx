@@ -125,6 +125,14 @@ describe('LanguageSwitcher', () => {
     mockI18n = { language: 'en', changeLanguage: changeLanguageMock };
   });
 
+  it('handles missing i18n and missing locale gracefully', async () => {
+    mockI18n = undefined;
+    render(<LanguageSwitcher />);
+    await userEvent.click(screen.getByRole('button', { name: 'UA' }));
+    expect(pushMock).toHaveBeenCalledWith('/ua/some-page', { scroll: false });
+    mockI18n = { language: 'en', changeLanguage: changeLanguageMock };
+  });
+
   it('falls back to / when join result is empty', async () => {
     window.history.pushState({}, '', '/en/some-page');
     const realJoin = Array.prototype.join;
