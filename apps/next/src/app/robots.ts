@@ -6,7 +6,7 @@ const baseUrl = (
   'https://pipelinestudios.com'
 ).replace(/\/+$/, '');
 
-export default function robots(): MetadataRoute.Robots {
+const robots = (): MetadataRoute.Robots => {
   return {
     rules: {
       userAgent: '*',
@@ -15,4 +15,6 @@ export default function robots(): MetadataRoute.Robots {
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };
-}
+};
+
+export default robots;

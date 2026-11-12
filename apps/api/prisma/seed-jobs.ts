@@ -530,12 +530,12 @@ async function seedJobs() {
     }
   }
 
-  console.log(`✅ Done. ${SEED_JOBS.length} jobs.`);
+  console.log(`Done. ${SEED_JOBS.length} jobs.`);
 }
 
 seedJobs()
   .catch((e) => {
-    console.error('❌ Seed failed:', e);
+    console.error('Seed failed:', e);
     process.exit(1);
   })
   .finally(async () => {

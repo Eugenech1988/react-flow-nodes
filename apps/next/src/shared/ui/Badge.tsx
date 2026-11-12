@@ -27,10 +27,10 @@ const HEX_INNER: Record<TBadgeTheme, string> = {
 };
 
 const HexBadge = ({
-                    children,
-                    className,
-                    theme,
-                  }: {
+  children,
+  className,
+  theme,
+}: {
   children: ReactNode;
   className?: string;
   theme: TBadgeTheme;
@@ -49,10 +49,10 @@ const HexBadge = ({
 );
 
 const PillBadge = ({
-                     children,
-                     className,
-                     theme,
-                   }: {
+  children,
+  className,
+  theme,
+}: {
   children: ReactNode;
   className?: string;
   theme: TBadgeTheme;
@@ -64,9 +64,9 @@ const PillBadge = ({
   return (
     <div
       className={cn(
-        'relative flex w-fit shrink-0 items-center justify-center overflow-hidden rounded-md border border-theme-accent/30 bg-theme-fg/5 px-5 py-2 shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-fg)_10%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.5),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md',
-        isCareers && 'rounded-sm border-theme-accent/40 bg-theme-bg/80',
-        isBlog && 'rounded-sm border-theme-accent/40 bg-theme-surface/80',
+        'border-theme-accent/30 bg-theme-fg/5 relative flex w-fit shrink-0 items-center justify-center overflow-hidden rounded-md border px-5 py-2 shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-fg)_10%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.5),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md',
+        isCareers && 'border-theme-accent/40 bg-theme-bg/80 rounded-sm',
+        isBlog && 'border-theme-accent/40 bg-theme-surface/80 rounded-sm',
         className,
       )}
     >
@@ -77,8 +77,8 @@ const PillBadge = ({
             'radial-gradient(circle at 50% 120%, color-mix(in oklab, var(--theme-accent) 15%, transparent), transparent 60%)',
         }}
       />
-      <span className="pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-theme-accent/40 to-transparent" />
-      <span className="pointer-events-none absolute inset-x-3 bottom-0 h-px bg-linear-to-r from-transparent via-theme-accent/20 to-transparent" />
+      <span className="via-theme-accent/40 pointer-events-none absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent to-transparent" />
+      <span className="via-theme-accent/20 pointer-events-none absolute inset-x-3 bottom-0 h-px bg-linear-to-r from-transparent to-transparent" />
 
       {[
         'top-1.25 left-1.25',
@@ -101,30 +101,27 @@ const PillBadge = ({
 
       <div className="relative z-20 flex items-center gap-3 px-1">
         <span className="relative flex h-1.5 w-1.5 items-center justify-center">
-          <span
-            className="absolute inline-flex h-full w-full animate-ping rounded-full bg-theme-accent opacity-60"
-          />
-          <span
-            className="relative inline-flex h-1.5 w-1.5 rounded-full bg-theme-accent shadow-[0_0_6px_var(--theme-accent)]"
-          />
+          <span className="bg-theme-accent absolute inline-flex h-full w-full animate-ping rounded-full opacity-60" />
+          <span className="bg-theme-accent relative inline-flex h-1.5 w-1.5 rounded-full shadow-[0_0_6px_var(--theme-accent)]" />
         </span>
 
         <span
           className={cn(
             'text-[10px] font-bold tracking-[0.15em] uppercase',
-            !isThemed && 'text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
+            !isThemed &&
+              'text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
             isCareers &&
-            'font-typewriter text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
+              'font-typewriter text-theme-accent drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]',
             isBlog &&
-            'font-typewriter text-theme-accent-hover drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent-hover)_40%,transparent)]',
+              'font-typewriter text-theme-accent-hover drop-shadow-[0_0_4px_color-mix(in_oklab,var(--theme-accent-hover)_40%,transparent)]',
           )}
         >
           {children}
         </span>
 
         <span className="relative flex h-1.5 w-1.5 items-center justify-center">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-theme-accent opacity-60" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-theme-accent shadow-[0_0_6px_var(--theme-accent)]" />
+          <span className="bg-theme-accent absolute inline-flex h-full w-full animate-ping rounded-full opacity-60" />
+          <span className="bg-theme-accent relative inline-flex h-1.5 w-1.5 rounded-full shadow-[0_0_6px_var(--theme-accent)]" />
         </span>
       </div>
     </div>

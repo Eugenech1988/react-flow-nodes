@@ -11,19 +11,17 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export const generateStaticParams = () => {
-  return [{ rest: ['not-found'] }];
-};
-
 const LocaleAwareNotFound = async ({ params }: Pick<IPageProps, 'params'>) => {
   const { locale } = await params;
   return <NotFoundClient locale={locale} />;
 };
 
-export default function RootNotFound({ params }: IPageProps) {
+const RootNotFound = ({ params }: IPageProps) => {
   return (
     <Suspense fallback={null}>
       <LocaleAwareNotFound params={params} />
     </Suspense>
   );
-}
+};
+
+export default RootNotFound;

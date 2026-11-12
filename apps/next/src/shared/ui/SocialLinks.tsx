@@ -50,12 +50,12 @@ export const SOCIAL_NODES = [
 ];
 
 export const SocialLinks = ({
-                              title,
-                              className,
-                              align = 'start',
-                              size = 'md',
-                              theme = 'default',
-                            }: ISocialLinksProps) => {
+  title,
+  className,
+  align = 'start',
+  size = 'md',
+  theme = 'default',
+}: ISocialLinksProps) => {
   const { t } = useT('common');
 
   const sizeClasses = {
@@ -76,7 +76,7 @@ export const SocialLinks = ({
       {title && (
         <div
           className={cn(
-            'mb-4 font-mono text-[10px] tracking-widest text-theme-accent/60 uppercase',
+            'text-theme-accent/60 mb-4 font-mono text-[10px] tracking-widest uppercase',
             align === 'center' && 'text-center',
             align === 'end' && 'text-right',
           )}

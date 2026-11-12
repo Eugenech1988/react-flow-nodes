@@ -13,7 +13,6 @@
     --font-caveat: var(--font-caveat);
     --font-typewriter: var(--font-typewriter);
 
-    /* Старые theme-* токены, на которых пока живут Header/Footer/Frame */
     --color-theme-bg: var(--theme-bg);
     --color-theme-surface: var(--theme-surface);
     --color-theme-panel: var(--theme-panel);
@@ -29,7 +28,6 @@
     --color-theme-danger: var(--theme-danger);
     --color-theme-rivet: var(--theme-rivet);
 
-    /* Старые тени для Frame */
     --shadow-theme-glow-sm: 0 0 8px color-mix(in oklab, var(--theme-accent) 20%, transparent);
     --shadow-theme-glow: 0 0 15px color-mix(in oklab, var(--theme-accent) 15%, transparent);
     --shadow-theme-glow-lg: 0 0 30px color-mix(in oklab, var(--theme-accent) 25%, transparent);
@@ -53,33 +51,15 @@ html:has([data-home-page]) {
 }
 
 body {
-    background: var(--color-bg);
-    color: var(--color-fg);
+    background: var(--theme-bg);
+    color: var(--theme-fg);
     font-family: var(--font-roboto), Arial, sans-serif;
 }
 
-
-@theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --font-sans: var(--font-roboto);
-    --font-mono: var(--font-roboto-mono);
-    --font-caveat: var(--font-caveat);
-    --font-typewriter: var(--font-typewriter);
-}
-
-/* Сетка-«миллиметровка» из акцентного цвета темы (используется с bg-size-[16px_16px]) */
 @utility theme-grid {
     background-image:
             linear-gradient(color-mix(in oklab, var(--theme-accent) 3%, transparent) 1px, transparent 1px),
             linear-gradient(90deg, color-mix(in oklab, var(--theme-accent) 3%, transparent) 1px, transparent 1px);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
 }
 
 @property --num {
@@ -87,13 +67,6 @@ body {
     initial-value: 0;
     inherits: false;
 }
-
-body {
-    background: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-roboto), Arial, sans-serif;
-}
-
 
 @keyframes gauge-needle-rotate {
     from {

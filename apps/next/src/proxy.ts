@@ -14,7 +14,7 @@ const corsOptions = {
   'Access-Control-Max-Age': '86400',
 };
 
-export function proxy(request: NextRequest) {
+export const proxy = (request: NextRequest) => {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith('/api/revalidate')) {
@@ -40,7 +40,7 @@ export function proxy(request: NextRequest) {
   }
 
   return intlProxy(request);
-}
+};
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],

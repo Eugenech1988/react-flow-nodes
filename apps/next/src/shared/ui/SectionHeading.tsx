@@ -12,17 +12,17 @@ interface ISectionHeadingProps {
 }
 
 export const SectionHeading = ({
-                                 title,
-                                 description,
-                                 align = 'center',
-                                 isMain = false,
-                                 className = '',
-                                 titleClassName = '',
-                                 gradientDirection = 'right',
-                                 gradientColors = 'from-theme-accent-hover via-theme-accent to-theme-accent-deep',
-                                 titleColor = 'text-theme-fg',
-                                 descriptionColor = 'text-theme-muted',
-                               }: ISectionHeadingProps) => {
+  title,
+  description,
+  align = 'center',
+  isMain = false,
+  className = '',
+  titleClassName = '',
+  gradientDirection = 'right',
+  gradientColors = 'from-theme-accent-hover via-theme-accent to-theme-accent-deep',
+  titleColor = 'text-theme-fg',
+  descriptionColor = 'text-theme-muted',
+}: ISectionHeadingProps) => {
   const isCenter = align === 'center';
   const Tag = isMain ? 'h1' : 'h2';
 

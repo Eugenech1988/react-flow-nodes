@@ -18,19 +18,19 @@ const OG_LOCALES: Record<string, string> = {
   ua: 'uk_UA',
 };
 
-type BuildMetadataParams = {
+type TBuildMetadataParams = {
   locale: string;
   path?: string;
   title?: string;
   description?: string;
 };
 
-export function buildMetadata({
+export const buildMetadata = ({
   locale,
   path = '',
   title,
   description,
-}: BuildMetadataParams): Metadata {
+}: TBuildMetadataParams): Metadata => {
   const ogLocale = OG_LOCALES[locale] ?? OG_LOCALES.en;
   const alternateLocale = Array.from(new Set(Object.values(OG_LOCALES))).filter(
     (value) => value !== ogLocale,
@@ -72,17 +72,17 @@ export function buildMetadata({
       images: [OG_IMAGE],
     },
   };
-}
+};
 
-async function getMarketingDescription(locale: string): Promise<string> {
+const getMarketingDescription = async (locale: string): Promise<string> => {
   'use cache';
   cacheLife('days');
 
   const { t } = await getT('marketing', { lng: locale });
   return t('meta.description');
-}
+};
 
-export async function getRootMetadata(locale: string): Promise<Metadata> {
+export const getRootMetadata = async (locale: string): Promise<Metadata> => {
   const description = await getMarketingDescription(locale);
 
   return {
@@ -112,9 +112,9 @@ export async function getRootMetadata(locale: string): Promise<Metadata> {
     },
     ...buildMetadata({ locale, description }),
   };
-}
+};
 
-export type PageMetadataOverrides = {
+export type TPageMetadataOverrides = {
   title?: string;
   description?: string;
   titleKey?: string;
@@ -123,41 +123,38 @@ export type PageMetadataOverrides = {
   fallbackDescriptionKey?: string;
 };
 
-export async function getPageMetadata(
+export const getPageMetadata = async (
   locale: string,
   namespace: string,
   path = '',
-  overrides?: PageMetadataOverrides,
-): Promise<Metadata> {
+  overrides?: TPageMetadataOverrides,
+): Promise<Metadata> => {
   'use cache';
   cacheLife('days');
 
   const { t } = await getT(namespace, { lng: locale });
 
-  let resolvedTitle = overrides?.title;
-  if (!resolvedTitle && overrides?.titleKey) {
-    resolvedTitle = t(overrides.titleKey, {
-      defaultValue: overrides.fallbackTitleKey ? t(overrides.fallbackTitleKey) : t('meta.title'), // Дефолтный фоллбек, если ничего не передано
-    });
-  } else if (!resolvedTitle) {
-    resolvedTitle = t('meta.title');
-  }
-
-  let resolvedDescription = overrides?.description;
-  if (!resolvedDescription && overrides?.descriptionKey) {
-    resolvedDescription = t(overrides.descriptionKey, {
-      defaultValue: overrides.fallbackDescriptionKey
-        ? t(overrides.fallbackDescriptionKey)
-        : t('meta.description'), // Дефолтный фоллбек
-    });
-  } else if (!resolvedDescription) {
-    resolvedDescription = t('meta.description');
-  }
+  const pick = (
+    explicit: string | undefined,
+    key: string | undefined,
+    fallbackKey: string | undefined,
+    defaultKey: 'meta.title' | 'meta.description',
+  ): string => {
+    if (explicit) return explicit;
+    const defaultText = t(defaultKey);
+    if (!key) return defaultText;
+    return t(key, { defaultValue: fallbackKey ? t(fallbackKey) : defaultText });
+  };
 
   return buildMetadata({
     locale,
     path,
-    title: resolvedTitle,
-    description: resolvedDescription,
+    title: pick(overrides?.title, overrides?.titleKey, overrides?.fallbackTitleKey, 'meta.title'),
+    description: pick(
+      overrides?.description,
+      overrides?.descriptionKey,
+      overrides?.fallbackDescriptionKey,
+      'meta.description',
+    ),
   });
-}
+};

@@ -11,11 +11,11 @@ import { NAV_LINKS } from './model';
 import { LanguageSwitcher } from '@/features';
 import { APP_LOGIN_URL } from '@/shared/lib/app-url';
 
-interface THeaderProps {
+interface IHeaderProps {
   theme?: 'default' | 'careers' | 'blog';
 }
 
-export const Header = ({ theme = 'default' }: THeaderProps) => {
+export const Header = ({ theme = 'default' }: IHeaderProps) => {
   const { t, i18n } = useT('common');
   const lng = i18n.language || 'en';
   const [isOpen, setIsOpen] = useState(false);

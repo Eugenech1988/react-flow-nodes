@@ -35,24 +35,26 @@ const specialElite = Special_Elite({
   display: 'swap',
 });
 
-type LayoutProps = {
+type TLayoutProps = {
   children: ReactNode;
   params: Promise<{ locale: string }>;
 };
 
-export function generateStaticParams() {
+export const generateStaticParams = () => {
   return generateI18nStaticParams<'locale'>();
-}
+};
 
-export async function generateMetadata({ params }: Pick<LayoutProps, 'params'>): Promise<Metadata> {
+export const generateMetadata = async ({
+  params,
+}: Pick<TLayoutProps, 'params'>): Promise<Metadata> => {
   const { locale } = await params;
 
   if (!i18nConfig.supportedLngs.includes(locale)) notFound();
 
   return getRootMetadata(locale);
-}
+};
 
-export default async function RootLayout({ children, params }: LayoutProps) {
+const RootLayout = async ({ children, params }: TLayoutProps) => {
   const { locale } = await params;
 
   if (!i18nConfig.supportedLngs.includes(locale)) notFound();
@@ -68,4 +70,6 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

@@ -5,7 +5,7 @@ import { useT } from '@/shared/lib/i18n/client';
 import { AppButton } from '@/shared/ui';
 import { InquiryModal } from '@/features';
 
-export function NotFoundClient({ locale }: { locale: string }) {
+export const NotFoundClient = ({ locale }: { locale: string }) => {
   const { t } = useT('common');
 
   return (
@@ -13,9 +13,7 @@ export function NotFoundClient({ locale }: { locale: string }) {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,#5eead4_1px,transparent_0)] bg-size-[22px_22px] opacity-[0.03]" />
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/5 blur-[100px]" />
 
-      {/* Контейнер: плавное появление с масштабированием */}
       <div className="animate-in fade-in zoom-in-95 relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center px-4 text-center duration-500 ease-out sm:px-6">
-        {/* Карточка: выезд снизу с задержкой 150ms */}
         <div
           className="animate-in fade-in slide-in-from-bottom-5 relative mb-12 w-full overflow-hidden rounded-3xl border-2 border-red-500/30 bg-slate-950/80 p-1.5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8),0_20px_40px_rgba(0,0,0,0.5)] backdrop-blur-md duration-500 ease-out sm:p-2"
           style={{ animationDelay: '150ms', animationFillMode: 'both' }}
@@ -54,7 +52,6 @@ export function NotFoundClient({ locale }: { locale: string }) {
           </div>
         </div>
 
-        {/* Кнопки: выезд снизу с задержкой 300ms */}
         <div
           className="animate-in fade-in slide-in-from-bottom-5 flex w-full flex-col items-stretch gap-3 px-2 duration-500 ease-out sm:w-auto sm:flex-row sm:items-center sm:gap-4 sm:px-0"
           style={{ animationDelay: '300ms', animationFillMode: 'both' }}
@@ -86,4 +83,4 @@ export function NotFoundClient({ locale }: { locale: string }) {
       </div>
     </div>
   );
-}
+};

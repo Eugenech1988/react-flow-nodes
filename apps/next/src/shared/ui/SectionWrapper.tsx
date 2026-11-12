@@ -10,18 +10,18 @@ interface ISectionProps {
 }
 
 export const Section = ({
-                          id,
-                          children,
-                          className,
-                          noBorder,
-                          theme: _theme = 'default',
-                        }: ISectionProps) => {
+  id,
+  children,
+  className,
+  noBorder,
+  theme: _theme = 'default',
+}: ISectionProps) => {
   return (
     <section
       id={id}
       className={cn(
-        'relative overflow-hidden bg-theme-bg py-16 text-theme-fg sm:py-24',
-        !noBorder && 'border-t border-theme-line',
+        'bg-theme-bg text-theme-fg relative overflow-hidden py-16 sm:py-24',
+        !noBorder && 'border-theme-line border-t',
         className,
       )}
     >
@@ -33,7 +33,7 @@ export const Section = ({
         }}
       />
 
-      <div className="pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full bg-theme-accent/5 blur-3xl" />
+      <div className="bg-theme-accent/5 pointer-events-none absolute top-1/2 left-1/2 h-150 w-200 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl" />
 
       {children}
     </section>

@@ -6,7 +6,7 @@ const baseUrl = (
   'https://pipelinestudios.com'
 ).replace(/\/+$/, '');
 
-export default function sitemap(): MetadataRoute.Sitemap {
+const sitemap = (): MetadataRoute.Sitemap => {
   return [
     {
       url: `${baseUrl}/en`,
@@ -19,4 +19,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
   ];
-}
+};
+
+export default sitemap;
