@@ -44,7 +44,7 @@ export const buildMetadata = ({
       canonical: url,
       languages: {
         en: `/en${path}`,
-        uk: `/ua${path}`,
+        uk: `/uk${path}`,
         'x-default': `/en${path}`,
       },
     },

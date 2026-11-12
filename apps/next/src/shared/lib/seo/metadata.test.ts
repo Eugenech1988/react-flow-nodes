@@ -115,7 +115,7 @@ describe('buildMetadata', () => {
     const meta = buildMetadata({ locale: 'en', path: '/x' });
     expect(meta.alternates?.languages).toEqual({
       en: '/en/x',
-      uk: '/ua/x',
+      uk: '/uk/x',
       'x-default': '/en/x',
     });
   });
