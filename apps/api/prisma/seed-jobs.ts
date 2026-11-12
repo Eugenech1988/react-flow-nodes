@@ -10,7 +10,7 @@ const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 type TSeedTranslation = {
-  locale: 'en' | 'ua';
+  locale: 'en' | 'uk';
   title: string;
   description: string;
   responsibilities: string[];
@@ -60,7 +60,7 @@ const SEED_JOBS: TSeedJob[] = [
           'Lead the development of our visual pipeline editor. Build highly interactive, performant, and accessible interfaces.',
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'Senior Frontend інженер',
         description:
           'Ми шукаємо Senior Frontend інженера, який очолить розробку нашого візуального редактора пайплайнів. Ви будете тісно співпрацювати з дизайнерами та бекенд-інженерами для створення високоінтерактивних та доступних інтерфейсів.',
@@ -108,7 +108,7 @@ const SEED_JOBS: TSeedJob[] = [
         metaDescription: 'Design and scale the core infrastructure that powers our data pipelines.',
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'Backend інженер',
         description:
           'Проєктуйте та масштабуйте базову інфраструктуру, що забезпечує роботу наших пайплайнів даних.',
@@ -150,7 +150,7 @@ const SEED_JOBS: TSeedJob[] = [
         ],
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'Продуктовий дизайнер',
         description: 'Створюйте інтуїтивний та красивий досвід користувачів для нашої платформи.',
         responsibilities: [
@@ -191,7 +191,7 @@ const SEED_JOBS: TSeedJob[] = [
         ],
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'ML дослідник',
         description:
           'Досліджуйте та впроваджуйте найсучасніші моделі машинного навчання для покращення пайплайнів.',
@@ -233,7 +233,7 @@ const SEED_JOBS: TSeedJob[] = [
         ],
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'DevOps інженер',
         description:
           'Підтримуйте та масштабуйте нашу хмарну інфраструктуру, забезпечуючи високу доступність та безпеку.',
@@ -275,7 +275,7 @@ const SEED_JOBS: TSeedJob[] = [
         ],
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'Партнер з талантів',
         description: 'Допоможіть нам знайти виняткових майстрів для нашої майстерні.',
         responsibilities: [
@@ -316,7 +316,7 @@ const SEED_JOBS: TSeedJob[] = [
         ],
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'Data інженер',
         description:
           'Створюйте надійні пайплайни та архітектури даних, що розширюють можливості інженерних команд.',
@@ -358,7 +358,7 @@ const SEED_JOBS: TSeedJob[] = [
         ],
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'UX-райтер',
         description: 'Створюйте чіткий, лаконічний та корисний текст для продукту.',
         responsibilities: [
@@ -399,7 +399,7 @@ const SEED_JOBS: TSeedJob[] = [
         ],
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'Security інженер',
         description:
           'Захищайте нашу платформу та дані користувачів, впроваджуючи надійні протоколи безпеки.',
@@ -440,7 +440,7 @@ const SEED_JOBS: TSeedJob[] = [
         ],
       },
       {
-        locale: 'ua',
+        locale: 'uk',
         title: 'Growth-менеджер',
         description:
           'Керуйте стратегіями залучення та утримання користувачів для масштабування продукту.',
