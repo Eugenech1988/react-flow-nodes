@@ -33,6 +33,26 @@ beforeEach(() => {
   vi.mocked(getT).mockResolvedValue({ t: mockT } as never);
 });
 
+describe('SITE_URL construction', () => {
+  it('uses NEXT_PUBLIC_SITE_URL and strips multiple trailing slashes', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://custom.test///');
+    vi.stubEnv('BASE_URL', 'https://base.test/');
+    vi.resetModules();
+    const mod = await import('./metadata');
+    expect(mod.SITE_URL).toBe('https://custom.test');
+    vi.unstubAllEnvs();
+  });
+
+  it('uses BASE_URL fallback and strips trailing slash', async () => {
+    vi.stubEnv('NEXT_PUBLIC_SITE_URL', '');
+    vi.stubEnv('BASE_URL', 'https://base.test/');
+    vi.resetModules();
+    const mod = await import('./metadata');
+    expect(mod.SITE_URL).toBe('https://base.test');
+    vi.unstubAllEnvs();
+  });
+});
+
 describe('buildMetadata', () => {
   it('builds canonical url from locale + path', () => {
     const meta = buildMetadata({ locale: 'en', path: '/about' });
