@@ -11,7 +11,7 @@ interface LanguageSwitcherProps {
 
 const LANGS = [
   { code: 'en', label: 'EN' },
-  { code: 'ua', label: 'UA' },
+  { code: 'uk', label: 'UA' },
 ] as const;
 
 export function LanguageSwitcher({
@@ -60,7 +60,7 @@ export function LanguageSwitcher({
       <span className="bg-theme-rivet absolute right-1.5 bottom-1.5 h-1 w-1 rounded-full shadow-[inset_0_1px_1px_rgba(0,0,0,0.8)]" />
 
       {LANGS.map(({ code, label }) => {
-        const isActive = current === code || (code === 'ua' && current === 'uk');
+        const isActive = current === code || (code === 'uk' && current === 'uk');
         const activeClasses = `border border-theme-accent bg-theme-accent/20 text-theme-accent font-bold ${btnRoundingClass}`;
         const inactiveClasses = `border border-transparent text-theme-muted hover:bg-theme-panel hover:text-theme-fg ${btnRoundingClass}`;
 

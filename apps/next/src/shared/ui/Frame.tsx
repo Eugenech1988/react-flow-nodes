@@ -31,7 +31,7 @@ export const Frame = ({
   innerClassName,
   toolbar,
   theme,
-  withRivets = true,
+  withRivets = false,
   variant = 'monitor',
   hasHazardStripes = false,
 }: IFrameProps) => {
