@@ -126,7 +126,7 @@ export const Header = ({ theme = 'default' }: IHeaderProps) => {
               isTechnical ? 'rounded-sm' : 'rounded-lg',
             )}
             aria-label={t('header.toggleMenu')}
-            // aria-expanded='mobile-menu'
+            ariaExpanded={isOpen ? 'true' : 'false'}
             aria-controls='mobile-menu'
           />
         </div>

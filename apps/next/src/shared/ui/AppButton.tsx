@@ -47,6 +47,7 @@ export interface IAppButtonProps extends Omit<
   linkTo?: string;
   newTab?: boolean;
   ariaLabel?: string;
+  ariaExpanded?: boolean;
 }
 
 const BUTTON_THEME: Partial<Record<ButtonVariant, TUiTheme>> = {
@@ -115,6 +116,7 @@ export const AppButton = ({
                             linkTo = '#',
                             newTab,
                             ariaLabel,
+                            ariaExpanded,
                             'aria-label': nativeAriaLabel,
                             ...props
                           }: IAppButtonProps) => {
@@ -184,6 +186,7 @@ export const AppButton = ({
       <Button
         {...scope}
         aria-label={effectiveAriaLabel}
+        aria-expanded={ariaExpanded}
         render={(buttonProps) => {
           const { ref: ignoredRef, ...linkProps } = buttonProps as Record<string, unknown>;
           void ignoredRef;
