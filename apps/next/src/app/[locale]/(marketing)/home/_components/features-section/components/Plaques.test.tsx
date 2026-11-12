@@ -39,7 +39,6 @@ describe('Feature Plaques', () => {
     it('renders title, number and badge', () => {
       render(<FeaturePlaque {...props} />);
       expect(screen.getByText('Visual Editor')).toBeInTheDocument();
-      // Ищем полное значение с номером
       expect(screen.getByText(/№\s*01/)).toBeInTheDocument();
       expect(screen.getByText('INTERACTIVE')).toBeInTheDocument();
     });
@@ -72,11 +71,9 @@ describe('Feature Plaques', () => {
     it('renders all visual elements', () => {
       const { container } = render(<BackgroundArtifacts />);
       
-      // Проверяем наличие специфичных текстов
       expect(screen.getByText('0x7F.SYS.001 //// SIGNAL.LOCKED')).toBeInTheDocument();
       expect(screen.getByText('0x7F.SYS.002 //// DATA.STREAM')).toBeInTheDocument();
       
-      // Проверяем наличие точек/линий (по классам)
       expect(container.querySelectorAll('.animate-pulse').length).toBeGreaterThan(0);
       expect(container.querySelectorAll('.bg-theme-accent\\/60').length).toBeGreaterThan(0);
     });

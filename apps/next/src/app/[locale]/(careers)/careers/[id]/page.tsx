@@ -27,8 +27,33 @@ const JobContent = async ({ params }: TPageWithIdProps) => {
 
   if (!job) notFound();
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: job.title,
+    description: job.description,
+    datePosted: new Date().toISOString().split('T')[0],
+    employmentType: job.type,
+    hiringOrganization: {
+      '@type': 'Organization',
+      name: 'Pipeline Studio',
+      sameAs: 'https://pipelinestudios.com',
+    },
+    jobLocation: {
+      '@type': 'Place',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: job.location || 'Remote',
+      },
+    },
+  };
+
   return (
     <div className="bg-theme-bg text-theme-fg relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <JobDetailView job={job} locale={locale} />
     </div>
   );

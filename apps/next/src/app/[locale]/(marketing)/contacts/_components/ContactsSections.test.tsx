@@ -3,7 +3,6 @@ import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import type { ReactNode } from 'react';
 
-// --- MOCKS ---
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
@@ -43,7 +42,6 @@ vi.mock('@/shared/ui', () => ({
   SocialLinks: () => <div data-testid="social-links" />,
 }));
 
-// --- COMPONENTS ---
 import { ContactsContent } from './ContactsContent';
 import { ContactsHero } from './ContactsHero';
 import { ContactsBackground } from './ContactsBackground';

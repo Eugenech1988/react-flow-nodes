@@ -75,7 +75,6 @@ describe('FeaturesSection', () => {
     render(<FeaturesSection />);
     expect(screen.getByTestId('cta-plaque')).toBeInTheDocument();
     
-    // Проверяем, что для прошлых шагов применяются классы isPast
     const pastElements = document.querySelectorAll('.-translate-y-30');
     expect(pastElements.length).toBeGreaterThanOrEqual(1);
   });

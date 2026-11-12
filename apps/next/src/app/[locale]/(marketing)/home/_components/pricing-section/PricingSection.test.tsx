@@ -71,7 +71,6 @@ describe('PricingSection', () => {
     
     expect(screen.queryByText('close-modal')).not.toBeInTheDocument();
     
-    // Ищем именно кнопку, чтобы fireEvent точно вызвал onClick
     const enterpriseBtn = screen.getByRole('button', { name: 'pricing.tiers.enterprise.cta' });
     fireEvent.click(enterpriseBtn);
     

@@ -2,7 +2,6 @@ import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useFeaturesScroll } from './useFeaturesScroll';
 
-// Мокаем TOTAL_STEPS = 7 для предсказуемых расчетов
 vi.mock('../constants', () => ({
   TOTAL_STEPS: 7,
 }));
@@ -54,7 +53,6 @@ describe('useFeaturesScroll', () => {
     });
     window.cancelAnimationFrame = vi.fn();
 
-    // По умолчанию десктоп
     mockMedia = createMockMedia(true);
     window.matchMedia = vi.fn().mockReturnValue(mockMedia);
 
@@ -92,19 +90,15 @@ describe('useFeaturesScroll', () => {
   it('computes index correctly and sets ready after RAF checks', () => {
     const { result } = renderHook(() => useFeaturesScroll());
 
-    // Симулируем, что wrapperRef получил DOM-элемент
     Object.defineProperty(result.current.wrapperRef, 'current', {
       value: mockElement(1000, 0),
     });
 
-    // Симулируем скролл до середины
     window.scrollY = 250;
     act(() => {
       window.dispatchEvent(new Event('scroll'));
     });
 
-    // progress = 250 / (1000 - 500) = 0.5
-    // index = floor(0.5 * 7) = 3
     expect(result.current.index).toBe(3);
   });
 
@@ -143,9 +137,6 @@ describe('useFeaturesScroll', () => {
         result.current.goToStep(3); // 3 / (7-1) = 0.5
       });
 
-      // scrollableHeight = 1000 - 500 = 500
-      // targetProgress = 3 / 6 = 0.5
-      // top = 100 + 0.5 * 500 = 350
       expect(window.scrollTo).toHaveBeenCalledWith({
         top: 350,
         behavior: 'smooth',
@@ -154,7 +145,6 @@ describe('useFeaturesScroll', () => {
 
     it('returns early in goToStep if element is null', () => {
       const { result } = renderHook(() => useFeaturesScroll());
-      // ref.current = null by default
 
       act(() => {
         result.current.goToStep(3);

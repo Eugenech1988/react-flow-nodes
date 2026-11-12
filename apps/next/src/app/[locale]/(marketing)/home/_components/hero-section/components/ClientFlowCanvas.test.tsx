@@ -76,10 +76,6 @@ describe('ClientFlowCanvas', () => {
       vi.advanceTimersByTime(600);
     });
 
-    // CORE.INGEST has hasTarget: false, hasSource: true -> 1 handle
-    // NEURAL.ENGINE has hasTarget: true, hasSource: true -> 2 handles
-    // SHIELD.SECURE has hasTarget: true, hasSource: false -> 1 handle
-    // Total handles = 1 + 2 + 1 = 4
     const handles = screen.getAllByTestId('handle');
     expect(handles).toHaveLength(4);
   });
@@ -87,7 +83,6 @@ describe('ClientFlowCanvas', () => {
   it('handles media query changes for interactivity (covers lines 85-86)', () => {
     render(<ClientFlowCanvas />);
     
-    // Получаем коллбэк напрямую из мока, чтобы V8 точно его выполнил
     const addEventListenerCall = mockMedia.addEventListener.mock.calls[0];
     expect(addEventListenerCall).toBeDefined();
     const [eventName, callback] = addEventListenerCall;

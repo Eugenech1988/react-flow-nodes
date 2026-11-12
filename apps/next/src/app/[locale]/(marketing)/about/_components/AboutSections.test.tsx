@@ -3,7 +3,6 @@ import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import type { ReactNode } from 'react';
 
-// --- MOCKS ---
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
@@ -44,7 +43,6 @@ vi.mock('@/shared/ui', () => ({
   ),
 }));
 
-// --- COMPONENTS ---
 import { MissionSection } from './MissionSection';
 import { PrinciplesSection } from './PrinciplesSection';
 import { CrewSection } from './CrewSection';

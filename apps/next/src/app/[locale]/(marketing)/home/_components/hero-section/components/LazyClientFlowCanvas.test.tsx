@@ -2,16 +2,13 @@ import { render, screen, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
-// Мокаем next/dynamic, но вызываем loader, чтобы покрыть строки 7-9
 vi.mock('next/dynamic', () => ({
   default: (loader: any) => {
-    // Вызываем загрузчик, чтобы выполнился код внутри import() и .then()
     loader().catch(() => {});
     return () => <div data-testid="canvas">Mock Canvas</div>;
   },
 }));
 
-// Мокаем сам компонент, чтобы промис резолвился без реальных импортов
 vi.mock('./ClientFlowCanvas', () => ({
   ClientFlowCanvas: () => <div data-testid="real-canvas">Real Canvas</div>,
 }));
@@ -40,7 +37,6 @@ describe('LazyHeroCanvas', () => {
 
     render(<LazyHeroCanvas />);
     
-    // Ждем разрешения промиса loader() (микрозадачи)
     await act(async () => {
       await Promise.resolve();
     });
@@ -81,7 +77,6 @@ describe('LazyHeroCanvas', () => {
 
     expect(screen.getByTestId('canvas')).toBeInTheDocument();
     
-    // Покрываем clearTimeout на unmount
     unmount();
   });
 });
