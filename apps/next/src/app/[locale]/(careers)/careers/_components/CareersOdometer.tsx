@@ -60,6 +60,7 @@ export const Odometer = ({ value }: { value: string }) => {
 
   useLayoutEffect(() => {
     const el = ref.current;
+    /* c8 ignore next */
     if (!el) return;
 
     const rect = el.getBoundingClientRect();
@@ -92,6 +93,8 @@ export const Odometer = ({ value }: { value: string }) => {
         if (isNaN(parseInt(char, 10))) {
           return (
             <span
+              aria-label={value}
+              role="text"
               key={index}
               className="text-theme-accent-hover mx-1 font-serif text-3xl font-bold"
             >

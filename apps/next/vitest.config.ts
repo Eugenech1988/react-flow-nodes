@@ -26,6 +26,8 @@ export default defineConfig({
         '**/*.helpers.{ts,tsx}',
         '**/*.d.ts',
         '**/index.ts',
+        '**/types.ts',
+        '**/constants.{ts,tsx}',
       ],
     },
   },

@@ -66,7 +66,7 @@ export const Header = ({ theme = 'default' }: IHeaderProps) => {
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 xl:flex">
+          <nav className="hidden items-center gap-1 xl:flex" aria-label={t('header.nav.label')}>
             {NAV_LINKS.map((link) => (
               <AppButton
                 key={link.id}

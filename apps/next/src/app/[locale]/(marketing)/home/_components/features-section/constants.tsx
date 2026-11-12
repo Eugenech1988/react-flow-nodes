@@ -47,3 +47,5 @@ export const SIGNAL_DOTS = [
   { top: '75%', left: '90%', delay: '0.3s' },
   { top: '45%', left: '50%', delay: '0.9s' },
 ];
+
+export const STARTUP_PROBES = 5;

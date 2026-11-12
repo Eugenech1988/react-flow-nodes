@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   MapPin,
@@ -25,6 +25,7 @@ import {
   type TDepartment,
 } from '../constants';
 import { SectionHeading, Frame } from '@/shared/ui';
+import { useScrollHint } from '@/shared/hooks';
 
 interface ICareersConsoleProps {
   jobs: TPublicJob[];
@@ -34,7 +35,6 @@ interface ICareersConsoleProps {
 export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
   const [activeDept, setActiveDept] = useState<TDepartment>('all');
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [showScrollHint, setShowScrollHint] = useState(false);
   const { t } = useT('careers');
   const router = useRouter();
 
@@ -54,26 +54,7 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
   const filtered =
     activeDept === 'all' ? jobs : jobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
 
-  useEffect(() => {
-    const checkScrollHint = () => {
-      const el = scrollRef.current;
-      if (!el) return;
-      const hasOverflow = el.scrollHeight > el.clientHeight + 2;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 8;
-      setShowScrollHint(hasOverflow && !atBottom);
-    };
-
-    checkScrollHint();
-    const el = scrollRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(checkScrollHint);
-    ro.observe(el);
-    el.addEventListener('scroll', checkScrollHint, { passive: true });
-    return () => {
-      ro.disconnect();
-      el.removeEventListener('scroll', checkScrollHint);
-    };
-  }, [activeDept]);
+  const showScrollHint = useScrollHint(scrollRef);
 
   const scrollMore = () => scrollRef.current?.scrollBy({ top: 220, behavior: 'smooth' });
 
@@ -105,6 +86,7 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
                   <button
                     key={dept.id}
                     type="button"
+                    aria-pressed={isActive}
                     onClick={() => setActiveDept(dept.id)}
                     className={`group border-theme-line relative flex flex-1 cursor-pointer items-center justify-center overflow-hidden border-y border-r px-3 py-2.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px] ${
                       isFirst ? 'border-l' : ''

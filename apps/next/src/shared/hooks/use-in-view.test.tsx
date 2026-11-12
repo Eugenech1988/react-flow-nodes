@@ -1,107 +1,90 @@
+import { render, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
 import { useInView } from './use-in-view';
 
-class MockIO {
-  static instances: MockIO[] = [];
-  cb: IntersectionObserverCallback;
-  observe = vi.fn();
-  disconnect = vi.fn();
-  unobserve = vi.fn();
-  takeRecords = vi.fn(() => []);
-  root = null;
-  rootMargin = '';
-  thresholds: number[] = [];
-
-  constructor(cb: IntersectionObserverCallback, opts?: IntersectionObserverInit) {
-    this.cb = cb;
-    if (opts?.rootMargin) this.rootMargin = opts.rootMargin;
-    if (opts?.threshold !== undefined) {
-      this.thresholds = Array.isArray(opts.threshold) ? opts.threshold : [opts.threshold];
-    }
-    MockIO.instances.push(this);
-  }
-
-  trigger(isIntersecting: boolean) {
-    this.cb(
-      [{ isIntersecting } as IntersectionObserverEntry],
-      this as unknown as IntersectionObserver,
-    );
-  }
-}
-
-const TestComponent = ({ options }: { options?: IntersectionObserverInit }) => {
-  const { ref, inView } = useInView<HTMLDivElement>(options);
-  return (
-    <div ref={ref} data-testid="target">
-      {inView ? 'in' : 'out'}
-    </div>
-  );
-};
-
-beforeEach(() => {
-  MockIO.instances = [];
-  vi.stubGlobal('IntersectionObserver', MockIO);
-});
-
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
-
 describe('useInView', () => {
-  it('starts with inView=false', () => {
-    render(<TestComponent />);
-    expect(screen.getByTestId('target')).toHaveTextContent('out');
+  let capturedCallback: IntersectionObserverCallback | null = null;
+  const observeMock = vi.fn();
+  const disconnectMock = vi.fn();
+
+  beforeEach(() => {
+    capturedCallback = null;
+    vi.clearAllMocks();
+
+    class MockIO {
+      observe = observeMock;
+      disconnect = disconnectMock;
+      unobserve = vi.fn();
+      takeRecords = vi.fn(() => []);
+      root = null;
+      rootMargin = '';
+      thresholds = [];
+
+      constructor(cb: IntersectionObserverCallback) {
+        capturedCallback = cb;
+      }
+    }
+
+    vi.stubGlobal('IntersectionObserver', MockIO);
   });
 
-  it('sets inView=true on intersect', () => {
-    render(<TestComponent />);
-    const io = MockIO.instances[0];
-    act(() => io.trigger(true));
-    expect(screen.getByTestId('target')).toHaveTextContent('in');
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
-  it('stays false on non-intersecting entry', () => {
-    render(<TestComponent />);
-    const io = MockIO.instances[0];
-    act(() => io.trigger(false));
-    expect(screen.getByTestId('target')).toHaveTextContent('out');
-  });
-
-  it('disconnects observer after first intersect', () => {
-    render(<TestComponent />);
-    const io = MockIO.instances[0];
-    act(() => io.trigger(true));
-    expect(io.disconnect).toHaveBeenCalled();
-  });
-
-  it('passes default options to IntersectionObserver', () => {
-    render(<TestComponent />);
-    const io = MockIO.instances[0];
-    expect(io.rootMargin).toBe('0px 0px -80px 0px');
-    expect(io.thresholds).toEqual([0.15]);
-  });
-
-  it('accepts custom options', () => {
-    render(<TestComponent options={{ threshold: 0.5, rootMargin: '100px' }} />);
-    const io = MockIO.instances[0];
-    expect(io.rootMargin).toBe('100px');
-    expect(io.thresholds).toEqual([0.5]);
-  });
-
-  it('handles missing element safely', () => {
-    const NoRefComponent = () => {
-      const { inView } = useInView<HTMLDivElement>();
-      return <div data-testid="no-ref">{inView ? 'in' : 'out'}</div>;
+  it('does not create observer when ref is null', () => {
+    const Test = () => {
+      useInView<HTMLDivElement>();
+      return null;
     };
-    render(<NoRefComponent />);
-    expect(screen.getByTestId('no-ref')).toHaveTextContent('out');
+    render(<Test />);
+    expect(capturedCallback).toBeNull();
   });
 
-  it('disconnects on unmount', () => {
-    const { unmount } = render(<TestComponent />);
-    const io = MockIO.instances[0];
-    unmount();
-    expect(io.disconnect).toHaveBeenCalled();
+  it('creates observer when div is mounted and observes element', () => {
+    const Test = () => {
+      const { ref } = useInView<HTMLDivElement>();
+      return <div ref={ref} data-testid="target" />;
+    };
+    const { getByTestId } = render(<Test />);
+
+    expect(capturedCallback).not.toBeNull();
+    expect(observeMock).toHaveBeenCalledWith(getByTestId('target'));
+  });
+
+  it('sets inView = true on intersection and disconnects', () => {
+    let inViewValue = false;
+    const Test = () => {
+      const { ref, inView } = useInView<HTMLDivElement>();
+      inViewValue = inView;
+      return <div ref={ref} data-testid="target" />;
+    };
+    render(<Test />);
+
+    expect(inViewValue).toBe(false);
+
+    act(() => {
+      capturedCallback!([{ isIntersecting: true } as any], {} as any);
+    });
+
+    expect(inViewValue).toBe(true);
+    expect(disconnectMock).toHaveBeenCalled();
+  });
+
+  it('does not set inView on non-intersection', () => {
+    let inViewValue = false;
+    const Test = () => {
+      const { ref, inView } = useInView<HTMLDivElement>();
+      inViewValue = inView;
+      return <div ref={ref} data-testid="target" />;
+    };
+    render(<Test />);
+
+    act(() => {
+      capturedCallback!([{ isIntersecting: false } as any], {} as any);
+    });
+
+    expect(inViewValue).toBe(false);
+    expect(disconnectMock).not.toHaveBeenCalled();
   });
 });

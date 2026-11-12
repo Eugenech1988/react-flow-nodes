@@ -1,27 +1,25 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
-import { TOTAL_STEPS } from '../constants';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import { TOTAL_STEPS, STARTUP_PROBES } from '../constants';
+import { useMediaQuery, useThrottledScroll } from '@/shared/hooks';
 
 const computeIndex = (el: HTMLElement): number => {
   const scrollableHeight = el.offsetHeight - window.innerHeight;
   if (scrollableHeight <= 0) return 0;
   const progress = Math.max(0, Math.min(1, (window.scrollY - el.offsetTop) / scrollableHeight));
-  return Math.min(TOTAL_STEPS - 1, Math.max(0, Math.floor(progress * TOTAL_STEPS + 0.001)));
+  return Math.min(TOTAL_STEPS - 1, Math.max(0, Math.floor(progress * TOTAL_STEPS)));
 };
 
-export function useFeaturesScroll() {
+export const useFeaturesScroll = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+
   const [index, setIndex] = useState(0);
   const [ready, setReady] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    const media = window.matchMedia('(min-width: 1024px)');
-    const desktop = media.matches;
-    setIsDesktop(desktop);
-
-    if (!desktop) {
+    if (!isDesktop) {
       setIndex(0);
       setReady(true);
       return;
@@ -38,7 +36,7 @@ export function useFeaturesScroll() {
         const el = wrapperRef.current;
         if (el) setIndex(computeIndex(el));
         attempts++;
-        if (attempts >= 5) {
+        if (attempts >= STARTUP_PROBES) {
           setReady(true);
           return;
         }
@@ -47,50 +45,23 @@ export function useFeaturesScroll() {
       raf = requestAnimationFrame(check);
     };
 
-    if (document.readyState === 'complete') {
-      startCheck();
-    } else {
-      const onLoad = () => startCheck();
-      window.addEventListener('load', onLoad, { once: true });
-      return () => {
-        cancelled = true;
-        window.removeEventListener('load', onLoad);
-        cancelAnimationFrame(raf);
-      };
-    }
+    startCheck();
 
     return () => {
       cancelled = true;
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [isDesktop]);
 
-  useEffect(() => {
+  const onScroll = useCallback(() => {
     if (!isDesktop || !ready) return;
-
-    const onScroll = () => {
-      const el = wrapperRef.current;
-      if (!el) return;
-      const next = computeIndex(el);
-      setIndex((prev) => (prev === next ? prev : next));
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const el = wrapperRef.current;
+    if (!el) return;
+    const next = computeIndex(el);
+    setIndex((prev) => (prev === next ? prev : next));
   }, [isDesktop, ready]);
 
-  useEffect(() => {
-    const media = window.matchMedia('(min-width: 1024px)');
-    const onChange = (e: MediaQueryListEvent) => {
-      setIsDesktop(e.matches);
-      if (!e.matches) {
-        setIndex(0);
-        setReady(true);
-      }
-    };
-    media.addEventListener('change', onChange);
-    return () => media.removeEventListener('change', onChange);
-  }, []);
+  useThrottledScroll(onScroll);
 
   const goToStep = (stepIndex: number) => {
     if (!isDesktop) {
@@ -110,4 +81,4 @@ export function useFeaturesScroll() {
   };
 
   return { wrapperRef, index, ready, isDesktop, goToStep };
-}
+};

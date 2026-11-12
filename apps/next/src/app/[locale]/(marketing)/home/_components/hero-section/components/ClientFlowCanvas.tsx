@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useMediaQuery } from '@/shared/hooks';
 import '@xyflow/react/dist/style.css';
 import {
   ReactFlow,
@@ -127,15 +128,7 @@ export const ClientFlowCanvas = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState<TCustomNodeType>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isInteractive, setIsInteractive] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia('(hover: hover) and (pointer: fine)');
-    setIsInteractive(media.matches);
-    const onChange = (e: MediaQueryListEvent) => setIsInteractive(e.matches);
-    media.addEventListener('change', onChange);
-    return () => media.removeEventListener('change', onChange);
-  }, []);
+  const isInteractive = useMediaQuery('(hover: hover) and (pointer: fine)');
 
   useEffect(() => {
     const timer = setTimeout(() => {

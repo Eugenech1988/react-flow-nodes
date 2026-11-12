@@ -17,6 +17,9 @@ export const CareersGauge = ({ value }: ICareersGaugeProps) => {
   return (
     <div
       className={`careers-gauge ${isReady ? 'is-active' : ''} mx-auto mt-8 flex flex-col items-center gap-2`}
+      role="meter"
+      aria-valuenow={value}
+      aria-valuemin={0}
       style={
         {
           '--target-angle': `${targetAngle}deg`,

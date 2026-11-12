@@ -68,6 +68,7 @@ export function LanguageSwitcher({
           <button
             key={code}
             type="button"
+            aria-pressed={isActive}
             onClick={() => switchLanguage(code)}
             className={`relative flex h-7 items-center justify-center font-mono text-[10px] tracking-widest uppercase transition-all duration-300 sm:text-xs ${
               isMobile ? 'flex-1 px-2' : 'px-3.5 sm:px-4'
