@@ -11,6 +11,7 @@ const mockStripeSubscriptionsRetrieve = jest.fn();
 const mockStripeSubscriptionsCancel = jest.fn();
 const mockStripeCheckoutSessionsCreate = jest.fn();
 const mockStripeCheckoutSessionsRetrieve = jest.fn();
+const mockStripeBillingPortalSessionsCreate = jest.fn();
 const mockStripeWebhooksConstructEvent = jest.fn();
 
 jest.mock('stripe', () => {
@@ -26,6 +27,11 @@ jest.mock('stripe', () => {
         retrieve: mockStripeCheckoutSessionsRetrieve,
       },
     },
+    billingPortal: {
+      sessions: {
+        create: mockStripeBillingPortalSessionsCreate,
+      },
+    },
     webhooks: { constructEvent: mockStripeWebhooksConstructEvent },
   }));
 });
@@ -36,7 +42,7 @@ jest.mock('fs', () => ({
   promises: { writeFile: jest.fn() },
 }));
 
-type PrismaMock = {
+type TPrismaMock = {
   subscription: { findUnique: jest.Mock; upsert: jest.Mock; update: jest.Mock };
   user: { findUnique: jest.Mock };
   transaction: {
@@ -48,7 +54,7 @@ type PrismaMock = {
   $transaction: jest.Mock;
 };
 
-const createPrismaMock = (): PrismaMock => ({
+const createPrismaMock = (): TPrismaMock => ({
   subscription: { findUnique: jest.fn(), upsert: jest.fn(), update: jest.fn() },
   user: { findUnique: jest.fn() },
   transaction: {
@@ -64,7 +70,8 @@ const createConfigMock = (overrides: Record<string, string | undefined> = {}) =>
   get: jest.fn((key: string) => {
     const defaults: Record<string, string> = {
       STRIPE_SECRET_KEY: 'sk_test_123',
-      STRIPE_PRO_PRICE_ID: 'price_pro',
+      STRIPE_PRO_PRICE_ID_MONTHLY: 'price_pro_monthly',
+      STRIPE_PRO_PRICE_ID_YEARLY: 'price_pro_yearly',
       STRIPE_ENTERPRISE_PRICE_ID: 'price_ent',
       FRONTEND_URL: 'http://localhost:3000',
       CLIENT_URL: 'http://localhost:3000',
@@ -78,7 +85,7 @@ global.fetch = jest.fn<Promise<Response>, Parameters<typeof fetch>>();
 
 describe('BillingService', () => {
   let service: BillingService;
-  let prisma: PrismaMock;
+  let prisma: TPrismaMock;
 
   const buildModule = async (overrides?: Record<string, string | undefined>) => {
     const mockPrisma = createPrismaMock();
@@ -122,7 +129,7 @@ describe('BillingService', () => {
   });
 
   describe('createCheckoutSession', () => {
-    it('should create stripe checkout session', async () => {
+    it('should use monthly price id by default', async () => {
       prisma.user.findUnique.mockResolvedValue({ id: 'user_1', email: 'test@example.com' });
       mockStripeCheckoutSessionsCreate.mockResolvedValue({ url: 'https://stripe.checkout/url' });
 
@@ -132,7 +139,38 @@ describe('BillingService', () => {
       expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           customer_email: 'test@example.com',
-          line_items: [{ price: 'price_pro', quantity: 1 }],
+          line_items: [{ price: 'price_pro_monthly', quantity: 1 }],
+          metadata: expect.objectContaining({ cycle: 'monthly' }),
+        }),
+      );
+    });
+
+    it('should use monthly price id when cycle=monthly', async () => {
+      prisma.user.findUnique.mockResolvedValue({ id: 'user_1', email: 'test@example.com' });
+      mockStripeCheckoutSessionsCreate.mockResolvedValue({ url: 'https://stripe.checkout/url' });
+
+      await service.createCheckoutSession('user_1', Plan.PRO, 'monthly');
+
+      expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          line_items: [{ price: 'price_pro_monthly', quantity: 1 }],
+        }),
+      );
+    });
+
+    it('should use yearly price id when cycle=yearly', async () => {
+      prisma.user.findUnique.mockResolvedValue({ id: 'user_1', email: 'test@example.com' });
+      mockStripeCheckoutSessionsCreate.mockResolvedValue({ url: 'https://stripe.checkout/url' });
+
+      await service.createCheckoutSession('user_1', Plan.PRO, 'yearly');
+
+      expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          line_items: [{ price: 'price_pro_yearly', quantity: 1 }],
+          metadata: expect.objectContaining({ cycle: 'yearly' }),
+          subscription_data: expect.objectContaining({
+            metadata: expect.objectContaining({ cycle: 'yearly' }),
+          }),
         }),
       );
     });
@@ -144,10 +182,28 @@ describe('BillingService', () => {
       );
     });
 
-    it('should throw BadRequestException for unconfigured plan price', async () => {
+    it('should throw BadRequestException when free plan requested', async () => {
       await expect(service.createCheckoutSession('user_1', Plan.FREE)).rejects.toThrow(
         BadRequestException,
       );
+    });
+
+    it('should throw BadRequestException when monthly price is not configured', async () => {
+      const local = await buildModule({ STRIPE_PRO_PRICE_ID_MONTHLY: undefined });
+      local.prisma.user.findUnique.mockResolvedValue({ id: 'user_1', email: 'test@example.com' });
+
+      await expect(
+        local.service.createCheckoutSession('user_1', Plan.PRO, 'monthly'),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw BadRequestException when yearly price is not configured', async () => {
+      const local = await buildModule({ STRIPE_PRO_PRICE_ID_YEARLY: undefined });
+      local.prisma.user.findUnique.mockResolvedValue({ id: 'user_1', email: 'test@example.com' });
+
+      await expect(
+        local.service.createCheckoutSession('user_1', Plan.PRO, 'yearly'),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should fallback to localhost when FRONTEND_URL is missing', async () => {
@@ -155,13 +211,55 @@ describe('BillingService', () => {
       local.prisma.user.findUnique.mockResolvedValue({ id: 'user_1', email: 'test@example.com' });
       mockStripeCheckoutSessionsCreate.mockResolvedValue({ url: 'https://stripe.com' });
 
-      await local.service.createCheckoutSession('user_1', Plan.PRO);
+      await local.service.createCheckoutSession('user_1', Plan.PRO, 'yearly');
 
       expect(mockStripeCheckoutSessionsCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           success_url: expect.stringContaining('http://localhost:5173'),
           cancel_url: expect.stringContaining('http://localhost:5173'),
         }),
+      );
+    });
+  });
+
+  describe('createBillingPortalSession', () => {
+    it('should create portal session and return url', async () => {
+      prisma.subscription.findUnique.mockResolvedValue({ customerId: 'cus_123' });
+      mockStripeBillingPortalSessionsCreate.mockResolvedValue({
+        url: 'https://stripe.portal/session',
+      });
+
+      const result = await service.createBillingPortalSession('user_1');
+
+      expect(mockStripeBillingPortalSessionsCreate).toHaveBeenCalledWith({
+        customer: 'cus_123',
+        return_url: expect.stringContaining('/settings/billing'),
+      });
+      expect(result).toEqual({ url: 'https://stripe.portal/session' });
+    });
+
+    it('should throw when subscription is missing', async () => {
+      prisma.subscription.findUnique.mockResolvedValue(null);
+
+      await expect(service.createBillingPortalSession('user_1')).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should throw when customerId is missing', async () => {
+      prisma.subscription.findUnique.mockResolvedValue({ customerId: null });
+
+      await expect(service.createBillingPortalSession('user_1')).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('should throw when Stripe returns no url', async () => {
+      prisma.subscription.findUnique.mockResolvedValue({ customerId: 'cus_123' });
+      mockStripeBillingPortalSessionsCreate.mockResolvedValue({ url: null });
+
+      await expect(service.createBillingPortalSession('user_1')).rejects.toThrow(
+        BadRequestException,
       );
     });
   });

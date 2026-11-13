@@ -27,6 +27,7 @@ describe('Billing Router', () => {
       getTransactionsByUserId: jest.fn(),
       createCheckoutSession: jest.fn(),
       cancelSubscription: jest.fn(),
+      createBillingPortalSession: jest.fn(),
     } as unknown as jest.Mocked<BillingService>;
 
     router = createBillingRouter(mockBillingService);
@@ -42,7 +43,9 @@ describe('Billing Router', () => {
 
       await expect(caller.subscription()).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
       await expect(caller.transactions()).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
-      await expect(caller.checkout(Plan.PRO)).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
+      await expect(
+        caller.checkout({ plan: 'PRO', cycle: 'monthly' }),
+      ).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
       await expect(caller.cancel()).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
     });
   });
@@ -75,16 +78,52 @@ describe('Billing Router', () => {
   });
 
   describe('checkout', () => {
-    it('should call createCheckoutSession with user id and plan', async () => {
+    it('should call createCheckoutSession with user id, plan and monthly cycle', async () => {
       mockBillingService.createCheckoutSession.mockResolvedValue({
         url: 'https://stripe.com/session',
       });
 
       const caller = router.createCaller(createMockContext(mockUser));
-      const result = await caller.checkout(Plan.PRO);
+      const result = await caller.checkout({ plan: 'PRO', cycle: 'monthly' });
 
-      expect(mockBillingService.createCheckoutSession).toHaveBeenCalledWith('user_1', Plan.PRO);
+      expect(mockBillingService.createCheckoutSession).toHaveBeenCalledWith(
+        'user_1',
+        'PRO',
+        'monthly',
+      );
       expect(result).toEqual({ url: 'https://stripe.com/session' });
+    });
+
+    it('should call createCheckoutSession with yearly cycle', async () => {
+      mockBillingService.createCheckoutSession.mockResolvedValue({
+        url: 'https://stripe.com/session-yearly',
+      });
+
+      const caller = router.createCaller(createMockContext(mockUser));
+      const result = await caller.checkout({ plan: 'PRO', cycle: 'yearly' });
+
+      expect(mockBillingService.createCheckoutSession).toHaveBeenCalledWith(
+        'user_1',
+        'PRO',
+        'yearly',
+      );
+      expect(result).toEqual({ url: 'https://stripe.com/session-yearly' });
+    });
+
+    it('should reject invalid plan', async () => {
+      const caller = router.createCaller(createMockContext(mockUser));
+
+      await expect(
+        caller.checkout({ plan: 'FREE', cycle: 'monthly' } as never),
+      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
+    });
+
+    it('should reject invalid cycle', async () => {
+      const caller = router.createCaller(createMockContext(mockUser));
+
+      await expect(
+        caller.checkout({ plan: 'PRO', cycle: 'weekly' } as never),
+      ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
     });
   });
 

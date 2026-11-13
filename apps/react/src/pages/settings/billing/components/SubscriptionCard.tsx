@@ -69,7 +69,9 @@ export const SubscriptionCard = () => {
       <div className="border-border/60 text-muted-foreground flex flex-col items-center justify-between gap-4 border-t pt-6 text-xs sm:flex-row">
         <div className="flex items-center gap-2">
           <ShieldCheck
-            className={`h-4 w-4 ${isProActive ? 'text-teal-600 dark:text-teal-400' : 'text-muted-foreground/60'}`}
+            className={`h-4 w-4 ${
+              isProActive ? 'text-teal-600 dark:text-teal-400' : 'text-muted-foreground/60'
+            }`}
           />
           Secure payments via Stripe
         </div>
@@ -102,7 +104,7 @@ export const SubscriptionCard = () => {
                 text="Activate Pro Plan"
                 pendingText="Redirecting..."
                 icon={CreditCard}
-                onClick={activateSubscription}
+                onClick={() => activateSubscription()}
               />
 
               <AppButton

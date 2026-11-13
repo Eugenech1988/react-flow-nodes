@@ -8,6 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Plan } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
+import type { TBillingCycle } from '@pipeline/contracts';
 import Stripe from 'stripe';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -26,16 +27,23 @@ export class BillingService {
     });
   }
 
-  private getPriceId(plan: Plan): string {
-    const prices: Record<Plan, string | undefined> = {
-      [Plan.FREE]: undefined,
-      [Plan.PRO]: this.configService.get<string>('STRIPE_PRO_PRICE_ID'),
-      [Plan.ENTERPRISE]: this.configService.get<string>('STRIPE_ENTERPRISE_PRICE_ID'),
-    };
+  private getPriceId(plan: Plan, cycle: TBillingCycle = 'monthly'): string {
+    if (plan === Plan.FREE) {
+      throw new BadRequestException('Free plan does not require a checkout session');
+    }
 
-    const priceId = prices[plan];
+    const envKey =
+      plan === Plan.PRO
+        ? cycle === 'yearly'
+          ? 'STRIPE_PRO_PRICE_ID_YEARLY'
+          : 'STRIPE_PRO_PRICE_ID_MONTHLY'
+        : 'STRIPE_ENTERPRISE_PRICE_ID';
+
+    const priceId = this.configService.get<string>(envKey);
     if (!priceId) {
-      throw new BadRequestException(`Price ID for plan ${plan} is not configured`);
+      throw new BadRequestException(
+        `Price ID for plan ${plan} (${cycle}) is not configured (${envKey})`,
+      );
     }
 
     return priceId;
@@ -59,8 +67,12 @@ export class BillingService {
     return subscription;
   }
 
-  async createCheckoutSession(userId: string, plan: Plan) {
-    const priceId = this.getPriceId(plan);
+  async createCheckoutSession(
+    userId: string,
+    plan: Plan,
+    cycle: TBillingCycle = 'monthly',
+  ) {
+    const priceId = this.getPriceId(plan, cycle);
 
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
@@ -76,11 +88,34 @@ export class BillingService {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${frontendUrl}/settings/billing?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${frontendUrl}/settings/billing?canceled=true`,
-      metadata: { userId, plan },
+      metadata: { userId, plan, cycle },
       subscription_data: {
-        metadata: { userId, plan },
+        metadata: { userId, plan, cycle },
       },
     });
+
+    return { url: session.url };
+  }
+
+  async createBillingPortalSession(userId: string): Promise<{ url: string }> {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: { userId },
+    });
+
+    if (!subscription?.customerId) {
+      throw new BadRequestException('No billing customer attached to this account');
+    }
+
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
+
+    const session = await this.stripe.billingPortal.sessions.create({
+      customer: subscription.customerId,
+      return_url: `${frontendUrl}/settings/billing`,
+    });
+
+    if (!session.url) {
+      throw new BadRequestException('Failed to create Stripe customer portal session');
+    }
 
     return { url: session.url };
   }
@@ -117,7 +152,8 @@ export class BillingService {
 
       const userId = session.metadata?.userId || stripeSubscription.metadata?.userId;
       const plan = (session.metadata?.plan || stripeSubscription.metadata?.plan) as
-        Plan | undefined;
+        | Plan
+        | undefined;
 
       if (!userId || !plan) {
         throw new BadRequestException('User metadata missing in session and subscription');

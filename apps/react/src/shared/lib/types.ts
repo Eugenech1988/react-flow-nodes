@@ -59,3 +59,10 @@ export type AlertState = {
   type: 'success' | 'error';
   message: string;
 } | null;
+
+export type TBillingCycle = 'monthly' | 'yearly';
+
+export type TCheckoutPlanInput = {
+  plan: 'PRO';
+  cycle: TBillingCycle;
+};

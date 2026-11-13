@@ -3,6 +3,12 @@ import { useSearchParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSubscription, useTransactions } from '@/shared/hooks';
 import { useTRPC } from '@/shared/api';
+import type { TBillingCycle, TCheckoutPlanInputData } from '@pipeline/contracts';
+
+interface IBillingBanner {
+  error: string | null;
+  success: string | null;
+}
 
 export const useBilling = () => {
   const queryClient = useQueryClient();
@@ -12,7 +18,7 @@ export const useBilling = () => {
   const { subscription, isLoading: isSubscriptionLoading } = useSubscription();
   const { transactions, isLoading: isTransactionLoading } = useTransactions();
 
-  const [banner, setBanner] = useState<{ error: string | null; success: string | null }>(() => {
+  const [banner, setBanner] = useState<IBillingBanner>(() => {
     if (searchParams.get('success') === 'true') {
       return { error: null, success: 'Payment successful! Your Pro plan is now active.' };
     }
@@ -42,12 +48,15 @@ export const useBilling = () => {
       onSuccess: (data) => {
         if (data?.url) {
           window.location.href = data.url;
-        } else {
-          setBanner({ error: 'Failed to retrieve payment link.', success: null });
+          return;
         }
+        setBanner({ error: 'Failed to retrieve payment link.', success: null });
       },
       onError: (error) => {
-        setBanner({ error: error.message || 'Failed to initialize payment.', success: null });
+        setBanner({
+          error: error.message || 'Failed to initialize payment.',
+          success: null,
+        });
       },
     }),
   );
@@ -61,7 +70,10 @@ export const useBilling = () => {
         setBanner({ error: null, success: 'Subscription successfully canceled.' });
       },
       onError: (error) => {
-        setBanner({ error: error.message || 'Failed to cancel subscription.', success: null });
+        setBanner({
+          error: error.message || 'Failed to cancel subscription.',
+          success: null,
+        });
       },
     }),
   );
@@ -76,6 +88,19 @@ export const useBilling = () => {
     setBanner((prev) => ({ ...prev, success: null }));
   };
 
+  const openBillingPortal = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/billing/portal`;
+  };
+
+  const activateSubscription = (cycle: TBillingCycle = 'monthly') => {
+    const payload: TCheckoutPlanInputData = { plan: 'PRO', cycle };
+    checkoutMutation.mutate(payload);
+  };
+
+  const cancelSubscription = () => {
+    cancelMutation.mutate();
+  };
+
   return {
     subscription,
     isSubscriptionLoading,
@@ -84,8 +109,9 @@ export const useBilling = () => {
     isProcessing: checkoutMutation.isPending || cancelMutation.isPending,
     errorMessage: banner.error,
     successMessage: banner.success,
-    activateSubscription: () => checkoutMutation.mutate('PRO'),
-    cancelSubscription: () => cancelMutation.mutate(),
+    activateSubscription,
+    cancelSubscription,
+    openBillingPortal,
     dismissSuccess,
     dismissError,
   };
