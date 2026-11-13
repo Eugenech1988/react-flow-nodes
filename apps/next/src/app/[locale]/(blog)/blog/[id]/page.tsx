@@ -61,8 +61,6 @@ const BlogPostContent = async ({ params }: TPageWithIdProps) => {
   );
 };
 
-const BlogPostPage = ({ params }: TPageWithIdProps) => (
-  <BlogPostContent params={params} />
-);
+const BlogPostPage = ({ params }: TPageWithIdProps) => <BlogPostContent params={params} />;
 
 export default BlogPostPage;

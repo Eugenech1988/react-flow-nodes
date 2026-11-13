@@ -18,14 +18,33 @@
   "archive": {
     "label": "SYS.ARCHIVE // {{count}} ENTRIES"
   },
+  "search": {
+    "placeholder": "SYS.GREP // SEARCH..."
+  },
   "empty": "NO ENTRIES IN SECTOR",
   "readEntry": "READ ENTRY",
+  "card": {
+    "online": "ONLINE"
+  },
+  "pagination": {
+    "prev": "PREV",
+    "next": "NEXT"
+  },
   "categories": {
     "all": "ALL",
     "engineering": "ENGINEERING",
     "design": "DESIGN",
     "research": "RESEARCH",
     "product": "PRODUCT"
+  },
+  "details": {
+    "returnToArchive": "Return to Archive",
+    "fileDecrypted": "FILE.DECRYPTED",
+    "priority": "PRIORITY.TRANSMISSION",
+    "author": "AUTHOR",
+    "secureChannel": "SECURE CHANNEL",
+    "share": "Share Entry",
+    "ref": "REF: ENTRY-{{id}}"
   },
   "posts": {
     "declarative-pipeline-as-code": {

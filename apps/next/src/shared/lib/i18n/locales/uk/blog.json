@@ -18,14 +18,33 @@
   "archive": {
     "label": "SYS.ARCHIVE // {{count}} ЗАПИСІВ"
   },
+  "search": {
+    "placeholder": "SYS.GREP // ПОШУК..."
+  },
   "empty": "У ЦЬОМУ СЕКТОРІ ЗАПИСІВ НЕМА",
   "readEntry": "ЧИТАТИ ЗАПИС",
+  "card": {
+    "online": "ОНЛАЙН"
+  },
+  "pagination": {
+    "prev": "НАЗАД",
+    "next": "ДАЛІ"
+  },
   "categories": {
     "all": "УСІ",
     "engineering": "ІНЖЕНЕРІЯ",
     "design": "ДИЗАЙН",
     "research": "ДОСЛІДЖЕННЯ",
     "product": "ПРОДУКТ"
+  },
+  "details": {
+    "returnToArchive": "Повернутися до архіву",
+    "fileDecrypted": "ФАЙЛ.РОЗШИФРОВАНО",
+    "priority": "ПРІОРИТЕТ.ПЕРЕДАЧІ",
+    "author": "АВТОР",
+    "secureChannel": "БЕЗПЕЧНИЙ КАНАЛ",
+    "share": "Поділитися записом",
+    "ref": "REF: ENTRY-{{id}}"
   },
   "posts": {
     "declarative-pipeline-as-code": {

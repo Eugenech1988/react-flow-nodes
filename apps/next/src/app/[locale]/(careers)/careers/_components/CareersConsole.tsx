@@ -2,14 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  MapPin,
-  Clock,
-  ChevronRight,
-  ChevronDown,
-  Eye,
-  FileText,
-} from 'lucide-react';
+import { MapPin, Clock, ChevronRight, ChevronDown, Eye, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { useT } from '@/shared/lib/i18n/client';
 import type { TPublicJob } from '@/shared/api';
@@ -135,7 +128,9 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
                           : 'from-theme-surface to-theme-bg text-theme-muted hover:border-theme-accent/50 hover:text-theme-accent-hover bg-linear-to-b shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent-hover)_8%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.5)]'
                       }`}
                     >
-                      <span className="relative z-10 truncate">{t(`openings.filters.${dept.id}`)}</span>
+                      <span className="relative z-10 truncate">
+                        {t(`openings.filters.${dept.id}`)}
+                      </span>
                       {isActive && (
                         <span className="bg-theme-accent-hover absolute top-1/2 right-2 h-1.5 w-1.5 -translate-y-1/2 animate-pulse rounded-full shadow-[0_0_5px_var(--theme-accent-hover)] sm:right-3" />
                       )}
@@ -188,7 +183,7 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
 
                           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                             <div className="flex items-start justify-between gap-3">
-                              <h3 className="text-theme-fg group-hover:text-theme-accent-hover text-sm font-bold leading-tight wrap-break-word transition-colors sm:text-base">
+                              <h3 className="text-theme-fg group-hover:text-theme-accent-hover text-sm leading-tight font-bold wrap-break-word transition-colors sm:text-base">
                                 {job.title}
                               </h3>
 

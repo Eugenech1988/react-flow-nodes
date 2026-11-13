@@ -138,7 +138,7 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
             }`}
           >
             <div className="overflow-hidden">
-              <div className="border-theme-line mt-1 flex flex-col rounded-sm border bg-theme-panel shadow-xl">
+              <div className="border-theme-line bg-theme-panel mt-1 flex flex-col rounded-sm border shadow-xl">
                 {BLOG_CATEGORIES.map((cat) => (
                   <button
                     key={cat.id}

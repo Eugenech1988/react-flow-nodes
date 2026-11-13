@@ -13,21 +13,12 @@ export const BlogPostBody = ({ post }: { post: IBlogPostData }) => {
         {t(`posts.${post.slug}.excerpt`)}
       </p>
 
-      <div
-        className="text-theme-muted space-y-6 text-sm leading-relaxed sm:text-base sm:leading-loose
-          [&_strong]:text-theme-fg [&_strong]:font-bold
-          [&_em]:text-theme-accent [&_em]:italic
-          [&_a]:text-theme-accent-hover [&_a]:underline [&_a]:decoration-current/30 [&_a]:underline-offset-4 [&_a:hover]:text-theme-accent
-          [&_code]:rounded [&_code]:bg-theme-panel [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.9em] [&_code]:text-theme-accent
-          [&_pre]:overflow-x-auto [&_pre]:rounded-sm [&_pre]:border [&_pre]:border-theme-line [&_pre]:bg-theme-panel/80 [&_pre]:p-4"
-      >
+      <div className="text-theme-muted [&_strong]:text-theme-fg [&_em]:text-theme-accent [&_a]:text-theme-accent-hover [&_a:hover]:text-theme-accent [&_code]:bg-theme-panel [&_code]:text-theme-accent [&_pre]:border-theme-line [&_pre]:bg-theme-panel/80 space-y-6 text-sm leading-relaxed sm:text-base sm:leading-loose [&_a]:underline [&_a]:decoration-current/30 [&_a]:underline-offset-4 [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-[0.9em] [&_em]:italic [&_pre]:overflow-x-auto [&_pre]:rounded-sm [&_pre]:border [&_pre]:p-4 [&_strong]:font-bold">
         {post.content.map((htmlBlock, index) => {
           // Очищаем HTML перед рендером
           const cleanHtml = DOMPurify.sanitize(htmlBlock);
 
-          return (
-            <div key={index} dangerouslySetInnerHTML={{ __html: cleanHtml }} />
-          );
+          return <div key={index} dangerouslySetInnerHTML={{ __html: cleanHtml }} />;
         })}
       </div>
 

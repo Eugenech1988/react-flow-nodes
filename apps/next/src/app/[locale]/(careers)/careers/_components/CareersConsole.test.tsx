@@ -11,24 +11,51 @@ vi.mock('@/shared/lib/i18n/client', () => ({ useT: () => ({ t: (k: string) => k 
 vi.mock('@/shared/api', () => ({ incrementJobViews: vi.fn() }));
 vi.mock('@/shared/ui', () => ({
   SectionHeading: ({ title }: any) => <h2>{title}</h2>,
-  Frame: ({ children, toolbar }: any) => <div>{toolbar}{children}</div>,
+  Frame: ({ children, toolbar }: any) => (
+    <div>
+      {toolbar}
+      {children}
+    </div>
+  ),
 }));
 vi.mock('@/shared/hooks', () => ({ useScrollHint: vi.fn() }));
 
 import { CareersConsole } from './CareersConsole';
 
 const engineeringJob: TPublicJob = {
-  id: '1', slug: 'frontend', title: 'Frontend Dev', description: 'Desc',
-  responsibilities: [], requirements: [], department: 'ENGINEERING',
-  level: 'SENIOR', type: 'FULL_TIME', location: 'Remote', icon: 'code-2',
-  metaTitle: null, metaDescription: null, views: 10, applications: 2,
+  id: '1',
+  slug: 'frontend',
+  title: 'Frontend Dev',
+  description: 'Desc',
+  responsibilities: [],
+  requirements: [],
+  department: 'ENGINEERING',
+  level: 'SENIOR',
+  type: 'FULL_TIME',
+  location: 'Remote',
+  icon: 'code-2',
+  metaTitle: null,
+  metaDescription: null,
+  views: 10,
+  applications: 2,
 };
 
 const designJob: TPublicJob = {
-  id: '2', slug: 'designer', title: 'Designer', description: 'Desc',
-  responsibilities: [], requirements: [], department: 'DESIGN',
-  level: 'UNKNOWN_LEVEL', type: 'UNKNOWN_TYPE', location: 'Remote', icon: null,
-  metaTitle: null, metaDescription: null, views: null as any, applications: undefined as any,
+  id: '2',
+  slug: 'designer',
+  title: 'Designer',
+  description: 'Desc',
+  responsibilities: [],
+  requirements: [],
+  department: 'DESIGN',
+  level: 'UNKNOWN_LEVEL',
+  type: 'UNKNOWN_TYPE',
+  location: 'Remote',
+  icon: null,
+  metaTitle: null,
+  metaDescription: null,
+  views: null as any,
+  applications: undefined as any,
 };
 
 const scrollByMock = vi.fn();
@@ -42,7 +69,7 @@ describe('CareersConsole', () => {
   it('renders all jobs with numeric values and fallbacks', () => {
     vi.mocked(useScrollHint).mockReturnValue(false);
     render(<CareersConsole jobs={[engineeringJob, designJob]} locale="en" />);
-    
+
     expect(screen.getByText('Frontend Dev')).toBeInTheDocument();
     expect(screen.getByText('Designer')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
@@ -115,7 +142,7 @@ describe('CareersConsole', () => {
     render(<CareersConsole jobs={[engineeringJob]} locale="en" />);
 
     fireEvent.click(screen.getByText('Frontend Dev').closest('a')!);
-    
+
     await waitFor(() => {
       expect(spy).toHaveBeenCalledWith('Failed to increment views', expect.any(Error));
     });
@@ -145,11 +172,13 @@ describe('CareersConsole', () => {
       ...engineeringJob,
       title: 'SuperExtremelyLongJobTitleWithoutAnySpacesThatShouldNotBreakLayout',
     };
-    
+
     vi.mocked(useScrollHint).mockReturnValue(false);
     render(<CareersConsole jobs={[longTitleJob]} locale="en" />);
 
-    const title = screen.getByText('SuperExtremelyLongJobTitleWithoutAnySpacesThatShouldNotBreakLayout');
+    const title = screen.getByText(
+      'SuperExtremelyLongJobTitleWithoutAnySpacesThatShouldNotBreakLayout',
+    );
     expect(title).toHaveClass('wrap-break-word');
   });
 });
