@@ -49,7 +49,7 @@ const BlogPage = async ({ params }: TPageProps) => {
       <div className="relative z-10">
         <BlogHero t={t} total={BLOG_POSTS.length} lastUpdate={featured?.date ?? ''} />
         {featured && (
-          <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="relative z-10 mx-auto mt-8 max-w-6xl px-4 sm:mt-12 sm:px-6">
             <BlogFeatured
               t={t}
               locale={locale}

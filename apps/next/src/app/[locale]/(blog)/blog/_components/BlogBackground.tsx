@@ -51,16 +51,13 @@ const SIZE_MAP = {
 
 export const BlogBackground = () => (
   <div className="bg-theme-bg pointer-events-none fixed inset-0 z-0 w-full overflow-hidden">
-    {/* Текстура сканирования и сетки */}
     <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_3px,color-mix(in_oklab,var(--theme-fg)_1.5%,transparent)_3px,color-mix(in_oklab,var(--theme-fg)_1.5%,transparent)_4px)]" />
     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,color-mix(in_oklab,var(--theme-bg)_95%,transparent)_100%)]" />
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,var(--theme-line)_1px,transparent_0)] bg-size-[22px_22px] opacity-20" />
 
-    {/* Безопасные фоновые пятна без критического выхода за экран на мобилках */}
     <div className="bg-theme-line/10 absolute top-[-10%] left-[-10%] h-80 w-80 rounded-full blur-[100px] sm:h-125 sm:w-125" />
     <div className="bg-theme-accent/5 absolute right-[-10%] bottom-[-10%] h-96 w-96 rounded-full blur-[120px] sm:h-150 sm:w-150" />
 
-    {/* Звезды */}
     {STARS.map((star, i) => {
       const s = SIZE_MAP[star.size as keyof typeof SIZE_MAP];
       return (
@@ -72,7 +69,6 @@ export const BlogBackground = () => (
       );
     })}
 
-    {/* Орбиты с адаптивными классами */}
     {ORBITS.map((orbit, i) => (
       <div
         key={`orbit-${i}`}
@@ -102,7 +98,6 @@ export const BlogBackground = () => (
       </div>
     ))}
 
-    {/* Сканирующие радары (скрыты на малых экранах или оптимизированы) */}
     <div className="absolute bottom-0 left-1/2 h-125 w-125 -translate-x-1/2 translate-y-1/2 sm:h-175 sm:w-175">
       <div className="border-theme-accent/10 absolute inset-0 rounded-full border" />
       <div className="border-theme-accent/10 absolute inset-16 rounded-full border" />

@@ -22,6 +22,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^14.9.1",
     "i18next": "^26.7.2",
+    "isomorphic-dompurify": "^4.7.0",
     "lucide-react": "^1.69.0",
     "next": "16.4.5",
     "next-i18next": "^16.4.6",
