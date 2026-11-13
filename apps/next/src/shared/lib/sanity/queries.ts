@@ -28,7 +28,8 @@ const DETAIL_FIELDS = groq`
 `;
 
 const POSTS_QUERY = groq`
-  *[_type == "post" && language == $locale] | order(coalesce(publishedAt, _createdAt) desc) {
+  *[_type == "post" && (language == $locale || ($locale == "uk" && language == "ua"))]
+    | order(coalesce(publishedAt, _createdAt) desc) {
     ${PREVIEW_FIELDS}
   }
 `;

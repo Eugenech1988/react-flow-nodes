@@ -29,7 +29,7 @@ export function LanguageSwitcher({
   const btnRoundingClass = isTechnical ? 'rounded-sm' : 'rounded-lg';
 
   const switchLanguage = (next: string) => {
-    if (current === next || (next === 'ua' && current === 'uk')) return;
+    if (current === next) return;
 
     if (i18n && typeof i18n.changeLanguage === 'function') {
       i18n.changeLanguage(next);
@@ -38,7 +38,7 @@ export function LanguageSwitcher({
     if (typeof window !== 'undefined') {
       const pathname = window.location.pathname;
       const segments = pathname.split('/');
-      const isLocaleInPath = ['en', 'ua', 'uk'].includes(segments[1]);
+      const isLocaleInPath = ['en', 'uk'].includes(segments[1]);
 
       if (isLocaleInPath) {
         segments[1] = next;

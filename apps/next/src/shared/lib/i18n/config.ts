@@ -7,10 +7,6 @@ const i18nConfig: I18nConfig = {
   ns: ['common', 'marketing', 'inquiry', 'about', 'careers', 'contacts', 'blog'],
   localeParamName: 'locale',
   resourceLoader: (language, namespace) => import(`./locales/${language}/${namespace}.json`),
-  onPreInitI18next: (i18nInstance) => {
-    const ukrainianRule = i18nInstance.services.pluralResolver.getRule('uk');
-    i18nInstance.services.pluralResolver.addRule('ua', ukrainianRule);
-  },
 };
 
 export default i18nConfig;

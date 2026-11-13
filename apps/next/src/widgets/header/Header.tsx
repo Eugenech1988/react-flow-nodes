@@ -71,7 +71,7 @@ export const Header = ({ theme = 'default' }: IHeaderProps) => {
               <AppButton
                 key={link.id}
                 isLink
-                linkTo={`/${lng}/${link.href}`}
+                linkTo={`/${lng}${link.href}`}
                 variant="nav"
                 className={cn(
                   'text-theme-muted hover:bg-theme-panel hover:text-theme-fg hover:after:bg-theme-accent hover:after:shadow-[0_0_8px_var(--theme-accent)]',

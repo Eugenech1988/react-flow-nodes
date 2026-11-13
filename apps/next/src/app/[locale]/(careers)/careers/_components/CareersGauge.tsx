@@ -20,6 +20,8 @@ export const CareersGauge = ({ value }: ICareersGaugeProps) => {
       role="meter"
       aria-valuenow={value}
       aria-valuemin={0}
+      aria-valuemax={MAX_VACANCIES}
+      aria-valuetext={`${value} / ${MAX_VACANCIES}`}
       style={
         {
           '--target-angle': `${targetAngle}deg`,

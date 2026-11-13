@@ -15,7 +15,6 @@ const OG_IMAGE = '/og-image.jpg';
 const OG_LOCALES: Record<string, string> = {
   en: 'en_US',
   uk: 'uk_UA',
-  ua: 'uk_UA',
 };
 
 type TBuildMetadataParams = {
@@ -78,7 +77,8 @@ const getMarketingDescription = async (locale: string): Promise<string> => {
   'use cache';
   cacheLife('days');
 
-  const { t } = await getT('marketing', { lng: locale });
+  const normalized = locale === 'ua' ? 'uk' : locale;
+  const { t } = await getT('marketing', { lng: normalized });
   return t('meta.description');
 };
 

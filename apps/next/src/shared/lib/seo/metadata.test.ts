@@ -79,9 +79,9 @@ describe('buildMetadata', () => {
     expect(meta.openGraph).toMatchObject({ locale: 'uk_UA' });
   });
 
-  it('maps ua to uk_UA', () => {
+  it('falls back to en_US for legacy ua locale', () => {
     const meta = buildMetadata({ locale: 'ua' });
-    expect(meta.openGraph).toMatchObject({ locale: 'uk_UA' });
+    expect(meta.openGraph).toMatchObject({ locale: 'en_US' });
   });
 
   it('falls back to en for unknown locale', () => {

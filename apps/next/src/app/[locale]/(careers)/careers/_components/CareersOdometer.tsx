@@ -60,7 +60,6 @@ export const Odometer = ({ value }: { value: string }) => {
 
   useLayoutEffect(() => {
     const el = ref.current;
-    /* c8 ignore next */
     if (!el) return;
 
     const rect = el.getBoundingClientRect();
@@ -88,14 +87,13 @@ export const Odometer = ({ value }: { value: string }) => {
   const chars = String(value).split('');
 
   return (
-    <div ref={ref} className="flex items-center">
+    <div ref={ref} className="flex items-center" role="img" aria-label={value}>
       {chars.map((char, index) => {
-        if (isNaN(parseInt(char, 10))) {
+        if (Number.isNaN(parseInt(char, 10))) {
           return (
             <span
-              aria-label={value}
-              role="text"
               key={index}
+              aria-hidden="true"
               className="text-theme-accent-hover mx-1 font-serif text-3xl font-bold"
             >
               {char}
@@ -103,7 +101,11 @@ export const Odometer = ({ value }: { value: string }) => {
           );
         }
 
-        return <OdometerDigit key={index} value={parseInt(char, 10)} isActive={inView} />;
+        return (
+          <span key={index} aria-hidden="true">
+            <OdometerDigit value={parseInt(char, 10)} isActive={inView} />
+          </span>
+        );
       })}
     </div>
   );

@@ -8,16 +8,8 @@ const baseUrl = (
 
 const sitemap = (): MetadataRoute.Sitemap => {
   return [
-    {
-      url: `${baseUrl}/en`,
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/ua`,
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
+    { url: `${baseUrl}/en`, changeFrequency: 'weekly', priority: 1 },
+    { url: `${baseUrl}/uk`, changeFrequency: 'weekly', priority: 1 },
   ];
 };
 
