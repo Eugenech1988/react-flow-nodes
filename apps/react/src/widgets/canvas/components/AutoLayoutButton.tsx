@@ -1,15 +1,16 @@
 import { useStore } from '@/entities';
-import { useAutoLayout } from '../hooks/useAutoLayout';
 import { SquareCenterlineDashedVertical } from 'lucide-react';
+import { computeAutoLayout } from '../lib/autoLayout';
 
 export const AutoLayoutButton = () => {
   const nodes = useStore((state) => state.nodes);
   const edges = useStore((state) => state.edges);
   const setNodes = useStore((state) => state.setNodes);
-  const layoutedNodes = useAutoLayout(nodes, edges);
+  const takeSnapshot = useStore((state) => state.takeSnapshot);
 
   const handleLayout = () => {
-    setNodes(layoutedNodes);
+    takeSnapshot();
+    setNodes(computeAutoLayout(nodes, edges));
   };
 
   return (
