@@ -14,7 +14,8 @@
     "fix": "bun run lint:fix && bun run typecheck",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui --api.token=''"
+    "test:ui": "vitest --ui --api.token=''",
+    "test:cov": "vitest --coverage"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
