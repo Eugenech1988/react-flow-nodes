@@ -1,44 +1,48 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { ShieldCheck, Loader2, Copy, Check } from 'lucide-react';
 import { Dialog, DialogContent, Input } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter, AppButton } from '@/shared/ui';
 import { twoFactorTotpOnlySchema, twoFactorCodeOrBackupSchema } from '@pipeline/contracts';
 
-interface TwoFactorModalProps {
+type TTwoFactorMode = 'enable' | 'disable';
+
+interface ITwoFactorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (code: string) => Promise<string[] | void>;
-  mode: 'enable' | 'disable';
+  mode: TTwoFactorMode;
   qrCodeImage?: string | null;
   modalError?: string | null;
   isPending?: boolean;
 }
 
+interface ITotpFormData {
+  code: string;
+}
+
 export const TwoFactorModal = ({
-  isOpen,
-  onClose,
-  onConfirm,
-  mode,
-  qrCodeImage,
-  modalError,
-  isPending = false,
-}: TwoFactorModalProps) => {
+                                 isOpen,
+                                 onClose,
+                                 onConfirm,
+                                 mode,
+                                 qrCodeImage,
+                                 modalError,
+                                 isPending = false,
+                               }: ITwoFactorModalProps) => {
   const isEnable = mode === 'enable';
   const [recoveryCodes, setRecoveryCodes] = useState<string[] | null>(null);
   const [copied, setCopied] = useState(false);
 
   const activeSchema = isEnable ? twoFactorTotpOnlySchema : twoFactorCodeOrBackupSchema;
-  type TFormSchema = z.infer<typeof activeSchema>;
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isValid },
-  } = useForm<TFormSchema>({
+  } = useForm<ITotpFormData>({
     resolver: zodResolver(activeSchema),
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -59,7 +63,7 @@ export const TwoFactorModal = ({
     onClose();
   };
 
-  const handleFormSubmit = async (data: TFormSchema) => {
+  const handleFormSubmit = async (data: ITotpFormData) => {
     try {
       const result = await onConfirm(data.code);
       if (isEnable && Array.isArray(result) && result.length > 0) {
@@ -74,12 +78,12 @@ export const TwoFactorModal = ({
 
   const handleCopyCodes = () => {
     if (!recoveryCodes) return;
-    navigator.clipboard.writeText(recoveryCodes.join('\n'));
+    void navigator.clipboard.writeText(recoveryCodes.join('\n'));
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    window.setTimeout(() => setCopied(false), 2000);
   };
 
-  const hasCodeError = !!errors.code;
+  const hasCodeError = Boolean(errors.code);
 
   return (
     <Dialog open={isOpen} onOpenChange={recoveryCodes ? undefined : handleClose}>
@@ -104,9 +108,12 @@ export const TwoFactorModal = ({
             </div>
 
             <div className="bg-muted/30 border-border/60 grid grid-cols-2 gap-2 rounded-lg border p-3 text-center font-mono text-xs">
-              {recoveryCodes.map((c, i) => (
-                <div key={i} className="bg-background border-border/40 rounded border px-2 py-1">
-                  {c}
+              {recoveryCodes.map((code) => (
+                <div
+                  key={code}
+                  className="bg-background border-border/40 rounded border px-2 py-1"
+                >
+                  {code}
                 </div>
               ))}
             </div>
@@ -132,7 +139,7 @@ export const TwoFactorModal = ({
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit(handleFormSubmit)}>
+          <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
             <DialogBody withBorder className="space-y-5">
               {modalError && (
                 <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-xs font-medium text-rose-600 dark:text-rose-400">
@@ -191,7 +198,7 @@ export const TwoFactorModal = ({
                       />
                       {errors.code && (
                         <p className="mt-1 text-center text-xs font-medium text-rose-600 dark:text-rose-400">
-                          {errors.code.message as string}
+                          {errors.code.message}
                         </p>
                       )}
                     </div>
@@ -220,7 +227,7 @@ export const TwoFactorModal = ({
                     />
                     {errors.code && (
                       <p className="mt-1 text-center text-xs font-medium text-rose-600 dark:text-rose-400">
-                        {errors.code.message as string}
+                        {errors.code.message}
                       </p>
                     )}
                   </div>
@@ -230,7 +237,6 @@ export const TwoFactorModal = ({
 
             <DialogFooter
               onCancel={handleClose}
-              onSubmit={() => handleSubmit(handleFormSubmit)()}
               isPending={isPending}
               isDisabled={!isValid || (isEnable && !qrCodeImage)}
               submitText={isEnable ? 'Enable' : 'Disable'}
