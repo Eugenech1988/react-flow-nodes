@@ -4,9 +4,9 @@ import i18nConfig from '@/shared/lib/i18n/config';
 
 const intlProxy = createProxy(i18nConfig);
 
-const ALLOWED_ORIGINS = ['http://localhost:5173', process.env.ADMIN_APP_URL].filter(
-  Boolean,
-) as string[];
+const DEV_ORIGIN = process.env.NODE_ENV !== 'production' ? 'http://localhost:5173' : null;
+
+const ALLOWED_ORIGINS = [DEV_ORIGIN, process.env.ADMIN_APP_URL].filter(Boolean) as string[];
 
 const corsOptions = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -16,6 +16,13 @@ const corsOptions = {
 
 export const proxy = (request: NextRequest) => {
   const { pathname } = request.nextUrl;
+
+  if (pathname === '/ua' || pathname.startsWith('/ua/')) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.replace(/^\/ua(?=\/|$)/, '/uk');
+    return NextResponse.redirect(url, 301);
+  }
+
 
   if (pathname.startsWith('/api/revalidate')) {
     const origin = request.headers.get('origin') ?? '';
@@ -43,5 +50,6 @@ export const proxy = (request: NextRequest) => {
 };
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],
+  matcher: ['/((?!_next/static|_next/image|api/|favicon.ico|robots.txt|sitemap.xml).*)'],
 };
+
