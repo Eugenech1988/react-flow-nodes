@@ -6,8 +6,6 @@ import {
   MapPin,
   Clock,
   ChevronRight,
-  // Gauge,
-  // Power,
   ChevronDown,
   Eye,
   FileText,
@@ -34,7 +32,9 @@ interface ICareersConsoleProps {
 
 export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
   const [activeDept, setActiveDept] = useState<TDepartment>('all');
+  const [isDeptMenuOpen, setIsDeptMenuOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const showScrollHint = useScrollHint(scrollRef);
   const { t } = useT('careers');
   const router = useRouter();
 
@@ -53,8 +53,6 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
 
   const filtered =
     activeDept === 'all' ? jobs : jobs.filter((j) => j.department === DEPT_TO_BACKEND[activeDept]);
-
-  const showScrollHint = useScrollHint(scrollRef);
 
   const scrollMore = () => scrollRef.current?.scrollBy({ top: 220, behavior: 'smooth' });
 
@@ -78,31 +76,73 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
           theme="careers"
           className="h-100 sm:h-130"
           toolbar={
-            <div className="flex w-full">
-              {DEPARTMENTS.map((dept, idx) => {
-                const isActive = dept.id === activeDept;
-                const isFirst = idx === 0;
-                return (
-                  <button
-                    key={dept.id}
-                    type="button"
-                    aria-pressed={isActive}
-                    onClick={() => setActiveDept(dept.id)}
-                    className={`group border-theme-line relative flex flex-1 cursor-pointer items-center justify-center overflow-hidden border-y border-r px-3 py-2.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px] ${
-                      isFirst ? 'border-l' : ''
-                    } ${
-                      isActive
-                        ? 'border-theme-accent-hover from-theme-accent-deep to-theme-accent-deep/80 text-theme-bg bg-linear-to-b shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent-hover)_40%,transparent),0_0_15px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]'
-                        : 'from-theme-surface to-theme-bg text-theme-muted hover:border-theme-accent/50 hover:text-theme-accent-hover bg-linear-to-b shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent-hover)_8%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.5)]'
-                    }`}
-                  >
-                    <span className="relative z-10">{t(`openings.filters.${dept.id}`)}</span>
-                    {isActive && (
-                      <span className="bg-theme-accent-hover absolute top-1/2 right-3 h-1 w-1 -translate-y-1/2 animate-pulse rounded-full shadow-[0_0_5px_var(--theme-accent-hover)]" />
-                    )}
-                  </button>
-                );
-              })}
+            <div className="relative flex w-full flex-col">
+              <div className="w-full md:hidden">
+                <button
+                  type="button"
+                  onClick={() => setIsDeptMenuOpen(!isDeptMenuOpen)}
+                  className="border-theme-line bg-theme-panel text-theme-accent flex w-full items-center justify-between border-b px-4 py-3 font-mono text-[10px] font-bold tracking-widest uppercase"
+                >
+                  <span>{t(`openings.filters.${activeDept}`)}</span>
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform duration-300 ${isDeptMenuOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
+
+                <div
+                  className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+                    isDeptMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="border-theme-line flex flex-col border-b">
+                      {DEPARTMENTS.map((dept) => (
+                        <button
+                          key={dept.id}
+                          type="button"
+                          onClick={() => {
+                            setActiveDept(dept.id);
+                            setIsDeptMenuOpen(false);
+                          }}
+                          className={`px-4 py-3 text-left font-mono text-[10px] font-bold tracking-widest uppercase transition-colors ${
+                            dept.id === activeDept
+                              ? 'bg-theme-accent-deep text-theme-bg'
+                              : 'bg-theme-surface text-theme-muted hover:bg-theme-panel hover:text-theme-accent'
+                          }`}
+                        >
+                          {t(`openings.filters.${dept.id}`)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="hidden w-full md:flex">
+                {DEPARTMENTS.map((dept, idx) => {
+                  const isActive = dept.id === activeDept;
+                  const isFirst = idx === 0;
+                  return (
+                    <button
+                      key={dept.id}
+                      type="button"
+                      onClick={() => setActiveDept(dept.id)}
+                      className={`group border-theme-line relative flex flex-1 cursor-pointer items-center justify-center overflow-hidden border-y border-r px-3 py-2.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:text-[10px] ${
+                        isFirst ? 'border-l' : ''
+                      } ${
+                        isActive
+                          ? 'border-theme-accent-hover from-theme-accent-deep to-theme-accent-deep/80 text-theme-bg bg-linear-to-b shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent-hover)_40%,transparent),0_0_15px_color-mix(in_oklab,var(--theme-accent)_40%,transparent)]'
+                          : 'from-theme-surface to-theme-bg text-theme-muted hover:border-theme-accent/50 hover:text-theme-accent-hover bg-linear-to-b shadow-[inset_0_1px_0_color-mix(in_oklab,var(--theme-accent-hover)_8%,transparent),inset_0_-1px_2px_rgba(0,0,0,0.5)]'
+                      }`}
+                    >
+                      <span className="relative z-10 truncate">{t(`openings.filters.${dept.id}`)}</span>
+                      {isActive && (
+                        <span className="bg-theme-accent-hover absolute top-1/2 right-2 h-1.5 w-1.5 -translate-y-1/2 animate-pulse rounded-full shadow-[0_0_5px_var(--theme-accent-hover)] sm:right-3" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           }
         >
@@ -133,48 +173,58 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
                         key={job.id}
                         href={`/${locale}/careers/${job.slug}`}
                         onClick={(e) => handleJobClick(e, job)}
-                        className="group animate-in fade-in slide-in-from-left-4 border-theme-line hover:bg-theme-accent/5 relative flex flex-col gap-3 border-b border-dashed px-4 py-4 transition-colors duration-300 ease-out sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
+                        className="group animate-in fade-in slide-in-from-left-4 border-theme-line hover:bg-theme-accent/5 relative flex flex-col gap-3 border-b border-dashed px-4 py-3 transition-colors duration-300 ease-out sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6"
                         style={{ animationDelay: `${idx * 30}ms`, animationFillMode: 'both' }}
                       >
                         <div className="via-theme-accent/5 pointer-events-none absolute inset-0 bg-linear-to-r from-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                        <div className="relative flex items-start gap-3 sm:gap-4">
-                          <div className="flex flex-col items-center">
+
+                        <div className="relative flex w-full flex-1 items-start gap-3 sm:items-center sm:gap-4">
+                          <div className="flex shrink-0 flex-col items-center">
                             <span className="text-theme-dim font-mono text-[9px] tracking-widest uppercase">
                               {String(idx + 1).padStart(3, '0')}
                             </span>
                             <Icon className="text-theme-accent mt-1 h-5 w-5" />
                           </div>
-                          <div className="min-w-0">
-                            <h3 className="text-theme-fg group-hover:text-theme-accent-hover text-sm font-bold transition-colors sm:text-base">
-                              {job.title}
-                            </h3>
-                            <div className="text-theme-muted mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[9px] tracking-widest uppercase sm:text-[10px]">
+
+                          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                            <div className="flex items-start justify-between gap-3">
+                              <h3 className="text-theme-fg group-hover:text-theme-accent-hover text-sm font-bold leading-tight wrap-break-word transition-colors sm:text-base">
+                                {job.title}
+                              </h3>
+
+                              <span className="border-theme-line bg-theme-bg text-theme-accent-hover group-hover:border-theme-accent group-hover:bg-theme-accent/10 flex shrink-0 items-center gap-1.5 rounded border px-2.5 py-1 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:hidden">
+                                {t('openings.apply')}
+                                <ChevronRight className="h-3 w-3" />
+                              </span>
+                            </div>
+
+                            <div className="text-theme-muted flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[9px] tracking-widest uppercase sm:text-[10px]">
                               <span className="flex items-center gap-1">
-                                <MapPin className="h-2.5 w-2.5" />
+                                <MapPin className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 {job.location}
                               </span>
                               <span className="text-theme-dim">·</span>
                               <span className="flex items-center gap-1">
-                                <Clock className="h-2.5 w-2.5" />
+                                <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 {typeLabel}
                               </span>
                               <span className="text-theme-dim">·</span>
                               <span className="text-theme-accent">{levelLabel}</span>
                               <span className="text-theme-dim">·</span>
                               <span className="flex items-center gap-1" title="Views">
-                                <Eye className="h-2.5 w-2.5" />
+                                <Eye className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 {job.views ?? 0}
                               </span>
                               <span className="text-theme-dim">·</span>
                               <span className="flex items-center gap-1" title="Applications">
-                                <FileText className="h-2.5 w-2.5" />
+                                <FileText className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                                 {job.applications ?? 0}
                               </span>
                             </div>
                           </div>
                         </div>
 
-                        <span className="border-theme-line bg-theme-bg text-theme-accent-hover group-hover:border-theme-accent group-hover:bg-theme-accent/10 relative flex cursor-pointer items-center gap-2 self-start rounded border px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:self-center sm:text-[10px]">
+                        <span className="border-theme-line bg-theme-bg text-theme-accent-hover group-hover:border-theme-accent group-hover:bg-theme-accent/10 relative hidden shrink-0 cursor-pointer items-center gap-2 rounded border px-3 py-1.5 font-mono text-[9px] font-bold tracking-widest uppercase transition-all sm:flex sm:text-[10px]">
                           {t('openings.apply')}
                           <ChevronRight className="h-3 w-3" />
                         </span>
