@@ -27,7 +27,9 @@ export const BlogGrid = ({ posts, locale }: IBlogGridProps) => {
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
-        (p) => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q),
+        (p) =>
+          (p.title ?? '').toLowerCase().includes(q) ||
+          (p.excerpt ?? '').toLowerCase().includes(q),
       );
     }
 

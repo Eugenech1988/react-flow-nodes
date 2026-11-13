@@ -1,10 +1,21 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useFeaturesScroll } from './useFeaturesScroll';
+import { useThrottledScroll } from '@/shared/hooks';
 
 vi.mock('../constants', () => ({ TOTAL_STEPS: 7, STARTUP_PROBES: 5 }));
 
+vi.mock('@/shared/hooks', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/shared/hooks')>();
+  return {
+    ...actual,
+    useThrottledScroll: vi.fn(),
+  };
+});
+
 let rafCallbacks: FrameRequestCallback[] = [];
+let scrollCallback: (() => void) | undefined;
+
 const flushRAF = () => {
   while (rafCallbacks.length > 0) {
     const cbs = [...rafCallbacks];
@@ -17,7 +28,11 @@ describe('useFeaturesScroll', () => {
   let originalMatchMedia: typeof window.matchMedia;
   let originalRAF: typeof window.requestAnimationFrame;
   let originalScrollTo: typeof window.scrollTo;
-  let mockMedia: any;
+  let mockMedia: {
+    matches: boolean;
+    addEventListener: ReturnType<typeof vi.fn>;
+    removeEventListener: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     originalMatchMedia = window.matchMedia;
@@ -26,6 +41,8 @@ describe('useFeaturesScroll', () => {
 
     window.scrollTo = vi.fn();
     rafCallbacks = [];
+    scrollCallback = undefined;
+
     window.requestAnimationFrame = vi.fn((cb) => {
       rafCallbacks.push(cb);
       return rafCallbacks.length;
@@ -45,6 +62,10 @@ describe('useFeaturesScroll', () => {
       value: 500,
     });
     Object.defineProperty(window, 'scrollY', { writable: true, configurable: true, value: 0 });
+
+    vi.mocked(useThrottledScroll).mockImplementation((cb) => {
+      scrollCallback = cb;
+    });
   });
 
   afterEach(() => {
@@ -75,21 +96,60 @@ describe('useFeaturesScroll', () => {
     expect(result.current.ready).toBe(true);
   });
 
+  it('computes index during startup check if ref is available', () => {
+    const { result } = renderHook(() => useFeaturesScroll());
+    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 0 } as HTMLElement;
+    Object.defineProperty(window, 'innerHeight', { value: 500, configurable: true });
+    Object.defineProperty(window, 'scrollY', { value: 250, configurable: true });
+
+    act(() => {
+      flushRAF();
+    });
+
+    expect(result.current.ready).toBe(true);
+    expect(result.current.index).toBe(3);
+  });
+
   it('computes index on scroll (scrollableHeight > 0)', () => {
     const { result } = renderHook(() => useFeaturesScroll());
     act(() => {
       flushRAF();
     });
 
-    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 0 } as any;
+    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 0 } as HTMLElement;
     Object.defineProperty(window, 'scrollY', { writable: true, value: 250 });
 
     act(() => {
-      window.dispatchEvent(new Event('scroll'));
-      flushRAF();
+      if (scrollCallback) scrollCallback();
     });
 
     expect(result.current.index).toBe(3);
+  });
+
+  it('does not update index on scroll when ref is null', () => {
+    const { result } = renderHook(() => useFeaturesScroll());
+    act(() => {
+      flushRAF();
+    });
+
+    act(() => {
+      if (scrollCallback) scrollCallback();
+    });
+
+    expect(result.current.index).toBe(0);
+  });
+
+  it('does not update index on scroll when not ready', () => {
+    const { result } = renderHook(() => useFeaturesScroll());
+
+    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 0 } as HTMLElement;
+    Object.defineProperty(window, 'scrollY', { writable: true, value: 250 });
+
+    act(() => {
+      if (scrollCallback) scrollCallback();
+    });
+
+    expect(result.current.index).toBe(0);
   });
 
   it('does not update index on scroll (scrollableHeight <= 0)', () => {
@@ -98,12 +158,11 @@ describe('useFeaturesScroll', () => {
       flushRAF();
     });
 
-    result.current.wrapperRef.current = { offsetHeight: 400, offsetTop: 0 } as any;
+    result.current.wrapperRef.current = { offsetHeight: 400, offsetTop: 0 } as HTMLElement;
     Object.defineProperty(window, 'scrollY', { writable: true, value: 250 });
 
     act(() => {
-      window.dispatchEvent(new Event('scroll'));
-      flushRAF();
+      if (scrollCallback) scrollCallback();
     });
 
     expect(result.current.index).toBe(0);
@@ -121,7 +180,7 @@ describe('useFeaturesScroll', () => {
     act(() => {
       flushRAF();
     });
-    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 100 } as any;
+    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 100 } as HTMLElement;
     act(() => result.current.goToStep(3));
     expect(window.scrollTo).toHaveBeenCalledWith({ top: 350, behavior: 'smooth' });
   });
@@ -140,7 +199,7 @@ describe('useFeaturesScroll', () => {
     act(() => {
       flushRAF();
     });
-    result.current.wrapperRef.current = { offsetHeight: 400, offsetTop: 100 } as any;
+    result.current.wrapperRef.current = { offsetHeight: 400, offsetTop: 100 } as HTMLElement;
     act(() => result.current.goToStep(3));
     expect(window.scrollTo).not.toHaveBeenCalled();
   });

@@ -1,7 +1,7 @@
 'use client';
 
 import { Activity, Gauge, RadioTower, Radio } from 'lucide-react';
-import { AppButton, Frame, Reveal, SignalBars } from '@/shared/ui';
+import { AppButton, BackgroundGrid, Frame, Reveal, SignalBars } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 
 export const CtaSection = () => {
@@ -43,7 +43,7 @@ export const CtaSection = () => {
         className="shadow-theme-frame"
       >
         <div className="relative overflow-hidden px-5 py-10 sm:px-12 sm:py-14">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,color-mix(in_oklab,var(--theme-accent)_8%,transparent)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
+          <BackgroundGrid variant="dots" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_80%_50%,color-mix(in_oklab,var(--theme-accent)_7%,transparent),transparent_55%)]" />
 
           <div className="relative z-10 grid items-center gap-10 md:grid-cols-[1.2fr_0.8fr] md:gap-14">

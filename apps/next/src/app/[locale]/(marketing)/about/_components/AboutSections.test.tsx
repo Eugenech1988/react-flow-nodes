@@ -41,6 +41,7 @@ vi.mock('@/shared/ui', () => ({
     </div>
   ),
   SignalBars: () => <div data-testid="signal-bars" />,
+  BackgroundGrid: () => <div data-testid="background-grid" />,
 }));
 
 import { MissionSection } from './MissionSection';

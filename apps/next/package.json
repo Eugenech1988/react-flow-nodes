@@ -12,7 +12,10 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:ui": "vitest --ui",
-    "test:cov": "vitest --coverage"
+    "test:cov": "vitest --coverage",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:headless": "cypress run --headless --browser chrome"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.3",
@@ -50,11 +53,11 @@
     "@vitejs/plugin-react": "^6.2.1",
     "@vitest/coverage-v8": "5.1.0",
     "babel-plugin-react-compiler": "1.0.0",
+    "cypress": "^16.3.0",
     "eslint": "^9",
     "jsdom": "^30.1.3",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^5.1.0"
   },
   "packageManager": "bun@1.4.4",

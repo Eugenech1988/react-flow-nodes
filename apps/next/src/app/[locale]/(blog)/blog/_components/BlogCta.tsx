@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { Mail, Radio } from 'lucide-react';
-import { AppButton, AppInput, Reveal, Frame, SignalBars } from '@/shared/ui';
+import { AppButton, AppInput, Reveal, Frame, SignalBars, BackgroundGrid } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 
 export const BlogCta = () => {
@@ -35,7 +35,7 @@ export const BlogCta = () => {
           }
         >
           <div className="relative px-6 py-12 text-center sm:px-12 sm:py-16">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,color-mix(in_oklab,var(--theme-accent)_6%,transparent)_1px,transparent_1.5px)] bg-size-[16px_16px]" />
+            <BackgroundGrid variant="dots" />
 
             <div className="relative">
               <div className="border-theme-accent/40 bg-theme-panel mb-6 inline-flex h-14 w-14 items-center justify-center rounded-sm border shadow-[inset_0_0_20px_color-mix(in_oklab,var(--theme-accent)_15%,transparent)]">
