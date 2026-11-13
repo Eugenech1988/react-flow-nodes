@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from '@pipeline/ui';
 import { useJobMutations } from '../hooks/';
-import { triggerPortalRevalidate } from '@/shared/api/revalidate';
 import type { IJob } from '../model/types';
 import { JobDeleteModal } from './JobDeleteModal'; // 👈 Импортируем модалку
 
@@ -29,7 +28,6 @@ export const JobTableRowActions = ({ job, onEdit }: JobsTableRowActionsProps) =>
 
   const handleAction = (action: () => void) => {
     action();
-    triggerPortalRevalidate();
   };
 
   const handleDeleteClick = (e: React.MouseEvent<HTMLDivElement>) => {

@@ -33,8 +33,14 @@ export const POST = async (req: Request) => {
   }
 
   try {
-    revalidateTag('jobs', 'max');
-    return NextResponse.json({ ok: true }, { headers: cors });
+    const body = (await req.json().catch(() => ({}))) as { tags?: string[] };
+    const tags = Array.isArray(body.tags) && body.tags.length > 0 ? body.tags : ['jobs'];
+
+    for (const tag of tags) {
+      revalidateTag(tag, 'max');
+    }
+
+    return NextResponse.json({ ok: true, tags }, { headers: cors });
   } catch {
     return NextResponse.json({ ok: false }, { status: 500, headers: cors });
   }

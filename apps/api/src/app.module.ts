@@ -12,6 +12,7 @@ import { DatabaseNodesModule } from '@/database-nodes/database-nodes.module';
 import { ExecutionsModule } from './executions/executions.module';
 import { JobsModule } from '@/jobs/jobs.module';
 import { ApplicationsModule } from './applications/applications.module';
+import { PortalRevalidateModule } from '@/portal-revalidate/portal-revalidate.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ApplicationsModule } from './applications/applications.module';
     ExecutionsModule,
     JobsModule,
     ApplicationsModule,
+    PortalRevalidateModule
   ],
 })
 export class AppModule {}

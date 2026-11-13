@@ -37,6 +37,7 @@ import { NodesToolbar } from '@/widgets/nodes-toolbar';
 
 export const Canvas = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const lastInitPipelineIdRef = useRef<string | null>(null);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance<
     TPipelineNode,
     TPipelineEdge
@@ -85,30 +86,42 @@ export const Canvas = () => {
 
   const { user } = useUser();
   const currentPipeline = user?.currentPipeline as
-    Pick<TPipeline, 'id' | 'graphData'> | null | undefined;
+    | Pick<TPipeline, 'id' | 'graphData'>
+    | null
+    | undefined;
   const currentPipelineId = currentPipeline?.id;
   const currentPipelineGraphData = currentPipeline?.graphData;
 
   useEffect(() => {
-    if (currentPipelineId) {
-      const graph = graphDataSchema.safeParse(currentPipelineGraphData);
-      const nodes = graph.success ? graph.data.nodes : [];
-      const edges = graph.success ? graph.data.edges : [];
-
-      initGraph(nodes, edges, currentPipelineId);
+    if (!currentPipelineId) {
+      lastInitPipelineIdRef.current = null;
+      return;
     }
 
+    if (lastInitPipelineIdRef.current === currentPipelineId) {
+      return;
+    }
+
+    const graph = graphDataSchema.safeParse(currentPipelineGraphData);
+    const parsedNodes = graph.success ? graph.data.nodes : [];
+    const parsedEdges = graph.success ? graph.data.edges : [];
+
+    initGraph(parsedNodes, parsedEdges, currentPipelineId);
+    lastInitPipelineIdRef.current = currentPipelineId;
+  }, [currentPipelineId, currentPipelineGraphData, initGraph]);
+
+  useEffect(() => {
     return () => {
       resetGraph();
+      lastInitPipelineIdRef.current = null;
     };
-  }, [currentPipelineId, currentPipelineGraphData, initGraph, resetGraph]);
+  }, [resetGraph]);
 
   useEffect(() => {
     const navState = location.state as { autoRun?: boolean } | null;
 
     if (navState?.autoRun && nodes.length > 0) {
       runWorkflow();
-
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.state, nodes.length, runWorkflow, navigate, location.pathname]);

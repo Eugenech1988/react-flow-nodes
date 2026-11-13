@@ -1,13 +1,14 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { JobDepartment, JobStatus } from '@prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
-import { JobStatus } from '@prisma/client';
+import { PortalRevalidateService } from '@/portal-revalidate/portal-revalidate.service';
 import type {
   TCreateJobInputData,
   TUpdateJobInputData,
   TUpsertJobTranslationInputData,
 } from '@pipeline/contracts';
 
-interface FindAllJobsOptions {
+interface IFindAllJobsOptions {
   locale?: string;
   department?: string;
   includeUnpublished?: boolean;
@@ -15,15 +16,18 @@ interface FindAllJobsOptions {
 
 @Injectable()
 export class JobsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly revalidate: PortalRevalidateService,
+  ) {}
 
-  async findAll(options: FindAllJobsOptions = {}) {
+  async findAll(options: IFindAllJobsOptions = {}) {
     const { department, includeUnpublished = false } = options;
 
     const jobs = await this.prisma.job.findMany({
       where: {
         ...(!includeUnpublished && { status: JobStatus.PUBLISHED }),
-        ...(department && { department: department as any }),
+        ...(department && { department: department as JobDepartment }),
       },
       include: {
         translations: true,
@@ -97,6 +101,7 @@ export class JobsService {
       include: { translations: true },
     });
 
+    this.revalidate.scheduleRevalidate(['jobs']);
     return job;
   }
 
@@ -117,7 +122,7 @@ export class JobsService {
 
     const { translations, ...rootData } = data;
 
-    return this.prisma.$transaction(async (tx) => {
+    const job = await this.prisma.$transaction(async (tx) => {
       await tx.job.update({
         where: { id },
         data: {
@@ -157,34 +162,46 @@ export class JobsService {
         include: { translations: true },
       });
     });
+
+    this.revalidate.scheduleRevalidate(['jobs']);
+    return job;
   }
 
   async publish(id: string) {
     await this.findOne(id);
-    return this.prisma.job.update({
+    const job = await this.prisma.job.update({
       where: { id },
       data: { status: JobStatus.PUBLISHED, publishedAt: new Date() },
       include: { translations: true },
     });
+
+    this.revalidate.scheduleRevalidate(['jobs']);
+    return job;
   }
 
   async archive(id: string) {
     await this.findOne(id);
-    return this.prisma.job.update({
+    const job = await this.prisma.job.update({
       where: { id },
       data: { status: JobStatus.ARCHIVED },
       include: { translations: true },
     });
+
+    this.revalidate.scheduleRevalidate(['jobs']);
+    return job;
   }
 
   async remove(id: string) {
     await this.findOne(id);
-    return this.prisma.job.delete({ where: { id } });
+    const job = await this.prisma.job.delete({ where: { id } });
+
+    this.revalidate.scheduleRevalidate(['jobs']);
+    return job;
   }
 
   async upsertTranslation(jobId: string, data: TUpsertJobTranslationInputData) {
     await this.findOne(jobId);
-    return this.prisma.jobTranslation.upsert({
+    const translation = await this.prisma.jobTranslation.upsert({
       where: { jobId_locale: { jobId, locale: data.locale } },
       create: { jobId, ...data },
       update: {
@@ -196,6 +213,9 @@ export class JobsService {
         metaDescription: data.metaDescription,
       },
     });
+
+    this.revalidate.scheduleRevalidate(['jobs']);
+    return translation;
   }
 
   async removeTranslation(jobId: string, locale: string) {
@@ -203,11 +223,17 @@ export class JobsService {
       where: { jobId_locale: { jobId, locale } },
     });
     if (!translation) {
-      throw new NotFoundException(`Translation "${locale}" for job "${jobId}" not found`);
+      throw new NotFoundException(
+        `Translation "${locale}" for job "${jobId}" not found`,
+      );
     }
-    return this.prisma.jobTranslation.delete({
+
+    const removed = await this.prisma.jobTranslation.delete({
       where: { jobId_locale: { jobId, locale } },
     });
+
+    this.revalidate.scheduleRevalidate(['jobs']);
+    return removed;
   }
 
   async incrementViews(id: string) {

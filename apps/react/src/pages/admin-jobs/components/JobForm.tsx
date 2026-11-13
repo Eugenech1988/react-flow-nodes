@@ -3,7 +3,6 @@ import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
-import { triggerPortalRevalidate } from '@/shared/api/revalidate';
 import { LocalAlert } from '@/shared/ui';
 import { useJobMutations } from '../hooks';
 import type { IJob } from '../model';
@@ -114,8 +113,6 @@ export function JobForm({ jobId, initialData, onSuccess, onCancel }: JobFormProp
 
       queryClient.invalidateQueries(trpc.jobs.adminList.queryFilter());
       queryClient.invalidateQueries(trpc.jobs.adminById.queryFilter());
-
-      await triggerPortalRevalidate();
 
       onSuccess();
     } catch (err) {
