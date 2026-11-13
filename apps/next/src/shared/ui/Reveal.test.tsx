@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 
@@ -20,10 +21,14 @@ describe('Reveal', () => {
     expect(screen.getByText('Hello')).toBeInTheDocument();
   });
 
-  it('applies opacity-0 before intersection', () => {
+  it('does not apply opacity-0 during SSR', () => {
+    const html = renderToString(<Reveal>Content</Reveal>);
+    expect(html).not.toContain('opacity-0');
+  });
+
+  it('applies opacity-0 after mount when not in view', () => {
     const { container } = render(<Reveal>Content</Reveal>);
     expect(container.firstChild).toHaveClass('opacity-0');
-    expect(container.firstChild).toHaveStyle({ animationDelay: '0ms' });
   });
 
   it('applies animation class after intersection', () => {
@@ -34,7 +39,7 @@ describe('Reveal', () => {
     expect(container.firstChild).not.toHaveClass('opacity-0');
   });
 
-  it('applies delay as animationDelay', () => {
+  it('applies delay as animationDelay when in view', () => {
     mockUseInView.mockReturnValue({ ref: { current: null }, inView: true });
     const { container } = render(<Reveal delay={200}>Content</Reveal>);
     expect(container.firstChild).toHaveStyle({ animationDelay: '200ms' });

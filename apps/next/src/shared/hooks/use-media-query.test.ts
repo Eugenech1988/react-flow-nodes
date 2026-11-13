@@ -3,7 +3,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useMediaQuery } from './use-media-query';
 
 describe('useMediaQuery', () => {
-  let mockMedia: any;
+  let mockMedia: {
+    matches: boolean;
+    addEventListener: ReturnType<typeof vi.fn>;
+    removeEventListener: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     mockMedia = {
@@ -24,10 +28,11 @@ describe('useMediaQuery', () => {
     const { result } = renderHook(() => useMediaQuery('(min-width: 1024px)'));
     expect(result.current).toBe(false);
 
-    const changeHandler = mockMedia.addEventListener.mock.calls[0][1];
+    const changeHandler = mockMedia.addEventListener.mock.calls[0][1] as () => void;
 
     act(() => {
-      changeHandler({ matches: true });
+      mockMedia.matches = true;
+      changeHandler();
     });
 
     expect(result.current).toBe(true);
