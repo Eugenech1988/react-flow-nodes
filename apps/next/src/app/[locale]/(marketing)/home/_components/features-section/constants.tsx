@@ -15,9 +15,13 @@ export const FEATURES = [
   { id: 'schema-control', icon: ShieldCheck },
   { id: 'collaborative-rooms', icon: Users },
   { id: 'one-click-deploy', icon: CloudLightning },
-];
+] as const;
 
-export type TSlide = { kind: 'feature'; id: string; icon: LucideIcon } | { kind: 'cta' };
+export type TFeatureId = (typeof FEATURES)[number]['id'];
+
+export type TSlide =
+  | { kind: 'feature'; id: TFeatureId; icon: LucideIcon }
+  | { kind: 'cta' };
 
 export const SLIDES: TSlide[] = [
   ...FEATURES.map((f): TSlide => ({ kind: 'feature', id: f.id, icon: f.icon })),

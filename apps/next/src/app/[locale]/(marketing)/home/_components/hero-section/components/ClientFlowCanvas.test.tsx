@@ -4,11 +4,17 @@ import '@testing-library/jest-dom/vitest';
 import React from 'react';
 
 vi.mock('@xyflow/react', () => ({
-  ReactFlow: ({ nodes, nodeTypes }: any) => {
+  ReactFlow: ({
+                nodes,
+                nodeTypes,
+              }: {
+    nodes: Array<{ id: string; data: unknown }>;
+    nodeTypes: Record<string, React.FC<{ data: unknown }>>;
+  }) => {
     const CustomNode = nodeTypes.custom;
     return (
       <div data-testid="react-flow">
-        {nodes.map((n: any) => (
+        {nodes.map((n) => (
           <CustomNode key={n.id} data={n.data} />
         ))}
       </div>
@@ -17,11 +23,11 @@ vi.mock('@xyflow/react', () => ({
   Background: () => null,
   Handle: () => <div data-testid="handle" />,
   Position: { Left: 'left', Right: 'right' },
-  useNodesState: (initial: any) => {
+  useNodesState: (initial: unknown[]) => {
     const [nodes, setNodes] = React.useState(initial);
     return [nodes, setNodes, vi.fn()];
   },
-  useEdgesState: (initial: any) => {
+  useEdgesState: (initial: unknown[]) => {
     const [edges, setEdges] = React.useState(initial);
     return [edges, setEdges, vi.fn()];
   },
@@ -31,11 +37,16 @@ vi.mock('@xyflow/react/dist/style.css', () => ({}));
 
 import { ClientFlowCanvas } from './ClientFlowCanvas';
 
+interface IMockMedia {
+  matches: boolean;
+  addEventListener: ReturnType<typeof vi.fn>;
+  removeEventListener: ReturnType<typeof vi.fn>;
+}
+
 describe('ClientFlowCanvas', () => {
-  let mockMedia: any;
+  let mockMedia: IMockMedia;
 
   beforeEach(() => {
-    vi.useFakeTimers();
     mockMedia = {
       matches: true,
       addEventListener: vi.fn(),
@@ -45,20 +56,11 @@ describe('ClientFlowCanvas', () => {
   });
 
   afterEach(() => {
-    vi.useRealTimers();
     vi.clearAllMocks();
   });
 
-  it('shows loading state initially', () => {
+  it('renders nodes immediately', () => {
     render(<ClientFlowCanvas />);
-    expect(screen.getByText('INITIALIZING_CANVAS_NODES...')).toBeInTheDocument();
-  });
-
-  it('renders nodes after timeout', () => {
-    render(<ClientFlowCanvas />);
-    act(() => {
-      vi.advanceTimersByTime(600);
-    });
     expect(screen.getByText('CORE.INGEST')).toBeInTheDocument();
     expect(screen.getByText('NEURAL.ENGINE')).toBeInTheDocument();
     expect(screen.getByText('SHIELD.SECURE')).toBeInTheDocument();
@@ -73,19 +75,14 @@ describe('ClientFlowCanvas', () => {
 
   it('handles media query change event', () => {
     render(<ClientFlowCanvas />);
-    const onChange = mockMedia.addEventListener.mock.calls[0][1];
+    const onChange = mockMedia.addEventListener.mock.calls[0][1] as (e: { matches: boolean }) => void;
 
     act(() => {
+      mockMedia.matches = false;
       onChange({ matches: false });
     });
 
     const container = screen.getByTestId('react-flow').parentElement;
     expect(container).toHaveClass('pointer-events-none');
-  });
-
-  it('clears timer on unmount', () => {
-    const { unmount } = render(<ClientFlowCanvas />);
-    unmount();
-    expect(vi.getTimerCount()).toBe(0);
   });
 });

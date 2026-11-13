@@ -1,10 +1,8 @@
 'use client';
 
 import { Activity, Gauge, RadioTower, Radio } from 'lucide-react';
-import { AppButton, Frame, Reveal } from '@/shared/ui';
+import { AppButton, Frame, Reveal, SignalBars } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-
-const SIGNAL_BARS = [40, 60, 80, 100, 70];
 
 export const CtaSection = () => {
   const { t, i18n } = useT('about');
@@ -101,13 +99,7 @@ export const CtaSection = () => {
                 </div>
 
                 <div className="flex h-5 items-end gap-1">
-                  {SIGNAL_BARS.map((height, i) => (
-                    <span
-                      key={i}
-                      className="bg-theme-accent/70 w-1.5 animate-pulse rounded-sm motion-reduce:animate-none"
-                      style={{ height: `${height}%`, animationDelay: `${i * 150}ms` }}
-                    />
-                  ))}
+                  <SignalBars className="justify-center mb-4" />
                 </div>
               </div>
 

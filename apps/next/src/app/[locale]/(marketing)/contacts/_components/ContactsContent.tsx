@@ -5,7 +5,7 @@ import { Frame, TechCard, Reveal, Rivets } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
 import { InquiryForm } from '@/entities/inquiry/InquiryForm';
 import { SocialLinks } from '@/shared/ui';
-import { CONTACT_CHANNELS, RADAR_BLIPS } from '../constants';
+import { CONTACT_CHANNELS, RADAR_BLIPS } from './constants';
 
 export const ContactsContent = () => {
   const { t } = useT('contacts');

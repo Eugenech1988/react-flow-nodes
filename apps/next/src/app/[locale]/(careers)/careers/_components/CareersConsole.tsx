@@ -73,6 +73,8 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
               <div className="w-full md:hidden">
                 <button
                   type="button"
+                  aria-expanded={isDeptMenuOpen}
+                  aria-controls="careers-mobile-filters"
                   onClick={() => setIsDeptMenuOpen(!isDeptMenuOpen)}
                   className="border-theme-line bg-theme-panel text-theme-accent flex w-full items-center justify-between border-b px-4 py-3 font-mono text-[10px] font-bold tracking-widest uppercase"
                 >
@@ -83,6 +85,7 @@ export const CareersConsole = ({ jobs, locale }: ICareersConsoleProps) => {
                 </button>
 
                 <div
+                  id="careers-mobile-filters"
                   className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
                     isDeptMenuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
                   }`}

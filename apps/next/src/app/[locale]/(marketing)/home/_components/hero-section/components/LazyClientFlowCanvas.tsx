@@ -8,7 +8,7 @@ const ClientFlowCanvas = dynamic(
   { ssr: false },
 );
 
-export function LazyHeroCanvas() {
+export const LazyHeroCanvas = () => {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {

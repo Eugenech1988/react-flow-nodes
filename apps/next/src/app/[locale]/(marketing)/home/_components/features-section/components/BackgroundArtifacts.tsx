@@ -1,7 +1,7 @@
 import { GLITCH_BARS_H, GLITCH_BARS_V, CROSSHAIRS, SIGNAL_DOTS } from '../constants';
 
 export const BackgroundArtifacts = () => (
-  <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+  <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
     <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_2px,color-mix(in_oklab,var(--theme-accent)_2.5%,transparent)_2px,color-mix(in_oklab,var(--theme-accent)_2.5%,transparent)_3px)]" />
 
     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,color-mix(in_oklab,var(--theme-bg)_55%,transparent)_100%)]" />

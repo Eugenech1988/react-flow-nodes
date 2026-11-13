@@ -1,6 +1,6 @@
 export const CareersBackground = () => {
   return (
-    <div className="pointer-events-none fixed inset-0 z-0">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0">
       <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent_0,transparent_32px,color-mix(in_oklab,var(--theme-accent)_3%,transparent)_32px,color-mix(in_oklab,var(--theme-accent)_3%,transparent)_33px)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,color-mix(in_oklab,var(--theme-bg)_55%,transparent)_100%)]" />
       <div className="bg-theme-accent/5 absolute top-0 left-1/2 h-200 w-250 -translate-x-1/2 rounded-full blur-[150px]" />

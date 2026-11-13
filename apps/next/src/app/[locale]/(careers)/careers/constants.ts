@@ -29,7 +29,7 @@ export const CAREERS_STATS = [
   { id: '2', icon: Globe },
   { id: '3', icon: Layers },
   { id: '4', icon: Users },
-];
+] as const;
 
 export const DEPARTMENTS = [
   { id: 'all' },
@@ -37,7 +37,7 @@ export const DEPARTMENTS = [
   { id: 'design' },
   { id: 'research' },
   { id: 'operations' },
-];
+] as const;
 
 export type TDepartment = (typeof DEPARTMENTS)[number]['id'];
 
@@ -87,7 +87,7 @@ export const PERKS = [
   { id: '4', icon: Clock },
   { id: '5', icon: Coffee },
   { id: '6', icon: Cpu },
-];
+] as const;
 
 export const PROCESS_STEPS = [
   { id: 'apply', icon: Feather },
@@ -95,7 +95,7 @@ export const PROCESS_STEPS = [
   { id: 'interview', icon: Users },
   { id: 'craft', icon: FlaskConical },
   { id: 'offer', icon: Rocket },
-];
+] as const;
 
 export const MAX_VACANCIES = 50;
 

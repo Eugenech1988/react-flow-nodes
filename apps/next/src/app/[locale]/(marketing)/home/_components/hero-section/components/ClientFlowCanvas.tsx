@@ -125,36 +125,21 @@ const nodeTypes = {
 } as NodeTypes;
 
 export const ClientFlowCanvas = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<TCustomNodeType>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [nodes, setNodes, onNodesChange] = useNodesState<TCustomNodeType>(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(initialEdges);
+  const [isMounted, setIsMounted] = useState(false);
   const isInteractive = useMediaQuery('(hover: hover) and (pointer: fine)');
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setNodes(initialNodes);
-      setEdges(initialEdges);
-      setIsLoading(false);
-    }, 600);
-
-    return () => clearTimeout(timer);
-  }, [setNodes, setEdges]);
+    setIsMounted(true);
+  }, []);
 
   return (
     <div className="relative flex h-full w-full items-center justify-center">
-      {isLoading && (
-        <div className="bg-theme-bg/80 text-theme-accent/40 absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 backdrop-blur-xs">
-          <Cpu className="text-theme-accent h-8 w-8 animate-pulse motion-reduce:animate-none sm:h-16 sm:w-16" />
-          <span className="font-mono text-[8px] tracking-widest uppercase sm:text-xs">
-            INITIALIZING_CANVAS_NODES...
-          </span>
-        </div>
-      )}
-
       <div
-        className={`h-full w-full transition-all duration-600 ease-out motion-reduce:transition-none ${isInteractive ? '' : 'pointer-events-none'} ${
-          isLoading ? 'pointer-events-none scale-[0.98] opacity-0' : 'scale-100 opacity-100'
-        }`}
+        className={`h-full w-full transition-all duration-700 ease-out motion-reduce:transition-none ${
+          isInteractive ? '' : 'pointer-events-none'
+        } ${isMounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
       >
         <ReactFlow
           nodes={nodes}

@@ -6,4 +6,4 @@ export const HOW_IT_WORKS_STEPS = [
   { id: 'deploy', icon: Play },
   { id: 'monitor', icon: Activity },
   { id: 'scale', icon: Flame },
-];
+] as const;

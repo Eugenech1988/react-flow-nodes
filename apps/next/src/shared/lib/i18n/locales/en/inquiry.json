@@ -24,6 +24,8 @@
     "email": "Comm-Link (Email)",
     "company": "Organization",
     "message": "Mission Parameters",
+    "position": "Position",
+    "placeholderPosition": "Developer",
     "placeholderName": "John Doe",
     "placeholderEmail": "john@company.com",
     "placeholderCompany": "Acme Corp",

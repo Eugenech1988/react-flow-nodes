@@ -119,6 +119,8 @@ export const BlogGrid = ({ posts, locale }: IBlogGridProps) => {
           <button
             type="button"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
+            aria-expanded={isFilterOpen}
+            aria-controls="blog-mobile-filters"
             className="border-theme-line bg-theme-panel text-theme-accent flex w-full items-center justify-between rounded-sm border px-3 py-2 font-mono text-[10px] font-bold tracking-widest uppercase"
           >
             <span>
@@ -131,6 +133,7 @@ export const BlogGrid = ({ posts, locale }: IBlogGridProps) => {
           </button>
 
           <div
+            id="blog-mobile-filters"
             className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
               isFilterOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
             }`}

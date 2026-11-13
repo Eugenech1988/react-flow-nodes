@@ -24,9 +24,11 @@
     "email": "Канал зв'язку (Email)",
     "company": "Організація",
     "message": "Параметри місії",
+    "position": "Посада",
     "placeholderName": "Джон Доу",
     "placeholderEmail": "john@company.com",
     "placeholderCompany": "Acme Corp",
+    "placeholderPosition": "Розробник",
     "errors": {
       "name": "Ім'я має містити щонайменше 2 символи.",
       "email": "Будь ласка, введіть дійсну адресу електронної пошти.",

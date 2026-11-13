@@ -17,6 +17,7 @@ vi.mock('@/shared/ui', () => ({
   Reveal: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   AppButton: ({ children }: { children: ReactNode }) => <button>{children}</button>,
   AppInput: ({ placeholder }: { placeholder?: string }) => <input placeholder={placeholder} />,
+  SignalBars: () => <div data-testid="signal-bars" />,
 }));
 
 import { BlogCta } from './BlogCta';

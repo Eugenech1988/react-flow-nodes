@@ -14,11 +14,11 @@ const LANGS = [
   { code: 'uk', label: 'UA' },
 ] as const;
 
-export function LanguageSwitcher({
+export const LanguageSwitcher = ({
   locale,
   isMobile = false,
   theme = 'default',
-}: LanguageSwitcherProps) {
+}: LanguageSwitcherProps) => {
   const { i18n } = useT('common');
   const router = useRouter();
 

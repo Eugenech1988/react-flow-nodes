@@ -11,3 +11,5 @@ export * from './TechLabel';
 export * from './Frame';
 export * from './Badge';
 export * from './SocialLinks';
+export * from './SignalBars';
+export * from './BackgroundGrid';

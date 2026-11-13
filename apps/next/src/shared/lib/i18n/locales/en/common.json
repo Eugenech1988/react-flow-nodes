@@ -5,6 +5,7 @@
   },
   "header": {
     "nav": {
+      "label": "Main navigation",
       "about": "About",
       "blog": "Blog",
       "careers": "Careers",

@@ -4,7 +4,7 @@ export const VALUES = [
   { id: '1', Icon: Cog, number: '01' },
   { id: '2', Icon: Zap, number: '02' },
   { id: '3', Icon: ShieldCheck, number: '03' },
-];
+] as const;
 
 export const CREW = [
   { id: '1', avatar: 'https://i.pravatar.cc/150?u=eugene' },
@@ -13,7 +13,7 @@ export const CREW = [
   { id: '4', avatar: 'https://i.pravatar.cc/150?u=elena' },
   { id: '5', avatar: 'https://i.pravatar.cc/150?u=viktor' },
   { id: '6', avatar: 'https://i.pravatar.cc/150?u=sarah' },
-];
+] as const;
 
 export const RIVET_POSITIONS = [
   'top-3 left-3 sm:top-4 sm:left-4',

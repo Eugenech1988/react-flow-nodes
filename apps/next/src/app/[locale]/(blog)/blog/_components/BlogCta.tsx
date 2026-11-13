@@ -1,13 +1,18 @@
 'use client';
 
+import { useState, type FormEvent } from 'react';
 import { Mail, Radio } from 'lucide-react';
-import { AppButton, AppInput, Reveal, Frame } from '@/shared/ui';
+import { AppButton, AppInput, Reveal, Frame, SignalBars } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-
-const SIGNAL_BARS = [40, 60, 80, 100, 70];
 
 export const BlogCta = () => {
   const { t } = useT('blog');
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setEmail('');
+  };
 
   return (
     <section className="relative z-10 mx-auto max-w-4xl px-4 pb-6">
@@ -38,13 +43,7 @@ export const BlogCta = () => {
               </div>
 
               <div className="mb-4 flex h-6 items-end justify-center gap-1">
-                {SIGNAL_BARS.map((height, i) => (
-                  <span
-                    key={i}
-                    className="bg-theme-accent/70 w-1.5 animate-pulse rounded-sm motion-reduce:animate-none"
-                    style={{ height: `${height}%`, animationDelay: `${i * 150}ms` }}
-                  />
-                ))}
+                <SignalBars className="justify-center mb-4" />
               </div>
 
               <h2 className="text-theme-fg text-2xl font-bold sm:text-3xl">{t('cta.title')}</h2>
@@ -52,13 +51,16 @@ export const BlogCta = () => {
                 {t('cta.description')}
               </p>
 
-              <form className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row">
+              <form onSubmit={handleSubmit} className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row">
                 <AppInput
                   type="email"
                   required
                   theme="blog"
                   placeholder={t('cta.placeholder')}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="flex-1"
+                  aria-label={t('cta.placeholder')}
                 />
                 <AppButton variant="blog" size="md" type="submit">
                   {t('cta.submit')}

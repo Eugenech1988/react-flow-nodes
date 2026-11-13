@@ -45,7 +45,7 @@ vi.mock('@/shared/ui', () => ({
 import { ContactsContent } from './ContactsContent';
 import { ContactsHero } from './ContactsHero';
 import { ContactsBackground } from './ContactsBackground';
-import { CONTACT_CHANNELS, RADAR_BLIPS } from '../constants';
+import { CONTACT_CHANNELS, RADAR_BLIPS } from './constants';
 
 describe('Contacts Sections', () => {
   describe('ContactsHero', () => {

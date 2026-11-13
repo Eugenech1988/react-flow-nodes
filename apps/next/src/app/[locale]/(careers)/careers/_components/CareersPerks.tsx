@@ -37,7 +37,7 @@ export const CareersPerks = () => {
                   description={t(`perks.list.${perk.id}.description`)}
                   number={String(i + 1).padStart(2, '0')}
                   Icon={Icon}
-                  badge={t('perks.heading.badge')}
+                  badge={t('perks.badge')}
                 />
               </div>
             </Reveal>
