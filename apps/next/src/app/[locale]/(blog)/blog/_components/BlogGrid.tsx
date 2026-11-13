@@ -1,40 +1,38 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ChangeEvent } from 'react';
 import { Archive, Search, X, ChevronDown } from 'lucide-react';
 import { useT } from '@/shared/lib/i18n/client';
 import { cn } from '@/shared/lib';
-import { BLOG_CATEGORIES, BLOG_PAGE_SIZE, BLOG_POSTS } from './constants';
-import { BlogCard } from './BlogCard';
-import { BlogPagination } from './BlogPagination';
+import { BLOG_CATEGORIES, BLOG_PAGE_SIZE, IBlogPostPreview, BlogCard, BlogPagination } from '.';
 
 interface IBlogGridProps {
+  posts: IBlogPostPreview[];
   locale: string;
 }
 
-export const BlogGrid = ({ locale }: IBlogGridProps) => {
+export const BlogGrid = ({ posts, locale }: IBlogGridProps) => {
   const { t } = useT('blog');
   const [active, setActive] = useState('all');
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const nonFeatured = useMemo(() => BLOG_POSTS.filter((p) => !p.featured), []);
+  const nonFeatured = useMemo(() => posts.filter((p) => !p.featured), [posts]);
 
   const filtered = useMemo(() => {
-    let result = active === 'all' ? nonFeatured : nonFeatured.filter((p) => p.category === active);
+    let result =
+      active === 'all' ? nonFeatured : nonFeatured.filter((p) => p.category === active);
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
-        (p) =>
-          t(`posts.${p.slug}.title`).toLowerCase().includes(q) ||
-          t(`posts.${p.slug}.excerpt`).toLowerCase().includes(q),
+        (p) => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q),
       );
     }
 
     return result;
-  }, [active, nonFeatured, searchQuery, t]);
+  }, [active, nonFeatured, searchQuery]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / BLOG_PAGE_SIZE));
   const visible = filtered.slice((page - 1) * BLOG_PAGE_SIZE, page * BLOG_PAGE_SIZE);
@@ -45,7 +43,7 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
     setIsFilterOpen(false);
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     setPage(1);
   };
@@ -54,7 +52,7 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
     setPage(Math.min(Math.max(1, next), totalPages));
   };
 
-  const activeCategory = BLOG_CATEGORIES.find((c) => c.id === active) || BLOG_CATEGORIES[0];
+  const activeCategory = BLOG_CATEGORIES.find((c) => c.id === active) ?? BLOG_CATEGORIES[0];
 
   return (
     <section className="relative z-10 mx-auto max-w-6xl overflow-x-hidden px-4 py-12 sm:px-6 sm:py-16">
@@ -169,6 +167,7 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
           <span>{t('empty')}</span>
           {searchQuery && (
             <button
+              type="button"
               onClick={() => setSearchQuery('')}
               className="text-theme-accent hover:text-theme-accent-hover underline decoration-current/30 underline-offset-4"
             >
@@ -183,15 +182,7 @@ export const BlogGrid = ({ locale }: IBlogGridProps) => {
             className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6"
           >
             {visible.map((post) => (
-              <BlogCard
-                key={post.id}
-                id={post.id}
-                slug={post.slug}
-                category={post.category}
-                date={post.date}
-                readTime={post.readTime}
-                locale={locale}
-              />
+              <BlogCard key={post.id ?? post.slug} post={post} locale={locale} />
             ))}
           </div>
 

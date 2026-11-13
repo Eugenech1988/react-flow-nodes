@@ -1,4 +1,23 @@
-const STARS = [
+type TStarSize = 'xs' | 'sm' | 'md' | 'lg';
+
+interface IStar {
+  top: string;
+  left: string;
+  size: TStarSize;
+  twinkle: string;
+}
+
+interface IOrbit {
+  top: string;
+  left: string;
+  w: string;
+  h: string;
+  tilt: number;
+  duration: string;
+  satellite: string;
+}
+
+const STARS: IStar[] = [
   { top: '8%', left: '12%', size: 'xs', twinkle: '0s' },
   { top: '12%', left: '34%', size: 'sm', twinkle: '1.2s' },
   { top: '6%', left: '58%', size: 'xs', twinkle: '2.4s' },
@@ -21,7 +40,7 @@ const STARS = [
   { top: '70%', left: '84%', size: 'md', twinkle: '0.4s' },
 ];
 
-const ORBITS = [
+const ORBITS: IOrbit[] = [
   {
     top: '50%',
     left: '50%',
@@ -42,7 +61,7 @@ const ORBITS = [
   },
 ];
 
-const SIZE_MAP = {
+const SIZE_MAP: Record<TStarSize, { dot: string; ring: string }> = {
   xs: { dot: 'h-0.5 w-0.5', ring: '-inset-1.5' },
   sm: { dot: 'h-1 w-1', ring: '-inset-2' },
   md: { dot: 'h-1.5 w-1.5', ring: '-inset-3' },
@@ -59,7 +78,7 @@ export const BlogBackground = () => (
     <div className="bg-theme-accent/5 absolute right-[-10%] bottom-[-10%] h-96 w-96 rounded-full blur-[120px] sm:h-150 sm:w-150" />
 
     {STARS.map((star, i) => {
-      const s = SIZE_MAP[star.size as keyof typeof SIZE_MAP];
+      const s = SIZE_MAP[star.size];
       return (
         <span
           key={`star-${i}`}

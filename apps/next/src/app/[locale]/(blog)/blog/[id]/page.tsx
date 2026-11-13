@@ -2,43 +2,59 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { TPageWithIdProps } from '@/shared/lib';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
-import { getT } from '@/shared/lib/i18n/server';
 import { JsonLd } from '@/shared/lib/seo/JsonLd';
-import { BLOG_POSTS } from '../_components/constants';
-import { BlogPostView } from './_components';
+import { sanityClient, POST_BY_SLUG_QUERY, ALL_SLUGS_QUERY } from '@/shared/lib/sanity';
+import { BlogPostView, IBlogPostDetail } from './_components';
+
+export const generateStaticParams = async () => {
+  const locales = ['en', 'ua'];
+  const result: { locale: string; id: string }[] = [];
+
+  for (const locale of locales) {
+    const slugs = await sanityClient.fetch<{ slug: string }[]>(
+      ALL_SLUGS_QUERY,
+      { locale },
+      { next: { revalidate: 3600 } }
+    );
+    for (const s of slugs) result.push({ locale, id: s.slug });
+  }
+
+  return result;
+};
 
 export const generateMetadata = async ({ params }: TPageWithIdProps): Promise<Metadata> => {
   const { locale, id } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === id);
+  const post = await sanityClient.fetch<IBlogPostDetail | null>(
+    POST_BY_SLUG_QUERY,
+    { locale, slug: id },
+    { next: { revalidate: 60 } }
+  );
 
   if (!post) return {};
 
-  const { t } = await getT('blog', { lng: locale });
-
   return getPageMetadata(locale, 'blog', `/blog/${id}`, {
-    title: t(`posts.${post.slug}.title`),
-    description: t(`posts.${post.slug}.excerpt`),
+    title: post.title,
+    description: post.excerpt,
   });
 };
 
 const BlogPostContent = async ({ params }: TPageWithIdProps) => {
   const { locale, id } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === id);
+  const post = await sanityClient.fetch<IBlogPostDetail | null>(
+    POST_BY_SLUG_QUERY,
+    { locale, slug: id },
+    { next: { revalidate: 60 } }
+  );
 
   if (!post) notFound();
-
-  const { t } = await getT('blog', { lng: locale });
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: t(`posts.${post.slug}.title`),
-    description: t(`posts.${post.slug}.excerpt`),
-    datePublished: post.date.replace(/\./g, '-'),
-    author: {
-      '@type': 'Person',
-      name: post.author,
-    },
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date ? post.date.replace(/\./g, '-') : undefined,
+    author: { '@type': 'Person', name: post.author },
     publisher: {
       '@type': 'Organization',
       name: 'Pipeline Studio',

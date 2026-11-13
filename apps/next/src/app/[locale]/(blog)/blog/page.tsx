@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import type { TPageProps } from '@/shared/lib';
 import { getPageMetadata } from '@/shared/lib/seo/metadata';
 import { getT } from '@/shared/lib/i18n/server';
-import { BlogHero, BlogFeatured, BlogGrid, BlogCta, BLOG_POSTS } from './_components';
 import { JsonLd } from '@/shared/lib/seo/JsonLd';
+import { sanityClient, POSTS_QUERY } from '@/shared/lib/sanity';
+import { BlogHero, BlogFeatured, BlogGrid, BlogCta, IBlogPostPreview } from './_components';
 
 export const generateMetadata = async ({ params }: TPageProps): Promise<Metadata> => {
   const { locale } = await params;
@@ -13,7 +14,14 @@ export const generateMetadata = async ({ params }: TPageProps): Promise<Metadata
 const BlogPage = async ({ params }: TPageProps) => {
   const { locale } = await params;
   const { t } = await getT('blog', { lng: locale });
-  const featured = BLOG_POSTS.find((p) => p.featured) ?? BLOG_POSTS[0];
+  
+  const posts = await sanityClient.fetch<IBlogPostPreview[]>(
+    POSTS_QUERY,
+    { locale },
+    { next: { revalidate: 60 } }
+  );
+  
+  const featured = posts.find((p) => p.featured) ?? posts[0];
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -47,21 +55,13 @@ const BlogPage = async ({ params }: TPageProps) => {
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumbs} />
       <div className="relative z-10">
-        <BlogHero t={t} total={BLOG_POSTS.length} lastUpdate={featured?.date ?? ''} />
+        <BlogHero t={t} total={posts.length} lastUpdate={featured?.date ?? ''} />
         {featured && (
           <div className="relative z-10 mx-auto mt-8 max-w-6xl px-4 sm:mt-12 sm:px-6">
-            <BlogFeatured
-              t={t}
-              locale={locale}
-              slug={featured.slug}
-              category={featured.category}
-              date={featured.date}
-              readTime={featured.readTime}
-              author={featured.author}
-            />
+            <BlogFeatured t={t} post={featured} locale={locale} />
           </div>
         )}
-        <BlogGrid locale={locale} />
+        <BlogGrid posts={posts} locale={locale} />
         <BlogCta />
       </div>
     </>

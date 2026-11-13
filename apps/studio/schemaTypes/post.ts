@@ -22,8 +22,9 @@ export default defineType({
           { title: 'Українська', value: 'ua' },
         ],
       },
+      initialValue: 'en',
       validation: (Rule) => Rule.required(),
-      readOnly: true,
+      // readOnly: true,  <-- УДАЛЕНО
     }),
     defineField({
       name: 'title',
@@ -51,6 +52,7 @@ export default defineType({
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime',
+      initialValue: () => new Date().toISOString(),
     }),
     defineField({
       name: 'excerpt',
@@ -58,6 +60,38 @@ export default defineType({
       type: 'text',
       rows: 3,
       description: 'Used for SEO and blog previews.',
+    }),
+    defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Engineering', value: 'engineering' },
+          { title: 'Design', value: 'design' },
+          { title: 'Research', value: 'research' },
+          { title: 'Product', value: 'product' },
+        ],
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'author',
+      title: 'Author',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'readTime',
+      title: 'Read time (min)',
+      type: 'number',
+      initialValue: 5,
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured post',
+      type: 'boolean',
+      initialValue: false,
     }),
     defineField({
       name: 'body',
@@ -96,11 +130,6 @@ export default defineType({
                     name: 'href',
                     type: 'url',
                     title: 'URL',
-                    validation: (Rule) =>
-                      Rule.uri({
-                        allowRelative: true,
-                        scheme: ['http', 'https', 'mailto', 'tel'],
-                      }),
                   },
                   {
                     name: 'blank',

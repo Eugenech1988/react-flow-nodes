@@ -1,21 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { Activity, ArrowLeft } from 'lucide-react';
+import { Activity, ChevronLeft } from 'lucide-react';
 import { Frame, Reveal } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-import type { IBlogPostData } from '../../_components/constants';
-import { BlogPostHeader } from './BlogPostHeader';
-import { BlogPostBody } from './BlogPostBody';
-import { BlogPostSidebar } from './BlogPostSidebar';
+import { BlogPostHeader, BlogPostBody, BlogPostSidebar, IBlogPostDetail } from '.';
 
 interface IBlogPostViewProps {
-  post: IBlogPostData;
+  post: IBlogPostDetail;
   locale: string;
 }
 
 export const BlogPostView = ({ post, locale }: IBlogPostViewProps) => {
   const { t } = useT('blog');
+  const entryId = post.id ? post.id.slice(0, 6).toUpperCase() : '------';
 
   return (
     <div className="relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 sm:pt-26 sm:pb-16">
@@ -24,7 +22,7 @@ export const BlogPostView = ({ post, locale }: IBlogPostViewProps) => {
           href={`/${locale}/blog`}
           className="text-theme-muted hover:text-theme-accent-hover mb-8 inline-flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ChevronLeft className="h-6 w-6" />
           {t('details.returnToArchive', { defaultValue: 'Return to Archive' })}
         </Link>
       </Reveal>
@@ -34,7 +32,7 @@ export const BlogPostView = ({ post, locale }: IBlogPostViewProps) => {
           <Frame
             theme="blog"
             headerIcon={Activity}
-            headerTitle={`SYS.ARCHIVE // ENTRY.${post.id}`}
+            headerTitle={`SYS.ARCHIVE // ENTRY.${entryId}`}
             footer={
               <div className="text-theme-dim flex w-full items-center justify-between font-mono text-[10px] tracking-widest uppercase">
                 <span className="flex items-center gap-2">
@@ -48,7 +46,7 @@ export const BlogPostView = ({ post, locale }: IBlogPostViewProps) => {
             }
           >
             <div className="relative overflow-hidden p-5 sm:p-10">
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(color-mix(in_oklab,var(--theme-accent)_3%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--theme-accent)_3%,transparent)_1px,transparent_1px)] bg-size-[30px_30px]" />
+              <div className="pointer-events-none absolute inset-0 theme-grid bg-size-[30px_30px]" />
 
               <div className="relative z-10">
                 <BlogPostHeader post={post} />

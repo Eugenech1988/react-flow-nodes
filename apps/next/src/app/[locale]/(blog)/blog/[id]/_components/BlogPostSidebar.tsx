@@ -1,18 +1,26 @@
 'use client';
 
 import Link from 'next/link';
-import { ShieldAlert, Radio, Share2 } from 'lucide-react';
+import { ShieldAlert, Radio, Share2, ChevronLeft } from 'lucide-react';
 import { Frame, Reveal, AppButton } from '@/shared/ui';
 import { useT } from '@/shared/lib/i18n/client';
-import type { IBlogPostData } from '../../_components/constants';
+import { IBlogPostDetail } from '.';
 
 interface IBlogPostSidebarProps {
-  post: IBlogPostData;
+  post: IBlogPostDetail;
   locale: string;
 }
 
 export const BlogPostSidebar = ({ post, locale }: IBlogPostSidebarProps) => {
   const { t } = useT('blog');
+  const readTime = post.readTime ? String(post.readTime).padStart(2, '0') : '00';
+
+  const handleShare = (): void => {
+    if (typeof navigator === 'undefined' || typeof navigator.share !== 'function') return;
+    void navigator
+      .share({ title: post.title, url: window.location.href })
+      .catch(() => undefined);
+  };
 
   return (
     <div className="hidden lg:sticky lg:top-24 lg:block">
@@ -53,7 +61,7 @@ export const BlogPostSidebar = ({ post, locale }: IBlogPostSidebarProps) => {
               </div>
               <div className="text-theme-muted flex items-center gap-3 font-mono text-xs">
                 <span className="text-theme-dim w-12">TIME:</span>
-                <span>T-{String(post.readTime).padStart(2, '0')}</span>
+                <span>T-{readTime}</span>
               </div>
               <div className="text-theme-muted flex items-center gap-3 font-mono text-xs">
                 <span className="text-theme-dim w-12">TYPE:</span>
@@ -65,25 +73,19 @@ export const BlogPostSidebar = ({ post, locale }: IBlogPostSidebarProps) => {
               variant="blog-outline"
               size="md"
               icon={Share2}
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({
-                    title: t(`posts.${post.slug}.title`),
-                    url: window.location.href,
-                  });
-                }
-              }}
+              onClick={handleShare}
               className="w-full"
             >
               {t('details.share', { defaultValue: 'Share Entry' })}
             </AppButton>
 
-            <div className="border-theme-line text-theme-dim mt-6 border-t pt-4 text-center font-mono text-[10px] tracking-widest">
+            <div className="border-theme-line text-theme-dim mt-6 border-t pt-4 text-center tracking-widest">
               <Link
                 href={`/${locale}/blog`}
-                className="text-theme-accent hover:text-theme-accent-hover mt-1 block hover:underline"
+                className="text-theme-accent text-xs hover:text-theme-accent-hover mt-1 flex items-center"
               >
-                &lt; RETURN TO ARCHIVE
+                <ChevronLeft />
+                {t('details.returnToArchive', { defaultValue: 'Return to Archive' })}
               </Link>
             </div>
           </div>
