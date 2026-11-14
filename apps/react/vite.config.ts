@@ -4,7 +4,6 @@ import babel from '@rolldown/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 import type { Plugin } from 'vite';
-import type { RolldownOutputOptions, WarningHandler } from 'rolldown';
 
 const appSrc = path.resolve(import.meta.dirname, './src');
 const uiSrc = path.resolve(import.meta.dirname, '../../packages/ui/src');
@@ -72,22 +71,24 @@ const CHUNK_GROUPS: IChunkGroup[] = [
 
 const IGNORED_WARNINGS: RegExp[] = [/\[MODULE_LEVEL_DIRECTIVE\][\s\S]*react-compiler-runtime/];
 
-const onwarn: WarningHandler = (warning, warn) => {
-  const message =
-    typeof warning === 'string'
-      ? warning
-      : typeof warning === 'object' && warning !== null && 'message' in warning
-        ? String((warning as { message: unknown }).message ?? '')
-        : '';
+const extractWarningMessage = (warning: unknown): string => {
+  if (typeof warning === 'string') return warning;
 
-  if (IGNORED_WARNINGS.some((re) => re.test(message))) {
-    return;
+  if (typeof warning === 'object' && warning !== null && 'message' in warning) {
+    const message = (warning as { message: unknown }).message;
+    if (typeof message === 'string') return message;
   }
 
+  return '';
+};
+
+const onwarn = (warning: unknown, warn: (warning: unknown) => void): void => {
+  const message = extractWarningMessage(warning);
+  if (IGNORED_WARNINGS.some((re) => re.test(message))) return;
   warn(warning);
 };
 
-const manualChunks: RolldownOutputOptions['manualChunks'] = (id: string) => {
+const manualChunks = (id: string): string | undefined => {
   if (!id.includes('node_modules')) return undefined;
 
   for (const group of CHUNK_GROUPS) {
@@ -126,7 +127,7 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 600,
     rolldownOptions: {
-      onwarn,
+      onwarn: onwarn as never,
       output: {
         manualChunks,
       },
@@ -138,8 +139,35 @@ export default defineConfig({
     setupFiles: './src/setupTests.ts',
     server: {
       deps: {
-        inline: [/@pipeline\/.*/],
+        inline: [/@pipeline\/.*/, /@xyflow\/react/],
       },
+    },
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['text', 'html', 'lcov'],
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/coverage/**',
+        '**/vite.config.ts',
+        '**/vite-env.d.ts',
+        '**/*.d.ts',
+        '**/main.tsx',
+        '**/App.tsx',
+        '**/AppLayout.tsx',
+        '**/AppRoutes.tsx',
+        '**/index.ts',
+        '**/index.tsx',
+        '**/*.test.{ts,tsx}',
+        '**/*.spec.{ts,tsx}',
+        '**/setupTests.ts',
+        '**/mocks/**',
+        '**/__mocks__/**',
+        '**/*.mock.{ts,tsx}',
+        '**/*.stories.{ts,tsx}',
+        '**/*.css',
+        '**/assets/**',
+      ],
     },
   },
 });

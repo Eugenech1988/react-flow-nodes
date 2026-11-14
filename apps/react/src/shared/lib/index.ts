@@ -1,3 +1,3 @@
 export * from './utils';
-export * from './constants.ts';
+export * from './constants';
 export * from './types';

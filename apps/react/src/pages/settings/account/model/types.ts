@@ -3,10 +3,7 @@ import { updatePasswordInputSchema } from '@pipeline/contracts';
 
 const baseAccountPasswordSchema = updatePasswordInputSchema.extend({
   currentPassword: z.string().optional(),
-  newPassword: z
-    .string()
-    .min(1, 'New password is required')
-    .min(6, 'Password must be at least 6 characters long'),
+  newPassword: z.string().min(6, 'Password must be at least 6 characters long'),
   confirmPassword: z.string().min(1, 'Please confirm your new password'),
 });
 

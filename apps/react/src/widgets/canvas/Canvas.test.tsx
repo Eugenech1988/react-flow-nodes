@@ -1,3 +1,4 @@
+import React from 'react';
 import { fireEvent, render, screen, act } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Canvas } from '@/widgets/canvas/Canvas';
@@ -61,6 +62,10 @@ vi.mock('@/entities', () => ({
   ),
 }));
 
+vi.mock('@/app/providers/ThemeProvider', () => ({
+  useTheme: () => ({ theme: 'light', resolvedTheme: 'light', setTheme: vi.fn() }),
+}));
+
 vi.mock('@/shared/hooks', () => ({
   useUser: () => mockUseUser(),
 }));
@@ -106,17 +111,18 @@ vi.mock('@xyflow/react', async () => {
   return {
     ...actual,
     ReactFlow: (props: ReactFlowProps) => {
-      if (props.onInit) {
-        mockRfInstance = {
-          screenToFlowPosition: (pos: { x?: number; y?: number }) => ({
-            x: pos.x ?? 100,
-            y: pos.y ?? 200,
-          }),
-        } as ReactFlowInstance;
-        act(() => {
-          props.onInit?.(mockRfInstance!);
-        });
-      }
+      React.useEffect(() => {
+        if (props.onInit) {
+          mockRfInstance = {
+            screenToFlowPosition: (pos: { x?: number; y?: number }) => ({
+              x: pos.x ?? 100,
+              y: pos.y ?? 200,
+            }),
+          } as ReactFlowInstance;
+          props.onInit(mockRfInstance);
+        }
+      }, [props.onInit]);
+
       return (
         <div data-testid="react-flow" onDrop={props.onDrop} onDragOver={props.onDragOver}>
           {props.children}

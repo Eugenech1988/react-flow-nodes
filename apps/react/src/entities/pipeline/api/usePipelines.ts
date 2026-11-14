@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
 import { useUser } from '@/shared/hooks';
-import type { TPipeline } from '../model/types';
+import type { TPipeline } from '../model';
 
 export function usePipelines() {
   const { user } = useUser();
@@ -11,6 +11,7 @@ export function usePipelines() {
   const {
     data: pipelines,
     isLoading,
+    isPending,
     isError,
     error,
     refetch,
@@ -27,6 +28,7 @@ export function usePipelines() {
     pipelines: pipelineList,
     hasPipelines: pipelineList.length > 0,
     isLoading,
+    isPending,
     isError,
     error,
     refetch,

@@ -1,5 +1,6 @@
 import type { StateCreator } from 'zustand';
 import { applyNodeChanges, applyEdgeChanges, addEdge } from '@xyflow/react';
+import { graphDataSchema } from '@pipeline/contracts';
 import type {
   TPipelineStore,
   TGraphState,
@@ -285,14 +286,19 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const parsed = JSON.parse(event.target?.result as string);
-        if (Array.isArray(parsed.nodes) && Array.isArray(parsed.edges)) {
-          set({
-            nodes: parsed.nodes,
-            edges: parsed.edges,
-            saveStatus: 'unsaved',
-          });
+        const raw: unknown = JSON.parse(event.target?.result as string);
+        const result = graphDataSchema.safeParse(raw);
+
+        if (!result.success) {
+          console.error('Invalid pipeline file:', result.error.issues);
+          return;
         }
+
+        set({
+          nodes: result.data.nodes as TPipelineNode[],
+          edges: result.data.edges as TPipelineEdge[],
+          saveStatus: 'unsaved',
+        });
       } catch (e) {
         console.error('Failed to parse import file', e);
       }

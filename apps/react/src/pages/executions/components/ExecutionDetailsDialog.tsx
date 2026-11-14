@@ -1,19 +1,10 @@
 import { Terminal, Info, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { DialogBody, DialogFooter, DialogHeader } from '@/shared/ui';
-
-import { DetailsRow } from './DetailsRow';
-import type { IExecutionItem } from '@/pages/executions/model';
 import { formatTimestamp } from '@/shared/lib';
-
-export type TExecutionLog = {
-  id: string;
-  nodeId?: string;
-  timestamp: number | string;
-  type: 'info' | 'success' | 'error';
-  message: string;
-  order?: number;
-};
+import { DetailsRow } from './DetailsRow';
+import type { IExecutionItem } from '../model';
+import type { TExecutionLog } from '@/entities';
 
 type TExecutionDetailsDialogProps = {
   execution:

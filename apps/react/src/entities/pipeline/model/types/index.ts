@@ -38,6 +38,7 @@ export type TExecutionLog = {
   timestamp: number;
   type: 'info' | 'success' | 'error';
   message: string;
+  order?: number;
 };
 
 export type THistorySnapshot = {

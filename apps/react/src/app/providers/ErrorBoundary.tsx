@@ -54,7 +54,7 @@ export class ErrorBoundary extends Component<IProps, IState> {
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-8 text-center">
         <h1 className="text-xl font-semibold">Something went wrong</h1>
         <p className="text-muted-foreground max-w-md text-sm">
-          {this.state.error?.message ?? 'An unexpected error occurred.'}
+          {this.state.error?.message || 'An unexpected error occurred.'}
         </p>
         <button
           type="button"

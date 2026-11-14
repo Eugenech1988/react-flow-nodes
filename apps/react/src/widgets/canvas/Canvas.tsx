@@ -174,7 +174,7 @@ export const Canvas = () => {
         onConnect={onConnect}
         onDrop={onDrop}
         onDragOver={onDragOver}
-        onInit={setRfInstance}
+        onInit={(instance) => setRfInstance(instance)}
         nodeTypes={NODE_TYPES}
         proOptions={PRO_OPTIONS}
         snapGrid={[GRID_SIZE, GRID_SIZE]}
