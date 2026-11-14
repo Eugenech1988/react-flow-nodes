@@ -9,7 +9,7 @@ import {
 } from '@pipeline/ui';
 import { useJobMutations } from '../hooks/';
 import type { IJob } from '../model/types';
-import { JobDeleteModal } from './JobDeleteModal'; // 👈 Импортируем модалку
+import { JobDeleteModal } from './JobDeleteModal';
 
 interface JobsTableRowActionsProps {
   job: IJob;
@@ -101,7 +101,7 @@ export const JobTableRowActions = ({ job, onEdit }: JobsTableRowActionsProps) =>
           <DropdownMenuSeparator className="bg-border/60 my-1" />
 
           <DropdownMenuItem
-            onClick={handleDeleteClick} // 👈 Изменено
+            onClick={handleDeleteClick}
             disabled={isRemoving}
             className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-rose-600 outline-none focus:bg-rose-500/10 focus:text-rose-700 dark:text-rose-400 dark:focus:bg-rose-500/20 dark:focus:text-rose-300"
           >

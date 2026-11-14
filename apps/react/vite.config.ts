@@ -143,30 +143,39 @@ export default defineConfig({
       },
     },
     coverage: {
-      provider: 'istanbul',
+      provider: 'istanbul', // или 'v8', если остался он
       reporter: ['text', 'html', 'lcov'],
       exclude: [
         '**/node_modules/**',
         '**/dist/**',
         '**/coverage/**',
-        '**/vite.config.ts',
-        '**/vite-env.d.ts',
-        '**/*.d.ts',
-        '**/main.tsx',
-        '**/App.tsx',
-        '**/AppLayout.tsx',
-        '**/AppRoutes.tsx',
-        '**/index.ts',
-        '**/index.tsx',
+
         '**/*.test.{ts,tsx}',
         '**/*.spec.{ts,tsx}',
         '**/setupTests.ts',
         '**/mocks/**',
         '**/__mocks__/**',
         '**/*.mock.{ts,tsx}',
-        '**/*.stories.{ts,tsx}',
+        '**/test-utils/**',
+
+        '**/index.ts',
+        '**/index.tsx',
+
+        '**/*.d.ts',
+        '**/vite-env.d.ts',
+
+        '**/vite.config.ts',
+        '**/tailwind.config.*',
+        '**/postcss.config.*',
+
         '**/*.css',
+        '**/*.scss',
         '**/assets/**',
+
+        '**/main.tsx',
+        '**/App.tsx',
+        '**/AppLayout.tsx',
+        '**/AppRoutes.tsx',
       ],
     },
   },

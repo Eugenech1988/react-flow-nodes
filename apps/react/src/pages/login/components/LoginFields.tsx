@@ -9,7 +9,6 @@ interface LoginFieldsProps {
 }
 
 export const LoginFields: FC<LoginFieldsProps> = ({ register, errors }) => {
-  // Общие классы для всех полей, чтобы не дублировать
   const labelClasses =
     'text-zinc-400 peer-focus:text-teal-400 peer-not-placeholder-shown:text-teal-400 [&]:peer-[:autofill]:text-teal-400';
   const fieldsetClasses =

@@ -22,7 +22,6 @@ export const JobDeleteModal = ({
       <DialogContent
         showCloseButton={false}
         className="border-border bg-card gap-0 overflow-hidden rounded-xl p-0 shadow-lg backdrop-blur-md sm:max-w-md"
-        // Предотвращаем всплытие клика до строки таблицы (на случай, если портал не используется)
         onClick={(e) => e.stopPropagation()}
       >
         <DialogHeader

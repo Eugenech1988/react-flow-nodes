@@ -45,8 +45,6 @@ export const formatLogsToRecord = (
       acc[log.id || `log_${index}`] = {
         ...log,
         timestamp: parsedTimestamp,
-        // JSON object key order is not a reliable log sequence in the database.
-        // Persist an explicit position so readers can restore execution order.
         order: typeof log.order === 'number' ? log.order : index,
       };
 

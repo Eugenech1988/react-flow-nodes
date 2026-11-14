@@ -2,11 +2,18 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BaseNode, createNode } from './BaseNode';
 import type { TFieldConfig } from '@/entities';
-import type { ChangeEvent } from 'react';
 
-const { updateNodeField, deleteElements, extractVariables } = vi.hoisted(() => ({
+const {
+  updateNodeField,
+  deleteElements,
+  extractVariables,
+  mockRunNode,
+  mockExecutionStatus,
+} = vi.hoisted(() => ({
   updateNodeField: vi.fn(),
   deleteElements: vi.fn(),
+  mockRunNode: vi.fn(),
+  mockExecutionStatus: { current: 'idle' as string },
   extractVariables: vi.fn((text: string) => {
     const matches = text.match(/\{\{(.*?)\}\}/g) ?? [];
     return matches.map((v) => v.slice(2, -2));
@@ -20,6 +27,8 @@ vi.mock('@/entities', () => ({
       activeNodeId: 'node-active',
       successNodeIds: ['node-success'],
       failedNodeId: 'node-failed',
+      executionStatus: mockExecutionStatus.current,
+      runNode: mockRunNode,
     }),
 }));
 
@@ -30,46 +39,18 @@ vi.mock('@xyflow/react', () => ({
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  Input: ({
-    value,
-    onChange,
-  }: {
-    value: string | number;
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  }) => <input data-testid="input" value={value} onChange={onChange} />,
-  Textarea: ({
-    value,
-    onChange,
-  }: {
-    value: string;
-    onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-  }) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
-  Select: ({
-    value,
-    onValueChange,
-    children,
-  }: {
-    value: string;
-    onValueChange: (value: string) => void;
-    children?: React.ReactNode;
-  }) => (
+  Input: ({ value, onChange }: any) => <input data-testid="input" value={value} onChange={onChange} />,
+  Textarea: ({ value, onChange }: any) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
+  Select: ({ value, onValueChange, children }: any) => (
     <select data-testid="select" value={value} onChange={(e) => onValueChange(e.target.value)}>
       {children}
     </select>
   ),
-  SelectTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  SelectTrigger: ({ children }: any) => <>{children}</>,
   SelectValue: () => <span />,
-  SelectContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  SelectItem: ({ value, children }: { value: string; children: React.ReactNode }) => (
-    <option value={value}>{children}</option>
-  ),
-  AutosizeTextarea: ({
-    value,
-    onChange,
-  }: {
-    value: string;
-    onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-  }) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
+  SelectContent: ({ children }: any) => <>{children}</>,
+  SelectItem: ({ value, children }: any) => <option value={value}>{children}</option>,
+  AutosizeTextarea: ({ value, onChange }: any) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
 }));
 
 vi.mock('@/shared/lib', () => ({
@@ -97,6 +78,7 @@ const createMockNodeProps = (id: string, nodeType = 'text', overrides = {}) => (
 describe('BaseNode', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockExecutionStatus.current = 'idle';
   });
 
   it('renders title and icon', () => {
@@ -140,7 +122,6 @@ describe('BaseNode', () => {
 
   it('triggers deleteElements on delete button click', () => {
     render(<BaseNode {...createMockNodeProps('node-1')} title="Delete Test" />);
-
     fireEvent.click(screen.getByTitle('Delete node'));
     expect(deleteElements).toHaveBeenCalledWith({ nodes: [{ id: 'node-1' }] });
   });
@@ -157,20 +138,50 @@ describe('BaseNode', () => {
 
   it('shows cross indicator when node execution failed', () => {
     const { container } = render(<BaseNode {...createMockNodeProps('node-failed')} />);
-
     const failedIndicator = container.querySelector('.bg-rose-500');
-    expect(failedIndicator).toBeInTheDocument();
     expect(failedIndicator).toHaveTextContent('✕');
   });
 
   it('createNode factory generates a valid component from configuration object', () => {
     const NodeComponent = createNode({ title: 'Config Node', category: 'test-category' });
-    render(
-      <NodeComponent
-        {...createMockNodeProps('node-factory', 'test-category', { selected: true })}
-      />,
-    );
-
+    render(<NodeComponent {...createMockNodeProps('node-factory', 'test-category', { selected: true })} />);
     expect(screen.getByText('Config Node')).toBeInTheDocument();
+  });
+
+  // --- EXTENDED COVERAGE ---
+
+  it('syncs values when data prop changes', () => {
+    const fields: TFieldConfig[] = [{ key: 'name', label: 'Name', type: 'text' }];
+    const { rerender } = render(
+      <BaseNode {...createMockNodeProps('node-1')} data={{ name: 'A' }} fields={fields} />
+    );
+    expect(screen.getByTestId('input')).toHaveValue('A');
+
+    rerender(
+      <BaseNode {...createMockNodeProps('node-1')} data={{ name: 'B' }} fields={fields} />
+    );
+    expect(screen.getByTestId('input')).toHaveValue('B');
+  });
+
+  it('toggles continueOnError', () => {
+    const fields: TFieldConfig[] = [{ key: 'name', label: 'Name', type: 'text' }];
+    render(<BaseNode {...createMockNodeProps('node-1')} fields={fields} />);
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+    expect(updateNodeField).toHaveBeenCalledWith('node-1', 'continueOnError', 'true');
+  });
+
+  it('calls runNode when Run node is clicked', () => {
+    const fields: TFieldConfig[] = [{ key: 'name', label: 'Name', type: 'text' }];
+    render(<BaseNode {...createMockNodeProps('node-1')} fields={fields} />);
+    fireEvent.click(screen.getByText('Run node'));
+    expect(mockRunNode).toHaveBeenCalledWith('node-1');
+  });
+
+  it('disables Run node when executionStatus is running', () => {
+    mockExecutionStatus.current = 'running';
+    const fields: TFieldConfig[] = [{ key: 'name', label: 'Name', type: 'text' }];
+    render(<BaseNode {...createMockNodeProps('node-1')} fields={fields} />);
+    expect(screen.getByText('Run node').closest('button')).toBeDisabled();
   });
 });

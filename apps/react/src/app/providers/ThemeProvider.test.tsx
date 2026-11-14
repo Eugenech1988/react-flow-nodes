@@ -100,12 +100,10 @@ describe('ThemeProvider', () => {
       </ThemeProvider>,
     );
 
-    // Spy on instance method directly — this is what the component calls
     vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
       throw new Error('QuotaExceededError');
     });
 
-    // Should not throw, state should still update
     expect(() => {
       fireEvent.click(screen.getByText('Set Dark'));
     }).not.toThrow();

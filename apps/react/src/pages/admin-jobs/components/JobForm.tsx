@@ -95,7 +95,7 @@ export function JobForm({ jobId, initialData, onSuccess, onCancel }: JobFormProp
             location: data.location,
             icon: data.icon || null,
             status: data.status,
-            translations: translationsToSend, // передаем массив переводов
+            translations: translationsToSend,
           },
         });
       } else {
