@@ -24,10 +24,7 @@ const validPipeline = () => ({
     node('text1', 'text', 'text', { text: 'Hello {{name}}' }),
     node('out1', 'customOutput', 'output', { outputName: 'result' }),
   ],
-  edges: [
-    edge('e1', 'in1', 'text1'),
-    edge('e2', 'text1', 'out1'),
-  ],
+  edges: [edge('e1', 'in1', 'text1'), edge('e2', 'text1', 'out1')],
 });
 
 describe('validatePipeline', () => {
@@ -144,11 +141,7 @@ describe('validatePipeline', () => {
         node('t1', 'text', 'text', { text: 'Hello' }),
         node('out1', 'customOutput', 'output', { outputName: 'y' }),
       ];
-      const edges = [
-        edge('e1', 'in1', 't1'),
-        edge('e2', 'in2', 't1'),
-        edge('e3', 't1', 'out1'),
-      ];
+      const edges = [edge('e1', 'in1', 't1'), edge('e2', 'in2', 't1'), edge('e3', 't1', 'out1')];
       const result = validatePipeline(nodes, edges);
       expect(result.noDuplicateVariables).toBe(false);
     });
@@ -202,10 +195,7 @@ describe('validatePipeline — extended coverage', () => {
         node('t1', 'text', 'text', { text: 'Hello {{name}}' }),
         node('out1', 'customOutput', 'output', { outputName: 'y' }),
       ];
-      const edges = [
-        edge('e1', 'in1', 't1'),
-        edge('e2', 't1', 'out1'),
-      ];
+      const edges = [edge('e1', 'in1', 't1'), edge('e2', 't1', 'out1')];
 
       const result = validatePipeline(nodes, edges);
 
@@ -275,9 +265,7 @@ describe('validatePipeline — getNodeKinds combinations', () => {
     ];
     const edges = [edge('e1', 'in1', 't1'), edge('e2', 't1', 'out1')];
     const result = validatePipeline(nodes, edges);
-    expect(result.errors.some((e) => e.includes('Text node "in1" has no content'))).toBe(
-      true,
-    );
+    expect(result.errors.some((e) => e.includes('Text node "in1" has no content'))).toBe(true);
   });
 
   it('recognizes output node with text in type name', () => {

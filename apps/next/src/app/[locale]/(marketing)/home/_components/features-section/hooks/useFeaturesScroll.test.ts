@@ -98,7 +98,10 @@ describe('useFeaturesScroll', () => {
 
   it('computes index during startup check if ref is available', () => {
     const { result } = renderHook(() => useFeaturesScroll());
-    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 0 } as HTMLElement;
+    result.current.wrapperRef.current = {
+      offsetHeight: 1000,
+      offsetTop: 0,
+    } as unknown as HTMLDivElement;
     Object.defineProperty(window, 'innerHeight', { value: 500, configurable: true });
     Object.defineProperty(window, 'scrollY', { value: 250, configurable: true });
 
@@ -116,7 +119,10 @@ describe('useFeaturesScroll', () => {
       flushRAF();
     });
 
-    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 0 } as HTMLElement;
+    result.current.wrapperRef.current = {
+      offsetHeight: 1000,
+      offsetTop: 0,
+    } as unknown as HTMLDivElement;
     Object.defineProperty(window, 'scrollY', { writable: true, value: 250 });
 
     act(() => {
@@ -142,7 +148,10 @@ describe('useFeaturesScroll', () => {
   it('does not update index on scroll when not ready', () => {
     const { result } = renderHook(() => useFeaturesScroll());
 
-    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 0 } as HTMLElement;
+    result.current.wrapperRef.current = {
+      offsetHeight: 1000,
+      offsetTop: 0,
+    } as unknown as HTMLDivElement;
     Object.defineProperty(window, 'scrollY', { writable: true, value: 250 });
 
     act(() => {
@@ -158,7 +167,10 @@ describe('useFeaturesScroll', () => {
       flushRAF();
     });
 
-    result.current.wrapperRef.current = { offsetHeight: 400, offsetTop: 0 } as HTMLElement;
+    result.current.wrapperRef.current = {
+      offsetHeight: 400,
+      offsetTop: 0,
+    } as unknown as HTMLDivElement;
     Object.defineProperty(window, 'scrollY', { writable: true, value: 250 });
 
     act(() => {
@@ -180,7 +192,10 @@ describe('useFeaturesScroll', () => {
     act(() => {
       flushRAF();
     });
-    result.current.wrapperRef.current = { offsetHeight: 1000, offsetTop: 100 } as HTMLElement;
+    result.current.wrapperRef.current = {
+      offsetHeight: 1000,
+      offsetTop: 100,
+    } as unknown as HTMLDivElement;
     act(() => result.current.goToStep(3));
     expect(window.scrollTo).toHaveBeenCalledWith({ top: 350, behavior: 'smooth' });
   });
@@ -199,7 +214,10 @@ describe('useFeaturesScroll', () => {
     act(() => {
       flushRAF();
     });
-    result.current.wrapperRef.current = { offsetHeight: 400, offsetTop: 100 } as HTMLElement;
+    result.current.wrapperRef.current = {
+      offsetHeight: 400,
+      offsetTop: 100,
+    } as unknown as HTMLDivElement;
     act(() => result.current.goToStep(3));
     expect(window.scrollTo).not.toHaveBeenCalled();
   });

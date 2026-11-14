@@ -131,9 +131,7 @@ export const BaseNode = ({
                 <input
                   type="checkbox"
                   checked={continueOnError}
-                  onChange={(event) =>
-                    updateNodeField(id, 'continueOnError', event.target.checked)
-                  }
+                  onChange={(event) => updateNodeField(id, 'continueOnError', event.target.checked)}
                   className="accent-[var(--node-accent)]"
                 />
                 Continue on error

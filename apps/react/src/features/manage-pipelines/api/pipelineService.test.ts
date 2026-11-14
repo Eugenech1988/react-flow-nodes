@@ -95,9 +95,9 @@ describe('pipelineService', () => {
 
   describe('update', () => {
     it('throws when id is missing', async () => {
-      await expect(pipelineService.update({ name: 'X' } as TUpdatePipelineInputData)).rejects.toThrow(
-        'Pipeline ID is required for update',
-      );
+      await expect(
+        pipelineService.update({ name: 'X' } as TUpdatePipelineInputData),
+      ).rejects.toThrow('Pipeline ID is required for update');
       expect(mocks.trpcClient.pipelines.update.mutate).not.toHaveBeenCalled();
     });
 

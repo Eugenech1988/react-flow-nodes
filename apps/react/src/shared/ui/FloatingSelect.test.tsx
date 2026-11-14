@@ -82,9 +82,7 @@ describe('FloatingSelect', () => {
   });
 
   it('renders error message', () => {
-    render(
-      <FloatingSelect label="Country" options={options} error errorMessage="Required" />,
-    );
+    render(<FloatingSelect label="Country" options={options} error errorMessage="Required" />);
     expect(screen.getByText('Required')).toBeInTheDocument();
   });
 

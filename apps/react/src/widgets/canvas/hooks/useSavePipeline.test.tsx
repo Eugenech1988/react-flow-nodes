@@ -106,9 +106,7 @@ describe('useSavePipeline', () => {
     });
 
     it('unregisters saveAction on unmount', () => {
-      const { unmount } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef() }),
-      );
+      const { unmount } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 
       unmount();
 
@@ -118,9 +116,7 @@ describe('useSavePipeline', () => {
 
   describe('handleSavePipeline — without screenshot', () => {
     it('calls updatePipeline with graph data', async () => {
-      const { result } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef() }),
-      );
+      const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 
       await act(async () => {
         await result.current.handleSavePipeline(false);
@@ -144,9 +140,7 @@ describe('useSavePipeline', () => {
     it('returns early if no pipeline id', async () => {
       mockUseUser.mockReturnValue({ user: null });
 
-      const { result } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef() }),
-      );
+      const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 
       await act(async () => {
         await result.current.handleSavePipeline(false);
@@ -160,9 +154,7 @@ describe('useSavePipeline', () => {
       mockStore.lastRunAt = '2024-01-01T00:00:00Z';
       mockStore.lastRunStatus = 'SUCCESS';
 
-      const { result } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef() }),
-      );
+      const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 
       await act(async () => {
         await result.current.handleSavePipeline(false);
@@ -179,9 +171,7 @@ describe('useSavePipeline', () => {
 
   describe('handleSavePipeline — with screenshot', () => {
     it('calls fitView, waits, captures screenshot, sends to update', async () => {
-      const { result } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef() }),
-      );
+      const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 
       const promise = result.current.handleSavePipeline(true);
       await act(async () => {
@@ -199,9 +189,7 @@ describe('useSavePipeline', () => {
     });
 
     it('returns undefined from captureScreenshot if no viewport', async () => {
-      const { result } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef(false) }),
-      );
+      const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef(false) }));
 
       const promise = result.current.handleSavePipeline(true);
       await act(async () => {
@@ -219,9 +207,7 @@ describe('useSavePipeline', () => {
       mockToPng.mockRejectedValue(new Error('canvas error'));
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      const { result } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef() }),
-      );
+      const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 
       const promise = result.current.handleSavePipeline(true);
       await act(async () => {
@@ -238,9 +224,7 @@ describe('useSavePipeline', () => {
 
   describe('toast notifications', () => {
     it('shows success toast when notify=true', async () => {
-      const { result } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef() }),
-      );
+      const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 
       await act(async () => {
         await result.current.handleSavePipeline(false, true);
@@ -253,9 +237,7 @@ describe('useSavePipeline', () => {
       mockMutateAsync.mockRejectedValue(new Error('network'));
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      const { result } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef() }),
-      );
+      const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 
       await act(async () => {
         await result.current.handleSavePipeline(false, true);
@@ -266,9 +248,7 @@ describe('useSavePipeline', () => {
     });
 
     it('does not show toast when notify=false', async () => {
-      const { result } = renderHook(() =>
-        useSavePipeline({ wrapperRef: makeWrapperRef() }),
-      );
+      const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 
       await act(async () => {
         await result.current.handleSavePipeline(false, false);

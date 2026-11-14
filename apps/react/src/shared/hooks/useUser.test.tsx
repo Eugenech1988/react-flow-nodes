@@ -3,13 +3,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useUser } from './useUser';
 
 const mockUseQuery = vi.fn();
-const mockUseTRPC = vi.fn(() => ({ auth: { me: { queryOptions: () => ({ queryKey: ['auth', 'me'] }) } } }));
+const mockUseTRPC = vi.fn(() => ({
+  auth: { me: { queryOptions: () => ({ queryKey: ['auth', 'me'] }) } },
+}));
 
 vi.mock('@tanstack/react-query', () => ({ useQuery: (opts: unknown) => mockUseQuery(opts) }));
 vi.mock('@/shared/api', () => ({ useTRPC: () => mockUseTRPC() }));
 
 describe('useUser', () => {
-  beforeEach(() => { vi.clearAllMocks(); });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
   it('returns nulls when no user', () => {
     mockUseQuery.mockReturnValue({ data: null, isLoading: false, isError: false, error: null });
@@ -28,14 +32,24 @@ describe('useUser', () => {
   });
 
   it('isError=true + no data', () => {
-    mockUseQuery.mockReturnValue({ data: undefined, isLoading: false, isError: true, error: new Error('boom') });
+    mockUseQuery.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      isError: true,
+      error: new Error('boom'),
+    });
     const { result } = renderHook(() => useUser());
     expect(result.current.isError).toBe(true);
     expect(result.current.user).toBeNull();
   });
 
   it('returns user when loaded', () => {
-    const user = { id: 'u1', email: 'a@b.com', role: 'USER', subscription: { plan: 'FREE', planStatus: 'ACTIVE' } };
+    const user = {
+      id: 'u1',
+      email: 'a@b.com',
+      role: 'USER',
+      subscription: { plan: 'FREE', planStatus: 'ACTIVE' },
+    };
     mockUseQuery.mockReturnValue({ data: user, isLoading: false, isError: false, error: null });
     const { result } = renderHook(() => useUser());
     expect(result.current.user).toEqual(user);
@@ -50,12 +64,16 @@ describe('useUser', () => {
   });
 
   it('isProActive when PRO + ACTIVE', () => {
-    mockUseQuery.mockReturnValue({ data: { id: 'u1', role: 'USER', subscription: { plan: 'PRO', planStatus: 'ACTIVE' } } });
+    mockUseQuery.mockReturnValue({
+      data: { id: 'u1', role: 'USER', subscription: { plan: 'PRO', planStatus: 'ACTIVE' } },
+    });
     expect(renderHook(() => useUser()).result.current.isProActive).toBe(true);
   });
 
   it('isProActive false when PRO + CANCELED', () => {
-    mockUseQuery.mockReturnValue({ data: { id: 'u1', role: 'USER', subscription: { plan: 'PRO', planStatus: 'CANCELED' } } });
+    mockUseQuery.mockReturnValue({
+      data: { id: 'u1', role: 'USER', subscription: { plan: 'PRO', planStatus: 'CANCELED' } },
+    });
     expect(renderHook(() => useUser()).result.current.isProActive).toBe(false);
   });
 
@@ -65,7 +83,12 @@ describe('useUser', () => {
   });
 
   it('exposes error and isLoading', () => {
-    mockUseQuery.mockReturnValue({ data: undefined, isLoading: true, isError: true, error: new Error('boom') });
+    mockUseQuery.mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      isError: true,
+      error: new Error('boom'),
+    });
     const { result } = renderHook(() => useUser());
     expect(result.current.isLoading).toBe(true);
     expect(result.current.isError).toBe(true);

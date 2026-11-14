@@ -53,10 +53,7 @@ const migrateV1ToV2 = (state: TPersistedState): TPersistedState => {
   };
 };
 
-export const migratePersistedState = (
-  state: unknown,
-  fromVersion: number,
-): TPersistedState => {
+export const migratePersistedState = (state: unknown, fromVersion: number): TPersistedState => {
   let current = ensurePersistedShape(state);
 
   if (fromVersion < 1) {

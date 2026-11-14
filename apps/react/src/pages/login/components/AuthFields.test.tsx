@@ -25,8 +25,13 @@ describe('Auth Fields', () => {
       render(
         <LoginFields
           register={vi.fn() as unknown as never}
-          errors={{ email: { message: 'Invalid email' }, password: { message: 'Required' } } as unknown as never}
-        />
+          errors={
+            {
+              email: { message: 'Invalid email' },
+              password: { message: 'Required' },
+            } as unknown as never
+          }
+        />,
       );
       expect(screen.getByTestId('error-Email Address')).toHaveTextContent('Invalid email');
       expect(screen.getByTestId('error-Password')).toHaveTextContent('Required');
@@ -46,7 +51,7 @@ describe('Auth Fields', () => {
         <RegisterFields
           register={vi.fn() as unknown as never}
           errors={{ confirmPassword: { message: 'Mismatch' } } as unknown as never}
-        />
+        />,
       );
       expect(screen.getByTestId('error-Confirm Password')).toHaveTextContent('Mismatch');
     });

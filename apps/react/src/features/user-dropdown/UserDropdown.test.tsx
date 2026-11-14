@@ -44,13 +44,9 @@ vi.mock('@pipeline/ui', () => ({
   DropdownMenu: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuTrigger: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  DropdownMenuItem: ({
-    children,
-    ...props
-  }: {
-    children: ReactNode;
-    [key: string]: unknown;
-  }) => <button {...props}>{children}</button>,
+  DropdownMenuItem: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => (
+    <button {...props}>{children}</button>
+  ),
   DropdownMenuLabel: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuSeparator: () => <hr />,
   DropdownMenuGroup: ({ children }: { children: ReactNode }) => <div>{children}</div>,
@@ -102,25 +98,19 @@ describe('UserDropdown', () => {
   });
 
   it('renders nickname if no first/last name', () => {
-    mockUseUser.mockReturnValue(
-      createUser({ profile: { nickName: 'johnny', avatarUrl: null } }),
-    );
+    mockUseUser.mockReturnValue(createUser({ profile: { nickName: 'johnny', avatarUrl: null } }));
     render(<UserDropdown />);
     expect(screen.getByText('johnny')).toBeInTheDocument();
   });
 
   it('renders avatar image if avatarUrl present', () => {
-    mockUseUser.mockReturnValue(
-      createUser({ profile: { avatarUrl: 'http://img.com/a.jpg' } }),
-    );
+    mockUseUser.mockReturnValue(createUser({ profile: { avatarUrl: 'http://img.com/a.jpg' } }));
     render(<UserDropdown />);
     expect(screen.getByRole('img')).toHaveAttribute('src', 'http://img.com/a.jpg');
   });
 
   it('prefixes relative avatar url with BASE_URL', () => {
-    mockUseUser.mockReturnValue(
-      createUser({ profile: { avatarUrl: '/uploads/a.jpg' } }),
-    );
+    mockUseUser.mockReturnValue(createUser({ profile: { avatarUrl: '/uploads/a.jpg' } }));
     render(<UserDropdown />);
     expect(screen.getByRole('img').getAttribute('src')).toMatch(/\/uploads\/a\.jpg$/);
   });

@@ -62,9 +62,7 @@ describe('ExecutionDetailsDialog', () => {
       b: { id: 'b', type: 'info', message: 'first', timestamp: 200, order: 0 },
       c: { id: 'c', type: 'info', message: 'second', timestamp: 50, order: 1 },
     };
-    render(
-      <ExecutionDetailsDialog execution={makeExecution(logs)} onClose={vi.fn()} />
-    );
+    render(<ExecutionDetailsDialog execution={makeExecution(logs)} onClose={vi.fn()} />);
 
     const messages = screen.getAllByText(/first|second|third/);
     expect(messages.map((m) => m.textContent)).toEqual(['first', 'second', 'third']);
@@ -75,19 +73,17 @@ describe('ExecutionDetailsDialog', () => {
       { id: 'a', type: 'info', message: 'late', timestamp: 300 },
       { id: 'b', type: 'info', message: 'early', timestamp: 100 },
     ];
-    render(
-      <ExecutionDetailsDialog execution={makeExecution(logs)} onClose={vi.fn()} />
-    );
+    render(<ExecutionDetailsDialog execution={makeExecution(logs)} onClose={vi.fn()} />);
 
     const messages = screen.getAllByText(/late|early/);
     expect(messages.map((m) => m.textContent)).toEqual(['early', 'late']);
   });
 
   it('handles unknown log type as info', () => {
-    const logs = [{ id: 'a', type: 'unknown', message: 'test', timestamp: 100 }] as unknown as never;
-    render(
-      <ExecutionDetailsDialog execution={makeExecution(logs)} onClose={vi.fn()} />
-    );
+    const logs = [
+      { id: 'a', type: 'unknown', message: 'test', timestamp: 100 },
+    ] as unknown as never;
+    render(<ExecutionDetailsDialog execution={makeExecution(logs)} onClose={vi.fn()} />);
     expect(screen.getByText('test')).toBeInTheDocument();
   });
 });

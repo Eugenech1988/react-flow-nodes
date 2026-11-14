@@ -8,9 +8,7 @@ vi.mock('../hooks', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: (props: unknown) => (
-    <input data-testid={`input-${props.label}`} {...props} />
-  ),
+  FloatingInput: (props: unknown) => <input data-testid={`input-${props.label}`} {...props} />,
   LocalAlert: ({ alertMessage }: unknown) => <div>{alertMessage}</div>,
   AppButton: ({ text, onClick, type, isDisabled }: unknown) => (
     <button onClick={onClick} type={type} disabled={isDisabled}>
@@ -21,7 +19,7 @@ vi.mock('@/shared/ui', () => ({
 
 const mockedUsePasswordSection = vi.mocked(usePasswordSection);
 
-const createHookMock =   (overrides: Record<string, unknown> = {}) => ({
+const createHookMock = (overrides: Record<string, unknown> = {}) => ({
   form: {
     register: vi.fn(),
     handleSubmit: vi.fn((fn) => fn),

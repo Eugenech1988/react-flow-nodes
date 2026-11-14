@@ -304,7 +304,7 @@ export const PipelineModal = ({
           </DialogBody>
 
           <DialogFooter
-type="submit"
+            type="submit"
             onCancel={handleClose}
             isPending={isPending}
             submitText={isCreate ? 'Create Pipeline' : 'Save Changes'}

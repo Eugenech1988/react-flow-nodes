@@ -8,12 +8,8 @@ vi.mock('@pipeline/ui', () => ({
       {children}
     </div>
   ),
-  AlertTitle: ({ children, className }: unknown) => (
-    <h3 className={className}>{children}</h3>
-  ),
-  AlertDescription: ({ children, className }: unknown) => (
-    <p className={className}>{children}</p>
-  ),
+  AlertTitle: ({ children, className }: unknown) => <h3 className={className}>{children}</h3>,
+  AlertDescription: ({ children, className }: unknown) => <p className={className}>{children}</p>,
 }));
 
 vi.mock('lucide-react', () => ({

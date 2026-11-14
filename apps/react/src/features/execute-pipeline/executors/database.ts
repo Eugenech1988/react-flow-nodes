@@ -18,7 +18,6 @@ type TCreateDatabaseRecordInput = {
 const createDatabaseRecord = async (
   input: TCreateDatabaseRecordInput,
 ): Promise<TDatabaseRecord> => {
-
   const payload: TCreateDatabaseNodeInputData = {
     nodeId: input.nodeId,
     pipelineId: input.pipelineId,

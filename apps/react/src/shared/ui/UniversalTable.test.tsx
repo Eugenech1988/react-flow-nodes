@@ -43,7 +43,10 @@ interface IWrapperProps {
 }
 
 const TestTable = ({
-  data = [{ id: '1', name: 'Alice' }, { id: '2', name: 'Bob' }],
+  data = [
+    { id: '1', name: 'Alice' },
+    { id: '2', name: 'Bob' },
+  ],
   onSort = vi.fn(),
   onSelect,
   onPageChange = vi.fn(),
@@ -147,14 +150,7 @@ describe('UniversalTable', () => {
 
   it('calls onPageChange on prev click when not on first page', () => {
     const onPageChange = vi.fn();
-    render(
-      <TestTable
-        totalItems={25}
-        totalPages={3}
-        page={2}
-        onPageChange={onPageChange}
-      />,
-    );
+    render(<TestTable totalItems={25} totalPages={3} page={2} onPageChange={onPageChange} />);
 
     const buttons = screen.getAllByRole('button');
     const prevBtn = buttons[buttons.length - 2];

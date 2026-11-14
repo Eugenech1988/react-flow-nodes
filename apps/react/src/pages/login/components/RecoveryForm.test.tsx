@@ -5,7 +5,11 @@ import { RecoveryForm } from './RecoveryForm';
 vi.mock('@/shared/ui', () => ({
   FloatingInput: (props: unknown) => <input data-testid={`input-${props.label}`} {...props} />,
   LocalAlert: ({ alertMessage }: unknown) => <div>{alertMessage}</div>,
-  AppButton: ({ text, type, onClick }: unknown) => <button type={type} onClick={onClick}>{text}</button>,
+  AppButton: ({ text, type, onClick }: unknown) => (
+    <button type={type} onClick={onClick}>
+      {text}
+    </button>
+  ),
 }));
 
 describe('RecoveryForm', () => {
@@ -31,7 +35,9 @@ describe('RecoveryForm', () => {
 
   it('renders success state', () => {
     render(<RecoveryForm {...defaultProps} mode="request" isSuccess={true} />);
-    expect(screen.getByText('Check your email for a link to reset your password.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Check your email for a link to reset your password.'),
+    ).toBeInTheDocument();
   });
 
   it('triggers onBack', () => {

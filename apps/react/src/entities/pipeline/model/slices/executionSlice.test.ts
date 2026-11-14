@@ -182,9 +182,9 @@ describe('executionSlice', () => {
       await useStore.getState().runWorkflow();
 
       expect(useStore.getState().executionStatus).toBe('failed');
-      expect(
-        useStore.getState().logs.some((l) => l.message.includes('No valid start node')),
-      ).toBe(true);
+      expect(useStore.getState().logs.some((l) => l.message.includes('No valid start node'))).toBe(
+        true,
+      );
     });
 
     it('executes start → output and marks success', async () => {
@@ -200,9 +200,7 @@ describe('executionSlice', () => {
       await useStore.getState().runWorkflow();
 
       expect(useStore.getState().executionStatus).toBe('success');
-      expect(useStore.getState().successNodeIds).toEqual(
-        expect.arrayContaining(['in1', 'out1']),
-      );
+      expect(useStore.getState().successNodeIds).toEqual(expect.arrayContaining(['in1', 'out1']));
     });
 
     it('stops workflow on node error without continueOnError', async () => {
@@ -239,9 +237,7 @@ describe('executionSlice', () => {
       await useStore.getState().runWorkflow();
 
       expect(
-        useStore.getState().logs.some((l) =>
-          l.message.includes('continue by node option'),
-        ),
+        useStore.getState().logs.some((l) => l.message.includes('continue by node option')),
       ).toBe(true);
     });
   });
@@ -254,9 +250,9 @@ describe('executionSlice', () => {
 
       expect(useStore.getState().executionStatus).toBe('idle');
       expect(useStore.getState().activeNodeId).toBeNull();
-      expect(
-        useStore.getState().logs.some((l) => l.message.includes('manually terminated')),
-      ).toBe(true);
+      expect(useStore.getState().logs.some((l) => l.message.includes('manually terminated'))).toBe(
+        true,
+      );
     });
 
     it('calls finishExecution with CANCELED status when backend id exists', () => {
@@ -303,9 +299,7 @@ describe('executionSlice — extended coverage', () => {
 
       expect(useStore.getState().executionStatus).toBe('failed');
       expect(
-        useStore.getState().logs.some((l) =>
-          l.message.includes('Infinite loop detected'),
-        ),
+        useStore.getState().logs.some((l) => l.message.includes('Infinite loop detected')),
       ).toBe(true);
     });
   });
@@ -362,9 +356,7 @@ describe('executionSlice — extended coverage', () => {
           makeNode('out1', 'customOutput', 'output', { outputName: 'y' }),
           makeNode('orphan', 'text', 'text', { text: 'orphan' }),
         ],
-        edges: [
-          { id: 'e1', source: 'in1', target: 'out1' } as TPipelineEdge,
-        ],
+        edges: [{ id: 'e1', source: 'in1', target: 'out1' } as TPipelineEdge],
       });
 
       mockExecuteNode.mockResolvedValue({ value: 'x' });
@@ -373,9 +365,7 @@ describe('executionSlice — extended coverage', () => {
 
       expect(useStore.getState().executionStatus).toBe('failed');
       expect(
-        useStore.getState().logs.some((l) =>
-          l.message.includes('unreachable or skipped'),
-        ),
+        useStore.getState().logs.some((l) => l.message.includes('unreachable or skipped')),
       ).toBe(true);
     });
   });

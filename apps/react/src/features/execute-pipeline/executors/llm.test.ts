@@ -59,9 +59,7 @@ describe('executeLlmNode', () => {
     const node = makeNode({});
     await executeLlmNode(node, { connectedPrompt: 'from parent' });
 
-    expect(mockMutate).toHaveBeenCalledWith(
-      expect.objectContaining({ message: 'from parent' })
-    );
+    expect(mockMutate).toHaveBeenCalledWith(expect.objectContaining({ message: 'from parent' }));
   });
 
   it('wraps mutation errors', async () => {
@@ -77,7 +75,7 @@ describe('executeLlmNode — extra coverage', () => {
     const node = makeNode({ prompt: 'Hi' });
 
     await expect(executeLlmNode(node, {})).rejects.toThrow(
-      'LLM node execution failed: string-error'
+      'LLM node execution failed: string-error',
     );
   });
 
@@ -86,9 +84,7 @@ describe('executeLlmNode — extra coverage', () => {
     const node = makeNode({ message: 'from message' });
     await executeLlmNode(node, {});
 
-    expect(mockMutate).toHaveBeenCalledWith(
-      expect.objectContaining({ message: 'from message' })
-    );
+    expect(mockMutate).toHaveBeenCalledWith(expect.objectContaining({ message: 'from message' }));
   });
 
   it('uses input.prompt when data missing', async () => {
@@ -96,9 +92,7 @@ describe('executeLlmNode — extra coverage', () => {
     const node = makeNode({});
     await executeLlmNode(node, { prompt: 'from input' });
 
-    expect(mockMutate).toHaveBeenCalledWith(
-      expect.objectContaining({ message: 'from input' })
-    );
+    expect(mockMutate).toHaveBeenCalledWith(expect.objectContaining({ message: 'from input' }));
   });
 
   it('uses input.text as fallback', async () => {
@@ -106,9 +100,7 @@ describe('executeLlmNode — extra coverage', () => {
     const node = makeNode({});
     await executeLlmNode(node, { text: 'from text' });
 
-    expect(mockMutate).toHaveBeenCalledWith(
-      expect.objectContaining({ message: 'from text' })
-    );
+    expect(mockMutate).toHaveBeenCalledWith(expect.objectContaining({ message: 'from text' }));
   });
 
   it('uses connectedSystemPrompt for system', async () => {

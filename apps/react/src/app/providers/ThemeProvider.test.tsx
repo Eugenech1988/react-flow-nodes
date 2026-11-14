@@ -165,7 +165,7 @@ describe('ThemeProvider', () => {
   });
 
   it('reacts to system preference changes when theme is system (matches=true)', () => {
-    let mediaQueryListener: ((e: MediaQueryListEvent) => void) = () => {};
+    let mediaQueryListener: (e: MediaQueryListEvent) => void = () => {};
 
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -195,7 +195,7 @@ describe('ThemeProvider', () => {
   });
 
   it('reacts to system preference changes when theme is system (matches=false)', () => {
-    let mediaQueryListener: ((e: MediaQueryListEvent) => void) = () => {};
+    let mediaQueryListener: (e: MediaQueryListEvent) => void = () => {};
 
     Object.defineProperty(window, 'matchMedia', {
       writable: true,

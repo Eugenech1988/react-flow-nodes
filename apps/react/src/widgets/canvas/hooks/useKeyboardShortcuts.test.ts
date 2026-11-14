@@ -103,9 +103,7 @@ describe('useKeyboardShortcuts hook', () => {
 
     renderHook(() => useKeyboardShortcuts(params));
 
-    window.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'c', ctrlKey: true, bubbles: true }),
-    );
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'c', ctrlKey: true, bubbles: true }));
 
     expect(mockToastSuccess).toHaveBeenCalledWith('Nodes copied', { duration: 2000 });
   });
@@ -115,9 +113,7 @@ describe('useKeyboardShortcuts hook', () => {
 
     renderHook(() => useKeyboardShortcuts(params));
 
-    window.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'c', ctrlKey: true, bubbles: true }),
-    );
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'c', ctrlKey: true, bubbles: true }));
 
     expect(params.copyNodes).not.toHaveBeenCalled();
     expect(mockToastSuccess).not.toHaveBeenCalled();
@@ -195,9 +191,7 @@ describe('useKeyboardShortcuts hook', () => {
 
     renderHook(() => useKeyboardShortcuts(params));
 
-    window.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }),
-    );
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }));
 
     expect(params.undo).toHaveBeenCalledTimes(1);
     expect(params.redo).not.toHaveBeenCalled();
@@ -226,9 +220,7 @@ describe('useKeyboardShortcuts hook', () => {
 
     renderHook(() => useKeyboardShortcuts(params));
 
-    window.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'y', ctrlKey: true, bubbles: true }),
-    );
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'y', ctrlKey: true, bubbles: true }));
 
     expect(params.redo).toHaveBeenCalledTimes(1);
   });
@@ -267,9 +259,7 @@ describe('useKeyboardShortcuts — listener lifecycle', () => {
 
     rerender({ params: second });
 
-    window.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'c', ctrlKey: true, bubbles: true }),
-    );
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'c', ctrlKey: true, bubbles: true }));
 
     expect(second.copyNodes).toHaveBeenCalledTimes(1);
     expect(first.copyNodes).not.toHaveBeenCalled();

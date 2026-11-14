@@ -75,9 +75,7 @@ describe('NodesToolbar', () => {
     fireEvent.click(screen.getByRole('button', { name: /close node library/i }));
 
     await waitFor(() => {
-      expect(
-        screen.queryByRole('button', { name: /close node library/i }),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /close node library/i })).not.toBeInTheDocument();
     });
 
     expect(screen.getByRole('button', { name: /open node library/i })).toBeInTheDocument();
@@ -90,8 +88,6 @@ describe('NodesToolbar', () => {
     const openBtn = await screen.findByRole('button', { name: /open node library/i });
     fireEvent.click(openBtn);
 
-    expect(
-      await screen.findByRole('button', { name: /close node library/i }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /close node library/i })).toBeInTheDocument();
   });
 });

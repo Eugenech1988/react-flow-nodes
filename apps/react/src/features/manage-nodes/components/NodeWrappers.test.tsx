@@ -28,7 +28,7 @@ describe('Node Wrappers', () => {
     render(
       <ReactFlowProvider>
         <TextNode id="t1" data={{}} selected={false} {...({} as unknown as never)} />
-      </ReactFlowProvider>
+      </ReactFlowProvider>,
     );
     expect(screen.getByText('Text')).toBeInTheDocument();
   });
@@ -38,7 +38,7 @@ describe('Node Wrappers', () => {
     render(
       <ReactFlowProvider>
         <Node id="o1" data={{}} selected={false} />
-      </ReactFlowProvider>
+      </ReactFlowProvider>,
     );
     expect(screen.getByText('Output')).toBeInTheDocument();
   });
@@ -47,7 +47,7 @@ describe('Node Wrappers', () => {
     render(
       <ReactFlowProvider>
         <DatabaseNode id="d1" data={{}} selected={false} {...({} as unknown as never)} />
-      </ReactFlowProvider>
+      </ReactFlowProvider>,
     );
     expect(screen.getByText('Database')).toBeInTheDocument();
   });

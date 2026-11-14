@@ -46,7 +46,7 @@ describe('pipelineExecutionService', () => {
           triggeredBy: 'MANUAL',
           status: 'RUNNING',
           nodesExecuted: 0,
-        })
+        }),
       );
     });
 
@@ -63,7 +63,7 @@ describe('pipelineExecutionService', () => {
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
         '[PipelineExecutionService] Failed to create execution in BE:',
-        expect.any(Error)
+        expect.any(Error),
       );
     });
 
@@ -74,9 +74,7 @@ describe('pipelineExecutionService', () => {
         triggeredBy: 'SCHEDULED',
       });
 
-      expect(mockCreate).toHaveBeenCalledWith(
-        expect.objectContaining({ triggeredBy: 'CRON' })
-      );
+      expect(mockCreate).toHaveBeenCalledWith(expect.objectContaining({ triggeredBy: 'CRON' }));
     });
 
     it('includes formatted logs', async () => {
@@ -133,7 +131,7 @@ describe('pipelineExecutionService', () => {
           durationMs: 0,
           nodesExecuted: 0,
           logs: [],
-        })
+        }),
       ).resolves.not.toThrow();
 
       expect(console.error).toHaveBeenCalled();

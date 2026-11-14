@@ -31,9 +31,7 @@ describe('useExecutionsTable', () => {
 
   it('passes pipelineId from user', () => {
     renderHook(() => useExecutionsTable());
-    expect(mockUseExecutions).toHaveBeenCalledWith(
-      expect.objectContaining({ pipelineId: 'p1' })
-    );
+    expect(mockUseExecutions).toHaveBeenCalledWith(expect.objectContaining({ pipelineId: 'p1' }));
   });
 
   it('resets page on search change', () => {
@@ -45,7 +43,7 @@ describe('useExecutionsTable', () => {
     act(() =>
       result.current.handleSearchChange({
         target: { value: 'abc' },
-      } as unknown as never)
+      } as unknown as never),
     );
     expect(result.current.page).toBe(1);
     expect(result.current.searchQuery).toBe('abc');
@@ -78,7 +76,7 @@ describe('useExecutionsTable', () => {
     mockUseUser.mockReturnValue({ user: null });
     renderHook(() => useExecutionsTable());
     expect(mockUseExecutions).toHaveBeenCalledWith(
-      expect.objectContaining({ pipelineId: undefined })
+      expect.objectContaining({ pipelineId: undefined }),
     );
   });
 });

@@ -92,9 +92,9 @@ describe('useExecutionsHandler — error branches', () => {
     mockCreate.mockRejectedValue(error);
     const { result } = renderHook(() => useExecutionsHandler());
 
-    await expect(
-      result.current.createExecution.mutate({} as unknown as never),
-    ).rejects.toThrow('create failed');
+    await expect(result.current.createExecution.mutate({} as unknown as never)).rejects.toThrow(
+      'create failed',
+    );
   });
 
   it('updateExecution calls onError when mutate fails', async () => {

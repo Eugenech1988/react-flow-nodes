@@ -30,7 +30,7 @@ describe('executeDatabaseNode', () => {
         nodeId: 'node-1',
         pipelineId: 'p1',
         query: 'SELECT * FROM users WHERE id = 42',
-      })
+      }),
     );
   });
 
@@ -40,7 +40,7 @@ describe('executeDatabaseNode', () => {
     await executeDatabaseNode(node, {}, {});
 
     expect(mockMutate).toHaveBeenCalledWith(
-      expect.objectContaining({ query: 'SELECT * FROM table' })
+      expect.objectContaining({ query: 'SELECT * FROM table' }),
     );
   });
 
@@ -96,7 +96,7 @@ describe('executeDatabaseNode', () => {
     mockMutate.mockRejectedValue(new Error('DB connection lost'));
     const node = makeNode({ query: 'SELECT' });
     await expect(executeDatabaseNode(node, {}, {})).rejects.toThrow(
-      'Database node execution failed: DB connection lost'
+      'Database node execution failed: DB connection lost',
     );
   });
 });
@@ -107,9 +107,7 @@ describe('executeDatabaseNode — extra coverage', () => {
     const node = makeNode({ query: 'SELECT', pipelineId: 'from-data' });
     await executeDatabaseNode(node, {}, {});
 
-    expect(mockMutate).toHaveBeenCalledWith(
-      expect.objectContaining({ pipelineId: 'from-data' })
-    );
+    expect(mockMutate).toHaveBeenCalledWith(expect.objectContaining({ pipelineId: 'from-data' }));
   });
 
   it('uses input.pipelineId when context and data missing', async () => {
@@ -117,9 +115,7 @@ describe('executeDatabaseNode — extra coverage', () => {
     const node = makeNode({ query: 'SELECT' });
     await executeDatabaseNode(node, { pipelineId: 'from-input' }, {});
 
-    expect(mockMutate).toHaveBeenCalledWith(
-      expect.objectContaining({ pipelineId: 'from-input' })
-    );
+    expect(mockMutate).toHaveBeenCalledWith(expect.objectContaining({ pipelineId: 'from-input' }));
   });
 
   it('falls back to null pipelineId', async () => {
@@ -127,9 +123,7 @@ describe('executeDatabaseNode — extra coverage', () => {
     const node = makeNode({ query: 'SELECT' });
     await executeDatabaseNode(node, {}, {});
 
-    expect(mockMutate).toHaveBeenCalledWith(
-      expect.objectContaining({ pipelineId: null })
-    );
+    expect(mockMutate).toHaveBeenCalledWith(expect.objectContaining({ pipelineId: null }));
   });
 
   it('prefers context.pipelineId over data', async () => {
@@ -138,7 +132,7 @@ describe('executeDatabaseNode — extra coverage', () => {
     await executeDatabaseNode(node, {}, { pipelineId: 'from-context' });
 
     expect(mockMutate).toHaveBeenCalledWith(
-      expect.objectContaining({ pipelineId: 'from-context' })
+      expect.objectContaining({ pipelineId: 'from-context' }),
     );
   });
 
@@ -147,7 +141,7 @@ describe('executeDatabaseNode — extra coverage', () => {
     const node = makeNode({ query: 'SELECT' });
 
     await expect(executeDatabaseNode(node, {}, {})).rejects.toThrow(
-      'Database node execution failed: string-error'
+      'Database node execution failed: string-error',
     );
   });
 });

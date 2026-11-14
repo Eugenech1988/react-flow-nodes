@@ -11,7 +11,11 @@ vi.mock('../model', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  AppButton: ({ text, type, onClick }: unknown) => <button type={type} onClick={onClick}>{text}</button>,
+  AppButton: ({ text, type, onClick }: unknown) => (
+    <button type={type} onClick={onClick}>
+      {text}
+    </button>
+  ),
   LocalAlert: ({ alertMessage }: unknown) => <div>{alertMessage}</div>,
 }));
 
@@ -44,7 +48,7 @@ describe('TwoFactorForm', () => {
     await waitFor(() => {
       expect(defaultProps.onVerify).toHaveBeenCalledWith(
         { tempToken: 'temp', code: '123456' },
-        expect.anything()
+        expect.anything(),
       );
     });
   });

@@ -28,22 +28,12 @@ vi.mock('@/shared/ui', () => ({
 describe('BaseNode.parts', () => {
   describe('NodeHandles', () => {
     it('renders handles of type target', () => {
-      render(
-        <NodeHandles
-          handles={[{ id: 'in', type: 'target' }]}
-          type="target"
-        />
-      );
+      render(<NodeHandles handles={[{ id: 'in', type: 'target' }]} type="target" />);
       expect(screen.getByTestId('handle-in')).toHaveAttribute('data-type', 'target');
     });
 
     it('renders handles of type source', () => {
-      render(
-        <NodeHandles
-          handles={[{ id: 'out', type: 'source' }]}
-          type="source"
-        />
-      );
+      render(<NodeHandles handles={[{ id: 'out', type: 'source' }]} type="source" />);
       expect(screen.getByTestId('handle-out')).toHaveAttribute('data-type', 'source');
     });
 
@@ -55,7 +45,7 @@ describe('BaseNode.parts', () => {
             { id: 'b', type: 'target' },
           ]}
           type="target"
-        />
+        />,
       );
       expect(screen.getByTestId('handle-a')).toBeInTheDocument();
       expect(screen.getByTestId('handle-b')).toBeInTheDocument();
@@ -96,7 +86,7 @@ describe('BaseNode.parts', () => {
           }}
           value="a"
           onChange={onChange}
-        />
+        />,
       );
       fireEvent.change(screen.getByTestId('select'), { target: { value: 'b' } });
       expect(onChange).toHaveBeenCalledWith('b');
@@ -109,7 +99,7 @@ describe('BaseNode.parts', () => {
           field={{ key: 'txt', label: 'Txt', type: 'textarea' }}
           value="hello"
           onChange={onChange}
-        />
+        />,
       );
       fireEvent.change(screen.getByTestId('autosize'), { target: { value: 'world' } });
       expect(onChange).toHaveBeenCalledWith('world');
@@ -122,7 +112,7 @@ describe('BaseNode.parts', () => {
           field={{ key: 'txt', label: 'Txt', type: 'text' }}
           value="hello"
           onChange={onChange}
-        />
+        />,
       );
       fireEvent.change(screen.getByTestId('input'), { target: { value: 'world' } });
       expect(onChange).toHaveBeenCalledWith('world');
@@ -135,7 +125,7 @@ describe('BaseNode.parts', () => {
           field={{ key: 'num', label: 'Num', type: 'number' }}
           value={42}
           onChange={onChange}
-        />
+        />,
       );
       const input = screen.getByTestId('input');
       expect(input).toHaveAttribute('type', 'number');
@@ -193,24 +183,14 @@ describe('BaseNode.parts — branch edge cases', () => {
   describe('NodeField — edge cases', () => {
     it('falls back to text input when field.type is undefined', () => {
       const onChange = vi.fn();
-      render(
-        <NodeField
-          field={{ key: 'x', label: 'X' }}
-          value=""
-          onChange={onChange}
-        />
-      );
+      render(<NodeField field={{ key: 'x', label: 'X' }} value="" onChange={onChange} />);
       expect(screen.getByTestId('input')).toHaveAttribute('type', 'text');
     });
 
     it('handles select with undefined options (renders nothing inside)', () => {
       const onChange = vi.fn();
       render(
-        <NodeField
-          field={{ key: 'x', label: 'X', type: 'select' }}
-          value=""
-          onChange={onChange}
-        />
+        <NodeField field={{ key: 'x', label: 'X', type: 'select' }} value="" onChange={onChange} />,
       );
       const select = screen.getByTestId('select') as HTMLSelectElement;
       expect(select.querySelectorAll('option')).toHaveLength(0);
@@ -223,7 +203,7 @@ describe('BaseNode.parts — branch edge cases', () => {
           field={{ key: 'x', label: 'X', type: 'select', options: [{ value: 'a', label: 'A' }] }}
           value="a"
           onChange={onChange}
-        />
+        />,
       );
       const select = screen.getByTestId('select') as HTMLSelectElement;
       fireEvent.change(select, { target: { value: '' } });
@@ -237,7 +217,7 @@ describe('BaseNode.parts — branch edge cases', () => {
           field={{ key: 'n', label: 'N', type: 'number' }}
           value={5}
           onChange={onChange}
-        />
+        />,
       );
       expect(screen.getByTestId('input')).toHaveAttribute('type', 'number');
     });

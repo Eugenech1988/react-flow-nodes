@@ -12,13 +12,7 @@ interface IMutationResult {
   isPending: boolean;
 }
 
-const {
-  mockMutate,
-  mockClear,
-  mockNavigate,
-  mockToastError,
-  mockUseMutation,
-} = vi.hoisted(() => ({
+const { mockMutate, mockClear, mockNavigate, mockToastError, mockUseMutation } = vi.hoisted(() => ({
   mockMutate: vi.fn<() => void>(),
   mockClear: vi.fn<() => void>(),
   mockNavigate: vi.fn<(path: string, opts: { replace: boolean }) => void>(),

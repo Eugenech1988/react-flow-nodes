@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { resolveStatusConfig, STATUS_CONFIG, EXTRA_STATUS_CONFIG, FALLBACK_STATUS } from './constants';
+import {
+  resolveStatusConfig,
+  STATUS_CONFIG,
+  EXTRA_STATUS_CONFIG,
+  FALLBACK_STATUS,
+} from './constants';
 
 describe('resolveStatusConfig', () => {
   it('resolves success', () => {

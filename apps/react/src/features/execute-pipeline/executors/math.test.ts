@@ -109,11 +109,21 @@ describe('executeMathNode', () => {
 
   describe('precision', () => {
     it('rounds to precision', async () => {
-      const node = makeNode({ operation: 'divide', leftOperand: '1', rightOperand: '3', precision: '2' });
+      const node = makeNode({
+        operation: 'divide',
+        leftOperand: '1',
+        rightOperand: '3',
+        precision: '2',
+      });
       expect((await executeMathNode(node, {})).result).toBe(0.33);
     });
     it('throws on invalid precision', async () => {
-      const node = makeNode({ operation: 'add', leftOperand: '1', rightOperand: '1', precision: '25' });
+      const node = makeNode({
+        operation: 'add',
+        leftOperand: '1',
+        rightOperand: '1',
+        precision: '25',
+      });
       expect(() => executeMathNode(node, {})).toThrow('Precision must be between 0 and 20');
     });
   });
@@ -121,7 +131,10 @@ describe('executeMathNode', () => {
   describe('inputs from connected handles', () => {
     it('uses connectedLeftOperand and connectedRightOperand', async () => {
       const node = makeNode({ operation: 'add' });
-      const result = await executeMathNode(node, { connectedLeftOperand: 10, connectedRightOperand: 20 });
+      const result = await executeMathNode(node, {
+        connectedLeftOperand: 10,
+        connectedRightOperand: 20,
+      });
       expect(result.result).toBe(30);
     });
   });

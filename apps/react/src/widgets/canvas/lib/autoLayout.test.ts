@@ -60,10 +60,7 @@ describe('computeAutoLayout', () => {
   });
 
   it('preserves node data and type', () => {
-    const nodes = [
-      { ...makeNode('a'), data: { label: 'A', extra: 42 } },
-      makeNode('b'),
-    ];
+    const nodes = [{ ...makeNode('a'), data: { label: 'A', extra: 42 } }, makeNode('b')];
     const result = computeAutoLayout(nodes, [makeEdge('e1', 'a', 'b')]);
 
     const a = result.find((n) => n.id === 'a')!;

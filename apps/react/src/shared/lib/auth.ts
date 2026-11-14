@@ -16,9 +16,7 @@ export const canSeeBilling = (role: TUserRole | null | undefined): boolean => {
   return role !== 'CONTENT_MANAGER';
 };
 
-export const resolveIsProActive = (
-  subscription: ISubscriptionLike | null | undefined,
-): boolean => {
+export const resolveIsProActive = (subscription: ISubscriptionLike | null | undefined): boolean => {
   return subscription?.plan === 'PRO' && subscription?.planStatus === 'ACTIVE';
 };
 

@@ -113,7 +113,9 @@ describe('CanvasPage', () => {
     mockUsePipelines.mockReturnValue({ pipelines: [{ id: 'p1' }], isLoading: false });
     mockUseUser.mockReturnValue({ user: { currentPipelineId: null } });
 
-    await act(async () => { renderPage(); });
+    await act(async () => {
+      renderPage();
+    });
 
     expect(mockSetCurrentPipeline.mutate).toHaveBeenCalledWith({ id: 'p1' });
   });
@@ -123,7 +125,9 @@ describe('CanvasPage', () => {
     mockUsePipelines.mockReturnValue({ pipelines: [], isLoading: false });
     mockUseUser.mockReturnValue({ user: { currentPipelineId: null } });
 
-    await act(async () => { renderPage(); });
+    await act(async () => {
+      renderPage();
+    });
 
     expect(mockToastError).toHaveBeenCalledWith(
       'Pipeline not found or you do not have access to it.',
@@ -136,7 +140,9 @@ describe('CanvasPage', () => {
     mockUsePipelines.mockReturnValue({ pipelines: [{ id: 'p1' }], isLoading: false });
     mockUseUser.mockReturnValue({ user: { currentPipelineId: 'p1' } });
 
-    await act(async () => { renderPage(); });
+    await act(async () => {
+      renderPage();
+    });
 
     expect(mockSetCurrentPipeline.mutate).not.toHaveBeenCalled();
     expect(mockSetSearchParams).toHaveBeenCalledWith({}, { replace: true });
@@ -147,7 +153,9 @@ describe('CanvasPage', () => {
     mockUsePipelines.mockReturnValue({ pipelines: [{ id: 'p1' }], isLoading: false });
     mockUseUser.mockReturnValue({ user: { currentPipelineId: null } });
 
-    await act(async () => { renderPage(); });
+    await act(async () => {
+      renderPage();
+    });
 
     expect(mockOptions.current?.onSetCurrentError).toBeDefined();
 

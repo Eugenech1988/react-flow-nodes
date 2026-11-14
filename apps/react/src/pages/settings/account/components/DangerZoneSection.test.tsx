@@ -19,7 +19,7 @@ vi.mock('@/shared/ui', () => ({
 
 const mockedUseDangerZone = vi.mocked(useDangerZoneSection);
 
-const createHookMock =   (overrides: Record<string, unknown> = {}) => ({
+const createHookMock = (overrides: Record<string, unknown> = {}) => ({
   isOpen: false,
   isPending: false,
   alert: null,
@@ -38,9 +38,7 @@ describe('DangerZoneSection', () => {
     mockedUseDangerZone.mockReturnValue(createHookMock());
     render(<DangerZoneSection />);
     expect(screen.getByText('Danger Zone')).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Delete Account' }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Delete Account' })).toBeInTheDocument();
   });
 
   it('opens modal', () => {

@@ -36,12 +36,7 @@ vi.mock('@/shared/ui/ConfirmDeleteModal', () => ({
 describe('PipelineDeleteModal', () => {
   it('renders nothing when closed', () => {
     const { container } = render(
-      <PipelineDeleteModal
-        isOpen={false}
-        onClose={vi.fn()}
-        onConfirm={vi.fn()}
-        pipelineName="x"
-      />,
+      <PipelineDeleteModal isOpen={false} onClose={vi.fn()} onConfirm={vi.fn()} pipelineName="x" />,
     );
     expect(container.firstChild).toBeNull();
   });
@@ -61,18 +56,14 @@ describe('PipelineDeleteModal', () => {
 
   it('triggers onConfirm', () => {
     const onConfirm = vi.fn();
-    render(
-      <PipelineDeleteModal isOpen onClose={vi.fn()} onConfirm={onConfirm} pipelineName="x" />,
-    );
+    render(<PipelineDeleteModal isOpen onClose={vi.fn()} onConfirm={onConfirm} pipelineName="x" />);
     fireEvent.click(screen.getByText('Confirm'));
     expect(onConfirm).toHaveBeenCalled();
   });
 
   it('triggers onClose', () => {
     const onClose = vi.fn();
-    render(
-      <PipelineDeleteModal isOpen onClose={onClose} onConfirm={vi.fn()} pipelineName="x" />,
-    );
+    render(<PipelineDeleteModal isOpen onClose={onClose} onConfirm={vi.fn()} pipelineName="x" />);
     fireEvent.click(screen.getByText('Cancel'));
     expect(onClose).toHaveBeenCalled();
   });

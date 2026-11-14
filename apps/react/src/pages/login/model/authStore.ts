@@ -238,11 +238,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       onSuccess();
     } catch (error) {
       set({
-        recoveryError: mapAuthError(
-          error,
-          'Failed to reset password. The link may have expired.',
-          [...RESET_PASSWORD_SPECIFIC, ...NETWORK_MATCHERS],
-        ),
+        recoveryError: mapAuthError(error, 'Failed to reset password. The link may have expired.', [
+          ...RESET_PASSWORD_SPECIFIC,
+          ...NETWORK_MATCHERS,
+        ]),
       });
     } finally {
       set({ isLoading: false });

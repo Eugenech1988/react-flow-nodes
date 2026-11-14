@@ -131,9 +131,7 @@ describe('usePipelinesFilter', () => {
       const pipelines = makeThree();
       const valid: TSortOption['value'][] = ['name', 'updatedAt', 'status'];
       valid.forEach((sortBy) => {
-        expect(() =>
-          renderHook(() => usePipelinesFilter(pipelines, sortBy, 'asc')),
-        ).not.toThrow();
+        expect(() => renderHook(() => usePipelinesFilter(pipelines, sortBy, 'asc'))).not.toThrow();
       });
     });
   });

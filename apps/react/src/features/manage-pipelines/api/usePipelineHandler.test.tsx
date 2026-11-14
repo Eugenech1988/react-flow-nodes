@@ -201,18 +201,14 @@ describe('usePipelineHandler', () => {
       const { result } = renderHook(() => usePipelineHandler());
 
       await act(async () => {
-        await result.current.setCurrentPipeline.mutate(
-          makePipeline({ lastRunStatus: 'RUNNING' }),
-        );
+        await result.current.setCurrentPipeline.mutate(makePipeline({ lastRunStatus: 'RUNNING' }));
       });
       expect(mocks.service.setCurrent).toHaveBeenLastCalledWith(
         expect.objectContaining({ lastRunStatus: 'RUNNING' }),
       );
 
       await act(async () => {
-        await result.current.setCurrentPipeline.mutate(
-          makePipeline({ lastRunStatus: 'FAILED' }),
-        );
+        await result.current.setCurrentPipeline.mutate(makePipeline({ lastRunStatus: 'FAILED' }));
       });
       expect(mocks.service.setCurrent).toHaveBeenLastCalledWith(
         expect.objectContaining({ lastRunStatus: 'FAILED' }),
@@ -224,9 +220,7 @@ describe('usePipelineHandler', () => {
       const { result } = renderHook(() => usePipelineHandler());
 
       await act(async () => {
-        await result.current.setCurrentPipeline.mutate(
-          makePipeline({ lastRunStatus: 'UNKNOWN' }),
-        );
+        await result.current.setCurrentPipeline.mutate(makePipeline({ lastRunStatus: 'UNKNOWN' }));
       });
 
       expect(mocks.service.setCurrent).toHaveBeenCalledWith(
@@ -251,9 +245,7 @@ describe('usePipelineHandler', () => {
       const updatedUser = { id: 'u1', currentPipeline: { id: 'p1' } };
       mocks.service.setCurrent.mockResolvedValue(updatedUser);
       const onSetCurrentSuccess = vi.fn();
-      const { result } = renderHook(() =>
-        usePipelineHandler({ onSetCurrentSuccess }),
-      );
+      const { result } = renderHook(() => usePipelineHandler({ onSetCurrentSuccess }));
 
       await act(async () => {
         await result.current.setCurrentPipeline.mutate(makePipeline());
@@ -266,9 +258,7 @@ describe('usePipelineHandler', () => {
     it('calls onSetCurrentError on failure', async () => {
       mocks.service.setCurrent.mockRejectedValue(new Error('network'));
       const onSetCurrentError = vi.fn();
-      const { result } = renderHook(() =>
-        usePipelineHandler({ onSetCurrentError }),
-      );
+      const { result } = renderHook(() => usePipelineHandler({ onSetCurrentError }));
 
       await expect(
         act(async () => {

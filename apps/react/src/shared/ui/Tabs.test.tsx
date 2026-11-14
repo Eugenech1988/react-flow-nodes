@@ -33,9 +33,7 @@ describe('Tabs', () => {
   });
 
   it('renders active indicator only on active tab', () => {
-    const { container } = render(
-      <Tabs tabs={tabs} currentTab="tab1" onTabChange={vi.fn()} />,
-    );
+    const { container } = render(<Tabs tabs={tabs} currentTab="tab1" onTabChange={vi.fn()} />);
     const indicators = container.querySelectorAll('[data-layout-id]');
     expect(indicators).toHaveLength(1);
   });
@@ -78,12 +76,7 @@ describe('Tabs', () => {
 
   it('uses provided layoutId', () => {
     const { container } = render(
-      <Tabs
-        tabs={tabs}
-        currentTab="tab1"
-        onTabChange={vi.fn()}
-        layoutId="custom-layout"
-      />,
+      <Tabs tabs={tabs} currentTab="tab1" onTabChange={vi.fn()} layoutId="custom-layout" />,
     );
     expect(container.querySelector('[data-layout-id="custom-layout"]')).toBeInTheDocument();
   });

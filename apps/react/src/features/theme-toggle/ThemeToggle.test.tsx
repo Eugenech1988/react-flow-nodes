@@ -7,7 +7,7 @@ const { mockSetTheme, mockUseTheme } = vi.hoisted(() => ({
   mockUseTheme: vi.fn(),
 }));
 
-vi.mock('@/app/providers', () => ({
+vi.mock('@/shared/lib/theme', () => ({
   useTheme: () => mockUseTheme(),
 }));
 

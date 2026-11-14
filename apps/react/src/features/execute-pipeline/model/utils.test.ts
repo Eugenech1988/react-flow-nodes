@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { resolveTemplate, toNumber, getNodeKind, mapTriggerType, formatLogsToRecord } from './utils';
+import {
+  resolveTemplate,
+  toNumber,
+  getNodeKind,
+  mapTriggerType,
+  formatLogsToRecord,
+} from './utils';
 import type { TPipelineNode } from '@/entities';
 
 describe('utils', () => {
@@ -87,12 +93,21 @@ describe('utils', () => {
       expect(result['log_0']).toBeDefined();
     });
     it('parses timestamp string', () => {
-      const logs = [{ id: 'l1', timestamp: '789' as unknown as number, type: 'info' as const, message: 'hi' }];
+      const logs = [
+        { id: 'l1', timestamp: '789' as unknown as number, type: 'info' as const, message: 'hi' },
+      ];
       const result = formatLogsToRecord(logs);
       expect(result['l1'].timestamp).toBe(789);
     });
     it('parses date string timestamp', () => {
-      const logs = [{ id: 'l1', timestamp: '2024-01-01' as unknown as number, type: 'info' as const, message: 'hi' }];
+      const logs = [
+        {
+          id: 'l1',
+          timestamp: '2024-01-01' as unknown as number,
+          type: 'info' as const,
+          message: 'hi',
+        },
+      ];
       const result = formatLogsToRecord(logs);
       expect(result['l1'].timestamp).toBeGreaterThan(0);
     });
@@ -107,7 +122,12 @@ describe('utils', () => {
 describe('utils — extra coverage', () => {
   it('formatLogsToRecord: handles Date string timestamp', () => {
     const logs = [
-      { id: 'l1', timestamp: '2024-06-15T12:00:00Z' as unknown as number, type: 'info' as const, message: 'x' },
+      {
+        id: 'l1',
+        timestamp: '2024-06-15T12:00:00Z' as unknown as number,
+        type: 'info' as const,
+        message: 'x',
+      },
     ];
     const result = formatLogsToRecord(logs);
     expect(result['l1'].timestamp).toBeGreaterThan(0);
@@ -116,7 +136,12 @@ describe('utils — extra coverage', () => {
   it('formatLogsToRecord: falls back to Date.now() for unparseable', () => {
     const before = Date.now();
     const logs = [
-      { id: 'l1', timestamp: 'not-a-date' as unknown as number, type: 'info' as const, message: 'x' },
+      {
+        id: 'l1',
+        timestamp: 'not-a-date' as unknown as number,
+        type: 'info' as const,
+        message: 'x',
+      },
     ];
     const result = formatLogsToRecord(logs);
     expect(result['l1'].timestamp).toBeGreaterThanOrEqual(before);

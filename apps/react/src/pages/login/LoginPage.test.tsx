@@ -174,7 +174,12 @@ describe('LoginPage', () => {
     mockFetchQuery.mockResolvedValue({ role: 'USER' });
   });
 
-  const renderPage = () => render(<MemoryRouter><LoginPage /></MemoryRouter>);
+  const renderPage = () =>
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>,
+    );
 
   it('renders login view by default', () => {
     renderPage();
@@ -305,9 +310,7 @@ describe('LoginPage', () => {
   });
 
   it('shows registration success banner', () => {
-    mockUseAuthStore.mockReturnValue(
-      createDefaultStore({ isRegistrationSuccess: true }),
-    );
+    mockUseAuthStore.mockReturnValue(createDefaultStore({ isRegistrationSuccess: true }));
     renderPage();
     expect(screen.getByText('Registered successfully! Please sign in.')).toBeInTheDocument();
   });

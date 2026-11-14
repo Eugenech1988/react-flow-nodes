@@ -110,6 +110,8 @@ export default defineConfig({
         import.meta.dirname,
         './node_modules/react/jsx-dev-runtime.js',
       ),
+      '@xyflow/react': path.resolve(import.meta.dirname, './node_modules/@xyflow/react'),
+      recharts: path.resolve(import.meta.dirname, './node_modules/recharts'),
     },
   },
   preview: {

@@ -1,8 +1,5 @@
 import { api, trpcClient } from '@/shared/api';
-import type {
-  TCreatePipelineInputData,
-  TUpdatePipelineInputData,
-} from '@pipeline/contracts';
+import type { TCreatePipelineInputData, TUpdatePipelineInputData } from '@pipeline/contracts';
 import type { TPipeline } from '@/entities';
 
 const REST_ENDPOINT = '/pipelines';
@@ -38,8 +35,7 @@ export const pipelineService = {
     return trpcClient.pipelines.update.mutate(data);
   },
 
-  remove: (pipelineId: string) =>
-    trpcClient.pipelines.remove.mutate({ id: pipelineId }),
+  remove: (pipelineId: string) => trpcClient.pipelines.remove.mutate({ id: pipelineId }),
 
   setCurrent: (payload: ISetCurrentPipelinePayload) =>
     trpcClient.users.setCurrentPipeline.mutate(payload),

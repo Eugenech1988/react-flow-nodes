@@ -38,21 +38,14 @@ vi.mock('./components', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: ({ onChange }: unknown) => (
-    <input data-testid="search" onChange={onChange} />
-  ),
+  FloatingInput: ({ onChange }: unknown) => <input data-testid="search" onChange={onChange} />,
   Tabs: ({ onTabChange }: unknown) => (
     <button data-testid="tab" onClick={() => onTabChange('failed')}>
       Tab
     </button>
   ),
   TableSkeleton: () => <div data-testid="skeleton" />,
-  UniversalTable: ({
-    onSort,
-    onSelect,
-    onPageChange,
-    onLimitChange,
-  }: unknown) => (
+  UniversalTable: ({ onSort, onSelect, onPageChange, onLimitChange }: unknown) => (
     <div data-testid="table">
       <button data-testid="sort" onClick={() => onSort('slug')}>
         Sort

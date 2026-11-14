@@ -114,9 +114,7 @@ describe('BillingToggle', () => {
 
     it('Yearly active shows foreground, Monthly inactive', () => {
       renderToggle('yearly');
-      expect(screen.getByRole('button', { name: /Yearly/ }).className).toContain(
-        'text-foreground',
-      );
+      expect(screen.getByRole('button', { name: /Yearly/ }).className).toContain('text-foreground');
       expect(screen.getByRole('button', { name: 'Monthly' }).className).toContain(
         'text-muted-foreground',
       );

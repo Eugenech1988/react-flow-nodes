@@ -19,9 +19,7 @@ export const BillingToggle = ({ billingCycle, onChange }: BillingToggleProps) =>
         onClick={() => onChange('monthly')}
         aria-pressed={isMonthly}
         className={`${BASE_BUTTON_CLASSES} ${
-          isMonthly
-            ? 'text-foreground'
-            : 'text-muted-foreground hover:text-foreground/80'
+          isMonthly ? 'text-foreground' : 'text-muted-foreground hover:text-foreground/80'
         }`}
       >
         Monthly
@@ -41,9 +39,7 @@ export const BillingToggle = ({ billingCycle, onChange }: BillingToggleProps) =>
         onClick={() => onChange('yearly')}
         aria-pressed={isYearly}
         className={`${BASE_BUTTON_CLASSES} flex items-center gap-1.5 ${
-          isYearly
-            ? 'text-foreground'
-            : 'text-muted-foreground hover:text-foreground/80'
+          isYearly ? 'text-foreground' : 'text-muted-foreground hover:text-foreground/80'
         }`}
       >
         Yearly

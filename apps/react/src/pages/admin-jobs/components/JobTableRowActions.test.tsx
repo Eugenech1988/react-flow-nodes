@@ -20,7 +20,9 @@ vi.mock('../hooks/', () => ({
 vi.mock('@pipeline/ui', () => ({
   DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DropdownMenuTrigger: ({ children, onClick, disabled }: unknown) => (
-    <button onClick={onClick} disabled={disabled}>{children}</button>
+    <button onClick={onClick} disabled={disabled}>
+      {children}
+    </button>
   ),
   DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DropdownMenuItem: ({ children, onClick, disabled }: unknown) => (
@@ -105,16 +107,14 @@ describe('JobTableRowActions', () => {
     fireEvent.click(screen.getByText('ConfirmDelete'));
     expect(mockRemove.mutate).toHaveBeenCalledWith(
       { id: 'j1' },
-      expect.objectContaining({ onSuccess: expect.any(Function) })
+      expect.objectContaining({ onSuccess: expect.any(Function) }),
     );
   });
 
   it('disables trigger during pending', () => {
     mockPublish.isPending = true;
     mockPublish.variables = { id: 'j1' };
-    const { container } = render(
-      <JobTableRowActions job={makeJob()} onEdit={vi.fn()} />
-    );
+    const { container } = render(<JobTableRowActions job={makeJob()} onEdit={vi.fn()} />);
     const trigger = container.querySelector('button');
     expect(trigger).toBeDisabled();
   });

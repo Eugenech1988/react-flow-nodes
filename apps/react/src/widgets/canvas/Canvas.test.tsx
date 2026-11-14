@@ -62,7 +62,7 @@ vi.mock('@/entities', () => ({
   ),
 }));
 
-vi.mock('@/app/providers/ThemeProvider', () => ({
+vi.mock('@/shared/lib/theme', () => ({
   useTheme: () => ({ theme: 'light', resolvedTheme: 'light', setTheme: vi.fn() }),
 }));
 

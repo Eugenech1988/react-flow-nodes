@@ -63,11 +63,7 @@ vi.mock('recharts', () => ({
   AreaChart: ({ children }: { children: ReactNode }) => (
     <div data-testid="area-chart">{children}</div>
   ),
-  Area: ({
-    activeDot,
-  }: {
-    activeDot?: (props: IActiveDotArgs) => ReactNode;
-  }) => {
+  Area: ({ activeDot }: { activeDot?: (props: IActiveDotArgs) => ReactNode }) => {
     if (typeof activeDot !== 'function') {
       return <div data-testid="area" />;
     }
@@ -91,11 +87,7 @@ vi.mock('recharts', () => ({
   XAxis: () => <div />,
   YAxis: () => <div />,
   CartesianGrid: () => <div />,
-  Tooltip: ({
-    content,
-  }: {
-    content?: (props: ITooltipContentArgs) => ReactNode;
-  }) => {
+  Tooltip: ({ content }: { content?: (props: ITooltipContentArgs) => ReactNode }) => {
     if (typeof content !== 'function') return null;
     return (
       <div data-testid="tooltip">

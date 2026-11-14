@@ -8,9 +8,7 @@ const MockIcon = ({ className }: { className?: string }) => (
 
 describe('StatusBadge', () => {
   it('renders label', () => {
-    render(
-      <StatusBadge config={{ label: 'Active', icon: MockIcon, className: 'bg-green-500' }} />,
-    );
+    render(<StatusBadge config={{ label: 'Active', icon: MockIcon, className: 'bg-green-500' }} />);
     expect(screen.getByText('Active')).toBeInTheDocument();
   });
 
@@ -36,9 +34,7 @@ describe('StatusBadge', () => {
   });
 
   it('handles missing iconClassName', () => {
-    render(
-      <StatusBadge config={{ label: 'X', icon: MockIcon, className: 'c' }} />,
-    );
+    render(<StatusBadge config={{ label: 'X', icon: MockIcon, className: 'c' }} />);
     expect(screen.getByTestId('badge-icon').getAttribute('data-class')).not.toContain('animate');
   });
 });

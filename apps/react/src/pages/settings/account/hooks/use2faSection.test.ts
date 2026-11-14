@@ -2,15 +2,13 @@ import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { use2faSection } from './use2faSection';
 
-const { mockGenerate, mockTurnOn, mockTurnOff, mockInvalidate, mockUseUser } = vi.hoisted(
-  () => ({
-    mockGenerate: vi.fn(),
-    mockTurnOn: vi.fn(),
-    mockTurnOff: vi.fn(),
-    mockInvalidate: vi.fn(),
-    mockUseUser: vi.fn(),
-  }),
-);
+const { mockGenerate, mockTurnOn, mockTurnOff, mockInvalidate, mockUseUser } = vi.hoisted(() => ({
+  mockGenerate: vi.fn(),
+  mockTurnOn: vi.fn(),
+  mockTurnOff: vi.fn(),
+  mockInvalidate: vi.fn(),
+  mockUseUser: vi.fn(),
+}));
 
 vi.mock('@tanstack/react-query', () => ({
   useMutation: (opts: unknown) => {
@@ -129,9 +127,7 @@ describe('use2faSection', () => {
         await result.current.modal2fa.handleToggleClick();
       });
 
-      expect(result.current.modal2fa.error).toBe(
-        'Failed to initialize 2FA. Please try again.',
-      );
+      expect(result.current.modal2fa.error).toBe('Failed to initialize 2FA. Please try again.');
     });
   });
 

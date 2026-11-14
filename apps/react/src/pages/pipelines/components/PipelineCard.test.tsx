@@ -62,13 +62,9 @@ vi.mock('react-router-dom', async () => {
 vi.mock('@pipeline/ui', () => ({
   DropdownMenu: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  DropdownMenuTrigger: ({
-    children,
-    disabled,
-  }: {
-    children: ReactNode;
-    disabled?: boolean;
-  }) => <button disabled={disabled}>{children}</button>,
+  DropdownMenuTrigger: ({ children, disabled }: { children: ReactNode; disabled?: boolean }) => (
+    <button disabled={disabled}>{children}</button>
+  ),
   DropdownMenuItem: ({
     children,
     onClick,

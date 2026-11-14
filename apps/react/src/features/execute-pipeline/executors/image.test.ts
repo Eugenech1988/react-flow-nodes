@@ -40,7 +40,9 @@ afterEach(() => {
 describe('executeImageNode', () => {
   it('throws when no image URL', async () => {
     const node = makeNode({});
-    await expect(executeImageNode(node, {})).rejects.toThrow('Image URL or incoming image is required');
+    await expect(executeImageNode(node, {})).rejects.toThrow(
+      'Image URL or incoming image is required',
+    );
   });
 
   it('throws when data: URL is not an image', async () => {
@@ -120,7 +122,7 @@ describe('executeImageNode — extra coverage', () => {
     const node = makeNode({ imageUrl: 'https://img.test/x.png' });
 
     await expect(executeImageNode(node, {})).rejects.toThrow(
-      'Image processing failed: string-error'
+      'Image processing failed: string-error',
     );
   });
 

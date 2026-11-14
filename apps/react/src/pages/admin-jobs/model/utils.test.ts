@@ -1,11 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  getEnTitle,
-  getLocalesLabel,
-  getStatusConfig,
-  getSortValue,
-  sortJobs,
-} from './utils';
+import { getEnTitle, getLocalesLabel, getStatusConfig, getSortValue, sortJobs } from './utils';
 import { STATUS_CONFIG, FALLBACK_STATUS } from './constants';
 import type { IJob } from './types';
 

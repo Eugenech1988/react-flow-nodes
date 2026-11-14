@@ -17,9 +17,7 @@ describe('useAutosizeTextarea', () => {
   });
 
   it('does nothing when ref is null', () => {
-    expect(() =>
-      renderHook(() => useAutosizeTextarea({ current: null }, 'x')),
-    ).not.toThrow();
+    expect(() => renderHook(() => useAutosizeTextarea({ current: null }, 'x'))).not.toThrow();
   });
 
   it('resizes on mount', () => {
@@ -30,10 +28,9 @@ describe('useAutosizeTextarea', () => {
 
   it('resizes when value changes', () => {
     const ref = createTextareaRef(50);
-    const { rerender } = renderHook(
-      ({ value }) => useAutosizeTextarea(ref, value),
-      { initialProps: { value: 'a' } },
-    );
+    const { rerender } = renderHook(({ value }) => useAutosizeTextarea(ref, value), {
+      initialProps: { value: 'a' },
+    });
     expect(ref.current.style.height).toBe('50px');
 
     Object.defineProperty(ref.current, 'scrollHeight', {

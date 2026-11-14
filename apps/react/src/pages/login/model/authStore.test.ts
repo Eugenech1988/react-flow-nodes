@@ -208,9 +208,7 @@ describe('authStore', () => {
     it('uses fallback for non-Error throw', async () => {
       mocks.register.mockRejectedValue('string-error');
       await useAuthStore.getState().register('a@b.com', 'p', vi.fn());
-      expect(useAuthStore.getState().apiError).toBe(
-        'Registration failed. Please try again later.',
-      );
+      expect(useAuthStore.getState().apiError).toBe('Registration failed. Please try again later.');
     });
 
     it('falls through to error.message for unmatched', async () => {

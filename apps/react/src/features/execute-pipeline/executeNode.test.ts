@@ -113,7 +113,7 @@ describe('executeNode', () => {
   describe('unknown node', () => {
     it('throws for unknown type', async () => {
       await expect(executeNode(makeNode('unknown-type'), {})).rejects.toThrow(
-        'No executor registered'
+        'No executor registered',
       );
     });
   });
@@ -121,11 +121,9 @@ describe('executeNode', () => {
   describe('context propagation', () => {
     it('passes pipelineId to executor', async () => {
       await executeNode(makeNode('text', 'text'), {}, 'pipeline-42');
-      expect(mockExecutors.text).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.any(Object),
-        { pipelineId: 'pipeline-42' }
-      );
+      expect(mockExecutors.text).toHaveBeenCalledWith(expect.any(Object), expect.any(Object), {
+        pipelineId: 'pipeline-42',
+      });
     });
   });
 });

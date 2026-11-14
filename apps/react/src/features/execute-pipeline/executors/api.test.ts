@@ -33,25 +33,33 @@ describe('executeApiNode', () => {
     const node = makeNode({ url: 'https://api.test/{{id}}', method: 'GET' });
     const result = await executeApiNode(node, { id: '42' });
 
-    expect(mockFetch).toHaveBeenCalledWith('https://api.test/42', expect.objectContaining({ method: 'GET' }));
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://api.test/42',
+      expect.objectContaining({ method: 'GET' }),
+    );
     expect(result.response).toEqual({ data: 'ok' });
     expect(result.status).toBe(200);
   });
 
   it('parses JSON headers', async () => {
     mockFetch.mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       headers: new Headers({ 'content-type': 'application/json' }),
       json: () => Promise.resolve({}),
     });
-    const node = makeNode({ url: 'https://api.test', method: 'GET', headers: '{"Authorization": "Bearer x"}' });
+    const node = makeNode({
+      url: 'https://api.test',
+      method: 'GET',
+      headers: '{"Authorization": "Bearer x"}',
+    });
     await executeApiNode(node, {});
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
         headers: expect.objectContaining({ Authorization: 'Bearer x' }),
-      })
+      }),
     );
   });
 
@@ -67,7 +75,8 @@ describe('executeApiNode', () => {
 
   it('sends body for POST', async () => {
     mockFetch.mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       headers: new Headers({ 'content-type': 'application/json' }),
       json: () => Promise.resolve({}),
     });
@@ -76,13 +85,14 @@ describe('executeApiNode', () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       'https://api.test',
-      expect.objectContaining({ method: 'POST', body: '{"q":"x"}' })
+      expect.objectContaining({ method: 'POST', body: '{"q":"x"}' }),
     );
   });
 
   it('does not send body for GET', async () => {
     mockFetch.mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       headers: new Headers({ 'content-type': 'application/json' }),
       json: () => Promise.resolve({}),
     });
@@ -91,13 +101,14 @@ describe('executeApiNode', () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       'https://api.test',
-      expect.not.objectContaining({ body: expect.anything() })
+      expect.not.objectContaining({ body: expect.anything() }),
     );
   });
 
   it('adds Content-Type header for non-GET with body', async () => {
     mockFetch.mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       headers: new Headers({ 'content-type': 'application/json' }),
       json: () => Promise.resolve({}),
     });
@@ -108,13 +119,14 @@ describe('executeApiNode', () => {
       'https://api.test',
       expect.objectContaining({
         headers: expect.objectContaining({ 'Content-Type': 'application/json' }),
-      })
+      }),
     );
   });
 
   it('throws on non-2xx response', async () => {
     mockFetch.mockResolvedValue({
-      ok: false, status: 500,
+      ok: false,
+      status: 500,
       headers: new Headers({ 'content-type': 'text/plain' }),
       text: () => Promise.resolve('error'),
     });
@@ -124,7 +136,8 @@ describe('executeApiNode', () => {
 
   it('parses text response', async () => {
     mockFetch.mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       headers: new Headers({ 'content-type': 'text/plain' }),
       text: () => Promise.resolve('hello'),
     });
@@ -137,7 +150,8 @@ describe('executeApiNode', () => {
 describe('executeApiNode — extra coverage', () => {
   it('stringifies object body', async () => {
     mockFetch.mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       headers: new Headers({ 'content-type': 'application/json' }),
       json: () => Promise.resolve({}),
     });
@@ -150,7 +164,8 @@ describe('executeApiNode — extra coverage', () => {
 
   it('does not override existing content-type header', async () => {
     mockFetch.mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       headers: new Headers({ 'content-type': 'application/json' }),
       json: () => Promise.resolve({}),
     });
@@ -168,7 +183,8 @@ describe('executeApiNode — extra coverage', () => {
 
   it('respects lowercase content-type (case-insensitive)', async () => {
     mockFetch.mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       headers: new Headers({ 'content-type': 'application/json' }),
       json: () => Promise.resolve({}),
     });
@@ -187,7 +203,8 @@ describe('executeApiNode — extra coverage', () => {
 
   it('uses input.body when data.body missing', async () => {
     mockFetch.mockResolvedValue({
-      ok: true, status: 200,
+      ok: true,
+      status: 200,
       headers: new Headers({ 'content-type': 'application/json' }),
       json: () => Promise.resolve({}),
     });

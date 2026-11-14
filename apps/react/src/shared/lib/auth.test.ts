@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  redirectByRole,
-  canSeeBilling,
-  resolveIsProActive,
-  resolveAvatarUrl,
-} from './auth';
+import { redirectByRole, canSeeBilling, resolveIsProActive, resolveAvatarUrl } from './auth';
 
 describe('redirectByRole', () => {
   it('sends CONTENT_MANAGER to /admin/jobs', () => {

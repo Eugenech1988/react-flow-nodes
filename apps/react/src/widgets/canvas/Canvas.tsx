@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useTheme } from '@/app/providers/ThemeProvider';
+import { useTheme } from '@/shared/lib/theme';
 import { useShallow } from 'zustand/react/shallow';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {

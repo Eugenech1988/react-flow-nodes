@@ -33,9 +33,7 @@ describe('ThemeProvider — extra branches', () => {
     );
 
     act(() => {
-      window.dispatchEvent(
-        new StorageEvent('storage', { key: 'theme', newValue: 'garbage' }),
-      );
+      window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: 'garbage' }));
     });
 
     expect(screen.getByTestId('theme').textContent).toBe('light');
@@ -49,9 +47,7 @@ describe('ThemeProvider — extra branches', () => {
     );
 
     act(() => {
-      window.dispatchEvent(
-        new StorageEvent('storage', { key: 'theme', newValue: null }),
-      );
+      window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: null }));
     });
 
     expect(screen.getByTestId('theme').textContent).toBe('light');

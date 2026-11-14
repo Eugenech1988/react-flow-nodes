@@ -52,9 +52,7 @@ export const DeleteAccountModal = ({
         />
 
         <DialogBody withBorder className="space-y-4">
-          {errorMessage && (
-            <LocalAlert hasSuccess={false} hasError alertMessage={errorMessage} />
-          )}
+          {errorMessage && <LocalAlert hasSuccess={false} hasError alertMessage={errorMessage} />}
 
           <p className="text-muted-foreground text-sm leading-relaxed">
             Are you sure you want to delete your account? This action cannot be undone and all your

@@ -4,22 +4,18 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "exactOptionalPropertyTypes": false,
     "noUncheckedIndexedAccess": false,
-    "types": [
-      "vite/client",
-      "vitest/globals",
-      "@testing-library/jest-dom"
-    ],
+    "erasableSyntaxOnly": false,
+    "verbatimModuleSyntax": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*",
-        "../api/src/*",
-        "../../packages/ui/src/*"
-      ]
+      "@/*": ["src/*", "../api/src/*", "../../packages/ui/src/*"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/setupTests.ts"]
 }

@@ -3,22 +3,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BaseNode, createNode } from './BaseNode';
 import type { TFieldConfig } from '@/entities';
 
-const {
-  updateNodeField,
-  deleteElements,
-  extractVariables,
-  mockRunNode,
-  mockExecutionStatus,
-} = vi.hoisted(() => ({
-  updateNodeField: vi.fn(),
-  deleteElements: vi.fn(),
-  mockRunNode: vi.fn(),
-  mockExecutionStatus: { current: 'idle' as string },
-  extractVariables: vi.fn((text: string) => {
-    const matches = text.match(/\{\{(.*?)\}\}/g) ?? [];
-    return matches.map((v) => v.slice(2, -2));
-  }),
-}));
+const { updateNodeField, deleteElements, extractVariables, mockRunNode, mockExecutionStatus } =
+  vi.hoisted(() => ({
+    updateNodeField: vi.fn(),
+    deleteElements: vi.fn(),
+    mockRunNode: vi.fn(),
+    mockExecutionStatus: { current: 'idle' as string },
+    extractVariables: vi.fn((text: string) => {
+      const matches = text.match(/\{\{(.*?)\}\}/g) ?? [];
+      return matches.map((v) => v.slice(2, -2));
+    }),
+  }));
 
 vi.mock('@/entities', () => ({
   useStore: (selector: (state: unknown) => unknown) =>
@@ -39,8 +34,12 @@ vi.mock('@xyflow/react', () => ({
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  Input: ({ value, onChange }: unknown) => <input data-testid="input" value={value} onChange={onChange} />,
-  Textarea: ({ value, onChange }: unknown) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
+  Input: ({ value, onChange }: unknown) => (
+    <input data-testid="input" value={value} onChange={onChange} />
+  ),
+  Textarea: ({ value, onChange }: unknown) => (
+    <textarea data-testid="textarea" value={value} onChange={onChange} />
+  ),
   Select: ({ value, onValueChange, children }: unknown) => (
     <select data-testid="select" value={value} onChange={(e) => onValueChange(e.target.value)}>
       {children}
@@ -50,7 +49,9 @@ vi.mock('@pipeline/ui', () => ({
   SelectValue: () => <span />,
   SelectContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   SelectItem: ({ value, children }: unknown) => <option value={value}>{children}</option>,
-  AutosizeTextarea: ({ value, onChange }: unknown) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
+  AutosizeTextarea: ({ value, onChange }: unknown) => (
+    <textarea data-testid="textarea" value={value} onChange={onChange} />
+  ),
 }));
 
 vi.mock('@/shared/lib', () => ({
@@ -149,20 +150,22 @@ describe('BaseNode', () => {
 
   it('createNode factory generates a valid component from configuration object', () => {
     const NodeComponent = createNode({ title: 'Config Node', category: 'test-category' });
-    render(<NodeComponent {...createMockNodeProps('node-factory', 'test-category', { selected: true })} />);
+    render(
+      <NodeComponent
+        {...createMockNodeProps('node-factory', 'test-category', { selected: true })}
+      />,
+    );
     expect(screen.getByText('Config Node')).toBeInTheDocument();
   });
 
   it('syncs values when data prop changes', () => {
     const fields: TFieldConfig[] = [{ key: 'name', label: 'Name', type: 'text' }];
     const { rerender } = render(
-      <BaseNode {...createMockNodeProps('node-1')} data={{ name: 'A' }} fields={fields} />
+      <BaseNode {...createMockNodeProps('node-1')} data={{ name: 'A' }} fields={fields} />,
     );
     expect(screen.getByTestId('input')).toHaveValue('A');
 
-    rerender(
-      <BaseNode {...createMockNodeProps('node-1')} data={{ name: 'B' }} fields={fields} />
-    );
+    rerender(<BaseNode {...createMockNodeProps('node-1')} data={{ name: 'B' }} fields={fields} />);
     expect(screen.getByTestId('input')).toHaveValue('B');
   });
 

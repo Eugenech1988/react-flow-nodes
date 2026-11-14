@@ -117,16 +117,10 @@ describe('migrate v1 to v2', () => {
   });
 
   it('converts number 1 to true, 0 to false', () => {
-    const out1 = migratePersistedState(
-      { nodes: [makeNode({ continueOnError: 1 })], edges: [] },
-      1,
-    );
+    const out1 = migratePersistedState({ nodes: [makeNode({ continueOnError: 1 })], edges: [] }, 1);
     expect((out1.nodes[0].data as { continueOnError: boolean }).continueOnError).toBe(true);
 
-    const out0 = migratePersistedState(
-      { nodes: [makeNode({ continueOnError: 0 })], edges: [] },
-      1,
-    );
+    const out0 = migratePersistedState({ nodes: [makeNode({ continueOnError: 0 })], edges: [] }, 1);
     expect((out0.nodes[0].data as { continueOnError: boolean }).continueOnError).toBe(false);
   });
 

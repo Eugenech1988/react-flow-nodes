@@ -98,23 +98,17 @@ describe('extractTrpcProcedurePaths', () => {
 
   it('extracts batched paths', async () => {
     const { extractTrpcProcedurePaths } = await import('./trpc');
-    expect(
-      extractTrpcProcedurePaths('http://x/trpc/a.b,c.d,e.f'),
-    ).toEqual(['a.b', 'c.d', 'e.f']);
+    expect(extractTrpcProcedurePaths('http://x/trpc/a.b,c.d,e.f')).toEqual(['a.b', 'c.d', 'e.f']);
   });
 
   it('strips query string', async () => {
     const { extractTrpcProcedurePaths } = await import('./trpc');
-    expect(
-      extractTrpcProcedurePaths('http://x/trpc/auth.login?batch=1'),
-    ).toEqual(['auth.login']);
+    expect(extractTrpcProcedurePaths('http://x/trpc/auth.login?batch=1')).toEqual(['auth.login']);
   });
 
   it('strips hash', async () => {
     const { extractTrpcProcedurePaths } = await import('./trpc');
-    expect(
-      extractTrpcProcedurePaths('http://x/trpc/auth.login#section'),
-    ).toEqual(['auth.login']);
+    expect(extractTrpcProcedurePaths('http://x/trpc/auth.login#section')).toEqual(['auth.login']);
   });
 
   it('returns empty for URL without /trpc/', async () => {
@@ -124,9 +118,7 @@ describe('extractTrpcProcedurePaths', () => {
 
   it('trims whitespace around paths', async () => {
     const { extractTrpcProcedurePaths } = await import('./trpc');
-    expect(
-      extractTrpcProcedurePaths('http://x/trpc/a.b , c.d'),
-    ).toEqual(['a.b', 'c.d']);
+    expect(extractTrpcProcedurePaths('http://x/trpc/a.b , c.d')).toEqual(['a.b', 'c.d']);
   });
 });
 

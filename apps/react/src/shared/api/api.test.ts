@@ -1,9 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  refreshAccessToken,
-  notifyAuthFailure,
-  getCsrfToken,
-} from './authRefresh';
+import { refreshAccessToken, notifyAuthFailure, getCsrfToken } from './authRefresh';
 
 vi.mock('./authRefresh', () => ({
   refreshAccessToken: vi.fn(),
@@ -96,14 +92,12 @@ describe('api.request', () => {
   describe('401 handling', () => {
     it('refreshes and retries once', async () => {
       const api = await importApi();
-      mockFetch
-        .mockResolvedValueOnce({ status: 401 })
-        .mockResolvedValueOnce({
-          ok: true,
-          status: 200,
-          headers: new Headers({ 'content-type': 'application/json' }),
-          json: () => Promise.resolve({ ok: true }),
-        });
+      mockFetch.mockResolvedValueOnce({ status: 401 }).mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: () => Promise.resolve({ ok: true }),
+      });
 
       const result = await api.get('/secure');
       expect(result).toEqual({ ok: true });

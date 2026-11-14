@@ -73,12 +73,26 @@ describe('InputNode', () => {
   });
 
   it('renders file dropzone when inputType is file', () => {
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     expect(screen.getByText('Click to upload or drag & drop')).toBeInTheDocument();
   });
 
   it('shows error on file larger than 10MB', () => {
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     const bigFile = new File(['a'], 'a.txt', { type: 'text/plain' });
     Object.defineProperty(bigFile, 'size', { value: 11 * 1024 * 1024 });
@@ -88,7 +102,14 @@ describe('InputNode', () => {
   });
 
   it('adds highlight class on dragOver and removes on dragLeave', () => {
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     const dropzone = getDropzone();
 
     fireEvent.dragOver(dropzone);
@@ -99,7 +120,14 @@ describe('InputNode', () => {
   });
 
   it('uploads file via FileReader and shows filename', () => {
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     const file = new File(['hello'], 'test.txt', { type: 'text/plain' });
 
@@ -114,7 +142,14 @@ describe('InputNode', () => {
   });
 
   it('removes file when X is clicked', () => {
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     const file = new File(['hello'], 'test.txt', { type: 'text/plain' });
 
@@ -126,7 +161,14 @@ describe('InputNode', () => {
   });
 
   it('handles file drop via dataTransfer', () => {
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     const dropzone = getDropzone();
     const file = new File(['hello'], 'dropped.txt', { type: 'text/plain' });
 
@@ -147,7 +189,14 @@ describe('InputNode — drag & FileReader edge cases', () => {
   };
 
   it('handleDragOver prevents default and stops propagation', () => {
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     const dropzone = getDropzone();
     const event = new Event('dragover', { bubbles: true, cancelable: true });
 
@@ -157,7 +206,14 @@ describe('InputNode — drag & FileReader edge cases', () => {
   });
 
   it('handleDragLeave removes highlight', () => {
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     const dropzone = getDropzone();
 
     fireEvent.dragOver(dropzone);
@@ -168,7 +224,14 @@ describe('InputNode — drag & FileReader edge cases', () => {
   });
 
   it('handles drop with empty files gracefully', () => {
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     const dropzone = getDropzone();
     mockUpdateNodeField.mockClear();
 
@@ -189,7 +252,14 @@ describe('InputNode — drag & FileReader edge cases', () => {
     const original = (globalThis as unknown as { FileReader: typeof FileReader }).FileReader;
     (globalThis as unknown as { FileReader: typeof FileReader }).FileReader = FailingFileReader;
 
-    render(<InputNode id="in1" data={{ inputType: 'file' }} selected={false} {...({} as unknown as never)} />);
+    render(
+      <InputNode
+        id="in1"
+        data={{ inputType: 'file' }}
+        selected={false}
+        {...({} as unknown as never)}
+      />,
+    );
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
     const file = new File(['x'], 'fail.txt', { type: 'text/plain' });
 

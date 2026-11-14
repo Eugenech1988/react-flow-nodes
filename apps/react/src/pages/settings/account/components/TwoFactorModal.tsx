@@ -246,7 +246,7 @@ export const TwoFactorModal = ({
             </DialogBody>
 
             <DialogFooter
-type="submit"
+              type="submit"
               onCancel={handleClose}
               isPending={isPending}
               isDisabled={!isValid || (isEnable && !qrCodeImage)}

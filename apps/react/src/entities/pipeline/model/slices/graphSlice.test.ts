@@ -299,9 +299,9 @@ describe('graphSlice', () => {
         nodes: [{ ...makeNode('a'), position: { x: 0, y: 0 } }],
       });
 
-      useStore.getState().onNodesChange([
-        { id: 'a', type: 'position', position: { x: 100, y: 200 } },
-      ]);
+      useStore
+        .getState()
+        .onNodesChange([{ id: 'a', type: 'position', position: { x: 100, y: 200 } }]);
 
       expect(useStore.getState().nodes[0].position).toEqual({ x: 100, y: 200 });
       expect(useStore.getState().saveStatus).toBe('unsaved');
@@ -309,9 +309,7 @@ describe('graphSlice', () => {
 
     it('marks unsaved on add change', () => {
       useStore.setState({ saveStatus: 'saved', nodes: [] });
-      useStore.getState().onNodesChange([
-        { type: 'add', item: makeNode('new') },
-      ]);
+      useStore.getState().onNodesChange([{ type: 'add', item: makeNode('new') }]);
       expect(useStore.getState().saveStatus).toBe('unsaved');
     });
 
@@ -375,10 +373,7 @@ describe('graphSlice', () => {
       useStore.getState().copyNodes([original], []);
 
       useStore.setState({
-        nodes: [
-          original,
-          { ...makeNode('text-99'), position: { x: 40, y: 40 } },
-        ],
+        nodes: [original, { ...makeNode('text-99'), position: { x: 40, y: 40 } }],
       });
 
       useStore.getState().pasteNodes();
@@ -394,9 +389,7 @@ describe('graphSlice', () => {
     });
 
     it('creates and clicks an anchor element', () => {
-      const clickSpy = vi
-        .spyOn(HTMLAnchorElement.prototype, 'click')
-        .mockImplementation(() => {});
+      const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
       const setAttributeSpy = vi.spyOn(HTMLAnchorElement.prototype, 'setAttribute');
 
       useStore.setState({
@@ -449,10 +442,7 @@ describe('graphSlice', () => {
       useStore.getState().importJSON(file);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      expect(errorSpy).toHaveBeenCalledWith(
-        'Invalid pipeline file:',
-        expect.any(Array),
-      );
+      expect(errorSpy).toHaveBeenCalledWith('Invalid pipeline file:', expect.any(Array));
       expect(useStore.getState().nodes).toHaveLength(0);
     });
 
@@ -465,10 +455,7 @@ describe('graphSlice', () => {
       useStore.getState().importJSON(file);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      expect(errorSpy).toHaveBeenCalledWith(
-        'Failed to parse import file',
-        expect.any(SyntaxError),
-      );
+      expect(errorSpy).toHaveBeenCalledWith('Failed to parse import file', expect.any(SyntaxError));
     });
   });
 });

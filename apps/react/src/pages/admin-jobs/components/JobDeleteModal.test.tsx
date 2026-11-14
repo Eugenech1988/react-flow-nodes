@@ -42,9 +42,7 @@ describe('JobDeleteModal', () => {
   });
 
   it('renders title and slug', () => {
-    render(
-      <JobDeleteModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="senior-dev" />,
-    );
+    render(<JobDeleteModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="senior-dev" />);
     expect(screen.getByText('Delete Job')).toBeInTheDocument();
     expect(screen.getByTestId('confirm-message')).toHaveTextContent('senior-dev');
   });
@@ -64,9 +62,7 @@ describe('JobDeleteModal', () => {
   });
 
   it('disables confirm when pending', () => {
-    render(
-      <JobDeleteModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="x" isPending />,
-    );
+    render(<JobDeleteModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="x" isPending />);
     expect(screen.getByText('Confirm')).toBeDisabled();
   });
 });

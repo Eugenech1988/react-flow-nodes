@@ -100,9 +100,7 @@ describe('DeleteAccountModal', () => {
 
   it('does not close if pending', () => {
     const onClose = vi.fn();
-    render(
-      <DeleteAccountModal isOpen onClose={onClose} onConfirm={vi.fn()} isDeletePending />,
-    );
+    render(<DeleteAccountModal isOpen onClose={onClose} onConfirm={vi.fn()} isDeletePending />);
     fireEvent.click(screen.getByText('Cancel'));
     expect(onClose).not.toHaveBeenCalled();
   });
@@ -120,9 +118,7 @@ describe('DeleteAccountModal', () => {
   });
 
   it('does not render LocalAlert when errorMessage is null', () => {
-    render(
-      <DeleteAccountModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} errorMessage={null} />,
-    );
+    render(<DeleteAccountModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} errorMessage={null} />);
     expect(screen.queryByTestId('local-alert')).not.toBeInTheDocument();
   });
 });

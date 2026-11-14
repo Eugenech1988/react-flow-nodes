@@ -38,13 +38,17 @@ describe('getConnectedValue', () => {
 
 describe('mapOutputToTarget — math', () => {
   it('maps a → connectedLeftOperand', () => {
-    expect(mapOutputToTarget({ value: 10 }, makeEdge({ targetHandle: 'a' }), makeNode('math'))).toEqual({
+    expect(
+      mapOutputToTarget({ value: 10 }, makeEdge({ targetHandle: 'a' }), makeNode('math')),
+    ).toEqual({
       connectedLeftOperand: 10,
     });
   });
 
   it('maps b → connectedRightOperand', () => {
-    expect(mapOutputToTarget({ value: 20 }, makeEdge({ targetHandle: 'b' }), makeNode('math'))).toEqual({
+    expect(
+      mapOutputToTarget({ value: 20 }, makeEdge({ targetHandle: 'b' }), makeNode('math')),
+    ).toEqual({
       connectedRightOperand: 20,
     });
   });
@@ -105,7 +109,11 @@ describe('mapOutputToTarget — api', () => {
 describe('mapOutputToTarget — output', () => {
   it('maps output handle → value', () => {
     expect(
-      mapOutputToTarget({ value: 'result' }, makeEdge({ targetHandle: 'value' }), makeNode('output')),
+      mapOutputToTarget(
+        { value: 'result' },
+        makeEdge({ targetHandle: 'value' }),
+        makeNode('output'),
+      ),
     ).toEqual({ value: 'result' });
   });
 });
@@ -123,7 +131,11 @@ describe('mapOutputToTarget — var-*', () => {
 
   it('returns {} for empty var- handle', () => {
     expect(
-      mapOutputToTarget({ value: 'v' }, makeEdge({ targetHandle: 'var-' }), makeNode('text', 'text')),
+      mapOutputToTarget(
+        { value: 'v' },
+        makeEdge({ targetHandle: 'var-' }),
+        makeNode('text', 'text'),
+      ),
     ).toEqual({});
   });
 });
@@ -131,7 +143,11 @@ describe('mapOutputToTarget — var-*', () => {
 describe('mapOutputToTarget — unknown', () => {
   it('returns {} for unknown node type', () => {
     expect(
-      mapOutputToTarget({ value: 'x' }, makeEdge({ targetHandle: 'anything' }), makeNode('unknown')),
+      mapOutputToTarget(
+        { value: 'x' },
+        makeEdge({ targetHandle: 'anything' }),
+        makeNode('unknown'),
+      ),
     ).toEqual({});
   });
 

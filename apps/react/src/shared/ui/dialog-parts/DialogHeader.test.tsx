@@ -6,31 +6,19 @@ vi.mock('@pipeline/ui', () => ({
   DialogHeader: ({ children, className }: unknown) => (
     <header className={className}>{children}</header>
   ),
-  DialogTitle: ({ children, className }: unknown) => (
-    <h2 className={className}>{children}</h2>
-  ),
+  DialogTitle: ({ children, className }: unknown) => <h2 className={className}>{children}</h2>,
 }));
 
 describe('DialogHeader', () => {
   it('renders title and description', () => {
-    render(
-      <DialogHeader
-        title="Edit"
-        description="Some description"
-        onClose={vi.fn()}
-      />,
-    );
+    render(<DialogHeader title="Edit" description="Some description" onClose={vi.fn()} />);
     expect(screen.getByText('Edit')).toBeInTheDocument();
     expect(screen.getByText('Some description')).toBeInTheDocument();
   });
 
   it('renders icon', () => {
     render(
-      <DialogHeader
-        title="Edit"
-        icon={<span data-testid="icon">★</span>}
-        onClose={vi.fn()}
-      />,
+      <DialogHeader title="Edit" icon={<span data-testid="icon">★</span>} onClose={vi.fn()} />,
     );
     expect(screen.getByTestId('icon')).toBeInTheDocument();
   });

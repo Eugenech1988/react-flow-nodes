@@ -2,19 +2,14 @@ import { render } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AuthFailureHandler } from './AuthFailureHandler';
 
-const {
-  mockSetQueryData,
-  mockInvalidateQueries,
-  mockOnAuthFailure,
-  mockUnsubscribe,
-  mockUseTRPC,
-} = vi.hoisted(() => ({
-  mockSetQueryData: vi.fn(),
-  mockInvalidateQueries: vi.fn(),
-  mockOnAuthFailure: vi.fn(),
-  mockUnsubscribe: vi.fn(),
-  mockUseTRPC: vi.fn(),
-}));
+const { mockSetQueryData, mockInvalidateQueries, mockOnAuthFailure, mockUnsubscribe, mockUseTRPC } =
+  vi.hoisted(() => ({
+    mockSetQueryData: vi.fn(),
+    mockInvalidateQueries: vi.fn(),
+    mockOnAuthFailure: vi.fn(),
+    mockUnsubscribe: vi.fn(),
+    mockUseTRPC: vi.fn(),
+  }));
 
 vi.mock('@tanstack/react-query', async () => {
   const actual =

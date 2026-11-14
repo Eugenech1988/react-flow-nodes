@@ -16,12 +16,7 @@ vi.mock('@/shared/ui', () => ({
     <div>
       <label>{label}</label>
       {error && <span data-testid={`error-${label}`}>{errorMessage}</span>}
-      <input
-        data-testid={`input-${label}`}
-        disabled={disabled}
-        value={value}
-        {...props}
-      />
+      <input data-testid={`input-${label}`} disabled={disabled} value={value} {...props} />
     </div>
   ),
   LocalAlert: ({ alertMessage }: unknown) => <div data-testid="alert">{alertMessage}</div>,
@@ -39,7 +34,7 @@ vi.mock('@/shared/ui', () => ({
 
 const mockedUseProfileForm = vi.mocked(useProfileForm);
 
-const createHookMock =   (overrides: Record<string, unknown> = {}) => ({
+const createHookMock = (overrides: Record<string, unknown> = {}) => ({
   form: {
     register: vi.fn(),
     formState: { errors: {} },
@@ -85,7 +80,7 @@ describe('ProfileForm', () => {
             errors: { firstName: { message: 'Too short' } },
           },
         },
-      })
+      }),
     );
     render(<ProfileForm />);
 
@@ -94,7 +89,7 @@ describe('ProfileForm', () => {
 
   it('shows alert when provided', () => {
     mockedUseProfileForm.mockReturnValue(
-      createHookMock({ alert: { type: 'success', message: 'Success!' } })
+      createHookMock({ alert: { type: 'success', message: 'Success!' } }),
     );
     render(<ProfileForm />);
 

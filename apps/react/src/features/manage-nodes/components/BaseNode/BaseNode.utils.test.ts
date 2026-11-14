@@ -1,4 +1,4 @@
-import { describe, it, expect, } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { Position } from '@xyflow/react';
 import type { TFieldConfig, THandleConfig } from '@/entities';
 import {

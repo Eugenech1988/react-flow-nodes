@@ -24,8 +24,8 @@ export const JobDeleteModal = ({
       title="Delete Job"
       message={
         <>
-          Are you sure you want to delete the job <strong>&quot;{jobSlug}&quot;</strong>? This action
-          cannot be undone and all associated translations will be permanently removed.
+          Are you sure you want to delete the job <strong>&quot;{jobSlug}&quot;</strong>? This
+          action cannot be undone and all associated translations will be permanently removed.
         </>
       }
     />

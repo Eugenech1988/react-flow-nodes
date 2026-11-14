@@ -33,9 +33,7 @@ export const isInputElement = (element: Element | null): boolean => {
     return true;
   }
   const htmlEl = element as HTMLElement;
-  const contentEditableAttr = element.getAttribute
-    ? element.getAttribute('contenteditable')
-    : null;
+  const contentEditableAttr = element.getAttribute ? element.getAttribute('contenteditable') : null;
   if (
     htmlEl.isContentEditable ||
     htmlEl.contentEditable === 'true' ||
