@@ -1,6 +1,7 @@
 import { Zap, CheckCircle2, ShieldCheck, XCircle, CreditCard } from 'lucide-react';
 import { AppButton } from '@/shared/ui';
-import { BASE_PLANS, PLAN_FEATURES } from '../../model';
+import { BASE_PLANS } from '@/pages/plans/model';
+import { PLAN_FEATURES } from '../../model';
 import { useBilling } from '../hooks/useBilling';
 import { useUser } from '@/shared/hooks';
 

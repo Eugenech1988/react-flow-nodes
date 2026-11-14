@@ -23,14 +23,14 @@ const MOCK_CHART_DATA = [
   { day: 'Sun', value: 95 },
 ];
 
-type TimeRange = '7d' | '30d' | '90d';
+type TTimeRange = '7d' | '30d' | '90d';
 
 interface IUsageChartModalProps {
   stat: IUsageStatItem | null;
   onClose: () => void;
 }
 
-const getLineColor = (value: number) => {
+const getLineColor = (value: number): string => {
   if (value >= 80) return '#ef4444';
   if (value >= 60) return '#f97316';
   if (value >= 40) return '#f59e0b';
@@ -60,7 +60,7 @@ const STROKE_STOPS = [
 ];
 
 export const UsageChartModal = ({ stat, onClose }: IUsageChartModalProps) => {
-  const [timeRange, setTimeRange] = useState<TimeRange>('7d');
+  const [timeRange, setTimeRange] = useState<TTimeRange>('7d');
 
   return (
     <Dialog open={!!stat} onOpenChange={(open) => !open && onClose()}>
@@ -84,7 +84,7 @@ export const UsageChartModal = ({ stat, onClose }: IUsageChartModalProps) => {
                 </div>
 
                 <div className="bg-muted/60 relative flex items-center gap-1 rounded-lg p-1 text-xs">
-                  {(['7d', '30d', '90d'] as TimeRange[]).map((range) => {
+                  {(['7d', '30d', '90d'] as TTimeRange[]).map((range) => {
                     const isActive = timeRange === range;
 
                     return (
@@ -139,26 +139,26 @@ export const UsageChartModal = ({ stat, onClose }: IUsageChartModalProps) => {
                     <CartesianGrid
                       strokeDasharray="3 3"
                       vertical={false}
-                      stroke="hsl(var(--border))"
+                      stroke="var(--border)"
                       opacity={0.5}
                     />
                     <XAxis
                       dataKey="day"
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                      tick={{ fill: 'var(--muted-foreground)', fontSize: 12 }}
                     />
                     <YAxis
                       dataKey="value"
                       domain={[0, 100]}
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                      tick={{ fill: 'var(--muted-foreground)', fontSize: 12 }}
                     />
 
                     <Tooltip
                       cursor={{
-                        stroke: 'hsl(var(--muted-foreground))',
+                        stroke: 'var(--muted-foreground)',
                         strokeWidth: 1,
                         strokeDasharray: '4 4',
                       }}
@@ -201,7 +201,7 @@ export const UsageChartModal = ({ stat, onClose }: IUsageChartModalProps) => {
                             cy={cy}
                             r={6}
                             fill={color}
-                            stroke="hsl(var(--background))"
+                            stroke="var(--background)"
                             strokeWidth={2}
                           />
                         );
