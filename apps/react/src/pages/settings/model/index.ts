@@ -1,1 +1,2 @@
-export * from './constants.tsx';
+export * from './constants';
+export * from './types';

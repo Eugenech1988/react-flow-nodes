@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import {
   AreaChart,
   Area,
@@ -11,6 +11,7 @@ import {
 import { motion } from 'framer-motion';
 import { Dialog, DialogContent } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter } from '@/shared/ui';
+import { type IUsageStatItem } from '../../model';
 
 const MOCK_CHART_DATA = [
   { day: 'Mon', value: 30 },
@@ -24,17 +25,8 @@ const MOCK_CHART_DATA = [
 
 type TimeRange = '7d' | '30d' | '90d';
 
-export interface UsageStatItem {
-  label: string;
-  value: string;
-  percentage: number;
-  barColor: string;
-  sub: string;
-  icon?: ReactNode;
-}
-
-interface UsageChartModalProps {
-  stat: UsageStatItem | null;
+interface IUsageChartModalProps {
+  stat: IUsageStatItem | null;
   onClose: () => void;
 }
 
@@ -67,7 +59,7 @@ const STROKE_STOPS = [
   { offset: '100%', color: '#14b8a6' },
 ];
 
-export const UsageChartModal = ({ stat, onClose }: UsageChartModalProps) => {
+export const UsageChartModal = ({ stat, onClose }: IUsageChartModalProps) => {
   const [timeRange, setTimeRange] = useState<TimeRange>('7d');
 
   return (

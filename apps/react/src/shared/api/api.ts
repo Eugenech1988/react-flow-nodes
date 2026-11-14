@@ -1,26 +1,27 @@
+import {
+  refreshAccessToken,
+  notifyAuthFailure,
+  getCsrfToken,
+} from './authRefresh';
+
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-const getCsrfToken = () => {
-  const match = document.cookie.match(/(?:^|;\s*)x-csrf-token=([^;]*)/);
-  return match ? decodeURIComponent(match[1]) : '';
-};
+const parseErrorMessage = async (response: Response): Promise<string> => {
+  const data: unknown = await response.json().catch(() => ({}));
 
-let isRefreshing = false;
-let refreshSubscribers: ((error?: Error) => void)[] = [];
+  if (typeof data === 'object' && data !== null && 'message' in data) {
+    const message = (data as { message: unknown }).message;
+    if (typeof message === 'string' && message.length > 0) return message;
+  }
 
-const subscribeTokenRefresh = (cb: (error?: Error) => void) => {
-  refreshSubscribers.push(cb);
-};
-
-const onRefreshed = (error?: Error) => {
-  refreshSubscribers.forEach((cb) => cb(error));
-  refreshSubscribers = [];
+  return 'API Error';
 };
 
 const request = async <T>(
   endpoint: string,
   options: RequestInit = {},
   responseType: 'json' | 'blob' = 'json',
+  isRetry = false,
 ): Promise<T> => {
   const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint}`;
   const isFormData = options.body instanceof FormData;
@@ -38,44 +39,24 @@ const request = async <T>(
   const response = await fetch(url, config);
 
   if (response.status === 401) {
-    if (endpoint === '/auth/refresh') {
-      isRefreshing = false;
-      onRefreshed(new Error('Unauthorized'));
+    if (isRetry) {
+      notifyAuthFailure();
       throw new Error('Unauthorized');
     }
 
-    if (isRefreshing) {
-      return new Promise<T>((resolve, reject) => {
-        subscribeTokenRefresh((error) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(request<T>(endpoint, options, responseType));
-          }
-        });
-      });
+    const refreshed = await refreshAccessToken();
+
+    if (!refreshed) {
+      notifyAuthFailure();
+      throw new Error('Unauthorized');
     }
 
-    isRefreshing = true;
-
-    try {
-      await request('/auth/refresh', { method: 'POST' });
-      isRefreshing = false;
-      onRefreshed();
-      return await request<T>(endpoint, options, responseType);
-    } catch (err) {
-      isRefreshing = false;
-      const authError = err instanceof Error ? err : new Error('Unauthorized');
-      onRefreshed(authError);
-      throw authError;
-    }
+    return request<T>(endpoint, options, responseType, true);
   }
 
   if (!response.ok) {
-    const errorData = (await response.json().catch(() => ({}))) as Record<string, unknown>;
-    const errorMessage = typeof errorData.message === 'string' ? errorData.message : 'API Error';
-
-    throw new Error(errorMessage);
+    const message = await parseErrorMessage(response);
+    throw new Error(message);
   }
 
   if (responseType === 'blob') {
@@ -92,43 +73,33 @@ const request = async <T>(
 };
 
 export const api = {
-  get: <T>(endpoint: string, options?: RequestInit) =>
+  get: <T>(endpoint: string, options?: RequestInit): Promise<T> =>
     request<T>(endpoint, { ...options, method: 'GET' }),
 
-  getBlob: (endpoint: string, options?: RequestInit) =>
-    request<Blob>(
-      endpoint,
-      {
-        ...options,
-        method: 'GET',
-      },
-      'blob',
-    ),
+  getBlob: (endpoint: string, options?: RequestInit): Promise<Blob> =>
+    request<Blob>(endpoint, { ...options, method: 'GET' }, 'blob'),
 
-  post: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
+  post: <T>(endpoint: string, body?: unknown, options?: RequestInit): Promise<T> =>
     request<T>(endpoint, {
       ...options,
       method: 'POST',
       body: body instanceof FormData ? body : JSON.stringify(body),
     }),
 
-  put: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
+  put: <T>(endpoint: string, body?: unknown, options?: RequestInit): Promise<T> =>
     request<T>(endpoint, {
       ...options,
       method: 'PUT',
       body: body instanceof FormData ? body : JSON.stringify(body),
     }),
 
-  patch: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
+  patch: <T>(endpoint: string, body?: unknown, options?: RequestInit): Promise<T> =>
     request<T>(endpoint, {
       ...options,
       method: 'PATCH',
       body: body instanceof FormData ? body : JSON.stringify(body),
     }),
 
-  delete: <T>(endpoint: string, options?: RequestInit) =>
-    request<T>(endpoint, {
-      ...options,
-      method: 'DELETE',
-    }),
+  delete: <T>(endpoint: string, options?: RequestInit): Promise<T> =>
+    request<T>(endpoint, { ...options, method: 'DELETE' }),
 };

@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { useUser } from '@/shared/hooks';
-import { PLAN_USAGE_STATS } from '../../model';
-import { UsageChartModal, type UsageStatItem } from './UsageChartModal';
+import { PLAN_USAGE_STATS, type IUsageStatItem } from '../../model';
+
+const UsageChartModal = lazy(() =>
+  import('./UsageChartModal').then((m) => ({ default: m.UsageChartModal })),
+);
 
 export const UsageStats = () => {
   const { isProActive } = useUser();
-  const [selectedStat, setSelectedStat] = useState<UsageStatItem | null>(null);
+  const [selectedStat, setSelectedStat] = useState<IUsageStatItem | null>(null);
 
   return (
     <>
@@ -41,7 +44,11 @@ export const UsageStats = () => {
         ))}
       </div>
 
-      <UsageChartModal stat={selectedStat} onClose={() => setSelectedStat(null)} />
+      {selectedStat && (
+        <Suspense fallback={null}>
+          <UsageChartModal stat={selectedStat} onClose={() => setSelectedStat(null)} />
+        </Suspense>
+      )}
     </>
   );
 };
