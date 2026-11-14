@@ -53,12 +53,9 @@ export type THistoryState = {
 export type TGraphState = {
   nodes: TPipelineNode[];
   edges: TPipelineEdge[];
-  nodeIDs: Record<string, number>;
   clipboard: TClipboardNodesData | null;
-  isDragging: boolean;
   past: THistorySnapshot[];
   future: THistorySnapshot[];
-  isHistoryAction: boolean;
   lastRunAt: Date | string | null;
   lastRunStatus: TLastRunStatus;
   saveStatus: 'saved' | 'saving' | 'unsaved' | 'error';

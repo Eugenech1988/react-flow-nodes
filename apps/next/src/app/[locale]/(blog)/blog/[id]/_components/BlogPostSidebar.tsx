@@ -17,9 +17,7 @@ export const BlogPostSidebar = ({ post, locale }: IBlogPostSidebarProps) => {
 
   const handleShare = (): void => {
     if (typeof navigator === 'undefined' || typeof navigator.share !== 'function') return;
-    void navigator
-      .share({ title: post.title, url: window.location.href })
-      .catch(() => undefined);
+    void navigator.share({ title: post.title, url: window.location.href }).catch(() => undefined);
   };
 
   return (
@@ -82,7 +80,7 @@ export const BlogPostSidebar = ({ post, locale }: IBlogPostSidebarProps) => {
             <div className="border-theme-line text-theme-dim mt-6 border-t pt-4 text-center tracking-widest">
               <Link
                 href={`/${locale}/blog`}
-                className="text-theme-accent text-xs hover:text-theme-accent-hover mt-1 flex items-center"
+                className="text-theme-accent hover:text-theme-accent-hover mt-1 flex items-center text-xs"
               >
                 <ChevronLeft />
                 {t('details.returnToArchive', { defaultValue: 'Return to Archive' })}

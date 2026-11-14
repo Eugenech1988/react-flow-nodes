@@ -1,7 +1,7 @@
-import { defineConfig } from 'sanity';
-import { structureTool } from 'sanity/structure';
-import { documentInternationalization } from '@sanity/document-internationalization';
-import { schemaTypes } from './schemaTypes';
+import {defineConfig} from 'sanity'
+import {structureTool} from 'sanity/structure'
+import {documentInternationalization} from '@sanity/document-internationalization'
+import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
   name: 'default',
@@ -20,20 +20,18 @@ export default defineConfig({
                 S.documentTypeList('translation.metadata')
                   .title('Blog Posts')
                   .child((documentId) =>
-                    S.document()
-                      .documentId(documentId)
-                      .schemaType('translation.metadata')
-                  )
+                    S.document().documentId(documentId).schemaType('translation.metadata'),
+                  ),
               ),
             ...S.documentTypeListItems().filter(
-              (listItem) => !['post', 'translation.metadata'].includes(listItem.getId() as string)
+              (listItem) => !['post', 'translation.metadata'].includes(listItem.getId() as string),
             ),
           ]),
     }),
     documentInternationalization({
       supportedLanguages: [
-        { id: 'en', title: 'English' },
-        { id: 'uk', title: 'Українська' },
+        {id: 'en', title: 'English'},
+        {id: 'uk', title: 'Українська'},
       ],
       schemaTypes: ['post'],
     }),
@@ -41,4 +39,4 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
   },
-});
+})

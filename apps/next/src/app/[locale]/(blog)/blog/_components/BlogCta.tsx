@@ -43,7 +43,7 @@ export const BlogCta = () => {
               </div>
 
               <div className="mb-4 flex h-6 items-end justify-center gap-1">
-                <SignalBars className="justify-center mb-4" />
+                <SignalBars className="mb-4 justify-center" />
               </div>
 
               <h2 className="text-theme-fg text-2xl font-bold sm:text-3xl">{t('cta.title')}</h2>
@@ -51,7 +51,10 @@ export const BlogCta = () => {
                 {t('cta.description')}
               </p>
 
-              <form onSubmit={handleSubmit} className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row">
+              <form
+                onSubmit={handleSubmit}
+                className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row"
+              >
                 <AppInput
                   type="email"
                   required

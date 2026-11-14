@@ -33,8 +33,14 @@ const mapOutputToTarget = (
   targetNode: TPipelineNode,
 ): TNodeExecutionResult => {
   const value = getConnectedValue(output, edge.sourceHandle);
-  const targetKind = String(targetNode.data?.nodeType || targetNode.type || '').toLowerCase();
   const targetHandle = edge.targetHandle || '';
+
+  if (targetHandle.startsWith('var-')) {
+    const variableName = targetHandle.slice(4);
+    if (variableName) return { [variableName]: value };
+  }
+
+  const targetKind = String(targetNode.data?.nodeType || targetNode.type || '').toLowerCase();
 
   if (targetKind.includes('math')) {
     if (targetHandle === 'a') return { connectedLeftOperand: value };

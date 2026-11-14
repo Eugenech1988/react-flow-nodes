@@ -7,51 +7,49 @@ vi.mock('@pipeline/ui', async () => {
   const React = await import('react');
 
   const Dialog = ({
-                    children,
-                    open,
-                  }: {
+    children,
+    open,
+  }: {
     children: React.ReactNode;
     open: boolean;
     onOpenChange?: (open: boolean) => void;
   }) => (open ? <div data-testid="dialog">{children}</div> : null);
 
   const DialogContent = ({
-                           children,
-                         }: {
+    children,
+  }: {
     children: React.ReactNode;
     showCloseButton?: boolean;
     className?: string;
   }) => <div>{children}</div>;
 
   const DialogHeader = ({
-                          children,
-                          className,
-                        }: {
+    children,
+    className,
+  }: {
     children: React.ReactNode;
     className?: string;
   }) => <header className={className}>{children}</header>;
 
   const DialogTitle = ({
-                         children,
-                         className,
-                       }: {
+    children,
+    className,
+  }: {
     children: React.ReactNode;
     className?: string;
   }) => <h2 className={className}>{children}</h2>;
 
-  const Input = React.forwardRef<
-    HTMLInputElement,
-    React.InputHTMLAttributes<HTMLInputElement>
-  >((props, ref) => <input ref={ref} {...props} />);
+  const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
+    (props, ref) => <input ref={ref} {...props} />,
+  );
 
-  const Button = React.forwardRef<
-    HTMLButtonElement,
-    React.ButtonHTMLAttributes<HTMLButtonElement>
-  >(({ children, ...props }, ref) => (
-    <button ref={ref} {...props}>
-      {children}
-    </button>
-  ));
+  const Button = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
+    ({ children, ...props }, ref) => (
+      <button ref={ref} {...props}>
+        {children}
+      </button>
+    ),
+  );
 
   return { Dialog, DialogContent, DialogHeader, DialogTitle, Input, Button };
 });
@@ -72,8 +70,7 @@ const renderModal = (props: IRenderProps = {}) => {
   const onConfirm = props.onConfirm ?? vi.fn().mockResolvedValue(undefined);
   const onClose = props.onClose ?? vi.fn();
 
-  const qrCodeImage =
-    props.qrCodeImage === undefined ? DEFAULT_QR : props.qrCodeImage;
+  const qrCodeImage = props.qrCodeImage === undefined ? DEFAULT_QR : props.qrCodeImage;
 
   render(
     <TwoFactorModal

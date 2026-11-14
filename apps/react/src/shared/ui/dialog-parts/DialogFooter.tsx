@@ -2,7 +2,7 @@ import { AppButton, type ButtonVariant } from '@/shared/ui';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/shared/lib';
 
-interface DialogFooterProps {
+interface IDialogFooterProps {
   onCancel: () => void;
   onSubmit?: () => void;
   isPending?: boolean;
@@ -32,7 +32,7 @@ export const DialogFooter = ({
   isDisabled = false,
   showSubmit = true,
   showCancel = true,
-}: DialogFooterProps) => {
+}: IDialogFooterProps) => {
   const renderActionBtn = () => {
     if (!showSubmit) return null;
 
@@ -45,7 +45,7 @@ export const DialogFooter = ({
 
     return (
       <AppButton
-        type="submit"
+        type={onSubmit ? 'button' : 'submit'}
         variant={buttonVariant}
         onClick={onSubmit}
         isPending={isPending}

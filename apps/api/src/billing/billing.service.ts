@@ -67,11 +67,7 @@ export class BillingService {
     return subscription;
   }
 
-  async createCheckoutSession(
-    userId: string,
-    plan: Plan,
-    cycle: TBillingCycle = 'monthly',
-  ) {
+  async createCheckoutSession(userId: string, plan: Plan, cycle: TBillingCycle = 'monthly') {
     const priceId = this.getPriceId(plan, cycle);
 
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
@@ -152,8 +148,7 @@ export class BillingService {
 
       const userId = session.metadata?.userId || stripeSubscription.metadata?.userId;
       const plan = (session.metadata?.plan || stripeSubscription.metadata?.plan) as
-        | Plan
-        | undefined;
+        Plan | undefined;
 
       if (!userId || !plan) {
         throw new BadRequestException('User metadata missing in session and subscription');

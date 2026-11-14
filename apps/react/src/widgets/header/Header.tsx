@@ -1,5 +1,5 @@
 import { Camera, Cloud, CloudAlert, CloudCheck, Save, ShieldCheck } from 'lucide-react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ThemeToggle } from '@/features/theme-toggle';
 import logo from '@/assets/logo.svg';
 import { UserDropdown } from '@/features/user-dropdown';
@@ -10,7 +10,6 @@ import { useStore } from '@/entities';
 
 export const Header = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const isHome = location.pathname === '/';
   const { user, role } = useUser();
   const currentPipelineName = user?.currentPipeline?.name;
@@ -20,30 +19,17 @@ export const Header = () => {
 
   const isContentManager = role === 'CONTENT_MANAGER';
   const isSuperAdmin = role === 'SUPER_ADMIN';
-  const isAdmin = isContentManager || isSuperAdmin;
-  const showPipelineControls = !isAdmin && Boolean(currentPipelineName);
-
-  const handleHeaderClick = () => {
-    if (!isHome) {
-      navigate('/');
-    }
-  };
-
-  const preventNavigation = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
+  const showAdminBadge = isContentManager || isSuperAdmin;
+  const showPipelineControls = !isContentManager && Boolean(currentPipelineName);
 
   return (
-    <header
-      className="bg-background bg-header-bg border-border fixed top-0 z-40 flex h-14 w-full shrink-0 items-center justify-between border-b px-6 transition-colors duration-300"
-      onClick={handleHeaderClick}
-    >
-      <div className="flex w-[320px] items-center gap-4" onClick={preventNavigation}>
+    <header className="bg-background bg-header-bg border-border fixed top-0 z-40 flex h-14 w-full shrink-0 items-center justify-between border-b px-6 transition-colors duration-300">
+      <div className="flex w-[320px] items-center gap-4">
         <Link to="/">
           <img className="h-6 w-auto object-contain" src={logo} alt="Pipeline logo" />
         </Link>
 
-        {isAdmin && (
+        {showAdminBadge && (
           <>
             <div className="bg-border h-4 w-px" />
             <span
@@ -85,7 +71,7 @@ export const Header = () => {
         )}
       </div>
 
-      <div className="flex w-[320px] items-center justify-end gap-3" onClick={preventNavigation}>
+      <div className="flex w-[320px] items-center justify-end gap-3">
         {showPipelineControls && (
           <>
             <WorkflowExecutionControl />
@@ -96,6 +82,7 @@ export const Header = () => {
               disabled={!isHome}
               onClick={() => triggerSave(false, true)}
               title={!isHome ? 'Saving is only available on the canvas page' : 'Save pipeline'}
+              aria-label="Save pipeline"
             >
               <Save className="h-4 w-4" />
             </button>
@@ -109,6 +96,7 @@ export const Header = () => {
                   ? 'Saving is only available on the canvas page'
                   : 'Center canvas and save screenshot'
               }
+              aria-label="Save pipeline with screenshot"
             >
               <Camera className="h-4 w-4" />
             </button>

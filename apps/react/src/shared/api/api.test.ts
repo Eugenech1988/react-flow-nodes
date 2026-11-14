@@ -55,14 +55,12 @@ describe('api.get', () => {
 
 describe('api 401 handling', () => {
   it('refreshes and retries once on 401', async () => {
-    mockFetch
-      .mockResolvedValueOnce({ status: 401 })
-      .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        headers: new Headers({ 'content-type': 'application/json' }),
-        json: () => Promise.resolve({ ok: true }),
-      });
+    mockFetch.mockResolvedValueOnce({ status: 401 }).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      headers: new Headers({ 'content-type': 'application/json' }),
+      json: () => Promise.resolve({ ok: true }),
+    });
 
     const result = await api.get<{ ok: boolean }>('/secure');
 

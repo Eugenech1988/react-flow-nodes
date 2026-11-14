@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Receipt, Download } from 'lucide-react';
+import { toast } from 'sonner';
 import { api } from '@/shared/api';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@pipeline/ui';
 import { useBilling } from '../hooks';
@@ -12,10 +13,7 @@ export const InvoiceHistory = () => {
   const handleDownloadInvoice = async (transactionId: string) => {
     try {
       setDownloadingId(transactionId);
-      const baseUrl = import.meta.env.VITE_API_URL;
-      const blob = await api.getBlob(`${baseUrl}/billing/transactions/${transactionId}/invoice`, {
-        credentials: 'include',
-      });
+      const blob = await api.getBlob(`/billing/transactions/${transactionId}/invoice`);
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -25,8 +23,9 @@ export const InvoiceHistory = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Failed to download invoice:', error);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to download invoice.';
+      toast.error(message);
     } finally {
       setDownloadingId(null);
     }

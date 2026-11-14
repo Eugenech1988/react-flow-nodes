@@ -19,9 +19,7 @@ export const FEATURES = [
 
 export type TFeatureId = (typeof FEATURES)[number]['id'];
 
-export type TSlide =
-  | { kind: 'feature'; id: TFeatureId; icon: LucideIcon }
-  | { kind: 'cta' };
+export type TSlide = { kind: 'feature'; id: TFeatureId; icon: LucideIcon } | { kind: 'cta' };
 
 export const SLIDES: TSlide[] = [
   ...FEATURES.map((f): TSlide => ({ kind: 'feature', id: f.id, icon: f.icon })),

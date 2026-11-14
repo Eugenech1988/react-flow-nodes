@@ -94,12 +94,8 @@ const components: PortableTextComponents = {
     h2: ({ children }) => (
       <h2 className="text-theme-fg mt-8 mb-3 text-2xl font-bold">{children}</h2>
     ),
-    h3: ({ children }) => (
-      <h3 className="text-theme-fg mt-6 mb-2 text-xl font-bold">{children}</h3>
-    ),
-    h4: ({ children }) => (
-      <h4 className="text-theme-fg mt-4 mb-2 text-lg font-bold">{children}</h4>
-    ),
+    h3: ({ children }) => <h3 className="text-theme-fg mt-6 mb-2 text-xl font-bold">{children}</h3>,
+    h4: ({ children }) => <h4 className="text-theme-fg mt-4 mb-2 text-lg font-bold">{children}</h4>,
     blockquote: ({ children }) => (
       <blockquote className="border-theme-accent/50 text-theme-accent-hover my-6 border-l-2 pl-4 italic">
         {children}

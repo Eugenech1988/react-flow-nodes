@@ -51,6 +51,7 @@ export const TwoFactorSection = () => {
         isOpen={modal2fa.isOpen}
         onClose={modal2fa.handleClose}
         onConfirm={modal2fa.handleConfirm}
+        onRetryGenerate={modal2fa.handleRetryGenerate}
         mode={modal2fa.mode}
         qrCodeImage={modal2fa.qrCodeImage}
         modalError={modal2fa.error}

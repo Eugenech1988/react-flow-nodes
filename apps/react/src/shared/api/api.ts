@@ -1,8 +1,4 @@
-import {
-  refreshAccessToken,
-  notifyAuthFailure,
-  getCsrfToken,
-} from './authRefresh';
+import { refreshAccessToken, notifyAuthFailure, getCsrfToken } from './authRefresh';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 

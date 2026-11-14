@@ -36,16 +36,21 @@ export const extractVariables = (text: string): string[] => {
   return uniqueVariables;
 };
 
+const getBrowserLocale = (): string => {
+  if (typeof navigator === 'undefined') return 'en-US';
+  return navigator.language || 'en-US';
+};
+
 export const formatDuration = (durationMs: number | null | undefined): string => {
-  if (durationMs == null || isNaN(durationMs)) return '00.00.00';
+  if (durationMs == null || isNaN(durationMs)) return '00:00.00';
 
   const minutes = Math.floor(durationMs / 60000);
   const seconds = Math.floor((durationMs % 60000) / 1000);
-  const milliseconds = Math.floor((durationMs % 1000) / 10);
+  const centiseconds = Math.floor((durationMs % 1000) / 10);
 
   const pad = (num: number) => String(num).padStart(2, '0');
 
-  return `${pad(minutes)}.${pad(seconds)}.${pad(milliseconds)}`;
+  return `${pad(minutes)}:${pad(seconds)}.${pad(centiseconds)}`;
 };
 
 export const formatDate = (
@@ -53,24 +58,25 @@ export const formatDate = (
   options?: { showTime?: boolean },
 ): string => {
   if (dateInput == null) return '—';
+
   const date =
     typeof dateInput === 'number'
       ? new Date(dateInput)
       : typeof dateInput === 'string'
         ? new Date(dateInput)
         : dateInput;
+
   if (isNaN(date.getTime())) return '—';
 
   const showTime = options?.showTime ?? true;
 
-  return new Intl.DateTimeFormat('ru-RU', {
+  return new Intl.DateTimeFormat(getBrowserLocale(), {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
     ...(showTime && {
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
     }),
   }).format(date);
 };
@@ -89,7 +95,7 @@ export const formatTimestamp = (ts: number | string): string => {
   }
 
   if (!isNaN(date.getTime())) {
-    return date.toLocaleTimeString('ru-RU', {
+    return date.toLocaleTimeString(getBrowserLocale(), {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',

@@ -36,8 +36,7 @@ export const usePlanSelection = (isProActive: boolean) => {
     }
 
     if (planId === 'enterprise') {
-      window.location.href =
-        'mailto:enterprise@yourdomain.com?subject=Enterprise%20Plan%20Inquiry';
+      window.location.href = 'mailto:enterprise@yourdomain.com?subject=Enterprise%20Plan%20Inquiry';
       return;
     }
 
@@ -64,8 +63,7 @@ export const usePlanSelection = (isProActive: boolean) => {
       } catch (error) {
         console.error('Failed to create checkout session', error);
         setErrorMessage(
-          extractErrorMessage(error) ??
-          'Failed to initialize payment. Please try again later.',
+          extractErrorMessage(error) ?? 'Failed to initialize payment. Please try again later.',
         );
       } finally {
         setProcessingPlan(null);

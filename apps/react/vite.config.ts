@@ -70,9 +70,7 @@ const CHUNK_GROUPS: IChunkGroup[] = [
   },
 ];
 
-const IGNORED_WARNINGS: RegExp[] = [
-  /\[MODULE_LEVEL_DIRECTIVE\][\s\S]*react-compiler-runtime/,
-];
+const IGNORED_WARNINGS: RegExp[] = [/\[MODULE_LEVEL_DIRECTIVE\][\s\S]*react-compiler-runtime/];
 
 const onwarn: WarningHandler = (warning, warn) => {
   const message =
@@ -100,21 +98,13 @@ const manualChunks: RolldownOutputOptions['manualChunks'] = (id: string) => {
 };
 
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-    babel({ presets: [reactCompilerPreset()] }),
-    workspaceAliases,
-  ],
+  plugins: [react(), tailwindcss(), babel({ presets: [reactCompilerPreset()] }), workspaceAliases],
   resolve: {
     alias: {
       'react/compiler-runtime': 'react-compiler-runtime',
       react: path.resolve(import.meta.dirname, './node_modules/react'),
       'react-dom': path.resolve(import.meta.dirname, './node_modules/react-dom'),
-      'react/jsx-runtime': path.resolve(
-        import.meta.dirname,
-        './node_modules/react/jsx-runtime.js',
-      ),
+      'react/jsx-runtime': path.resolve(import.meta.dirname, './node_modules/react/jsx-runtime.js'),
       'react/jsx-dev-runtime': path.resolve(
         import.meta.dirname,
         './node_modules/react/jsx-dev-runtime.js',

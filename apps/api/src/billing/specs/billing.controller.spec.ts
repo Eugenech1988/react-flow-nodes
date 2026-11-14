@@ -131,9 +131,7 @@ describe('BillingController', () => {
   describe('getSubscription', () => {
     it('should return subscription for current user', async () => {
       const mockReq = { user: { id: 'user_1' } } as unknown as TAuthedRequest;
-      service.getSubscriptionByUserId.mockResolvedValue(
-        createMockSubscription({ plan: Plan.PRO }),
-      );
+      service.getSubscriptionByUserId.mockResolvedValue(createMockSubscription({ plan: Plan.PRO }));
 
       const result = await controller.getSubscription(mockReq);
 
@@ -146,7 +144,9 @@ describe('BillingController', () => {
     it('should redirect to Stripe customer portal url', async () => {
       const mockReq = { user: { id: 'user_1' } } as unknown as TAuthedRequest;
       const mockRes = { redirect: jest.fn() } as unknown as TResponseMock;
-      service.createBillingPortalSession.mockResolvedValue({ url: 'https://stripe.portal/session' });
+      service.createBillingPortalSession.mockResolvedValue({
+        url: 'https://stripe.portal/session',
+      });
 
       await controller.openBillingPortal(mockReq, mockRes);
 
@@ -228,9 +228,7 @@ describe('BillingController', () => {
       const mockRes = { download: mockDownload } as unknown as TResponseMock;
       service.getInvoiceFilepath.mockResolvedValue('/abs/path/invoice.pdf');
 
-      await expect(
-        controller.downloadInvoice(mockReq, 'tx_1', mockRes),
-      ).resolves.toBeUndefined();
+      await expect(controller.downloadInvoice(mockReq, 'tx_1', mockRes)).resolves.toBeUndefined();
 
       expect(mockDownload).toHaveBeenCalledWith('/abs/path/invoice.pdf', expect.any(Function));
     });
@@ -243,9 +241,7 @@ describe('BillingController', () => {
       const mockRes = { download: mockDownload } as unknown as TResponseMock;
       service.getInvoiceFilepath.mockResolvedValue('/abs/path/invoice.pdf');
 
-      await expect(
-        controller.downloadInvoice(mockReq, 'tx_1', mockRes),
-      ).resolves.toBeUndefined();
+      await expect(controller.downloadInvoice(mockReq, 'tx_1', mockRes)).resolves.toBeUndefined();
 
       expect(mockDownload).toHaveBeenCalledWith('/abs/path/invoice.pdf', expect.any(Function));
     });
@@ -254,9 +250,7 @@ describe('BillingController', () => {
   describe('cancelSubscription', () => {
     it('should cancel subscription for current user', async () => {
       const mockReq = { user: { id: 'user_1' } } as unknown as TAuthedRequest;
-      service.cancelSubscription.mockResolvedValue(
-        createMockSubscription({ plan: Plan.FREE }),
-      );
+      service.cancelSubscription.mockResolvedValue(createMockSubscription({ plan: Plan.FREE }));
 
       const result = await controller.cancelSubscription(mockReq);
 

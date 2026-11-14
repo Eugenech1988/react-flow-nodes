@@ -223,9 +223,7 @@ export class JobsService {
       where: { jobId_locale: { jobId, locale } },
     });
     if (!translation) {
-      throw new NotFoundException(
-        `Translation "${locale}" for job "${jobId}" not found`,
-      );
+      throw new NotFoundException(`Translation "${locale}" for job "${jobId}" not found`);
     }
 
     const removed = await this.prisma.jobTranslation.delete({

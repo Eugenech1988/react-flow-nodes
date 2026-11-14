@@ -58,7 +58,7 @@ const JobContent = async ({ params }: TPageWithIdProps) => {
 };
 
 const JobPage = ({ params }: TPageWithIdProps) => (
-  <Suspense fallback={<div className="bg-theme-bg min-h-screen" />}>
+  <Suspense fallback={null}>
     <JobContent params={params} />
   </Suspense>
 );

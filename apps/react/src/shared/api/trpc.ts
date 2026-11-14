@@ -1,11 +1,7 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCContext } from '@trpc/tanstack-react-query';
 import type { AppRouter } from '@pipeline/api/trpc';
-import {
-  refreshAccessToken,
-  notifyAuthFailure,
-  getCsrfToken,
-} from './authRefresh';
+import { refreshAccessToken, notifyAuthFailure, getCsrfToken } from './authRefresh';
 
 const API_URL = import.meta.env.VITE_API_URL;
 

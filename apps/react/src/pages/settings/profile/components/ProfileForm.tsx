@@ -69,6 +69,14 @@ export const ProfileForm = () => {
           />
         </div>
 
+        <FloatingInput
+          {...register('jobTitle')}
+          label="Job Title"
+          id="jobTitle"
+          error={!!errors.jobTitle}
+          errorMessage={errors.jobTitle?.message}
+        />
+
         <div className="border-border/60 flex items-center justify-end gap-2 border-t pt-4">
           <AppButton variant="ghost" isLink linkTo="/" icon={ArrowLeft} text="Back to app" />
 

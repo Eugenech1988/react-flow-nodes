@@ -35,11 +35,7 @@ export class BillingController {
       throw new BadRequestException('User is not authenticated');
     }
 
-    return this.billingService.createCheckoutSession(
-      userId,
-      parsed.data.plan,
-      parsed.data.cycle,
-    );
+    return this.billingService.createCheckoutSession(userId, parsed.data.plan, parsed.data.cycle);
   }
 
   @Get('subscription')
@@ -83,10 +79,7 @@ export class BillingController {
     @Param('id') transactionId: string,
     @Res() res: Response,
   ) {
-    const filePath = await this.billingService.getInvoiceFilepath(
-      req.user.id,
-      transactionId,
-    );
+    const filePath = await this.billingService.getInvoiceFilepath(req.user.id, transactionId);
 
     return res.download(filePath, (err) => {
       if (err) {

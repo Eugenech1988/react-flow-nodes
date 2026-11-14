@@ -99,7 +99,7 @@ export const CtaSection = () => {
                 </div>
 
                 <div className="flex h-5 items-end gap-1">
-                  <SignalBars className="justify-center mb-4" />
+                  <SignalBars className="mb-4 justify-center" />
                 </div>
               </div>
 

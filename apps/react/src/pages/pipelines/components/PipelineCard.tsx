@@ -25,11 +25,11 @@ import { usePipelineDialogStore } from '../model';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-interface TPipelineCardProps {
+interface IPipelineCardProps {
   pipeline: TPipeline;
 }
 
-export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
+export const PipelineCard = ({ pipeline }: IPipelineCardProps) => {
   const openUpdateModal = usePipelineDialogStore((state) => state.openUpdateModal);
   const navigate = useNavigate();
 
@@ -37,17 +37,24 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
     onSetCurrentSuccess: () => navigate('/'),
   });
 
+  const isDeleting = deletePipeline.isPending;
+  const isSwitching = setCurrentPipeline.isPending;
+  const isBusy = isDeleting || isSwitching;
+
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isBusy) return;
     deletePipeline.mutate(pipeline.id);
   };
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isBusy) return;
     openUpdateModal(pipeline);
   };
 
   const handleCardClick = () => {
+    if (isBusy) return;
     setCurrentPipeline.mutate(pipeline);
   };
 
@@ -57,12 +64,14 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: deletePipeline.isPending ? 0.5 : 1 }}
+      animate={{ opacity: isDeleting ? 0.5 : 1 }}
       transition={{ duration: 0.15, ease: 'easeOut' }}
-      className="group border-border/80 bg-card pointer-events-auto relative flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border shadow-xs transition-all hover:border-teal-500/40 hover:shadow-md"
+      className={`group border-border/80 bg-card pointer-events-auto relative flex flex-col justify-between overflow-hidden rounded-2xl border shadow-xs transition-all hover:border-teal-500/40 hover:shadow-md ${
+        isBusy ? 'cursor-wait' : 'cursor-pointer'
+      }`}
       onClick={handleCardClick}
     >
-      {deletePipeline.isPending && (
+      {(isDeleting || isSwitching) && (
         <div className="bg-background/50 absolute inset-0 z-10 flex items-center justify-center backdrop-blur-xs">
           <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
         </div>
@@ -80,7 +89,10 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
 
             <div onClick={(e) => e.stopPropagation()}>
               <DropdownMenu>
-                <DropdownMenuTrigger className="text-muted-foreground hover:text-foreground hover:bg-muted/60 shrink-0 cursor-pointer rounded-lg p-1 transition-colors outline-none">
+                <DropdownMenuTrigger
+                  disabled={isBusy}
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted/60 shrink-0 cursor-pointer rounded-lg p-1 transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                >
                   <MoreVertical className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -89,6 +101,7 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
                 >
                   <DropdownMenuItem
                     onClick={handleEdit}
+                    disabled={isBusy}
                     className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors"
                   >
                     <Edit3 className="text-muted-foreground h-3.5 w-3.5" />
@@ -96,7 +109,7 @@ export const PipelineCard = ({ pipeline }: TPipelineCardProps) => {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={handleDelete}
-                    disabled={deletePipeline.isPending}
+                    disabled={isBusy}
                     className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-rose-600 transition-colors hover:bg-rose-500/10 focus:bg-rose-500/10 dark:text-rose-400"
                   >
                     <Trash2 className="h-3.5 w-3.5 text-current" />

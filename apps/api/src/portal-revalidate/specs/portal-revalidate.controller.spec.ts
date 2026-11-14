@@ -5,9 +5,7 @@ import { PortalRevalidateService } from '../portal-revalidate.service';
 const mockFetch = jest.fn();
 global.fetch = mockFetch as unknown as typeof fetch;
 
-const createConfigMock = (
-  overrides: Record<string, string | undefined> = {},
-) => ({
+const createConfigMock = (overrides: Record<string, string | undefined> = {}) => ({
   get: jest.fn((key: string) => {
     const defaults: Record<string, string> = {
       PORTAL_URL: 'https://portal.example.com',
@@ -180,9 +178,7 @@ describe('PortalRevalidateService', () => {
       await jest.runOnlyPendingTimersAsync();
 
       expect(mockFetch).not.toHaveBeenCalled();
-      expect(warnSpy).toHaveBeenCalledWith(
-        'PORTAL_URL or REVALIDATE_SECRET is not configured',
-      );
+      expect(warnSpy).toHaveBeenCalledWith('PORTAL_URL or REVALIDATE_SECRET is not configured');
     });
 
     it('logs warning and skips request when REVALIDATE_SECRET is missing', async () => {
@@ -196,9 +192,7 @@ describe('PortalRevalidateService', () => {
       await jest.runOnlyPendingTimersAsync();
 
       expect(mockFetch).not.toHaveBeenCalled();
-      expect(warnSpy).toHaveBeenCalledWith(
-        'PORTAL_URL or REVALIDATE_SECRET is not configured',
-      );
+      expect(warnSpy).toHaveBeenCalledWith('PORTAL_URL or REVALIDATE_SECRET is not configured');
     });
   });
 
@@ -225,10 +219,7 @@ describe('PortalRevalidateService', () => {
       jest.advanceTimersByTime(500);
       await jest.runOnlyPendingTimersAsync();
 
-      expect(errorSpy).toHaveBeenCalledWith(
-        'Portal revalidate network error',
-        networkError,
-      );
+      expect(errorSpy).toHaveBeenCalledWith('Portal revalidate network error', networkError);
     });
   });
 });

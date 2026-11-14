@@ -146,9 +146,7 @@ describe('JobsService', () => {
   describe('update — non-PUBLISHED status', () => {
     it('does not set publishedAt when status is not PUBLISHED', async () => {
       mockPrismaService.job.findUnique.mockResolvedValue(createMockJob());
-      mockPrismaService.job.update.mockResolvedValue(
-        createMockJob({ status: JobStatus.DRAFT }),
-      );
+      mockPrismaService.job.update.mockResolvedValue(createMockJob({ status: JobStatus.DRAFT }));
 
       await service.update('job-1', { status: 'DRAFT' });
 
@@ -286,9 +284,7 @@ describe('JobsService', () => {
 
     it('creates job with all translations', async () => {
       mockPrismaService.job.findUnique.mockResolvedValue(null);
-      mockPrismaService.job.create.mockResolvedValue(
-        createMockJob({ slug: 'new-job' }),
-      );
+      mockPrismaService.job.create.mockResolvedValue(createMockJob({ slug: 'new-job' }));
 
       const result = await service.create(createInput, 'user-1');
 
@@ -323,17 +319,13 @@ describe('JobsService', () => {
     it('throws ConflictException when slug is taken', async () => {
       mockPrismaService.job.findUnique.mockResolvedValue(createMockJob());
 
-      await expect(service.create(createInput, 'user-1')).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createInput, 'user-1')).rejects.toThrow(ConflictException);
     });
 
     it('does not trigger revalidation when create fails', async () => {
       mockPrismaService.job.findUnique.mockResolvedValue(createMockJob());
 
-      await expect(service.create(createInput, 'user-1')).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.create(createInput, 'user-1')).rejects.toThrow(ConflictException);
 
       expect(mockPortalRevalidateService.scheduleRevalidate).not.toHaveBeenCalled();
     });
@@ -432,25 +424,19 @@ describe('JobsService', () => {
       mockPrismaService.job.findUnique.mockResolvedValue(createMockJob());
       mockPrismaService.job.findFirst.mockResolvedValue(createMockJob({ id: 'other' }));
 
-      await expect(service.update('job-1', { slug: 'taken' })).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(service.update('job-1', { slug: 'taken' })).rejects.toThrow(ConflictException);
     });
 
     it('throws NotFoundException when job missing', async () => {
       mockPrismaService.job.findUnique.mockResolvedValue(null);
 
-      await expect(service.update('missing', { location: 'X' })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.update('missing', { location: 'X' })).rejects.toThrow(NotFoundException);
     });
 
     it('does not trigger revalidation when update fails', async () => {
       mockPrismaService.job.findUnique.mockResolvedValue(null);
 
-      await expect(service.update('missing', { location: 'X' })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.update('missing', { location: 'X' })).rejects.toThrow(NotFoundException);
 
       expect(mockPortalRevalidateService.scheduleRevalidate).not.toHaveBeenCalled();
     });
@@ -474,9 +460,7 @@ describe('JobsService', () => {
 
       await service.publish('job-1');
 
-      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith([
-        'jobs',
-      ]);
+      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith(['jobs']);
     });
 
     it('does not trigger revalidation when job is missing', async () => {
@@ -505,9 +489,7 @@ describe('JobsService', () => {
 
       await service.archive('job-1');
 
-      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith([
-        'jobs',
-      ]);
+      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith(['jobs']);
     });
   });
 
@@ -527,9 +509,7 @@ describe('JobsService', () => {
 
       await service.remove('job-1');
 
-      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith([
-        'jobs',
-      ]);
+      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith(['jobs']);
     });
   });
 
@@ -572,17 +552,13 @@ describe('JobsService', () => {
 
       await service.upsertTranslation('job-1', input);
 
-      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith([
-        'jobs',
-      ]);
+      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith(['jobs']);
     });
 
     it('throws NotFoundException when job is missing', async () => {
       mockPrismaService.job.findUnique.mockResolvedValue(null);
 
-      await expect(service.upsertTranslation('missing', input)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.upsertTranslation('missing', input)).rejects.toThrow(NotFoundException);
       expect(mockPrismaService.jobTranslation.upsert).not.toHaveBeenCalled();
       expect(mockPortalRevalidateService.scheduleRevalidate).not.toHaveBeenCalled();
     });
@@ -609,17 +585,13 @@ describe('JobsService', () => {
 
       await service.removeTranslation('job-1', 'en');
 
-      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith([
-        'jobs',
-      ]);
+      expect(mockPortalRevalidateService.scheduleRevalidate).toHaveBeenCalledWith(['jobs']);
     });
 
     it('throws NotFoundException when translation is missing', async () => {
       mockPrismaService.jobTranslation.findUnique.mockResolvedValue(null);
 
-      await expect(service.removeTranslation('job-1', 'xx')).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.removeTranslation('job-1', 'xx')).rejects.toThrow(NotFoundException);
       expect(mockPrismaService.jobTranslation.delete).not.toHaveBeenCalled();
       expect(mockPortalRevalidateService.scheduleRevalidate).not.toHaveBeenCalled();
     });

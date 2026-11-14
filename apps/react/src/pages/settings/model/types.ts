@@ -7,4 +7,5 @@ export interface IUsageStatItem {
   barColor: string;
   sub: string;
   icon?: ReactNode;
+  isUnlimited?: boolean;
 }

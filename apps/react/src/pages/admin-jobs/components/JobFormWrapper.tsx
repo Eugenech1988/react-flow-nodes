@@ -13,7 +13,7 @@ export function JobFormWrapper({ jobId, onSuccess, onCancel }: JobFormWrapperPro
   const { data: existingJob, isLoading } = useAdminJob(jobId);
 
   if (jobId && isLoading) {
-    return <GlobalLoader />;
+    return <GlobalLoader fullScreen={false} />;
   }
 
   return (

@@ -1,3 +1,10 @@
+export type TUserRole = 'USER' | 'CONTENT_MANAGER' | 'SUPER_ADMIN';
+export type TUserPlan = 'FREE' | 'PRO' | 'ENTERPRISE';
+export type TSubscriptionPlanStatus = 'ACTIVE' | 'CANCELED' | 'PAST_DUE' | 'TRIALING';
+export type TTransactionStatus = 'SUCCESS' | 'PENDING' | 'FAILED';
+export type TCurrentPipelineStatus = 'DRAFT' | 'ACTIVE' | 'PAUSED' | 'ARCHIVED';
+export type TCurrentPipelineRunStatus = 'SUCCESS' | 'FAILED' | 'RUNNING';
+
 export type TProfile = {
   id: string;
   userId: string;
@@ -14,12 +21,13 @@ export type TProfile = {
 
 export type TTransaction = {
   id: string;
-  usedrId: string;
-  ivoiceId: string;
+  userId: string;
+  invoiceId: string | null;
   providerTxId: string;
   amount: number;
   currency: string;
-  plan: string;
+  status: TTransactionStatus;
+  plan: TUserPlan;
   invoiceUrl: string | null;
   createdAt: string;
   updatedAt: string;
@@ -28,15 +36,25 @@ export type TTransaction = {
 export type TSubscription = {
   id: string;
   userId: string;
-  plan: string;
-  planStatus: string;
-  customerId: string;
-  subscriptionId: string;
+  plan: TUserPlan;
+  planStatus: TSubscriptionPlanStatus;
+  customerId: string | null;
+  subscriptionId: string | null;
   currentPeriodStart: string;
   currentPeriodEnd: string;
-  cancelAtPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
   createdAt: string;
   updatedAt: string;
+};
+
+export type TCurrentPipeline = {
+  id: string;
+  name: string;
+  description: string | null;
+  status: TCurrentPipelineStatus | null;
+  lastRunAt: string | null;
+  lastRunStatus: TCurrentPipelineRunStatus | null;
+  screenshotUrl: string | null;
 };
 
 export interface IUser {
@@ -44,25 +62,21 @@ export interface IUser {
   email: string;
   provider: 'google' | 'github' | 'local';
   providerId: string;
+  role: TUserRole;
+  hasPassword: boolean;
+  isTwoFactorEnabled: boolean;
+  currentPipelineId: string | null;
+  currentPipeline: TCurrentPipeline | null;
   createdAt: string;
   updatedAt: string;
   profile: TProfile | null;
   subscription: TSubscription | null;
   transactions: TTransaction[];
-  isTwoFactorEnabled?: boolean;
-  twoFactorSecret?: string;
 }
 
 export type TRoundedSize = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 
-export type AlertState = {
+export type TAlertState = {
   type: 'success' | 'error';
   message: string;
 } | null;
-
-export type TBillingCycle = 'monthly' | 'yearly';
-
-export type TCheckoutPlanInput = {
-  plan: 'PRO';
-  cycle: TBillingCycle;
-};

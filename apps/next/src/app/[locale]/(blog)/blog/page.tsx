@@ -14,13 +14,13 @@ export const generateMetadata = async ({ params }: TPageProps): Promise<Metadata
 const BlogPage = async ({ params }: TPageProps) => {
   const { locale } = await params;
   const { t } = await getT('blog', { lng: locale });
-  
+
   const posts = await sanityClient.fetch<IBlogPostPreview[]>(
     POSTS_QUERY,
     { locale },
-    { next: { revalidate: 60 } }
+    { next: { revalidate: 60 } },
   );
-  
+
   const featured = posts.find((p) => p.featured) ?? posts[0];
 
   const jsonLd = {

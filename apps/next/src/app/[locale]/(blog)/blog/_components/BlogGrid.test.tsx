@@ -15,9 +15,7 @@ vi.mock('@/shared/lib/sanity', () => ({
 }));
 
 vi.mock('./BlogCard', () => ({
-  BlogCard: ({ post }: { post: { title: string } }) => (
-    <div data-testid="card">{post.title}</div>
-  ),
+  BlogCard: ({ post }: { post: { title: string } }) => <div data-testid="card">{post.title}</div>,
 }));
 
 vi.mock('./BlogPagination', () => ({
@@ -46,11 +44,57 @@ import { BlogGrid } from './BlogGrid';
 import type { IBlogPostPreview } from '.';
 
 const posts: IBlogPostPreview[] = [
-  { id: 'f', slug: 'feat', title: 'Featured', excerpt: 'feat', category: 'engineering', author: 'A', date: '2024.01.01', readTime: 1, featured: true },
-  { id: 'a1', slug: 'a1', title: 'Alpha', excerpt: 'first', category: 'engineering', author: 'A', date: '2024.01.01', readTime: 1 },
-  { id: 'b1', slug: 'b1', title: 'Beta', excerpt: 'second', category: 'design', author: 'A', date: '2024.01.01', readTime: 1 },
-  { id: 'c1', slug: 'c1', title: 'Gamma', excerpt: 'third', category: 'engineering', author: 'A', date: '2024.01.01', readTime: 1 },
-  { id: 'd1', slug: 'd1', title: 'Delta', excerpt: 'fourth', category: 'engineering', author: 'A', date: '2024.01.01', readTime: 1 },
+  {
+    id: 'f',
+    slug: 'feat',
+    title: 'Featured',
+    excerpt: 'feat',
+    category: 'engineering',
+    author: 'A',
+    date: '2024.01.01',
+    readTime: 1,
+    featured: true,
+  },
+  {
+    id: 'a1',
+    slug: 'a1',
+    title: 'Alpha',
+    excerpt: 'first',
+    category: 'engineering',
+    author: 'A',
+    date: '2024.01.01',
+    readTime: 1,
+  },
+  {
+    id: 'b1',
+    slug: 'b1',
+    title: 'Beta',
+    excerpt: 'second',
+    category: 'design',
+    author: 'A',
+    date: '2024.01.01',
+    readTime: 1,
+  },
+  {
+    id: 'c1',
+    slug: 'c1',
+    title: 'Gamma',
+    excerpt: 'third',
+    category: 'engineering',
+    author: 'A',
+    date: '2024.01.01',
+    readTime: 1,
+  },
+  {
+    id: 'd1',
+    slug: 'd1',
+    title: 'Delta',
+    excerpt: 'fourth',
+    category: 'engineering',
+    author: 'A',
+    date: '2024.01.01',
+    readTime: 1,
+  },
 ];
 
 const getMobileMenu = (container: HTMLElement) =>
@@ -160,9 +204,7 @@ describe('BlogGrid', () => {
 
     fireEvent.click(mobile.querySelector('button')!);
     const activeOpt = Array.from(mobile.querySelectorAll('button')).find(
-      (b) =>
-        b.textContent?.includes('SEC.03') &&
-        b.className.includes('bg-theme-accent/20'),
+      (b) => b.textContent?.includes('SEC.03') && b.className.includes('bg-theme-accent/20'),
     );
     expect(activeOpt).toBeInTheDocument();
   });

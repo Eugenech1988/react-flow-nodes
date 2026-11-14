@@ -1,5 +1,6 @@
 import { User, Shield, CreditCard, Cpu, Clock, HardDrive } from 'lucide-react';
 import type { TabItem } from '@/shared/ui';
+import type { IUsageStatItem } from './types';
 
 export const SETTINGS_TABS = (
   isProActive: boolean,
@@ -26,21 +27,23 @@ export const PLAN_FEATURES = [
   '24/7 Dedicated engineering support',
 ];
 
-export const PLAN_USAGE_STATS = (isProActive: boolean) => [
+export const PLAN_USAGE_STATS = (isProActive: boolean): IUsageStatItem[] => [
   {
     label: 'Pipeline Executions',
     icon: <Cpu className="h-4 w-4 text-teal-500" />,
     value: isProActive ? 'Unlimited' : '85 / 100',
-    sub: 'Resets on the 1st of next month',
-    percentage: isProActive ? 100 : 85,
+    sub: isProActive ? 'No monthly execution cap' : 'Resets on the 1st of next month',
+    percentage: isProActive ? 0 : 85,
+    isUnlimited: isProActive,
     barColor: 'bg-teal-600 dark:bg-teal-500',
   },
   {
     label: 'Execution Time',
     icon: <Clock className="h-4 w-4 text-teal-500" />,
-    value: isProActive ? '12.4 hrs' : '4.2 / 5 hrs',
-    sub: 'Compute hours consumed this cycle',
-    percentage: isProActive ? 30 : 84,
+    value: isProActive ? 'Unlimited' : '4.2 / 5 hrs',
+    sub: isProActive ? 'No compute hour cap' : 'Compute hours consumed this cycle',
+    percentage: isProActive ? 0 : 84,
+    isUnlimited: isProActive,
     barColor: isProActive ? 'bg-teal-600 dark:bg-teal-500' : 'bg-amber-500',
   },
   {

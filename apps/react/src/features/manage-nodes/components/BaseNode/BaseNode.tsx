@@ -38,6 +38,24 @@ export const BaseNode = ({
     }
   }, [id, data?.nodeType, title, category, updateNodeField]);
 
+  useEffect(() => {
+    setValues((prev) => {
+      let changed = false;
+      const next = { ...prev };
+
+      for (const key of Object.keys(prev)) {
+        if (!(key in data)) continue;
+        const dataValue = data[key];
+        if (String(prev[key] ?? '') !== String(dataValue ?? '')) {
+          next[key] = (dataValue ?? '') as string | number;
+          changed = true;
+        }
+      }
+
+      return changed ? next : prev;
+    });
+  }, [data]);
+
   const handleFieldChange = (key: string, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }));
     updateNodeField(id, key, value);

@@ -5,9 +5,9 @@ import React from 'react';
 
 vi.mock('@xyflow/react', () => ({
   ReactFlow: ({
-                nodes,
-                nodeTypes,
-              }: {
+    nodes,
+    nodeTypes,
+  }: {
     nodes: Array<{ id: string; data: unknown }>;
     nodeTypes: Record<string, React.FC<{ data: unknown }>>;
   }) => {
@@ -75,7 +75,9 @@ describe('ClientFlowCanvas', () => {
 
   it('handles media query change event', () => {
     render(<ClientFlowCanvas />);
-    const onChange = mockMedia.addEventListener.mock.calls[0][1] as (e: { matches: boolean }) => void;
+    const onChange = mockMedia.addEventListener.mock.calls[0][1] as (e: {
+      matches: boolean;
+    }) => void;
 
     act(() => {
       mockMedia.matches = false;

@@ -29,7 +29,7 @@ const getNodeKinds = (node: TPipelineNode): Set<NodeKind> => {
   return kinds;
 };
 
-const getFieldName = (node: TPipelineNode, kind: 'input' | 'output') => {
+const getFieldName = (node: TPipelineNode, kind: 'input' | 'output'): string => {
   const rawName =
     kind === 'input'
       ? (node.data?.inputName ??
@@ -43,8 +43,12 @@ const getFieldName = (node: TPipelineNode, kind: 'input' | 'output') => {
         node.data?.label ??
         node.data?.value);
 
-  if (rawName !== undefined) return normalize(rawName);
-  return normalize(`${kind}_${node.id}`);
+  if (typeof rawName === 'string') {
+    const trimmed = rawName.trim();
+    if (trimmed.length > 0) return normalize(trimmed);
+  }
+
+  return '';
 };
 
 export const validatePipeline = (

@@ -13,4 +13,4 @@ export const I18nProvider = async ({ lng, children }: { lng: string; children: R
       {children}
     </BaseI18nProvider>
   );
-}
+};

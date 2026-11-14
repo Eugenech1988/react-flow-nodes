@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { useTRPC } from '@/shared/api';
 
 export const useLogout = () => {
@@ -9,13 +10,12 @@ export const useLogout = () => {
 
   const mutation = useMutation({
     ...trpc.auth.logout.mutationOptions(),
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.clear();
-
       navigate('/login', { replace: true });
     },
     onError: (error) => {
-      console.error('Logout failed:', error);
+      toast.error(error.message || 'Logout failed. Please try again or close the browser.');
     },
   });
 

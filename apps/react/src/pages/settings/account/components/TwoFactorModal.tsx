@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ShieldCheck, Loader2, Copy, Check } from 'lucide-react';
+import { ShieldCheck, Loader2, Copy, Check, RefreshCw } from 'lucide-react';
 import { Dialog, DialogContent, Input } from '@pipeline/ui';
 import { DialogHeader, DialogBody, DialogFooter, AppButton } from '@/shared/ui';
 import { twoFactorTotpOnlySchema, twoFactorCodeOrBackupSchema } from '@pipeline/contracts';
@@ -12,6 +12,7 @@ interface ITwoFactorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (code: string) => Promise<string[] | void>;
+  onRetryGenerate?: () => void;
   mode: TTwoFactorMode;
   qrCodeImage?: string | null;
   modalError?: string | null;
@@ -23,14 +24,15 @@ interface ITotpFormData {
 }
 
 export const TwoFactorModal = ({
-                                 isOpen,
-                                 onClose,
-                                 onConfirm,
-                                 mode,
-                                 qrCodeImage,
-                                 modalError,
-                                 isPending = false,
-                               }: ITwoFactorModalProps) => {
+  isOpen,
+  onClose,
+  onConfirm,
+  onRetryGenerate,
+  mode,
+  qrCodeImage,
+  modalError,
+  isPending = false,
+}: ITwoFactorModalProps) => {
   const isEnable = mode === 'enable';
   const [recoveryCodes, setRecoveryCodes] = useState<string[] | null>(null);
   const [copied, setCopied] = useState(false);
@@ -84,6 +86,7 @@ export const TwoFactorModal = ({
   };
 
   const hasCodeError = Boolean(errors.code);
+  const qrGenerationFailed = isEnable && !qrCodeImage && Boolean(modalError);
 
   return (
     <Dialog open={isOpen} onOpenChange={recoveryCodes ? undefined : handleClose}>
@@ -109,10 +112,7 @@ export const TwoFactorModal = ({
 
             <div className="bg-muted/30 border-border/60 grid grid-cols-2 gap-2 rounded-lg border p-3 text-center font-mono text-xs">
               {recoveryCodes.map((code) => (
-                <div
-                  key={code}
-                  className="bg-background border-border/40 rounded border px-2 py-1"
-                >
+                <div key={code} className="bg-background border-border/40 rounded border px-2 py-1">
                   {code}
                 </div>
               ))}
@@ -142,8 +142,18 @@ export const TwoFactorModal = ({
           <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
             <DialogBody withBorder className="space-y-5">
               {modalError && (
-                <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-xs font-medium text-rose-600 dark:text-rose-400">
-                  {modalError}
+                <div className="space-y-2 rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-xs font-medium text-rose-600 dark:text-rose-400">
+                  <p>{modalError}</p>
+                  {qrGenerationFailed && onRetryGenerate && (
+                    <AppButton
+                      type="button"
+                      variant="secondary"
+                      size="xs"
+                      icon={RefreshCw}
+                      text="Retry"
+                      onClick={onRetryGenerate}
+                    />
+                  )}
                 </div>
               )}
 

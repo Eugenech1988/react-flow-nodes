@@ -8,11 +8,14 @@ import type { TPipelineNode, TPipelineEdge } from '@/entities';
 import { usePipelineHandler } from '@/features/manage-pipelines';
 import { useUser } from '@/shared/hooks';
 
-interface UseSavePipelineProps {
+const AUTOSAVE_INTERVAL_MS = 120_000;
+const SAVE_WAIT_MS = 350;
+
+interface IUseSavePipelineProps {
   wrapperRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
+export const useSavePipeline = ({ wrapperRef }: IUseSavePipelineProps) => {
   const { user } = useUser();
   const { updatePipeline } = usePipelineHandler();
   const nodes = useStore((state) => state.nodes);
@@ -57,7 +60,7 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
         let screenshotBase64: string | undefined;
         if (withScreenshot) {
           await fitView({ padding: 0.2, duration: 300 });
-          await new Promise((resolve) => setTimeout(resolve, 350));
+          await new Promise((resolve) => setTimeout(resolve, SAVE_WAIT_MS));
           screenshotBase64 = await captureScreenshot();
         }
 
@@ -68,10 +71,7 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
 
         await updatePipeline.mutateAsync({
           id,
-          graphData: {
-            nodes: formattedNodes,
-            edges,
-          },
+          graphData: { nodes: formattedNodes, edges },
           ...(screenshotBase64 && { screenshotBase64 }),
           ...(lastRunAt && { lastRunAt: new Date(lastRunAt) }),
           ...(lastRunStatus && { lastRunStatus }),
@@ -112,6 +112,7 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
 
     const intervalId = window.setInterval(async () => {
       if (saveInProgress.current) return;
+      if (useStore.getState().saveStatus !== 'unsaved') return;
 
       saveInProgress.current = true;
       try {
@@ -121,12 +122,10 @@ export const useSavePipeline = ({ wrapperRef }: UseSavePipelineProps) => {
       } finally {
         saveInProgress.current = false;
       }
-    }, 120_000);
+    }, AUTOSAVE_INTERVAL_MS);
 
     return () => window.clearInterval(intervalId);
   }, [user?.currentPipelineId, user?.currentPipeline?.id]);
 
-  return {
-    handleSavePipeline,
-  };
+  return { handleSavePipeline };
 };

@@ -19,10 +19,10 @@ vi.mock('@/shared/lib/i18n/client', () => ({
 vi.mock('@/shared/ui', () => ({
   Reveal: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   Frame: ({
-            children,
-            headerTitle,
-            footer,
-          }: {
+    children,
+    headerTitle,
+    footer,
+  }: {
     children: ReactNode;
     headerTitle?: ReactNode;
     footer?: ReactNode;
@@ -61,9 +61,7 @@ vi.mock('./JobBody', () => ({
 }));
 
 vi.mock('./JobSidebar', () => ({
-  JobSidebar: ({ job }: { job: TPublicJob }) => (
-    <div data-testid="job-sidebar">{job.title}</div>
-  ),
+  JobSidebar: ({ job }: { job: TPublicJob }) => <div data-testid="job-sidebar">{job.title}</div>,
 }));
 
 vi.mock('./JobApplicationForm', () => ({
@@ -123,10 +121,7 @@ describe('JobDetailView', () => {
 
   it('falls back to 0 when applications is null', () => {
     render(
-      <JobDetailView
-        job={{ ...mockJob, applications: null as unknown as number }}
-        locale="en"
-      />,
+      <JobDetailView job={{ ...mockJob, applications: null as unknown as number }} locale="en" />,
     );
     expect(screen.getByTestId('job-header')).toHaveTextContent(':: 0');
   });
@@ -142,12 +137,7 @@ describe('JobDetailView', () => {
   });
 
   it('falls back to raw level and type when label maps miss', () => {
-    render(
-      <JobDetailView
-        job={{ ...mockJob, level: 'LEAD', type: 'CONTRACT' }}
-        locale="en"
-      />,
-    );
+    render(<JobDetailView job={{ ...mockJob, level: 'LEAD', type: 'CONTRACT' }} locale="en" />);
     expect(screen.getByTestId('job-sidebar')).toBeInTheDocument();
   });
 

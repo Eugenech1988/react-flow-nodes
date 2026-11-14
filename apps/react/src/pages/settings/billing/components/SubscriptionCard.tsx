@@ -1,8 +1,11 @@
 import { Zap, CheckCircle2, ShieldCheck, XCircle, CreditCard } from 'lucide-react';
 import { AppButton } from '@/shared/ui';
-import { PLAN_FEATURES } from '../../model';
+import { BASE_PLANS, PLAN_FEATURES } from '../../model';
 import { useBilling } from '../hooks/useBilling';
 import { useUser } from '@/shared/hooks';
+
+const proPlan = BASE_PLANS.find((p) => p.id === 'pro');
+const proMonthlyPrice = proPlan?.monthlyPrice ?? 0;
 
 export const SubscriptionCard = () => {
   const { isProActive } = useUser();
@@ -37,7 +40,7 @@ export const SubscriptionCard = () => {
 
         <div className="sm:text-right">
           <div className="text-2xl font-bold">
-            {isProActive ? '$49' : '$0'}
+            ${isProActive ? proMonthlyPrice : 0}
             <span className="text-muted-foreground text-sm font-normal">/month</span>
           </div>
           {isProActive && subscription?.currentPeriodEnd && (

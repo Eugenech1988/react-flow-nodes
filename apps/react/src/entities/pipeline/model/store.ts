@@ -16,7 +16,6 @@ export const useStore = create<TPipelineStore>()(
         partialize: (state) => ({
           nodes: state.nodes,
           edges: state.edges,
-          nodeIDs: state.nodeIDs,
         }),
       },
     ),

@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { AlertState } from '@/shared/lib';
+import type { TAlertState } from '@/shared/lib';
 import { useTRPC } from '@/shared/api';
 import { useUser } from '@/shared/hooks';
+
+type TTwoFactorMode = 'enable' | 'disable';
 
 export const use2faSection = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const { user } = useUser();
 
-  const [alert, setAlert] = useState<AlertState>(null);
+  const [alert, setAlert] = useState<TAlertState>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [mode, setMode] = useState<'enable' | 'disable'>('enable');
+  const [mode, setMode] = useState<TTwoFactorMode>('enable');
   const [qrCodeImage, setQrCodeImage] = useState<string | null>(null);
   const [modalError, setModalError] = useState<string | null>(null);
 
@@ -67,13 +69,25 @@ export const use2faSection = () => {
         const res = await generate2faMutation.mutateAsync();
         if (res?.qrCodeImage) {
           setQrCodeImage(res.qrCodeImage);
+        } else {
+          setModalError('Server did not return a QR code. Please try again.');
         }
-      } catch {}
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : 'Failed to initialize 2FA. Please try again.';
+        setModalError(message);
+      }
     } else {
       setMode('disable');
       setQrCodeImage(null);
       setIsOpen(true);
     }
+  };
+
+  const handleRetryGenerate = () => {
+    setModalError(null);
+    setQrCodeImage(null);
+    void handleToggleClick();
   };
 
   const handleClose = () => {
@@ -104,6 +118,7 @@ export const use2faSection = () => {
       error: modalError,
       isGenerating,
       handleToggleClick,
+      handleRetryGenerate,
       handleClose,
       handleConfirm,
     },

@@ -4,8 +4,7 @@ import { useProfileSidebar } from '../hooks';
 import { cn } from '@/shared/lib';
 
 export const ProfileSidebar = () => {
-  const { displayName, jobTitle, isTwoFactorEnabled, isProActive, planLabel } =
-    useProfileSidebar();
+  const { displayName, jobTitle, isTwoFactorEnabled, isProActive, planLabel } = useProfileSidebar();
 
   return (
     <div className="border-border bg-card flex h-fit flex-col items-center rounded-xl border p-6 shadow-xs backdrop-blur-xs md:col-span-1">
@@ -13,9 +12,7 @@ export const ProfileSidebar = () => {
 
       <h2 className="text-foreground mt-4 text-center text-lg font-semibold">{displayName}</h2>
 
-      {jobTitle && (
-        <p className="text-muted-foreground mt-0.5 text-center text-xs">{jobTitle}</p>
-      )}
+      {jobTitle && <p className="text-muted-foreground mt-0.5 text-center text-xs">{jobTitle}</p>}
 
       <div className="bg-border/60 my-4 h-px w-full" />
 

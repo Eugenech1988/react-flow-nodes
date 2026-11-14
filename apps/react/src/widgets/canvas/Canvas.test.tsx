@@ -89,8 +89,10 @@ vi.mock('@/widgets/canvas/hooks', () => ({
         const { nodeType } = JSON.parse(rawData);
         const id = args.getNodeID(nodeType);
         const instance = args.rfInstance ?? mockRfInstance;
-        const position =
-          instance?.screenToFlowPosition({ x: e.clientX, y: e.clientY }) ?? { x: 0, y: 0 };
+        const position = instance?.screenToFlowPosition({ x: e.clientX, y: e.clientY }) ?? {
+          x: 0,
+          y: 0,
+        };
         args.addNode({ id, type: nodeType, position, data: {} });
       }
     },
@@ -131,7 +133,10 @@ interface IUserWithPipeline {
   };
 }
 
-const createPipelineUser = (id: string, graphData: unknown = { nodes: [], edges: [] }): {
+const createPipelineUser = (
+  id: string,
+  graphData: unknown = { nodes: [], edges: [] },
+): {
   user: IUserWithPipeline;
 } => ({
   user: { currentPipeline: { id, graphData: graphData as { nodes: []; edges: [] } } },

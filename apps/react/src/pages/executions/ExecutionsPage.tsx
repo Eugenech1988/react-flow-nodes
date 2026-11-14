@@ -21,7 +21,6 @@ export const ExecutionsPage = () => {
     searchQuery,
     statusFilter,
     selectedExec,
-    sorting,
     isLoading,
     isFetching,
     processedExecutions,
@@ -32,8 +31,6 @@ export const ExecutionsPage = () => {
     setPage,
     setLimit,
     setSelectedExec,
-    setSorting,
-    handleSortToggle,
     handleSearchChange,
     handleTabChange,
     handleRefresh,
@@ -47,11 +44,7 @@ export const ExecutionsPage = () => {
   const table = useTable<TableFeatures, IExecutionItem>({
     data: processedExecutions,
     columns,
-    features: tableFeatures({
-      rowSortingFeature,
-    }),
-    state: { sorting },
-    onSortingChange: setSorting,
+    features: tableFeatures({ rowSortingFeature }),
   });
 
   return (
@@ -91,14 +84,14 @@ export const ExecutionsPage = () => {
           <UniversalTable
             table={table}
             columns={columns}
-            sorting={sorting}
+            sorting={[]}
             totalItems={totalRuns}
             itemsUnitLabel="runs"
             noDataText="No executions found matching your filters."
             page={page}
             totalPages={totalPages}
             limit={limit}
-            onSort={handleSortToggle}
+            onSort={() => {}}
             onSelect={setSelectedExec}
             onPageChange={setPage}
             onLimitChange={setLimit}

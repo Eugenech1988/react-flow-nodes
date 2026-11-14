@@ -44,13 +44,7 @@ vi.mock('@portabletext/react', () => {
   };
 
   return {
-    PortableText: ({
-      value,
-      components,
-    }: {
-      value: TBlock[];
-      components: TComponents;
-    }) => (
+    PortableText: ({ value, components }: { value: TBlock[]; components: TComponents }) => (
       <div data-testid="portable-root">
         {value.map((b, i) => {
           const text = b.children?.[0]?.text ?? '';

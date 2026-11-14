@@ -27,10 +27,14 @@ export const UsageStats = () => {
             </div>
 
             <div className="bg-muted/60 h-2 w-full overflow-hidden rounded-full">
-              <div
-                className={`h-full transition-all duration-500 ${stat.barColor}`}
-                style={{ width: `${Math.min(stat.percentage, 100)}%` }}
-              />
+              {stat.isUnlimited ? (
+                <div className="h-full w-full bg-gradient-to-r from-teal-600 via-teal-500 to-teal-400" />
+              ) : (
+                <div
+                  className={`h-full transition-all duration-500 ${stat.barColor}`}
+                  style={{ width: `${Math.min(stat.percentage, 100)}%` }}
+                />
+              )}
             </div>
 
             <div className="text-muted-foreground flex items-end justify-between gap-2 pt-0.5 text-[11px]">

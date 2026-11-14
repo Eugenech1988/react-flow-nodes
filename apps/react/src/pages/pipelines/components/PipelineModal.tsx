@@ -22,7 +22,9 @@ import {
 } from '@pipeline/contracts';
 import type { TPipeline } from '@/entities';
 
-interface TPipelineDialogProps {
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+interface IPipelineDialogProps {
   isOpen: boolean;
   onClose: () => void;
   mode?: 'create' | 'update';
@@ -43,12 +45,20 @@ const STATUS_OPTIONS: { value: TPipelineStatusOption; label: string }[] = [
   { value: 'ARCHIVED', label: 'Archived' },
 ];
 
+const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error('Failed to read file'));
+  });
+
 export const PipelineModal = ({
   isOpen,
   onClose,
   mode = 'create',
   initialData,
-}: TPipelineDialogProps) => {
+}: IPipelineDialogProps) => {
   const { user } = useUser();
   const isCreate = mode === 'create';
 
@@ -100,6 +110,10 @@ export const PipelineModal = ({
           status: 'DRAFT',
         });
       }
+
+      setFile(null);
+      setFilePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   }, [isOpen, initialData, isCreate, reset]);
 
@@ -134,27 +148,39 @@ export const PipelineModal = ({
     onClose();
   };
 
-  const onSubmit = (data: TFormData) => {
+  const onSubmit = async (data: TFormData) => {
     if (isCreate) {
       if (!user?.id) return;
       createPipeline.mutate(
         { data: data as TCreatePipelineInputData, file: file ?? undefined },
         { onSuccess: handleClose },
       );
-    } else if (initialData?.id) {
-      updatePipeline.mutate(
-        {
-          id: initialData.id,
-          name: data.name,
-          description: data.description,
-          status: data.status,
-        },
-        { onSuccess: handleClose },
-      );
+      return;
     }
+
+    if (!initialData?.id) return;
+
+    let screenshotBase64: string | null | undefined;
+    if (file) {
+      screenshotBase64 = await fileToBase64(file);
+    }
+
+    updatePipeline.mutate(
+      {
+        id: initialData.id,
+        name: data.name,
+        description: data.description,
+        status: data.status,
+        ...(screenshotBase64 && { screenshotBase64, screenshotUrl: null }),
+      },
+      { onSuccess: handleClose },
+    );
   };
 
   const isPending = createPipeline.isPending || updatePipeline.isPending;
+  const existingScreenshot =
+    !isCreate && initialData?.screenshotUrl ? `${BASE_URL}${initialData.screenshotUrl}` : null;
+  const displayPreview = filePreview ?? existingScreenshot;
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -201,13 +227,7 @@ export const PipelineModal = ({
                     label="Status"
                     rounded="lg"
                     value={field.value || 'DRAFT'}
-                    onChange={(val) => {
-                      const value =
-                        typeof val === 'object' && val !== null
-                          ? ((val as React.ChangeEvent<HTMLSelectElement>).target?.value ?? val)
-                          : val;
-                      field.onChange(value);
-                    }}
+                    onChange={(val) => field.onChange(val)}
                     options={STATUS_OPTIONS}
                     error={!!errors.status}
                     errorMessage={errors.status?.message}
@@ -216,65 +236,71 @@ export const PipelineModal = ({
               />
             )}
 
-            {isCreate && (
-              <div className="space-y-1.5">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
+            <div className="space-y-1.5">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
+              />
 
-                <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="group border-input bg-muted/20 relative flex h-36 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed transition-all hover:border-teal-500/50 hover:bg-teal-500/5"
-                >
-                  {!filePreview ? (
-                    <div className="flex flex-col items-center gap-2 p-4 text-center">
-                      <div className="bg-background border-border rounded-full border p-2.5 shadow-2xs transition-transform group-hover:scale-105">
-                        <ImageIcon className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-                      </div>
-                      <div>
-                        <p className="text-foreground text-xs font-medium">Select Screenshot</p>
-                        <p className="text-muted-foreground mt-0.5 text-[10px]">
-                          PNG, JPG or WEBP up to 5MB
-                        </p>
-                      </div>
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="group border-input bg-muted/20 relative flex h-36 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed transition-all hover:border-teal-500/50 hover:bg-teal-500/5"
+              >
+                {!displayPreview ? (
+                  <div className="flex flex-col items-center gap-2 p-4 text-center">
+                    <div className="bg-background border-border rounded-full border p-2.5 shadow-2xs transition-transform group-hover:scale-105">
+                      <ImageIcon className="h-5 w-5 text-teal-600 dark:text-teal-400" />
                     </div>
-                  ) : (
-                    <>
-                      <img
-                        src={filePreview}
-                        alt="Pipeline preview"
-                        className="h-full w-full object-cover"
+                    <div>
+                      <p className="text-foreground text-xs font-medium">
+                        {isCreate ? 'Select Screenshot' : 'Upload New Screenshot'}
+                      </p>
+                      <p className="text-muted-foreground mt-0.5 text-[10px]">
+                        PNG, JPG or WEBP up to 5MB
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <img
+                      src={displayPreview}
+                      alt="Pipeline preview"
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/60 opacity-0 backdrop-blur-[2px] transition-opacity group-hover:opacity-100">
+                      <AppButton
+                        variant="ghost"
+                        size="xs"
+                        text="Change"
+                        icon={Upload}
+                        onClick={(e) => {
+                          e?.stopPropagation();
+                          fileInputRef.current?.click();
+                        }}
+                        className="border-none bg-white/25 text-white backdrop-blur-md hover:bg-white/35"
                       />
-                      <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/60 opacity-0 backdrop-blur-[2px] transition-opacity group-hover:opacity-100">
-                        <AppButton
-                          variant="ghost"
-                          size="xs"
-                          text="Change"
-                          icon={Upload}
-                          onClick={(e) => {
-                            e?.stopPropagation();
-                            fileInputRef.current?.click();
-                          }}
-                          className="border-none bg-white/25 text-white backdrop-blur-md hover:bg-white/35"
-                        />
-                        <AppButton
-                          variant="danger"
-                          size="xs"
-                          text="Delete"
-                          icon={Trash2}
-                          onClick={handleRemoveFile}
-                          className="backdrop-blur-md"
-                        />
-                      </div>
-                    </>
-                  )}
-                </div>
+                      <AppButton
+                        variant="danger"
+                        size="xs"
+                        text="Remove"
+                        icon={Trash2}
+                        onClick={handleRemoveFile}
+                        className="backdrop-blur-md"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
-            )}
+
+              {!isCreate && existingScreenshot && !filePreview && (
+                <p className="text-muted-foreground text-[10px]">
+                  Current screenshot kept unless you upload a new one.
+                </p>
+              )}
+            </div>
           </DialogBody>
 
           <DialogFooter

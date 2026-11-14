@@ -39,6 +39,7 @@ type TUniversalTableProps<
   onLimitChange: (newLimit: number) => void;
   noDataText?: string;
   itemsUnitLabel?: string;
+  maxHeight?: string;
 };
 
 export const UniversalTable = <
@@ -58,14 +59,14 @@ export const UniversalTable = <
   onLimitChange,
   noDataText = 'No items found matching your filters.',
   itemsUnitLabel = 'items',
+  maxHeight = 'calc(100vh - 21.5rem)',
 }: TUniversalTableProps<TFeatures, TData>) => {
   const rows = table.getRowModel().rows;
-
   const showFooter = totalItems > 10 || totalPages > 1;
 
   return (
     <div className="border-border/60 bg-card/50 flex flex-col overflow-hidden rounded-xl border shadow-xs backdrop-blur-md">
-      <div className="relative max-h-[calc(100vh-21.5rem)] overflow-x-auto overflow-y-auto">
+      <div className="relative overflow-x-auto overflow-y-auto" style={{ maxHeight }}>
         <TableUI className="w-full font-sans text-sm">
           <TableHeader className="bg-muted/90 sticky top-0 z-10 backdrop-blur-xs">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -82,7 +83,6 @@ export const UniversalTable = <
                       : 'asc'
                     : false;
 
-                  // Извлекаем кастомные стили из meta
                   const meta = header.column.columnDef.meta as
                     { headerClassName?: string; cellClassName?: string } | undefined;
 
@@ -94,7 +94,6 @@ export const UniversalTable = <
                         canSort ? 'hover:text-foreground cursor-pointer' : '',
                         header.index === 0 ? 'pl-4' : '',
                         header.index === headerGroup.headers.length - 1 ? 'pr-4' : '',
-                        // Применяем класс заголовка из meta
                         meta?.headerClassName,
                       )}
                       onClick={canSort ? () => onSort(header.column.id) : undefined}
@@ -103,7 +102,6 @@ export const UniversalTable = <
                         <div
                           className={cn(
                             'flex w-full items-center justify-start gap-1.5',
-                            // Дублируем класс для выравнивания (если нужно justify-end)
                             meta?.headerClassName,
                           )}
                         >
@@ -146,14 +144,12 @@ export const UniversalTable = <
                             'px-4 py-2.5 align-middle',
                             idx === 0 ? 'pl-4' : '',
                             idx === cells.length - 1 ? 'pr-4' : '',
-                            // Применяем класс ячейки из meta
                             meta?.cellClassName,
                           )}
                         >
                           <div
                             className={cn(
                               'flex w-full items-center justify-start',
-                              // Дублируем класс для выравнивания
                               meta?.cellClassName,
                             )}
                           >

@@ -1,10 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  refreshAccessToken,
-  onAuthFailure,
-  notifyAuthFailure,
-  getCsrfToken,
-} from './authRefresh';
+import { refreshAccessToken, onAuthFailure, notifyAuthFailure, getCsrfToken } from './authRefresh';
 
 const mockFetch = vi.fn();
 const originalFetch = global.fetch;

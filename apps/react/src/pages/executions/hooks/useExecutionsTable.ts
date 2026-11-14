@@ -1,19 +1,15 @@
 import { useMemo, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import type { SortingState } from '@tanstack/react-table';
 import { useUser } from '@/shared/hooks';
 import { useExecutions } from './useExecutions';
-
 import type { IExecutionItem, TExecutionStatus } from '../model';
 
 export const useExecutionsTable = () => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<TExecutionStatus>('all');
   const [selectedExec, setSelectedExec] = useState<IExecutionItem | null>(null);
-  const [sorting, setSorting] = useState<SortingState>([]);
-
-  const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
   const { user } = useUser();
 
@@ -25,15 +21,6 @@ export const useExecutionsTable = () => {
     status: statusFilter,
   });
 
-  const handleSortToggle = (columnId: string) => {
-    setSorting((prev) => {
-      const existingSort = prev.find((s) => s.id === columnId);
-      if (!existingSort) return [{ id: columnId, desc: false }];
-      if (!existingSort.desc) return [{ id: columnId, desc: true }];
-      return [];
-    });
-  };
-
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     setPage(1);
@@ -44,27 +31,7 @@ export const useExecutionsTable = () => {
     setPage(1);
   };
 
-  const processedExecutions = useMemo<IExecutionItem[]>(() => {
-    if (!sorting.length) return executions;
-
-    const { id: sortKey, desc } = sorting[0];
-
-    return [...executions].sort((a, b) => {
-      const valA = a[sortKey as keyof IExecutionItem];
-      const valB = b[sortKey as keyof IExecutionItem];
-
-      if (valA === valB) return 0;
-      if (valA == null) return 1;
-      if (valB == null) return -1;
-
-      const comparison =
-        typeof valA === 'number' && typeof valB === 'number'
-          ? valA - valB
-          : String(valA).localeCompare(String(valB));
-
-      return desc ? -comparison : comparison;
-    });
-  }, [executions, sorting]);
+  const processedExecutions = useMemo<IExecutionItem[]>(() => executions, [executions]);
 
   return {
     searchQuery,
@@ -72,7 +39,6 @@ export const useExecutionsTable = () => {
     isLoading,
     isFetching,
     selectedExec,
-    sorting,
     processedExecutions,
     page,
     limit,
@@ -81,8 +47,6 @@ export const useExecutionsTable = () => {
     setPage,
     setLimit,
     setSelectedExec,
-    setSorting,
-    handleSortToggle,
     handleSearchChange,
     handleTabChange,
     handleRefresh: refetch,

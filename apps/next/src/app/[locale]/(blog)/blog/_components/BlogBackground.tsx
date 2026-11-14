@@ -69,7 +69,10 @@ const SIZE_MAP: Record<TStarSize, { dot: string; ring: string }> = {
 };
 
 export const BlogBackground = () => (
-  <div aria-hidden="true" className="bg-theme-bg pointer-events-none fixed inset-0 z-0 w-full overflow-hidden">
+  <div
+    aria-hidden="true"
+    className="bg-theme-bg pointer-events-none fixed inset-0 z-0 w-full overflow-hidden"
+  >
     <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0,transparent_3px,color-mix(in_oklab,var(--theme-fg)_1.5%,transparent)_3px,color-mix(in_oklab,var(--theme-fg)_1.5%,transparent)_4px)]" />
     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,color-mix(in_oklab,var(--theme-bg)_95%,transparent)_100%)]" />
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,var(--theme-line)_1px,transparent_0)] bg-size-[22px_22px] opacity-20" />

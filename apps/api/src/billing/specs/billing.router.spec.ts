@@ -43,9 +43,9 @@ describe('Billing Router', () => {
 
       await expect(caller.subscription()).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
       await expect(caller.transactions()).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
-      await expect(
-        caller.checkout({ plan: 'PRO', cycle: 'monthly' }),
-      ).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
+      await expect(caller.checkout({ plan: 'PRO', cycle: 'monthly' })).rejects.toMatchObject({
+        code: 'UNAUTHORIZED',
+      });
       await expect(caller.cancel()).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
     });
   });

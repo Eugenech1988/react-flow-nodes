@@ -60,12 +60,7 @@ describe('BlogPostSidebar', () => {
   });
 
   it('shows fallback when readTime missing', () => {
-    render(
-      <BlogPostSidebar
-        post={{ ...post, readTime: 0 } as IBlogPostDetail}
-        locale="en"
-      />,
-    );
+    render(<BlogPostSidebar post={{ ...post, readTime: 0 } as IBlogPostDetail} locale="en" />);
     expect(screen.getByText('T-00')).toBeInTheDocument();
   });
 

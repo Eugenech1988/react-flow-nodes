@@ -11,7 +11,9 @@ describe('Careers listing', () => {
   });
 
   it('filters by department', () => {
-    cy.get('button:visible').contains(/Engineering/i).click();
+    cy.get('button:visible')
+      .contains(/Engineering/i)
+      .click();
     cy.url().should('include', '/careers');
   });
 

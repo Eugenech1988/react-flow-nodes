@@ -1,122 +1,146 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ThemeToggle } from '@/features/theme-toggle/ThemeToggle';
+import { ThemeToggle } from './ThemeToggle';
 
-const { useThemeMock } = vi.hoisted(() => ({
-  useThemeMock: vi.fn(),
+const { mockSetTheme, mockUseTheme } = vi.hoisted(() => ({
+  mockSetTheme: vi.fn(),
+  mockUseTheme: vi.fn(),
 }));
 
-vi.mock('next-themes', () => ({
-  useTheme: useThemeMock,
+vi.mock('@/app/providers', () => ({
+  useTheme: () => mockUseTheme(),
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
-    <button {...props}>{children}</button>
+  Button: ({
+    children,
+    onClick,
+    className,
+    title,
+    ...props
+  }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+    <button onClick={onClick} className={className} title={title} {...props}>
+      {children}
+    </button>
   ),
 }));
 
-describe('ThemeToggle', () => {
-  const setTheme = vi.fn();
+type TResolvedTheme = 'light' | 'dark';
 
+const createUseThemeMock = (resolvedTheme: TResolvedTheme) => ({
+  theme: resolvedTheme,
+  resolvedTheme,
+  setTheme: mockSetTheme,
+});
+
+describe('ThemeToggle', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
 
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: vi.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      })),
+  describe('rendering', () => {
+    it('renders toggle button', () => {
+      mockUseTheme.mockReturnValue(createUseThemeMock('light'));
+
+      render(<ThemeToggle />);
+
+      expect(screen.getByRole('button')).toBeInTheDocument();
+    });
+
+    it('renders accessible title', () => {
+      mockUseTheme.mockReturnValue(createUseThemeMock('light'));
+
+      render(<ThemeToggle />);
+
+      expect(screen.getByTitle('Toggle theme')).toBeInTheDocument();
+    });
+
+    it('renders sr-only label for screen readers', () => {
+      mockUseTheme.mockReturnValue(createUseThemeMock('light'));
+
+      render(<ThemeToggle />);
+
+      expect(screen.getByText('Toggle theme')).toHaveClass('sr-only');
     });
   });
 
-  it('renders toggle button', () => {
-    useThemeMock.mockReturnValue({
-      resolvedTheme: 'light',
-      setTheme,
+  describe('icon visibility based on theme', () => {
+    it('shows Sun icon and hides Moon icon when resolvedTheme is light', () => {
+      mockUseTheme.mockReturnValue(createUseThemeMock('light'));
+      const { container } = render(<ThemeToggle />);
+
+      const sun = container.querySelector('.lucide-sun');
+      const moon = container.querySelector('.lucide-moon');
+
+      expect(sun).toHaveClass('scale-100');
+      expect(sun).toHaveClass('rotate-0');
+      expect(sun).toHaveClass('opacity-100');
+
+      expect(moon).toHaveClass('scale-0');
+      expect(moon).toHaveClass('-rotate-90');
+      expect(moon).toHaveClass('opacity-0');
     });
 
-    render(<ThemeToggle />);
+    it('shows Moon icon and hides Sun icon when resolvedTheme is dark', () => {
+      mockUseTheme.mockReturnValue(createUseThemeMock('dark'));
+      const { container } = render(<ThemeToggle />);
 
-    expect(screen.getByRole('button')).toBeInTheDocument();
-    expect(screen.getByTitle('Toggle theme')).toBeInTheDocument();
-    expect(screen.getByText('Toggle theme')).toHaveClass('sr-only');
+      const sun = container.querySelector('.lucide-sun');
+      const moon = container.querySelector('.lucide-moon');
+
+      expect(sun).toHaveClass('scale-0');
+      expect(sun).toHaveClass('rotate-90');
+      expect(sun).toHaveClass('opacity-0');
+
+      expect(moon).toHaveClass('scale-100');
+      expect(moon).toHaveClass('rotate-0');
+      expect(moon).toHaveClass('opacity-100');
+    });
   });
 
-  it('switches from light to dark', () => {
-    useThemeMock.mockReturnValue({
-      resolvedTheme: 'light',
-      setTheme,
+  describe('toggle behavior', () => {
+    it('calls setTheme("dark") when clicked in light mode', () => {
+      mockUseTheme.mockReturnValue(createUseThemeMock('light'));
+
+      render(<ThemeToggle />);
+      fireEvent.click(screen.getByRole('button'));
+
+      expect(mockSetTheme).toHaveBeenCalledTimes(1);
+      expect(mockSetTheme).toHaveBeenCalledWith('dark');
     });
 
-    render(<ThemeToggle />);
+    it('calls setTheme("light") when clicked in dark mode', () => {
+      mockUseTheme.mockReturnValue(createUseThemeMock('dark'));
 
-    fireEvent.click(screen.getByRole('button'));
+      render(<ThemeToggle />);
+      fireEvent.click(screen.getByRole('button'));
 
-    expect(setTheme).toHaveBeenCalledWith('dark');
-  });
-
-  it('switches from dark to light', () => {
-    useThemeMock.mockReturnValue({
-      resolvedTheme: 'dark',
-      setTheme,
+      expect(mockSetTheme).toHaveBeenCalledTimes(1);
+      expect(mockSetTheme).toHaveBeenCalledWith('light');
     });
 
-    render(<ThemeToggle />);
+    it('never calls setTheme with "system"', () => {
+      mockUseTheme.mockReturnValue(createUseThemeMock('light'));
 
-    fireEvent.click(screen.getByRole('button'));
+      render(<ThemeToggle />);
+      fireEvent.click(screen.getByRole('button'));
 
-    expect(setTheme).toHaveBeenCalledWith('light');
-  });
-
-  it('uses system theme when prefers light', () => {
-    window.matchMedia = vi.fn().mockImplementation(() => ({
-      matches: false,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    }));
-
-    useThemeMock.mockReturnValue({
-      resolvedTheme: 'light',
-      setTheme,
+      expect(mockSetTheme).not.toHaveBeenCalledWith('system');
     });
 
-    render(<ThemeToggle />);
+    it('toggles correctly across multiple clicks', () => {
+      mockUseTheme.mockReturnValue(createUseThemeMock('light'));
+      const { rerender } = render(<ThemeToggle />);
 
-    fireEvent.click(screen.getByRole('button'));
+      fireEvent.click(screen.getByRole('button'));
+      expect(mockSetTheme).toHaveBeenLastCalledWith('dark');
 
-    expect(setTheme).toHaveBeenCalledWith('dark');
-  });
+      mockUseTheme.mockReturnValue(createUseThemeMock('dark'));
+      rerender(<ThemeToggle />);
 
-  it('uses system theme when prefers dark', () => {
-    window.matchMedia = vi.fn().mockImplementation(() => ({
-      matches: true,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    }));
-
-    useThemeMock.mockReturnValue({
-      resolvedTheme: 'dark',
-      setTheme,
+      fireEvent.click(screen.getByRole('button'));
+      expect(mockSetTheme).toHaveBeenLastCalledWith('light');
+      expect(mockSetTheme).toHaveBeenCalledTimes(2);
     });
-
-    render(<ThemeToggle />);
-
-    fireEvent.click(screen.getByRole('button'));
-
-    expect(setTheme).toHaveBeenCalledWith('light');
   });
 });

@@ -21,15 +21,13 @@ export const BlogGrid = ({ posts, locale }: IBlogGridProps) => {
   const nonFeatured = useMemo(() => posts.filter((p) => !p.featured), [posts]);
 
   const filtered = useMemo(() => {
-    let result =
-      active === 'all' ? nonFeatured : nonFeatured.filter((p) => p.category === active);
+    let result = active === 'all' ? nonFeatured : nonFeatured.filter((p) => p.category === active);
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
         (p) =>
-          (p.title ?? '').toLowerCase().includes(q) ||
-          (p.excerpt ?? '').toLowerCase().includes(q),
+          (p.title ?? '').toLowerCase().includes(q) || (p.excerpt ?? '').toLowerCase().includes(q),
       );
     }
 

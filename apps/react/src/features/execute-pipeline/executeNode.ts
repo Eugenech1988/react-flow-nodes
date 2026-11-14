@@ -29,18 +29,36 @@ const EXECUTORS: Record<string, TNodeExecutor> = {
           input);
     return { ...input, [outputName]: value, output: value };
   },
-
   text: executeTextNode,
   image: executeImageNode,
-
   llm: executeLlmNode,
   math: executeMathNode,
   condition: executeConditionNode,
   logic: executeConditionNode,
-
   api: executeApiNode,
   database: executeDatabaseNode,
   db: executeDatabaseNode,
+};
+
+const EXECUTOR_ALIASES: Record<string, string> = {
+  custominput: 'input',
+  customoutput: 'output',
+  conditional: 'condition',
+  media: 'image',
+};
+
+const FALLBACK_MATCH_KEYS = Object.keys(EXECUTORS).sort((a, b) => b.length - a.length);
+
+const resolveExecutorKey = (kind: string): string | null => {
+  const normalized = kind.toLowerCase().trim();
+
+  if (EXECUTORS[normalized]) return normalized;
+
+  const alias = EXECUTOR_ALIASES[normalized];
+  if (alias && EXECUTORS[alias]) return alias;
+
+  const fallback = FALLBACK_MATCH_KEYS.find((key) => normalized.includes(key));
+  return fallback ?? null;
 };
 
 export const executeNode = async (
@@ -49,8 +67,7 @@ export const executeNode = async (
   pipelineId?: string | null,
 ): Promise<TNodeExecutionResult> => {
   const kind = getNodeKind(node);
-
-  const executorKey = Object.keys(EXECUTORS).find((key) => kind === key || kind.includes(key));
+  const executorKey = resolveExecutorKey(kind);
 
   if (executorKey && EXECUTORS[executorKey]) {
     return EXECUTORS[executorKey](node, input, { pipelineId });

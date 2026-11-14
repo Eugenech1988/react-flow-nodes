@@ -8,12 +8,12 @@ import {
   TableRow,
 } from '@pipeline/ui';
 
-interface TableSkeletonProps {
+interface ITableSkeletonProps {
   rowCount?: number;
   columnCount?: number;
 }
 
-export function TableSkeleton({ rowCount = 5, columnCount = 4 }: TableSkeletonProps) {
+export function TableSkeleton({ rowCount = 5, columnCount = 4 }: ITableSkeletonProps) {
   return (
     <div className="border-border rounded-md border">
       <Table>
@@ -21,7 +21,7 @@ export function TableSkeleton({ rowCount = 5, columnCount = 4 }: TableSkeletonPr
           <TableRow>
             {Array.from({ length: columnCount }).map((_, index) => (
               <TableHead key={index}>
-                <Skeleton className="h-4 w-25" />
+                <Skeleton className="h-4 w-[100px]" />
               </TableHead>
             ))}
           </TableRow>

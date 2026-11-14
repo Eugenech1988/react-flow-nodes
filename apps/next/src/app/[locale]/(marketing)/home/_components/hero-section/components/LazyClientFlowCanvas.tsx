@@ -22,4 +22,4 @@ export const LazyHeroCanvas = () => {
   }, []);
 
   return ready ? <ClientFlowCanvas /> : null;
-}
+};

@@ -15,21 +15,25 @@ describe('Blog listing', () => {
   });
 
   it('filters by category', () => {
-    cy.contains(/ENGINEERING/i).first().click();
+    cy.contains(/ENGINEERING/i)
+      .first()
+      .click();
     cy.url().should('include', '/blog');
     cy.get('a[href*="/blog/"]').should('have.length.greaterThan', 0);
   });
 
   it('filters by search', () => {
-    cy.get('a[href*="/blog/"]').last().then(($card) => {
-      const text = $card.text().trim();
-      const keyword = text.split(/\s+/).find((w) => w.length > 3) || 'a';
+    cy.get('a[href*="/blog/"]')
+      .last()
+      .then(($card) => {
+        const text = $card.text().trim();
+        const keyword = text.split(/\s+/).find((w) => w.length > 3) || 'a';
 
-      cy.get('input[placeholder*="SEARCH"]').type(keyword);
-      cy.wait(300);
+        cy.get('input[placeholder*="SEARCH"]').type(keyword);
+        cy.wait(300);
 
-      cy.get('a[href*="/blog/"]').should('have.length.greaterThan', 0);
-    });
+        cy.get('a[href*="/blog/"]').should('have.length.greaterThan', 0);
+      });
   });
 
   it('shows empty state for no results', () => {
@@ -53,7 +57,9 @@ describe('Blog listing', () => {
 
   it('submits subscribe form without reload', () => {
     cy.get('input[type="email"]').type('test@example.com');
-    cy.get('button[type="submit"]').contains(/SUBSCRIBE|ПІДПИСАТИСЬ/i).click();
+    cy.get('button[type="submit"]')
+      .contains(/SUBSCRIBE|ПІДПИСАТИСЬ/i)
+      .click();
     cy.url().should('not.include', '?');
     cy.get('input[type="email"]').should('have.value', '');
   });

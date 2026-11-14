@@ -46,7 +46,7 @@ export const BlogPostView = ({ post, locale }: IBlogPostViewProps) => {
             }
           >
             <div className="relative overflow-hidden p-5 sm:p-10">
-              <div className="pointer-events-none absolute inset-0 theme-grid bg-size-[30px_30px]" />
+              <div className="theme-grid pointer-events-none absolute inset-0 bg-size-[30px_30px]" />
 
               <div className="relative z-10">
                 <BlogPostHeader post={post} />

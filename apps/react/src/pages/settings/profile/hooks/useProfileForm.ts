@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
 import { useUser } from '@/shared/hooks';
-import type { AlertState } from '@/shared/lib';
+import type { TAlertState } from '@/shared/lib';
 import { updateProfileInputSchema, type TUpdateProfileInputData } from '@pipeline/contracts';
 
 export const useProfileForm = () => {
@@ -12,7 +12,7 @@ export const useProfileForm = () => {
   const { user } = useUser();
   const queryClient = useQueryClient();
 
-  const [alert, setAlert] = useState<AlertState>(null);
+  const [alert, setAlert] = useState<TAlertState>(null);
 
   const form = useForm<TUpdateProfileInputData>({
     resolver: zodResolver(updateProfileInputSchema),
@@ -36,10 +36,21 @@ export const useProfileForm = () => {
 
   const updateProfileMutation = useMutation(
     trpc.profile.update.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+      onSuccess: async (data) => {
         setAlert({ type: 'success', message: 'Profile updated successfully.' });
-        form.reset(form.getValues());
+
+        form.reset(
+          {
+            firstName: data.profile?.firstName ?? '',
+            lastName: data.profile?.lastName ?? '',
+            company: data.profile?.company ?? '',
+            location: data.profile?.location ?? '',
+            jobTitle: data.profile?.jobTitle ?? '',
+          },
+          { keepDirty: false },
+        );
+
+        await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
       },
       onError: (error) => {
         setAlert({

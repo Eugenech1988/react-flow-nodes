@@ -17,11 +17,21 @@ describe('Inquiry form on /contacts', () => {
       return false;
     });
 
-    cy.contains('label', /Operator Name/i).next().type('John Doe');
-    cy.contains('label', /Comm-Link/i).next().type('john@example.com');
-    cy.contains('label', /Organization/i).next().type('Acme');
-    cy.contains('label', /Position/i).next().type('Dev');
-    cy.contains('label', /Mission Parameters/i).next().type('Test message 12345');
+    cy.contains('label', /Operator Name/i)
+      .next()
+      .type('John Doe');
+    cy.contains('label', /Comm-Link/i)
+      .next()
+      .type('john@example.com');
+    cy.contains('label', /Organization/i)
+      .next()
+      .type('Acme');
+    cy.contains('label', /Position/i)
+      .next()
+      .type('Dev');
+    cy.contains('label', /Mission Parameters/i)
+      .next()
+      .type('Test message 12345');
 
     cy.contains('button', /Send Message|Transmit/i).click();
 

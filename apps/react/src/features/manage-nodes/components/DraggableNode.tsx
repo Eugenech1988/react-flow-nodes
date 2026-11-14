@@ -1,6 +1,6 @@
 import type { CSSProperties, DragEvent } from 'react';
 
-interface DraggableNodeProps {
+interface IDraggableNodeProps {
   type: string;
   label: string;
   icon?: string;
@@ -8,21 +8,26 @@ interface DraggableNodeProps {
 
 const categoryVar: Record<string, string> = {
   input: 'var(--node-input)',
+  customInput: 'var(--node-input)',
   output: 'var(--node-output)',
+  customOutput: 'var(--node-output)',
   text: 'var(--node-text)',
   llm: 'var(--node-llm)',
   math: 'var(--node-math)',
   condition: 'var(--node-logic)',
+  conditional: 'var(--node-logic)',
+  logic: 'var(--node-logic)',
   api: 'var(--node-api)',
+  data: 'var(--node-data)',
   database: 'var(--node-data)',
+  media: 'var(--node-media)',
   image: 'var(--node-media)',
 };
 
-export const DraggableNode = ({ type, label, icon }: DraggableNodeProps) => {
+export const DraggableNode = ({ type, label, icon }: IDraggableNodeProps) => {
   const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: string) => {
-    const appData = { nodeType };
     event.currentTarget.style.cursor = 'grabbing';
-    event.dataTransfer.setData('application/reactflow', JSON.stringify(appData));
+    event.dataTransfer.setData('application/reactflow', JSON.stringify({ nodeType }));
     event.dataTransfer.effectAllowed = 'move';
   };
 
@@ -30,7 +35,7 @@ export const DraggableNode = ({ type, label, icon }: DraggableNodeProps) => {
     event.currentTarget.style.cursor = 'grab';
   };
 
-  const accentColor = categoryVar[type] || 'var(--node-default)';
+  const accentColor = categoryVar[type] ?? 'var(--node-default)';
   const chipStyle: CSSProperties & { '--accent': string } = {
     '--accent': accentColor,
     borderColor: accentColor,

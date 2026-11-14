@@ -25,4 +25,4 @@ export const useInView = <T extends HTMLElement>(options?: IntersectionObserverI
   }, [options]);
 
   return { ref, inView };
-}
+};

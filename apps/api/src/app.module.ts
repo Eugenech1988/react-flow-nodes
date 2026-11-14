@@ -29,7 +29,7 @@ import { PortalRevalidateModule } from '@/portal-revalidate/portal-revalidate.mo
     ExecutionsModule,
     JobsModule,
     ApplicationsModule,
-    PortalRevalidateModule
+    PortalRevalidateModule,
   ],
 })
 export class AppModule {}

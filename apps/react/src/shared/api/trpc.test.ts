@@ -1,72 +1,76 @@
 import { describe, it, expect } from 'vitest';
+import { extractTrpcProcedurePaths, shouldSkipRefresh } from './trpc';
 
-const SKIP_REFRESH_PROCEDURES = new Set<string>([
-  'auth.login',
-  'auth.register',
-  'auth.loginWith2fa',
-  'auth.logout',
-  'auth.refresh',
-  'auth.requestPasswordReset',
-  'auth.resetPassword',
-]);
+describe('extractTrpcProcedurePaths', () => {
+  it('extracts single path', () => {
+    expect(extractTrpcProcedurePaths('https://api.test/trpc/auth.login')).toEqual(['auth.login']);
+  });
 
-const shouldSkipRefresh = (url: string, body: BodyInit | null | undefined): boolean => {
-  if (url.includes('/auth/')) return true;
-  if (typeof body !== 'string') return false;
+  it('extracts batched paths', () => {
+    expect(
+      extractTrpcProcedurePaths('https://api.test/trpc/auth.login,users.update,billing.checkout'),
+    ).toEqual(['auth.login', 'users.update', 'billing.checkout']);
+  });
 
-  try {
-    const parsed: unknown = JSON.parse(body);
-    const items: unknown[] = Array.isArray(parsed) ? parsed : [parsed];
+  it('ignores query string', () => {
+    expect(extractTrpcProcedurePaths('https://api.test/trpc/auth.login?batch=1&input=...')).toEqual(
+      ['auth.login'],
+    );
+  });
 
-    return items.some((item) => {
-      if (typeof item !== 'object' || item === null) return false;
-      const path = (item as { path?: unknown }).path;
-      return typeof path === 'string' && SKIP_REFRESH_PROCEDURES.has(path);
-    });
-  } catch {
-    return false;
-  }
-};
+  it('ignores hash', () => {
+    expect(extractTrpcProcedurePaths('https://api.test/trpc/auth.login#section')).toEqual([
+      'auth.login',
+    ]);
+  });
+
+  it('returns empty array when no /trpc/ segment', () => {
+    expect(extractTrpcProcedurePaths('https://api.test/other')).toEqual([]);
+  });
+
+  it('trims whitespace around paths', () => {
+    expect(extractTrpcProcedurePaths('https://api.test/trpc/auth.login , users.update')).toEqual([
+      'auth.login',
+      'users.update',
+    ]);
+  });
+});
 
 describe('shouldSkipRefresh', () => {
   it('skips REST auth endpoints by URL', () => {
-    expect(shouldSkipRefresh('https://api.test/auth/login', null)).toBe(true);
-    expect(shouldSkipRefresh('https://api.test/auth/refresh', null)).toBe(true);
+    expect(shouldSkipRefresh('https://api.test/auth/login')).toBe(true);
+    expect(shouldSkipRefresh('https://api.test/auth/refresh')).toBe(true);
+    expect(shouldSkipRefresh('https://api.test/auth/logout')).toBe(true);
   });
 
-  it('skips tRPC auth procedures by path', () => {
-    const body = JSON.stringify({ '0': { path: 'auth.login' } });
-    expect(shouldSkipRefresh('https://api.test/trpc', body)).toBe(true);
+  it('skips single tRPC auth procedure', () => {
+    expect(shouldSkipRefresh('https://api.test/trpc/auth.login')).toBe(true);
+    expect(shouldSkipRefresh('https://api.test/trpc/auth.loginWith2fa')).toBe(true);
+    expect(shouldSkipRefresh('https://api.test/trpc/auth.resetPassword')).toBe(true);
   });
 
   it('skips batched tRPC when any item is an auth procedure', () => {
-    const body = JSON.stringify({
-      '0': { path: 'users.updatePassword' },
-      '1': { path: 'auth.logout' },
-    });
-    expect(shouldSkipRefresh('https://api.test/trpc', body)).toBe(true);
+    expect(shouldSkipRefresh('https://api.test/trpc/users.updatePassword,auth.logout')).toBe(true);
+    expect(shouldSkipRefresh('https://api.test/trpc/billing.checkout,auth.login')).toBe(true);
   });
 
   it('does not skip non-auth procedures', () => {
-    const body = JSON.stringify({ '0': { path: 'billing.checkout' } });
-    expect(shouldSkipRefresh('https://api.test/trpc', body)).toBe(false);
+    expect(shouldSkipRefresh('https://api.test/trpc/billing.checkout')).toBe(false);
+    expect(shouldSkipRefresh('https://api.test/trpc/users.updatePassword')).toBe(false);
   });
 
-  it('does not skip when body is missing', () => {
-    expect(shouldSkipRefresh('https://api.test/trpc', null)).toBe(false);
-    expect(shouldSkipRefresh('https://api.test/trpc', undefined)).toBe(false);
+  it('does not skip batched non-auth procedures', () => {
+    expect(shouldSkipRefresh('https://api.test/trpc/billing.checkout,users.update')).toBe(false);
   });
 
-  it('does not skip when body is not a string', () => {
-    expect(shouldSkipRefresh('https://api.test/trpc', new Blob(['x']))).toBe(false);
+  it('handles query string', () => {
+    expect(shouldSkipRefresh('https://api.test/trpc/auth.login?batch=1&input=...')).toBe(true);
+    expect(shouldSkipRefresh('https://api.test/trpc/billing.checkout?batch=1')).toBe(false);
   });
 
-  it('does not skip on malformed JSON', () => {
-    expect(shouldSkipRefresh('https://api.test/trpc', 'not-json')).toBe(false);
-  });
-
-  it('does not skip when path is not a string', () => {
-    const body = JSON.stringify({ '0': { path: 123 } });
-    expect(shouldSkipRefresh('https://api.test/trpc', body)).toBe(false);
+  it('returns false when URL is malformed or has no /trpc/ segment', () => {
+    expect(shouldSkipRefresh('https://api.test/other/path')).toBe(false);
+    expect(shouldSkipRefresh('not-a-url')).toBe(false);
+    expect(shouldSkipRefresh('')).toBe(false);
   });
 });

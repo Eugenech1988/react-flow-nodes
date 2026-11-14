@@ -14,12 +14,9 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
 ) => ({
   nodes: [],
   edges: [],
-  nodeIDs: {},
   clipboard: null,
-  isDragging: false,
   past: [],
   future: [],
-  isHistoryAction: false,
   lastRunAt: null,
   lastRunStatus: null,
   saveAction: null,
@@ -161,8 +158,6 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
   },
 
   onEdgesChange: (changes) => {
-    // const { edges } = get();
-
     const hasActualRemoval = changes.some((c) => c.type === 'remove');
     if (hasActualRemoval) {
       get().takeSnapshot();

@@ -1,17 +1,19 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Camera } from 'lucide-react';
+import { toast } from 'sonner';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
 import { useProfileSidebar } from '../hooks';
 
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
+const MAX_AVATAR_SIZE = 5 * 1024 * 1024;
+
+const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
+    reader.onerror = () => reject(new Error('Failed to read file'));
   });
-};
 
 export const ProfileAvatar = () => {
   const trpc = useTRPC();
@@ -39,16 +41,19 @@ export const ProfileAvatar = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File is too large. Maximum size is 5MB.');
+    if (file.size > MAX_AVATAR_SIZE) {
+      toast.error('File is too large. Maximum size is 5MB.');
       return;
     }
 
     try {
       const base64Avatar = await fileToBase64(file);
       await uploadAvatarMutation.mutateAsync({ avatarUrl: base64Avatar });
-    } catch (e: any) {
-      console.error(e);
+      toast.success('Avatar updated.');
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to upload avatar. Please try again.';
+      toast.error(message);
     }
   };
 

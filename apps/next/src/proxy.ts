@@ -23,7 +23,6 @@ export const proxy = (request: NextRequest) => {
     return NextResponse.redirect(url, 301);
   }
 
-
   if (pathname.startsWith('/api/revalidate')) {
     const origin = request.headers.get('origin') ?? '';
     const isAllowed = ALLOWED_ORIGINS.includes(origin);
@@ -52,4 +51,3 @@ export const proxy = (request: NextRequest) => {
 export const config = {
   matcher: ['/((?!_next/static|_next/image|api/|favicon.ico|robots.txt|sitemap.xml).*)'],
 };
-

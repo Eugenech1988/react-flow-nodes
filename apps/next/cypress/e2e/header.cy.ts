@@ -37,6 +37,8 @@ describe('Header', () => {
   it('opens nav link without double slash', () => {
     cy.setDesktopViewport();
     cy.visit('/en');
-    cy.get('header nav').contains(/About|Про нас/i).should('have.attr', 'href', '/en/about');
+    cy.get('header nav')
+      .contains(/About|Про нас/i)
+      .should('have.attr', 'href', '/en/about');
   });
 });

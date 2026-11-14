@@ -86,9 +86,7 @@ export const Canvas = () => {
 
   const { user } = useUser();
   const currentPipeline = user?.currentPipeline as
-    | Pick<TPipeline, 'id' | 'graphData'>
-    | null
-    | undefined;
+    Pick<TPipeline, 'id' | 'graphData'> | null | undefined;
   const currentPipelineId = currentPipeline?.id;
   const currentPipelineGraphData = currentPipeline?.graphData;
 
