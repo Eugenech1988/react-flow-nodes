@@ -3,25 +3,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HistoryControls } from './HistoryControls';
 
 const mockStore = vi.hoisted(() => ({
-  nodes: [],
-  edges: [],
-  nodeIDs: {},
-  past: [] as unknown[],
-  future: [] as unknown[],
-  undo: vi.fn(),
-  redo: vi.fn(),
+  nodes: [] as unknown[],
+  edges: [] as unknown[],
+  nodeIDs: {} as Record<string, unknown>,
+  past: [] as Array<{ nodes: unknown[]; edges: unknown[] }>,
+  future: [] as Array<{ nodes: unknown[]; edges: unknown[] }>,
+  undo: vi.fn<() => void>(),
+  redo: vi.fn<() => void>(),
 }));
+
+type TStoreMock = typeof mockStore;
 
 vi.mock('@/entities', () => ({
-  useStore: (selector: (state: typeof mockStore) => unknown) => selector(mockStore),
-}));
-
-vi.mock('@pipeline/ui', () => ({
-  Button: ({ children, onClick, disabled, 'aria-label': ariaLabel, title, ...props }: any) => (
-    <button onClick={onClick} disabled={disabled} {...props}>
-      {ariaLabel || title || children}
-    </button>
-  ),
+  useStore: (selector: (state: TStoreMock) => unknown) => selector(mockStore),
 }));
 
 describe('HistoryControls', () => {
@@ -33,53 +27,35 @@ describe('HistoryControls', () => {
 
   it('renders buttons in disabled state when history is empty', () => {
     render(<HistoryControls />);
-
-    const undoBtn = screen.getByRole('button', { name: /undo/i });
-    const redoBtn = screen.getByRole('button', { name: /redo/i });
-
-    expect(undoBtn).toBeDisabled();
-    expect(redoBtn).toBeDisabled();
+    expect(screen.getByRole('button', { name: /undo/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /redo/i })).toBeDisabled();
   });
 
   it('enables undo button when there is past history', () => {
     mockStore.past = [{ nodes: [], edges: [] }];
     render(<HistoryControls />);
-
-    const undoBtn = screen.getByRole('button', { name: /undo/i });
-    const redoBtn = screen.getByRole('button', { name: /redo/i });
-
-    expect(undoBtn).toBeEnabled();
-    expect(redoBtn).toBeDisabled();
+    expect(screen.getByRole('button', { name: /undo/i })).toBeEnabled();
+    expect(screen.getByRole('button', { name: /redo/i })).toBeDisabled();
   });
 
   it('enables redo button when there is future history', () => {
     mockStore.future = [{ nodes: [], edges: [] }];
     render(<HistoryControls />);
-
-    const undoBtn = screen.getByRole('button', { name: /undo/i });
-    const redoBtn = screen.getByRole('button', { name: /redo/i });
-
-    expect(undoBtn).toBeDisabled();
-    expect(redoBtn).toBeEnabled();
+    expect(screen.getByRole('button', { name: /undo/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /redo/i })).toBeEnabled();
   });
 
   it('calls undo action on click', () => {
     mockStore.past = [{ nodes: [], edges: [] }];
     render(<HistoryControls />);
-
-    const undoBtn = screen.getByRole('button', { name: /undo/i });
-    fireEvent.click(undoBtn);
-
+    fireEvent.click(screen.getByRole('button', { name: /undo/i }));
     expect(mockStore.undo).toHaveBeenCalledTimes(1);
   });
 
   it('calls redo action on click', () => {
     mockStore.future = [{ nodes: [], edges: [] }];
     render(<HistoryControls />);
-
-    const redoBtn = screen.getByRole('button', { name: /redo/i });
-    fireEvent.click(redoBtn);
-
+    fireEvent.click(screen.getByRole('button', { name: /redo/i }));
     expect(mockStore.redo).toHaveBeenCalledTimes(1);
   });
 });

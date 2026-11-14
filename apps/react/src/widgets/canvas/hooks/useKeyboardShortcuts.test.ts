@@ -1,12 +1,14 @@
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useKeyboardShortcuts, isInputElement } from './useKeyboardShortcuts';
 import type { TPipelineNode, TPipelineEdge } from '@/entities';
+import { useKeyboardShortcuts, isInputElement } from './useKeyboardShortcuts';
+
+const { mockToastSuccess } = vi.hoisted(() => ({
+  mockToastSuccess: vi.fn<(message: string, opts?: { duration?: number }) => void>(),
+}));
 
 vi.mock('sonner', () => ({
-  toast: {
-    success: vi.fn(),
-  },
+  toast: { success: mockToastSuccess },
 }));
 
 describe('isInputElement helper', () => {
@@ -45,12 +47,12 @@ describe('isInputElement helper', () => {
 });
 
 describe('useKeyboardShortcuts hook', () => {
-  const copyNodes = vi.fn();
-  const pasteNodes = vi.fn();
+  const copyNodes = vi.fn<(nodes: TPipelineNode[], edges: TPipelineEdge[]) => void>();
+  const pasteNodes = vi.fn<() => void>();
   const getNodes = vi.fn<() => TPipelineNode[]>(() => []);
   const getEdges = vi.fn<() => TPipelineEdge[]>(() => []);
-  const undo = vi.fn();
-  const redo = vi.fn();
+  const undo = vi.fn<() => void>();
+  const redo = vi.fn<() => void>();
 
   const mockParams = {
     copyNodes,
@@ -63,6 +65,8 @@ describe('useKeyboardShortcuts hook', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    getNodes.mockReturnValue([]);
+    getEdges.mockReturnValue([]);
   });
 
   it('copies selected nodes on Ctrl/Cmd+C when focus is outside text input', () => {
@@ -88,6 +92,38 @@ describe('useKeyboardShortcuts hook', () => {
 
     expect(copyNodes).toHaveBeenCalledWith([mockNode], []);
     expect(preventDefaultSpy).toHaveBeenCalled();
+  });
+
+  it('shows toast after copying', () => {
+    const mockNode: TPipelineNode = {
+      id: 'node-1',
+      type: 'custom',
+      position: { x: 0, y: 0 },
+      data: {},
+      selected: true,
+    };
+    getNodes.mockReturnValue([mockNode]);
+
+    renderHook(() => useKeyboardShortcuts(mockParams));
+
+    window.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'c', ctrlKey: true, bubbles: true }),
+    );
+
+    expect(mockToastSuccess).toHaveBeenCalledWith('Nodes copied', { duration: 2000 });
+  });
+
+  it('does not copy when no nodes are selected', () => {
+    getNodes.mockReturnValue([]);
+
+    renderHook(() => useKeyboardShortcuts(mockParams));
+
+    window.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'c', ctrlKey: true, bubbles: true }),
+    );
+
+    expect(copyNodes).not.toHaveBeenCalled();
+    expect(mockToastSuccess).not.toHaveBeenCalled();
   });
 
   it('does NOT copy nodes on Ctrl/Cmd+C if focus is inside text input', () => {
@@ -157,5 +193,42 @@ describe('useKeyboardShortcuts hook', () => {
     expect(preventDefaultSpy).not.toHaveBeenCalled();
 
     document.body.removeChild(textarea);
+  });
+
+  it('undoes on Ctrl/Cmd+Z', () => {
+    renderHook(() => useKeyboardShortcuts(mockParams));
+
+    window.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }),
+    );
+
+    expect(undo).toHaveBeenCalledTimes(1);
+    expect(redo).not.toHaveBeenCalled();
+  });
+
+  it('redoes on Ctrl/Cmd+Shift+Z', () => {
+    renderHook(() => useKeyboardShortcuts(mockParams));
+
+    window.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'z',
+        ctrlKey: true,
+        shiftKey: true,
+        bubbles: true,
+      }),
+    );
+
+    expect(redo).toHaveBeenCalledTimes(1);
+    expect(undo).not.toHaveBeenCalled();
+  });
+
+  it('redoes on Ctrl/Cmd+Y', () => {
+    renderHook(() => useKeyboardShortcuts(mockParams));
+
+    window.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'y', ctrlKey: true, bubbles: true }),
+    );
+
+    expect(redo).toHaveBeenCalledTimes(1);
   });
 });

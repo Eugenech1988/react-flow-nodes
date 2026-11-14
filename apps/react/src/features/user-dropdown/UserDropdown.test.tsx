@@ -13,20 +13,20 @@ vi.mock('@/shared/hooks', () => ({
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  DropdownMenu: ({ children }: any) => <div>{children}</div>,
-  DropdownMenuTrigger: ({ children }: any) => <div>{children}</div>,
-  DropdownMenuContent: ({ children }: any) => <div>{children}</div>,
-  DropdownMenuItem: ({ children, ...props }: any) => <button {...props}>{children}</button>,
-  DropdownMenuLabel: ({ children }: any) => <div>{children}</div>,
+  DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DropdownMenuItem: ({ children, ...props }: unknown) => <button {...props}>{children}</button>,
+  DropdownMenuLabel: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DropdownMenuSeparator: () => <hr />,
-  DropdownMenuGroup: ({ children }: any) => <div>{children}</div>,
+  DropdownMenuGroup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock('react-router-dom', () => ({
-  Link: ({ children, to }: any) => <a href={to}>{children}</a>,
+  Link: ({ children, to }: unknown) => <a href={to}>{children}</a>,
 }));
 
-const createUser = (overrides: any = {}) => ({
+const createUser =   (overrides: Record<string, unknown> = {}) => ({
   user: {
     email: 'test@example.com',
     subscription: { plan: 'PRO' },

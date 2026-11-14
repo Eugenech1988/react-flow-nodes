@@ -1,51 +1,68 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { ClearCanvasButton } from '@/widgets/canvas/components/ClearCanvasButton';
-import { useStore } from '@/entities';
+
+interface IDialogProps {
+  children: ReactNode;
+  open: boolean;
+}
+
+interface IChildrenProps {
+  children: ReactNode;
+}
+
+interface IDialogCloseProps {
+  children: ReactNode;
+  onClick?: () => void;
+}
+
+const mockClearCanvas = vi.fn<() => void>();
 
 vi.mock('@/entities', () => ({
-  useStore: vi.fn(),
+  useStore: (selector: (state: { clearCanvas: () => void }) => unknown) =>
+    selector({ clearCanvas: mockClearCanvas }),
 }));
 
 vi.mock('@pipeline/ui', async () => {
-  const actual = await vi.importActual('@pipeline/ui');
+  const actual = await vi.importActual<typeof import('@pipeline/ui')>('@pipeline/ui');
   return {
     ...actual,
-    Dialog: ({ children, open }: any) => (open ? <div data-testid="dialog">{children}</div> : null),
-    DialogContent: ({ children }: any) => <div>{children}</div>,
-    DialogClose: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
-    DialogHeader: ({ children }: any) => <div>{children}</div>,
-    DialogTitle: ({ children }: any) => <h1>{children}</h1>,
-    DialogDescription: ({ children }: any) => <p>{children}</p>,
-    DialogFooter: ({ children }: any) => <footer>{children}</footer>,
+    Dialog: ({ children, open }: IDialogProps) =>
+      open ? <div data-testid="dialog">{children}</div> : null,
+    DialogContent: ({ children }: IChildrenProps) => <div>{children}</div>,
+    DialogClose: ({ children, onClick }: IDialogCloseProps) => (
+      <button onClick={onClick}>{children}</button>
+    ),
+    DialogHeader: ({ children }: IChildrenProps) => <div>{children}</div>,
+    DialogTitle: ({ children }: IChildrenProps) => <h1>{children}</h1>,
+    DialogDescription: ({ children }: IChildrenProps) => <p>{children}</p>,
+    DialogFooter: ({ children }: IChildrenProps) => <footer>{children}</footer>,
   };
 });
 
 describe('ClearCanvasButton', () => {
-  const mockClearCanvas = vi.fn();
-
   beforeEach(() => {
     vi.clearAllMocks();
-    (useStore as any).mockReturnValue(mockClearCanvas);
   });
 
   it('renders trigger button correctly', () => {
     render(<ClearCanvasButton />);
-    expect(screen.getByRole('button', { name: /clear canvas/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /clear canvas/i })).toBeInTheDocument();
   });
 
   it('opens dialog on click', () => {
     render(<ClearCanvasButton />);
     fireEvent.click(screen.getByRole('button', { name: /clear canvas/i }));
-    expect(screen.getByTestId('dialog')).toBeDefined();
-    expect(screen.getByText(/are you sure you want to clear the canvas/i)).toBeDefined();
+    expect(screen.getByTestId('dialog')).toBeInTheDocument();
+    expect(screen.getByText(/are you sure you want to clear the canvas/i)).toBeInTheDocument();
   });
 
   it('closes dialog on cancel', () => {
     render(<ClearCanvasButton />);
     fireEvent.click(screen.getByRole('button', { name: /clear canvas/i }));
     fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
-    expect(screen.queryByTestId('dialog')).toBeNull();
+    expect(screen.queryByTestId('dialog')).not.toBeInTheDocument();
   });
 
   it('calls clearCanvas and closes on confirm', async () => {
@@ -56,7 +73,7 @@ describe('ClearCanvasButton', () => {
 
     expect(mockClearCanvas).toHaveBeenCalledTimes(1);
     await waitFor(() => {
-      expect(screen.queryByTestId('dialog')).toBeNull();
+      expect(screen.queryByTestId('dialog')).not.toBeInTheDocument();
     });
   });
 });

@@ -160,6 +160,8 @@ export default defineConfig({
 
         '**/index.ts',
         '**/index.tsx',
+        '**/types.ts',
+        '**/constants.{ts,tsx}',
 
         '**/*.d.ts',
         '**/vite-env.d.ts',

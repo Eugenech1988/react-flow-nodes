@@ -15,7 +15,7 @@ vi.mock('@/entities', () => {
     runNode: vi.fn(),
   };
   return {
-    useStore: (selector: any) => selector(mockState),
+    useStore: (selector: (state: unknown) => unknown) => selector(mockState),
   };
 });
 
@@ -27,14 +27,14 @@ describe('Node Wrappers', () => {
   it('renders TextNode', () => {
     render(
       <ReactFlowProvider>
-        <TextNode id="t1" data={{}} selected={false} {...({} as any)} />
+        <TextNode id="t1" data={{}} selected={false} {...({} as unknown as never)} />
       </ReactFlowProvider>
     );
     expect(screen.getByText('Text')).toBeInTheDocument();
   });
 
   it('renders OutputNode', () => {
-    const Node = OutputNode as any;
+    const Node = OutputNode as unknown as never;
     render(
       <ReactFlowProvider>
         <Node id="o1" data={{}} selected={false} />
@@ -46,7 +46,7 @@ describe('Node Wrappers', () => {
   it('renders DatabaseNode', () => {
     render(
       <ReactFlowProvider>
-        <DatabaseNode id="d1" data={{}} selected={false} {...({} as any)} />
+        <DatabaseNode id="d1" data={{}} selected={false} {...({} as unknown as never)} />
       </ReactFlowProvider>
     );
     expect(screen.getByText('Database')).toBeInTheDocument();

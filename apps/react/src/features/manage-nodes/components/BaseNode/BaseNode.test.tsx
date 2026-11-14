@@ -21,7 +21,7 @@ const {
 }));
 
 vi.mock('@/entities', () => ({
-  useStore: (selector: (state: any) => unknown) =>
+  useStore: (selector: (state: unknown) => unknown) =>
     selector({
       updateNodeField,
       activeNodeId: 'node-active',
@@ -39,18 +39,18 @@ vi.mock('@xyflow/react', () => ({
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  Input: ({ value, onChange }: any) => <input data-testid="input" value={value} onChange={onChange} />,
-  Textarea: ({ value, onChange }: any) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
-  Select: ({ value, onValueChange, children }: any) => (
+  Input: ({ value, onChange }: unknown) => <input data-testid="input" value={value} onChange={onChange} />,
+  Textarea: ({ value, onChange }: unknown) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
+  Select: ({ value, onValueChange, children }: unknown) => (
     <select data-testid="select" value={value} onChange={(e) => onValueChange(e.target.value)}>
       {children}
     </select>
   ),
-  SelectTrigger: ({ children }: any) => <>{children}</>,
+  SelectTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   SelectValue: () => <span />,
-  SelectContent: ({ children }: any) => <>{children}</>,
-  SelectItem: ({ value, children }: any) => <option value={value}>{children}</option>,
-  AutosizeTextarea: ({ value, onChange }: any) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
+  SelectContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  SelectItem: ({ value, children }: unknown) => <option value={value}>{children}</option>,
+  AutosizeTextarea: ({ value, onChange }: unknown) => <textarea data-testid="textarea" value={value} onChange={onChange} />,
 }));
 
 vi.mock('@/shared/lib', () => ({
@@ -147,8 +147,6 @@ describe('BaseNode', () => {
     render(<NodeComponent {...createMockNodeProps('node-factory', 'test-category', { selected: true })} />);
     expect(screen.getByText('Config Node')).toBeInTheDocument();
   });
-
-  // --- EXTENDED COVERAGE ---
 
   it('syncs values when data prop changes', () => {
     const fields: TFieldConfig[] = [{ key: 'name', label: 'Name', type: 'text' }];

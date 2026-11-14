@@ -1,30 +1,32 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { ButtonHTMLAttributes, ReactElement } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 import { WorkflowExecutionControl } from '@/widgets/header/components/WorkflowExecutionControl';
 
-const mockStore = {
-  executionStatus: 'idle',
-  runWorkflow: vi.fn(),
-  stopWorkflow: vi.fn(),
-  setLastRunInfo: vi.fn(),
-};
-
-vi.mock('@/entities', () => ({
-  useStore: (selector: (state: typeof mockStore) => unknown) => selector(mockStore),
+const mockStore = vi.hoisted(() => ({
+  executionStatus: 'idle' as string,
+  runWorkflow: vi.fn<() => void>(),
+  stopWorkflow: vi.fn<() => void>(),
+  setLastRunInfo: vi.fn<() => void>(),
 }));
 
-const mockNavigate = vi.fn();
+type TStoreMock = typeof mockStore;
+
+vi.mock('@/entities', () => ({
+  useStore: (selector: (state: TStoreMock) => unknown) => selector(mockStore),
+}));
+
+const mockNavigate = vi.fn<() => void>();
+
 vi.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
   useLocation: () => ({ pathname: '/' }),
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  Button: ({ children, onClick, className, ...props }: any) => (
-    <button onClick={onClick} className={className} {...props}>
-      {children}
-    </button>
+  Button: ({ children, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) => (
+    <button {...props}>{children}</button>
   ),
 }));
 
@@ -40,9 +42,8 @@ vi.mock('@xyflow/react', async (importOriginal) => {
   };
 });
 
-const renderWithProvider = (ui: React.ReactElement) => {
-  return render(<ReactFlowProvider>{ui}</ReactFlowProvider>);
-};
+const renderWithProvider = (ui: ReactElement) =>
+  render(<ReactFlowProvider>{ui}</ReactFlowProvider>);
 
 describe('WorkflowExecutionControl', () => {
   beforeEach(() => {

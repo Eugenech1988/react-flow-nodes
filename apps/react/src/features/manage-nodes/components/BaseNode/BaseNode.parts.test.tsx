@@ -3,26 +3,26 @@ import { describe, it, expect, vi } from 'vitest';
 import { NodeHandles, NodeMeta, NodeField, NodeHeader, VariableTags } from './BaseNode.parts';
 
 vi.mock('@pipeline/ui', () => ({
-  Input: (props: any) => <input data-testid="input" {...props} />,
-  Textarea: (props: any) => <textarea data-testid="textarea" {...props} />,
-  Select: ({ value, onValueChange, children }: any) => (
+  Input: (props: unknown) => <input data-testid="input" {...props} />,
+  Textarea: (props: unknown) => <textarea data-testid="textarea" {...props} />,
+  Select: ({ value, onValueChange, children }: unknown) => (
     <select data-testid="select" value={value} onChange={(e) => onValueChange(e.target.value)}>
       {children}
     </select>
   ),
-  SelectTrigger: ({ children }: any) => <>{children}</>,
+  SelectTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   SelectValue: () => <span />,
-  SelectContent: ({ children }: any) => <>{children}</>,
-  SelectItem: ({ value, children }: any) => <option value={value}>{children}</option>,
+  SelectContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  SelectItem: ({ value, children }: unknown) => <option value={value}>{children}</option>,
 }));
 
 vi.mock('@xyflow/react', () => ({
-  Handle: ({ id, type }: any) => <div data-testid={`handle-${id}`} data-type={type} />,
+  Handle: ({ id, type }: unknown) => <div data-testid={`handle-${id}`} data-type={type} />,
   Position: { Left: 'left', Right: 'right', Top: 'top', Bottom: 'bottom' },
 }));
 
 vi.mock('@/shared/ui', () => ({
-  AutosizeTextarea: (props: any) => <textarea data-testid="autosize" {...props} />,
+  AutosizeTextarea: (props: unknown) => <textarea data-testid="autosize" {...props} />,
 }));
 
 describe('BaseNode.parts', () => {

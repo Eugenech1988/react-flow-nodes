@@ -67,7 +67,7 @@ export const AppButton = ({
   onClick,
   className,
   isLink = false,
-  linkTo = '#',
+  linkTo,
 }: IAppButtonProps) => {
   const disabled = isDisabled || isPending;
   const currentSize = sizeStyles[size];
