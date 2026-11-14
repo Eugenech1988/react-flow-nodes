@@ -1,14 +1,16 @@
 import { User, Shield, CreditCard, Cpu, Clock, HardDrive } from 'lucide-react';
 import type { TabItem } from '@/shared/ui';
+import type { TUserRole } from '@/shared/lib';
+import { canSeeBilling } from '@/shared/lib';
 import type { IUsageStatItem } from './types';
 
 export const SETTINGS_TABS = (
   isProActive: boolean,
-  isContentManager: boolean = false,
+  role: TUserRole | null | undefined = null,
 ): TabItem[] => [
   { id: 'profile', label: 'Profile', icon: User },
   { id: 'account', label: 'Account Settings', icon: Shield },
-  ...(!isContentManager
+  ...(canSeeBilling(role)
     ? [
         {
           id: 'billing',

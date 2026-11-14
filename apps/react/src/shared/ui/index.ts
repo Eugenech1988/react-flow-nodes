@@ -11,3 +11,4 @@ export * from './Tabs';
 export * from './UniversalTable';
 export * from './SortIndicator';
 export * from './StatusBadge';
+export * from './ConfirmDeleteModal';

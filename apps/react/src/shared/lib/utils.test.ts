@@ -197,3 +197,61 @@ describe('formatTimestamp', () => {
     expect(formatTimestamp('not-a-date')).toBe('not-a-date');
   });
 });
+
+describe('debounce — cancel()', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('cancel() prevents pending call', () => {
+    const fn = vi.fn();
+    const debounced = debounce(fn, 100);
+
+    debounced();
+    expect(fn).not.toHaveBeenCalled();
+
+    debounced.cancel();
+    vi.advanceTimersByTime(100);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it('cancel() is no-op when nothing is pending', () => {
+    const fn = vi.fn();
+    const debounced = debounce(fn, 100);
+
+    expect(() => debounced.cancel()).not.toThrow();
+
+    vi.advanceTimersByTime(100);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it('debounced still works after cancel()', () => {
+    const fn = vi.fn();
+    const debounced = debounce(fn, 100);
+
+    debounced();
+    debounced.cancel();
+    debounced('payload');
+    vi.advanceTimersByTime(100);
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith('payload');
+  });
+
+  it('multiple cancel() calls are safe', () => {
+    const fn = vi.fn();
+    const debounced = debounce(fn, 100);
+
+    debounced();
+    debounced.cancel();
+    debounced.cancel();
+    debounced.cancel();
+
+    vi.advanceTimersByTime(100);
+    expect(fn).not.toHaveBeenCalled();
+  });
+});

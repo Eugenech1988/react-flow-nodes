@@ -1,42 +1,52 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import type { ReactNode } from 'react';
 import { JobDeleteModal } from './JobDeleteModal';
 
-vi.mock('@pipeline/ui', () => ({
-  Dialog: ({ children, open }: unknown) => (open ? <div>{children}</div> : null),
-  DialogContent: ({ children, onClick }: unknown) => (
-    <div onClick={onClick}>{children}</div>
-  ),
-}));
+interface IConfirmDeleteModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  isPending?: boolean;
+  title: string;
+  message: ReactNode;
+}
 
-vi.mock('@/shared/ui', () => ({
-  DialogHeader: ({ title, onClose }: unknown) => (
-    <div>
-      <h2>{title}</h2>
-      <button onClick={onClose}>X</button>
-    </div>
-  ),
-  DialogBody: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DialogFooter: ({ onSubmit, onCancel, isPending }: unknown) => (
-    <div>
-      <button onClick={onSubmit} disabled={isPending}>Confirm</button>
-      <button onClick={onCancel}>Cancel</button>
-    </div>
-  ),
+vi.mock('@/shared/ui/ConfirmDeleteModal', () => ({
+  ConfirmDeleteModal: ({
+    isOpen,
+    onClose,
+    onConfirm,
+    isPending,
+    title,
+    message,
+  }: IConfirmDeleteModalProps) =>
+    isOpen ? (
+      <div data-testid="confirm-modal">
+        <h2>{title}</h2>
+        <div data-testid="confirm-message">{message}</div>
+        <button onClick={onConfirm} disabled={isPending}>
+          Confirm
+        </button>
+        <button onClick={onClose}>Cancel</button>
+      </div>
+    ) : null,
 }));
 
 describe('JobDeleteModal', () => {
   it('renders nothing when closed', () => {
     const { container } = render(
-      <JobDeleteModal isOpen={false} onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="x" />
+      <JobDeleteModal isOpen={false} onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="x" />,
     );
     expect(container.firstChild).toBeNull();
   });
 
   it('renders title and slug', () => {
-    render(<JobDeleteModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="senior-dev" />);
+    render(
+      <JobDeleteModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="senior-dev" />,
+    );
     expect(screen.getByText('Delete Job')).toBeInTheDocument();
-    expect(screen.getByText(/senior-dev/)).toBeInTheDocument();
+    expect(screen.getByTestId('confirm-message')).toHaveTextContent('senior-dev');
   });
 
   it('triggers onConfirm', () => {
@@ -46,17 +56,17 @@ describe('JobDeleteModal', () => {
     expect(onConfirm).toHaveBeenCalled();
   });
 
-  it('triggers onClose on header close', () => {
+  it('triggers onClose', () => {
     const onClose = vi.fn();
     render(<JobDeleteModal isOpen onClose={onClose} onConfirm={vi.fn()} jobSlug="x" />);
-    fireEvent.click(screen.getByText('X'));
+    fireEvent.click(screen.getByText('Cancel'));
     expect(onClose).toHaveBeenCalled();
   });
 
   it('disables confirm when pending', () => {
     render(
-      <JobDeleteModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="x" isPending />
+      <JobDeleteModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} jobSlug="x" isPending />,
     );
-    expect(screen.getByText('Confirm').closest('button')).toBeDisabled();
+    expect(screen.getByText('Confirm')).toBeDisabled();
   });
 });

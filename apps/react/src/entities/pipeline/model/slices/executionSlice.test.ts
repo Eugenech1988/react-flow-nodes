@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useStore } from '../store';
-import type { TPipelineNode, TPipelineEdge } from '../../types';
+import type { TPipelineNode, TPipelineEdge } from '../types';
 
 const { mockExecuteNode, mockStartExecution, mockFinishExecution, mockValidatePipeline } =
   vi.hoisted(() => ({
@@ -226,7 +226,7 @@ describe('executionSlice', () => {
         nodes: [
           makeNode('in1', 'customInput', 'input', {
             inputName: 'x',
-            continueOnError: 'true',
+            continueOnError: true,
           }),
           makeNode('out1', 'customOutput', 'output', { outputName: 'y' }),
         ],
@@ -528,7 +528,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to target math.a', async () => {
     await runPair({ value: 10 }, 'math', 'a');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ connectedLeftOperand: 10 });
   });
@@ -536,7 +536,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to target math.b', async () => {
     await runPair({ value: 20 }, 'math', 'b');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ connectedRightOperand: 20 });
   });
@@ -544,7 +544,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to target condition.value', async () => {
     await runPair({ value: 'x' }, 'condition', 'value');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ connectedValue: 'x' });
   });
@@ -552,7 +552,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to target condition.compare', async () => {
     await runPair({ value: 'y' }, 'condition', 'compare');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ connectedCompareWith: 'y' });
   });
@@ -560,7 +560,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to target llm.system', async () => {
     await runPair({ text: 'sys' }, 'llm', 'system');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ connectedSystemPrompt: 'sys' });
   });
@@ -568,7 +568,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to target llm.prompt', async () => {
     await runPair({ text: 'p' }, 'llm', 'prompt');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ connectedPrompt: 'p' });
   });
@@ -576,7 +576,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to target image.image', async () => {
     await runPair({ imageUrl: 'http://img' }, 'image', 'image');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ connectedImageUrl: 'http://img' });
   });
@@ -584,7 +584,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to target api.input', async () => {
     await runPair({ value: 'body-data' }, 'api', 'input');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ body: 'body-data' });
   });
@@ -592,7 +592,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to target output.value', async () => {
     await runPair({ value: 'result' }, 'output', 'value');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ value: 'result' });
   });
@@ -600,7 +600,7 @@ describe('executionSlice — mapOutputToTarget handles', () => {
   it('maps source handle to var-* handle', async () => {
     await runPair({ value: 'var-value' }, 'text', 'var-name');
     const tgtCall = mockExecuteNode.mock.calls.find(
-      ([n]: [TPipelineNode]) => n.id === 'tgt',
+      (call) => (call[0] as TPipelineNode).id === 'tgt',
     );
     expect(tgtCall![1]).toMatchObject({ name: 'var-value' });
   });

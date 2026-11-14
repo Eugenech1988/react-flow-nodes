@@ -3,7 +3,6 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./dist",
-    "verbatimModuleSyntax": false,
     "exactOptionalPropertyTypes": false,
     "noUncheckedIndexedAccess": false,
     "strictPropertyInitialization": false,
@@ -12,7 +11,9 @@
     "declaration": false,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     }
   }
 }

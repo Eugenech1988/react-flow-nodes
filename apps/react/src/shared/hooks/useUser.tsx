@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
+import { resolveIsProActive } from '@/shared/lib';
 
 export function useUser() {
   const trpc = useTRPC();
@@ -18,7 +19,7 @@ export function useUser() {
     user: user ?? null,
     isAuth: !!user,
     role: user?.role ?? null,
-    isProActive: user?.subscription?.plan === 'PRO' && user?.subscription?.planStatus === 'ACTIVE',
+    isProActive: resolveIsProActive(user?.subscription),
     isLoading,
     isError,
     error,

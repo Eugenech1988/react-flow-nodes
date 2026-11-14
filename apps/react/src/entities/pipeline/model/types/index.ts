@@ -17,6 +17,7 @@ export type TPipeline = {
 export type TNodeData = {
   id?: string;
   nodeType?: string;
+  continueOnError?: boolean;
   [key: string]: unknown;
 };
 
@@ -93,7 +94,12 @@ export type TGraphActions = {
   copyNodes: (nodes: TPipelineNode[], edges: TPipelineEdge[]) => void;
   pasteNodes: () => void;
   onConnect: (connection: Connection) => void;
-  updateNodeField: (nodeId: string, fieldName: string, fieldValue: unknown) => void;
+  updateNodeField: (
+    nodeId: string,
+    fieldName: string,
+    fieldValue: unknown,
+    skipSnapshot?: boolean,
+  ) => void;
   exportJSON: () => void;
   importJSON: (file: File) => void;
   clearCanvas: () => void;

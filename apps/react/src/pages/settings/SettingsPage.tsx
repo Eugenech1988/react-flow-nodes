@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import { ProfileSidebar } from './components';
 import { Tabs } from '@/shared/ui';
-import { PAGE_VARIANTS, SETTINGS_CONTENT_VARIANTS } from '@/shared/lib';
+import { PAGE_VARIANTS, SETTINGS_CONTENT_VARIANTS, canSeeBilling } from '@/shared/lib';
 import { SETTINGS_TABS } from './model';
 import { useUser } from '@/shared/hooks';
 
@@ -12,7 +12,6 @@ export const SettingsPage = () => {
   const navigate = useNavigate();
   const isInitialMount = useRef(true);
   const { isProActive, role } = useUser();
-  const isContentManager = role === 'CONTENT_MANAGER';
 
   const currentTab = location.pathname.split('/').pop() || 'profile';
 
@@ -21,10 +20,10 @@ export const SettingsPage = () => {
   }, []);
 
   useEffect(() => {
-    if (isContentManager && currentTab === 'billing') {
+    if (!canSeeBilling(role) && currentTab === 'billing') {
       navigate('/settings/profile', { replace: true });
     }
-  }, [isContentManager, currentTab, navigate]);
+  }, [role, currentTab, navigate]);
 
   const handleTabChange = (tabId: string) => {
     navigate(`/settings/${tabId}`);
@@ -48,7 +47,7 @@ export const SettingsPage = () => {
         <div className="space-y-6">
           <Tabs
             layoutId="settings-tabs"
-            tabs={SETTINGS_TABS(isProActive, isContentManager)}
+            tabs={SETTINGS_TABS(isProActive, role)}
             currentTab={currentTab}
             onTabChange={handleTabChange}
           />

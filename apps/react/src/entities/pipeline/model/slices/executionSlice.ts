@@ -290,7 +290,7 @@ export const createExecutionSlice: StateCreator<
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown execution error.';
-        if (node.data?.continueOnError === 'true') {
+        if (node.data?.continueOnError === true) {
           executedNodeIds.add(node.id);
           set({ nodesExecuted: executedNodeIds.size });
           addLog(

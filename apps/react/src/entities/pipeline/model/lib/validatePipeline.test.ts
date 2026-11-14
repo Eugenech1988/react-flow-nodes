@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validatePipeline } from './validatePipeline';
-import type { TPipelineNode, TPipelineEdge } from '../../types';
+import type { TPipelineNode, TPipelineEdge } from '../types';
 
 const node = (
   id: string,

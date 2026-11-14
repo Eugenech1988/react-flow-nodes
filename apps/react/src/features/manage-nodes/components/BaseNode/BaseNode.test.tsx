@@ -87,9 +87,14 @@ describe('BaseNode', () => {
     expect(screen.getByText('✎')).toBeInTheDocument();
   });
 
-  it('triggers updateNodeField inside useEffect if nodeType is missing or different', () => {
+  it('triggers updateNodeField with skipSnapshot=true when nodeType is missing', () => {
     render(<BaseNode {...createMockNodeProps('node-1', '')} title="Text" />);
-    expect(updateNodeField).toHaveBeenCalledWith('node-1', 'nodeType', 'text');
+    expect(updateNodeField).toHaveBeenCalledWith('node-1', 'nodeType', 'text', true);
+  });
+
+  it('does not trigger updateNodeField when nodeType already matches', () => {
+    render(<BaseNode {...createMockNodeProps('node-1', 'text')} title="Text" />);
+    expect(updateNodeField).not.toHaveBeenCalled();
   });
 
   it('updates input field and triggers updateNodeField', () => {
@@ -166,7 +171,7 @@ describe('BaseNode', () => {
     render(<BaseNode {...createMockNodeProps('node-1')} fields={fields} />);
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
-    expect(updateNodeField).toHaveBeenCalledWith('node-1', 'continueOnError', 'true');
+    expect(updateNodeField).toHaveBeenCalledWith('node-1', 'continueOnError', true);
   });
 
   it('calls runNode when Run node is clicked', () => {

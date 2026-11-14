@@ -19,6 +19,7 @@ export const useDangerZoneSection = () => {
   const deleteAccountMutation = useMutation(
     trpc.users.remove.mutationOptions({
       onSuccess: () => {
+        setIsOpen(false);
         queryClient.clear();
         navigate('/login', { replace: true });
       },
@@ -37,7 +38,6 @@ export const useDangerZoneSection = () => {
   const confirm = () => {
     setAlert(null);
     deleteAccountMutation.mutate();
-    setIsOpen(false);
   };
 
   return {

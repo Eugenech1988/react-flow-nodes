@@ -34,7 +34,7 @@ export const BaseNode = ({
   useEffect(() => {
     const currentType = title?.toLowerCase() || category || 'default';
     if (data?.nodeType !== currentType) {
-      updateNodeField(id, 'nodeType', currentType);
+      updateNodeField(id, 'nodeType', currentType, true);
     }
   }, [id, data?.nodeType, title, category, updateNodeField]);
 
@@ -80,7 +80,7 @@ export const BaseNode = ({
   const isActive = activeNodeId === id;
   const isSuccess = successNodeIds.includes(id);
   const isFailed = failedNodeId === id;
-  const continueOnError = data?.continueOnError === 'true';
+  const continueOnError = data?.continueOnError === true;
 
   return (
     <div
@@ -132,7 +132,7 @@ export const BaseNode = ({
                   type="checkbox"
                   checked={continueOnError}
                   onChange={(event) =>
-                    updateNodeField(id, 'continueOnError', String(event.target.checked))
+                    updateNodeField(id, 'continueOnError', event.target.checked)
                   }
                   className="accent-[var(--node-accent)]"
                 />

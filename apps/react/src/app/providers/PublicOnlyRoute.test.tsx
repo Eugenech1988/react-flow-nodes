@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { PublicOnlyRoute } from './PublicOnlyRoute';
 import { useUser } from '@/shared/hooks';
@@ -40,20 +40,15 @@ describe('PublicOnlyRoute', () => {
     expect(screen.getByTestId('admin')).toBeInTheDocument();
   });
 
-  it('redirects SUPER_ADMIN to /admin/jobs', () => {
+  it('redirects SUPER_ADMIN to home (not /admin/jobs)', () => {
     vi.mocked(useUser).mockReturnValue({ isAuth: true, role: 'SUPER_ADMIN' } as never);
     renderWithRouter();
-    expect(screen.getByTestId('admin')).toBeInTheDocument();
+    expect(screen.getByTestId('home')).toBeInTheDocument();
+    expect(screen.queryByTestId('admin')).not.toBeInTheDocument();
   });
 
   it('redirects to / when authenticated but role is null', () => {
     vi.mocked(useUser).mockReturnValue({ isAuth: true, role: null } as never);
-    renderWithRouter();
-    expect(screen.getByTestId('home')).toBeInTheDocument();
-  });
-
-  it('redirects to / when authenticated but role is USER (not admin)', () => {
-    vi.mocked(useUser).mockReturnValue({ isAuth: true, role: 'USER' } as never);
     renderWithRouter();
     expect(screen.getByTestId('home')).toBeInTheDocument();
   });

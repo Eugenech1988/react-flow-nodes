@@ -10,7 +10,7 @@ import {
 } from '@pipeline/contracts';
 import { router, publicProcedure, protectedProcedure } from '@/trpc/init';
 import { toSafeUser } from '@/users/users.helpers';
-import { setTokenCookies } from '@/trpc/helpers';
+import { setTokenCookies, clearTokenCookies } from '@/common/cookies';
 import type { AuthService } from './auth.service';
 
 export const createAuthRouter = (authService: AuthService) => {
@@ -75,10 +75,7 @@ export const createAuthRouter = (authService: AuthService) => {
         await authService.logout(refreshToken);
       }
 
-      const secure = process.env.NODE_ENV === 'production';
-      const options = { httpOnly: true, secure, sameSite: 'lax' as const };
-      ctx.res.clearCookie('accessToken', options);
-      ctx.res.clearCookie('refreshToken', options);
+      clearTokenCookies(ctx.res);
 
       return { success: true };
     }),

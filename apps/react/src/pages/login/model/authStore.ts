@@ -1,10 +1,8 @@
-import { z } from 'zod';
 import { create } from 'zustand';
 import { trpcClient } from '@/shared/api';
 import type { FormMode, LoginResponseData } from './types';
-import { twoFactorLoginInputSchema } from '@pipeline/contracts';
 
-type TTwoFactorLoginInputData = z.infer<typeof twoFactorLoginInputSchema>;
+type TMatcher = [RegExp, string];
 
 interface AuthState {
   mode: FormMode;
@@ -38,28 +36,44 @@ interface AuthState {
     onSuccess: () => Promise<void> | void,
   ) => Promise<void>;
   verifyTwoFactor: (
-    data: TTwoFactorLoginInputData,
+    data: { code: string; tempToken?: string },
     onSuccess: () => Promise<void> | void,
   ) => Promise<void>;
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (token: string, password: string, onSuccess: () => void) => Promise<void>;
 }
 
-const mapAuthError = (
-  error: unknown,
-  fallback: string,
-  matchers: Array<[RegExp, string]>,
-): string => {
+const NETWORK_MESSAGE = 'Network error. Please check your internet connection.';
+const NETWORK_MATCHERS: TMatcher[] = [[/network|failed to fetch/, NETWORK_MESSAGE]];
+
+const LOGIN_SPECIFIC: TMatcher[] = [
+  [/invalid credentials|wrong password|user not found/, 'Invalid email address or password.'],
+];
+
+const REGISTER_SPECIFIC: TMatcher[] = [
+  [/already exists|conflict/, 'An account with this email address already exists.'],
+];
+
+const TWO_FA_SPECIFIC: TMatcher[] = [
+  [/expired/, 'The verification code has expired. Please request a new one.'],
+];
+
+const REQUEST_RESET_SPECIFIC: TMatcher[] = [
+  [/not found|does not exist/, 'No account found with this email address.'],
+];
+
+const RESET_PASSWORD_SPECIFIC: TMatcher[] = [
+  [/invalid|expired/, 'The password reset link is invalid or has expired.'],
+];
+
+const mapAuthError = (error: unknown, fallback: string, matchers: TMatcher[]): string => {
   if (!(error instanceof Error)) return fallback;
   const msg = error.message.toLowerCase();
-  for (const [re, text] of matchers) if (re.test(msg)) return text;
+  for (const [re, text] of matchers) {
+    if (re.test(msg)) return text;
+  }
   return error.message || fallback;
 };
-
-const LOGIN_MATCHERS: Array<[RegExp, string]> = [
-  [/invalid credentials|wrong password|user not found/, 'Invalid email address or password.'],
-  [/network|failed to fetch/, 'Network error. Please check your internet connection.'],
-];
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   mode: 'login',
@@ -141,7 +155,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         apiError: mapAuthError(
           error,
           'Unable to sign in. Please verify your credentials and try again.',
-          LOGIN_MATCHERS,
+          [...LOGIN_SPECIFIC, ...NETWORK_MATCHERS],
         ),
       });
       return null;
@@ -158,37 +172,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       get().setMode('login');
       await onSuccess();
     } catch (error) {
-      let message = 'Registration failed. Please try again later.';
-      if (error instanceof Error) {
-        if (
-          error.message.toLowerCase().includes('already exists') ||
-          error.message.toLowerCase().includes('conflict')
-        ) {
-          message = 'An account with this email address already exists.';
-        } else if (
-          error.message.toLowerCase().includes('network') ||
-          error.message.toLowerCase().includes('failed to fetch')
-        ) {
-          message = 'Network error. Please check your internet connection.';
-        } else {
-          message = error.message;
-        }
-      }
-      set({ apiError: message });
+      set({
+        apiError: mapAuthError(error, 'Registration failed. Please try again later.', [
+          ...REGISTER_SPECIFIC,
+          ...NETWORK_MATCHERS,
+        ]),
+      });
     } finally {
       set({ isLoading: false });
     }
   },
 
   verifyTwoFactor: async (data, onSuccess) => {
-    const { tempToken } = get();
-    if (!tempToken) {
+    const effectiveTempToken = data.tempToken || get().tempToken;
+    if (!effectiveTempToken) {
       set({ twoFactorError: 'Verification session has expired. Please sign in again.' });
       return;
     }
     set({ isLoading: true, twoFactorError: null });
     try {
-      await trpcClient.auth.loginWith2fa.mutate({ tempToken, code: data.code });
+      await trpcClient.auth.loginWith2fa.mutate({
+        tempToken: effectiveTempToken,
+        code: data.code,
+      });
       set({ tempToken: null, is2faRequired: false, qrCodeImage: null, secretKey: null });
       try {
         await onSuccess();
@@ -198,8 +204,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       set({
         twoFactorError: mapAuthError(error, 'Invalid two-factor authentication code.', [
-          [/expired/, 'The verification code has expired. Please request a new one.'],
-          [/network|failed to fetch/, 'Network error. Please check your internet connection.'],
+          ...TWO_FA_SPECIFIC,
+          ...NETWORK_MATCHERS,
         ]),
       });
     } finally {
@@ -213,23 +219,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await trpcClient.auth.requestPasswordReset.mutate({ email });
       set({ isRecoverySuccess: true });
     } catch (error) {
-      let message = 'Failed to send password reset email. Please try again.';
-      if (error instanceof Error) {
-        if (
-          error.message.toLowerCase().includes('not found') ||
-          error.message.toLowerCase().includes('does not exist')
-        ) {
-          message = 'No account found with this email address.';
-        } else if (
-          error.message.toLowerCase().includes('network') ||
-          error.message.toLowerCase().includes('failed to fetch')
-        ) {
-          message = 'Network error. Please check your internet connection.';
-        } else {
-          message = error.message;
-        }
-      }
-      set({ recoveryError: message });
+      set({
+        recoveryError: mapAuthError(
+          error,
+          'Failed to send password reset email. Please try again.',
+          [...REQUEST_RESET_SPECIFIC, ...NETWORK_MATCHERS],
+        ),
+      });
     } finally {
       set({ isLoading: false });
     }
@@ -241,23 +237,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await trpcClient.auth.resetPassword.mutate({ token, password });
       onSuccess();
     } catch (error) {
-      let message = 'Failed to reset password. The link may have expired.';
-      if (error instanceof Error) {
-        if (
-          error.message.toLowerCase().includes('invalid') ||
-          error.message.toLowerCase().includes('expired')
-        ) {
-          message = 'The password reset link is invalid or has expired.';
-        } else if (
-          error.message.toLowerCase().includes('network') ||
-          error.message.toLowerCase().includes('failed to fetch')
-        ) {
-          message = 'Network error. Please check your internet connection.';
-        } else {
-          message = error.message;
-        }
-      }
-      set({ recoveryError: message });
+      set({
+        recoveryError: mapAuthError(
+          error,
+          'Failed to reset password. The link may have expired.',
+          [...RESET_PASSWORD_SPECIFIC, ...NETWORK_MATCHERS],
+        ),
+      });
     } finally {
       set({ isLoading: false });
     }

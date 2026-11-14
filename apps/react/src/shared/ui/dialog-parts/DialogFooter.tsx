@@ -1,10 +1,11 @@
-import { AppButton, type ButtonVariant } from '@/shared/ui';
+import { AppButton, type ButtonVariant } from '@/shared/ui/AppButton';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/shared/lib';
 
 interface IDialogFooterProps {
   onCancel: () => void;
   onSubmit?: () => void;
+  type?: 'button' | 'submit';
   isPending?: boolean;
   submitText?: string;
   pendingText?: string;
@@ -21,6 +22,7 @@ interface IDialogFooterProps {
 export const DialogFooter = ({
   onCancel,
   onSubmit,
+  type = 'button',
   isPending = false,
   submitText = 'Save',
   pendingText = 'Saving...',
@@ -45,7 +47,7 @@ export const DialogFooter = ({
 
     return (
       <AppButton
-        type={onSubmit ? 'button' : 'submit'}
+        type={type}
         variant={buttonVariant}
         onClick={onSubmit}
         isPending={isPending}

@@ -1,9 +1,20 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import type { ElementType, MouseEvent } from 'react';
 import { DialogFooter } from './DialogFooter';
 
+interface IAppButtonProps {
+  text?: string;
+  type?: 'button' | 'submit' | 'reset';
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+  isPending?: boolean;
+  isDisabled?: boolean;
+  variant?: string;
+  icon?: ElementType | null;
+}
+
 vi.mock('@/shared/ui/AppButton', () => ({
-  AppButton: ({ text, type, onClick, isPending, isDisabled, variant }: unknown) => (
+  AppButton: ({ text, type, onClick, isPending, isDisabled, variant }: IAppButtonProps) => (
     <button
       type={type}
       onClick={onClick}
@@ -38,14 +49,24 @@ describe('DialogFooter', () => {
     expect(onSubmit).toHaveBeenCalled();
   });
 
-  it('uses type="button" when onSubmit provided (avoids double submit)', () => {
+  it('defaults to type="button" (no implicit submit)', () => {
+    render(<DialogFooter onCancel={vi.fn()} submitText="Save" />);
+    expect(screen.getByTestId('btn-Save')).toHaveAttribute('type', 'button');
+  });
+
+  it('uses type="button" when onSubmit is provided', () => {
     render(<DialogFooter onCancel={vi.fn()} onSubmit={vi.fn()} submitText="Save" />);
     expect(screen.getByTestId('btn-Save')).toHaveAttribute('type', 'button');
   });
 
-  it('uses type="submit" when onSubmit not provided', () => {
-    render(<DialogFooter onCancel={vi.fn()} submitText="Save" />);
+  it('respects explicit type="submit"', () => {
+    render(<DialogFooter type="submit" onCancel={vi.fn()} submitText="Save" />);
     expect(screen.getByTestId('btn-Save')).toHaveAttribute('type', 'submit');
+  });
+
+  it('cancel button is always type="button"', () => {
+    render(<DialogFooter type="submit" onCancel={vi.fn()} submitText="Save" />);
+    expect(screen.getByTestId('btn-Cancel')).toHaveAttribute('type', 'button');
   });
 
   it('hides submit when showSubmit=false', () => {
@@ -84,6 +105,12 @@ describe('DialogFooter', () => {
     render(<DialogFooter onCancel={vi.fn()} isPending />);
     expect(screen.getByTestId('btn-Cancel')).toBeDisabled();
     expect(screen.getByTestId('btn-Save')).toBeDisabled();
+  });
+
+  it('disables submit when isDisabled', () => {
+    render(<DialogFooter onCancel={vi.fn()} isDisabled submitText="Save" />);
+    expect(screen.getByTestId('btn-Save')).toBeDisabled();
+    expect(screen.getByTestId('btn-Cancel')).not.toBeDisabled();
   });
 
   it('reverses button order with isReversedBtns', () => {

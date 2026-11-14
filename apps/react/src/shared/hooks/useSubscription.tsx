@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useTRPC } from '@/shared/api';
+import { useUser } from './useUser';
 
 export function useSubscription() {
   const trpc = useTRPC();
+  const { isProActive } = useUser();
   const {
     data: subscription,
     isLoading,
@@ -17,7 +19,7 @@ export function useSubscription() {
 
   return {
     subscription: subscription ?? null,
-    isProActive: subscription?.plan === 'PRO' && subscription?.planStatus === 'ACTIVE',
+    isProActive,
     isLoading,
     isError,
     error,

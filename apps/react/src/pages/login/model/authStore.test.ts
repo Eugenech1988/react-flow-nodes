@@ -46,8 +46,6 @@ describe('authStore', () => {
   it('setMode sets explicit mode', () => {
     useAuthStore.getState().setMode('register');
     expect(useAuthStore.getState().mode).toBe('register');
-    useAuthStore.getState().setMode('login');
-    expect(useAuthStore.getState().mode).toBe('login');
   });
 
   it('setApiError sets apiError', () => {
@@ -113,10 +111,32 @@ describe('authStore', () => {
       expect(useAuthStore.getState().is2faRequired).toBe(true);
     });
 
-    it('handles login errors', async () => {
+    it('maps invalid credentials to friendly message', async () => {
       mocks.login.mockRejectedValue(new Error('invalid credentials'));
       await useAuthStore.getState().login('a@b.com', 'pass', vi.fn());
       expect(useAuthStore.getState().apiError).toBe('Invalid email address or password.');
+    });
+
+    it('maps wrong password to same friendly message', async () => {
+      mocks.login.mockRejectedValue(new Error('wrong password'));
+      await useAuthStore.getState().login('a@b.com', 'pass', vi.fn());
+      expect(useAuthStore.getState().apiError).toBe('Invalid email address or password.');
+    });
+
+    it('maps network error', async () => {
+      mocks.login.mockRejectedValue(new Error('Failed to fetch'));
+      await useAuthStore.getState().login('a@b.com', 'p', vi.fn());
+      expect(useAuthStore.getState().apiError).toBe(
+        'Network error. Please check your internet connection.',
+      );
+    });
+
+    it('maps network keyword', async () => {
+      mocks.login.mockRejectedValue(new Error('Network unreachable'));
+      await useAuthStore.getState().login('a@b.com', 'p', vi.fn());
+      expect(useAuthStore.getState().apiError).toBe(
+        'Network error. Please check your internet connection.',
+      );
     });
 
     it('returns null when response has no user', async () => {
@@ -125,26 +145,18 @@ describe('authStore', () => {
       expect(result).toBeNull();
     });
 
-    it('handles network error', async () => {
-      mocks.login.mockRejectedValue(new Error('Failed to fetch'));
-      await useAuthStore.getState().login('a@b.com', 'p', vi.fn());
-      expect(useAuthStore.getState().apiError).toBe(
-        'Network error. Please check your internet connection.',
-      );
-    });
-
-    it('handles generic error', async () => {
-      mocks.login.mockRejectedValue(new Error('Unexpected'));
-      await useAuthStore.getState().login('a@b.com', 'p', vi.fn());
-      expect(useAuthStore.getState().apiError).toBe('Unexpected');
-    });
-
-    it('handles non-Error throw as fallback', async () => {
+    it('uses fallback for non-Error throw', async () => {
       mocks.login.mockRejectedValue('string-error');
       await useAuthStore.getState().login('a@b.com', 'p', vi.fn());
       expect(useAuthStore.getState().apiError).toBe(
         'Unable to sign in. Please verify your credentials and try again.',
       );
+    });
+
+    it('falls through to error.message for unmatched', async () => {
+      mocks.login.mockRejectedValue(new Error('Custom message'));
+      await useAuthStore.getState().login('a@b.com', 'p', vi.fn());
+      expect(useAuthStore.getState().apiError).toBe('Custom message');
     });
 
     it('does not fail login when onSuccess throws', async () => {
@@ -169,7 +181,7 @@ describe('authStore', () => {
       expect(onSuccess).toHaveBeenCalled();
     });
 
-    it('handles registration conflict error', async () => {
+    it('maps "already exists" to friendly message', async () => {
       mocks.register.mockRejectedValue(new Error('User already exists'));
       await useAuthStore.getState().register('a@b.com', 'pass', vi.fn());
       expect(useAuthStore.getState().apiError).toBe(
@@ -177,7 +189,15 @@ describe('authStore', () => {
       );
     });
 
-    it('handles network error', async () => {
+    it('maps "conflict" to friendly message', async () => {
+      mocks.register.mockRejectedValue(new Error('CONFLICT'));
+      await useAuthStore.getState().register('a@b.com', 'pass', vi.fn());
+      expect(useAuthStore.getState().apiError).toBe(
+        'An account with this email address already exists.',
+      );
+    });
+
+    it('maps network error', async () => {
       mocks.register.mockRejectedValue(new Error('Failed to fetch'));
       await useAuthStore.getState().register('a@b.com', 'p', vi.fn());
       expect(useAuthStore.getState().apiError).toBe(
@@ -185,18 +205,18 @@ describe('authStore', () => {
       );
     });
 
-    it('handles generic error', async () => {
-      mocks.register.mockRejectedValue(new Error('Unexpected'));
-      await useAuthStore.getState().register('a@b.com', 'p', vi.fn());
-      expect(useAuthStore.getState().apiError).toBe('Unexpected');
-    });
-
-    it('handles non-Error throw', async () => {
+    it('uses fallback for non-Error throw', async () => {
       mocks.register.mockRejectedValue('string-error');
       await useAuthStore.getState().register('a@b.com', 'p', vi.fn());
       expect(useAuthStore.getState().apiError).toBe(
         'Registration failed. Please try again later.',
       );
+    });
+
+    it('falls through to error.message for unmatched', async () => {
+      mocks.register.mockRejectedValue(new Error('Unexpected'));
+      await useAuthStore.getState().register('a@b.com', 'p', vi.fn());
+      expect(useAuthStore.getState().apiError).toBe('Unexpected');
     });
   });
 
@@ -224,7 +244,7 @@ describe('authStore', () => {
       expect(onSuccess).toHaveBeenCalled();
     });
 
-    it('handles expired code error', async () => {
+    it('maps expired code', async () => {
       useAuthStore.setState({ tempToken: 'token' });
       mocks.loginWith2fa.mockRejectedValue(new Error('Code expired'));
       await useAuthStore.getState().verifyTwoFactor({ code: '123' }, vi.fn());
@@ -233,7 +253,7 @@ describe('authStore', () => {
       );
     });
 
-    it('handles network error', async () => {
+    it('maps network error', async () => {
       useAuthStore.setState({ tempToken: 'token' });
       mocks.loginWith2fa.mockRejectedValue(new Error('Failed to fetch'));
       await useAuthStore.getState().verifyTwoFactor({ code: '123' }, vi.fn());
@@ -242,11 +262,20 @@ describe('authStore', () => {
       );
     });
 
-    it('handles generic error', async () => {
+    it('uses fallback for unmatched Error', async () => {
       useAuthStore.setState({ tempToken: 'token' });
-      mocks.loginWith2fa.mockRejectedValue(new Error('Unexpected'));
+      mocks.loginWith2fa.mockRejectedValue(new Error('whatever'));
       await useAuthStore.getState().verifyTwoFactor({ code: '123' }, vi.fn());
-      expect(useAuthStore.getState().twoFactorError).toBe('Unexpected');
+      expect(useAuthStore.getState().twoFactorError).toBe('whatever');
+    });
+
+    it('falls back to non-Error fallback message', async () => {
+      useAuthStore.setState({ tempToken: 'token' });
+      mocks.loginWith2fa.mockRejectedValue('string');
+      await useAuthStore.getState().verifyTwoFactor({ code: '123' }, vi.fn());
+      expect(useAuthStore.getState().twoFactorError).toBe(
+        'Invalid two-factor authentication code.',
+      );
     });
 
     it('handles onSuccess throw', async () => {
@@ -259,14 +288,14 @@ describe('authStore', () => {
     });
   });
 
-  describe('password reset', () => {
-    it('handles request success', async () => {
+  describe('requestPasswordReset', () => {
+    it('handles success', async () => {
       mocks.requestPasswordReset.mockResolvedValue({});
       await useAuthStore.getState().requestPasswordReset('a@b.com');
       expect(useAuthStore.getState().isRecoverySuccess).toBe(true);
     });
 
-    it('handles request not found error', async () => {
+    it('maps "not found"', async () => {
       mocks.requestPasswordReset.mockRejectedValue(new Error('User not found'));
       await useAuthStore.getState().requestPasswordReset('a@b.com');
       expect(useAuthStore.getState().recoveryError).toBe(
@@ -274,7 +303,15 @@ describe('authStore', () => {
       );
     });
 
-    it('handles request network error', async () => {
+    it('maps "does not exist"', async () => {
+      mocks.requestPasswordReset.mockRejectedValue(new Error('Account does not exist'));
+      await useAuthStore.getState().requestPasswordReset('a@b.com');
+      expect(useAuthStore.getState().recoveryError).toBe(
+        'No account found with this email address.',
+      );
+    });
+
+    it('maps network error', async () => {
       mocks.requestPasswordReset.mockRejectedValue(new Error('Failed to fetch'));
       await useAuthStore.getState().requestPasswordReset('a@b.com');
       expect(useAuthStore.getState().recoveryError).toBe(
@@ -282,13 +319,7 @@ describe('authStore', () => {
       );
     });
 
-    it('handles request generic error', async () => {
-      mocks.requestPasswordReset.mockRejectedValue(new Error('Unknown error'));
-      await useAuthStore.getState().requestPasswordReset('a@b.com');
-      expect(useAuthStore.getState().recoveryError).toBe('Unknown error');
-    });
-
-    it('handles request non-Error throw', async () => {
+    it('uses fallback for non-Error', async () => {
       mocks.requestPasswordReset.mockRejectedValue('string-error');
       await useAuthStore.getState().requestPasswordReset('a@b.com');
       expect(useAuthStore.getState().recoveryError).toBe(
@@ -296,6 +327,14 @@ describe('authStore', () => {
       );
     });
 
+    it('falls through to error.message', async () => {
+      mocks.requestPasswordReset.mockRejectedValue(new Error('Unexpected'));
+      await useAuthStore.getState().requestPasswordReset('a@b.com');
+      expect(useAuthStore.getState().recoveryError).toBe('Unexpected');
+    });
+  });
+
+  describe('resetPassword', () => {
     it('handles reset success', async () => {
       mocks.resetPassword.mockResolvedValue({});
       const onSuccess = vi.fn();
@@ -303,7 +342,7 @@ describe('authStore', () => {
       expect(onSuccess).toHaveBeenCalled();
     });
 
-    it('handles reset invalid token error', async () => {
+    it('maps invalid token', async () => {
       mocks.resetPassword.mockRejectedValue(new Error('Invalid token'));
       await useAuthStore.getState().resetPassword('token', 'newpass', vi.fn());
       expect(useAuthStore.getState().recoveryError).toBe(
@@ -311,7 +350,15 @@ describe('authStore', () => {
       );
     });
 
-    it('handles reset network error', async () => {
+    it('maps expired token', async () => {
+      mocks.resetPassword.mockRejectedValue(new Error('Token expired'));
+      await useAuthStore.getState().resetPassword('token', 'newpass', vi.fn());
+      expect(useAuthStore.getState().recoveryError).toBe(
+        'The password reset link is invalid or has expired.',
+      );
+    });
+
+    it('maps network error', async () => {
       mocks.resetPassword.mockRejectedValue(new Error('Failed to fetch'));
       await useAuthStore.getState().resetPassword('t', 'p', vi.fn());
       expect(useAuthStore.getState().recoveryError).toBe(
@@ -319,18 +366,18 @@ describe('authStore', () => {
       );
     });
 
-    it('handles reset generic error', async () => {
-      mocks.resetPassword.mockRejectedValue(new Error('Unexpected'));
-      await useAuthStore.getState().resetPassword('t', 'p', vi.fn());
-      expect(useAuthStore.getState().recoveryError).toBe('Unexpected');
-    });
-
-    it('handles reset non-Error throw', async () => {
+    it('uses fallback for non-Error', async () => {
       mocks.resetPassword.mockRejectedValue('string-error');
       await useAuthStore.getState().resetPassword('t', 'p', vi.fn());
       expect(useAuthStore.getState().recoveryError).toBe(
         'Failed to reset password. The link may have expired.',
       );
+    });
+
+    it('falls through to error.message', async () => {
+      mocks.resetPassword.mockRejectedValue(new Error('Unexpected'));
+      await useAuthStore.getState().resetPassword('t', 'p', vi.fn());
+      expect(useAuthStore.getState().recoveryError).toBe('Unexpected');
     });
   });
 

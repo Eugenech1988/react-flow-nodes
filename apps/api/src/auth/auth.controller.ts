@@ -24,6 +24,7 @@ import type {
 } from '@pipeline/contracts';
 import { LocalAuthGuard } from '@/auth/guards/local-auth.guard';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { setTokenCookies, clearTokenCookies } from '@/common/cookies';
 import { GoogleOauthGuard } from '@/auth/guards/google.guard';
 import { GithubOauthGuard } from '@/auth/guards/github.guard';
 import type { TUserSafe, TOauthUser } from '@/auth/types/auth.types';
@@ -44,24 +45,6 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  private setTokenCookies(res: Response, accessToken: string, refreshToken: string) {
-    const isProd = process.env.NODE_ENV === 'production';
-
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: 'lax',
-      maxAge: 15 * 60 * 1000,
-    });
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-  }
-
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User successfully registered and logged in.' })
@@ -72,7 +55,7 @@ export class AuthController {
   ): Promise<TUserSafe> {
     const user = await this.authService.register(dto);
     const tokens = await this.authService.generateTokens(user.id);
-    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
     return user;
   }
 
@@ -97,7 +80,7 @@ export class AuthController {
     }
 
     const tokens = await this.authService.generateTokens(user.id);
-    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
     return user;
   }
 
@@ -112,7 +95,7 @@ export class AuthController {
   ): Promise<TUserSafe> {
     const user = await this.authService.authenticateWith2Fa(dto.tempToken, dto.code);
     const tokens = await this.authService.generateTokens(user.id);
-    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
     return user;
   }
 
@@ -154,7 +137,7 @@ export class AuthController {
   async googleAuthCallback(@Req() req: IRequestWithOauthUser, @Res() res: Response) {
     const user = await this.authService.validateOauthUser(req.user);
     const tokens = await this.authService.generateTokens(user.id);
-    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
 
     const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
     return res.redirect(clientUrl);
@@ -171,7 +154,7 @@ export class AuthController {
   async githubAuthCallback(@Req() req: IRequestWithOauthUser, @Res() res: Response) {
     const user = await this.authService.validateOauthUser(req.user);
     const tokens = await this.authService.generateTokens(user.id);
-    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
 
     const clientUrl = this.configService.get<string>('CLIENT_URL') || 'http://localhost:5173';
     return res.redirect(clientUrl);
@@ -194,7 +177,7 @@ export class AuthController {
     }
 
     const tokens = await this.authService.refreshTokens(refreshToken);
-    this.setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
+    setTokenCookies(res, tokens.accessToken, tokens.refreshToken);
     return { success: true };
   }
 
@@ -221,15 +204,7 @@ export class AuthController {
       await this.authService.logout(refreshToken);
     }
 
-    const isProd = process.env.NODE_ENV === 'production';
-    const cookieOptions = {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: 'lax' as const,
-    };
-
-    res.clearCookie('accessToken', cookieOptions);
-    res.clearCookie('refreshToken', cookieOptions);
+    clearTokenCookies(res);
 
     return { success: true };
   }

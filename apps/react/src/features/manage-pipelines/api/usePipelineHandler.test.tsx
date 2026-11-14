@@ -1,58 +1,83 @@
-import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { act, renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { TCreatePipelineInputData, TUpdatePipelineInputData } from '@pipeline/contracts';
+import type { TPipeline } from '@/entities';
 import { usePipelineHandler } from './usePipelineHandler';
 
-const {
-  mockApiPost,
-  mockTrpcUpdate,
-  mockTrpcRemove,
-  mockTrpcSetCurrent,
-  mockInvalidate,
-  mockSetQueryData,
-} = vi.hoisted(() => ({
-  mockApiPost: vi.fn(),
-  mockTrpcUpdate: vi.fn(),
-  mockTrpcRemove: vi.fn(),
-  mockTrpcSetCurrent: vi.fn(),
-  mockInvalidate: vi.fn(),
-  mockSetQueryData: vi.fn(),
+interface IMutationCallbacks {
+  mutationFn: (vars: unknown) => Promise<unknown>;
+  onSuccess?: (data: unknown, vars: unknown) => void;
+  onError?: (error: Error) => void;
+}
+
+interface IServiceMock {
+  create: ReturnType<typeof vi.fn>;
+  update: ReturnType<typeof vi.fn>;
+  remove: ReturnType<typeof vi.fn>;
+  setCurrent: ReturnType<typeof vi.fn>;
+}
+
+interface IQueryClientMock {
+  invalidateQueries: ReturnType<typeof vi.fn>;
+  setQueryData: ReturnType<typeof vi.fn>;
+}
+
+const mocks = vi.hoisted<{ service: IServiceMock; queryClient: IQueryClientMock }>(() => ({
+  service: {
+    create: vi.fn(),
+    update: vi.fn(),
+    remove: vi.fn(),
+    setCurrent: vi.fn(),
+  },
+  queryClient: {
+    invalidateQueries: vi.fn(),
+    setQueryData: vi.fn(),
+  },
 }));
 
-vi.mock('@/shared/api', () => ({
-  api: { post: mockApiPost },
-  trpcClient: {
-    pipelines: {
-      update: { mutate: mockTrpcUpdate },
-      remove: { mutate: mockTrpcRemove },
-    },
-    users: {
-      setCurrentPipeline: { mutate: mockTrpcSetCurrent },
-    },
-  },
-  useTRPC: () => ({
-    pipelines: { list: { queryKey: () => ['pipelines'] } },
-    auth: { me: { queryKey: () => ['auth'] } },
-  }),
+vi.mock('./pipelineService', () => ({
+  pipelineService: mocks.service,
 }));
 
 vi.mock('@tanstack/react-query', () => ({
-  useMutation: (opts: unknown) => ({
+  useMutation: (opts: IMutationCallbacks) => ({
     mutate: async (vars: unknown) => {
       try {
         const res = await opts.mutationFn(vars);
         opts.onSuccess?.(res, vars);
         return res;
       } catch (e) {
-        opts.onError?.(e);
+        opts.onError?.(e as Error);
         throw e;
       }
     },
+    isPending: false,
   }),
-  useQueryClient: () => ({
-    invalidateQueries: mockInvalidate,
-    setQueryData: mockSetQueryData,
+  useQueryClient: () => mocks.queryClient,
+}));
+
+vi.mock('@/shared/api', () => ({
+  useTRPC: () => ({
+    pipelines: { list: { queryKey: () => ['pipelines'] } },
+    auth: { me: { queryKey: () => ['auth'] } },
   }),
 }));
+
+const createData: TCreatePipelineInputData = { name: 'New' };
+
+const updateData: TUpdatePipelineInputData = { id: 'p1', name: 'Updated' };
+
+const makePipeline = (overrides: Partial<TPipeline> = {}): TPipeline =>
+  ({
+    id: 'p1',
+    name: 'Pipeline',
+    description: 'desc',
+    status: 'ACTIVE',
+    lastRunAt: '2024-01-01T00:00:00Z',
+    lastRunStatus: 'SUCCESS',
+    screenshotUrl: '/uploads/a.png',
+    ...overrides,
+  }) as TPipeline;
 
 describe('usePipelineHandler', () => {
   beforeEach(() => {
@@ -60,335 +85,198 @@ describe('usePipelineHandler', () => {
   });
 
   describe('createPipeline', () => {
-    it('builds FormData with name only', async () => {
-      mockApiPost.mockResolvedValue({});
-      const { result } = renderHook(() => usePipelineHandler());
+    it('delegates to pipelineService.create with data only', async () => {
+      mocks.service.create.mockResolvedValue({ id: 'p1' });
+      const onCreateSuccess = vi.fn();
+      const { result } = renderHook(() => usePipelineHandler({ onCreateSuccess }));
 
       await act(async () => {
-        await result.current.createPipeline.mutate({
-          data: { name: 'New' } as unknown as never,
-        });
+        await result.current.createPipeline.mutate({ data: createData });
       });
 
-      const formData = mockApiPost.mock.calls[0][1] as FormData;
-      expect(formData.get('name')).toBe('New');
-      expect(formData.get('description')).toBeNull();
-      expect(formData.get('file')).toBeNull();
+      expect(mocks.service.create).toHaveBeenCalledWith({ data: createData });
+      expect(mocks.queryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['pipelines'] });
+      expect(onCreateSuccess).toHaveBeenCalled();
     });
 
-    it('includes description and file when provided', async () => {
-      mockApiPost.mockResolvedValue({});
+    it('delegates to pipelineService.create with file when provided', async () => {
+      mocks.service.create.mockResolvedValue({ id: 'p1' });
       const { result } = renderHook(() => usePipelineHandler());
       const file = new File(['x'], 'cover.png', { type: 'image/png' });
 
       await act(async () => {
-        await result.current.createPipeline.mutate({
-          data: { name: 'P', description: 'desc' } as unknown as never,
-          file,
-        });
+        await result.current.createPipeline.mutate({ data: createData, file });
       });
 
-      const formData = mockApiPost.mock.calls[0][1] as FormData;
-      expect(formData.get('name')).toBe('P');
-      expect(formData.get('description')).toBe('desc');
-      expect(formData.get('file')).toBeInstanceOf(File);
+      expect(mocks.service.create).toHaveBeenCalledWith({ data: createData, file });
     });
 
-    it('calls onCreateSuccess after success', async () => {
-      mockApiPost.mockResolvedValue({});
-      const onSuccess = vi.fn();
-      const { result } = renderHook(() => usePipelineHandler({ onCreateSuccess: onSuccess }));
-
-      await act(async () => {
-        await result.current.createPipeline.mutate({ data: { name: 'X' } as unknown as never });
-      });
-
-      expect(onSuccess).toHaveBeenCalledTimes(1);
-    });
-
-    it('invalidates pipelines list after success', async () => {
-      mockApiPost.mockResolvedValue({});
+    it('works without onCreateSuccess callback', async () => {
+      mocks.service.create.mockResolvedValue({});
       const { result } = renderHook(() => usePipelineHandler());
 
       await act(async () => {
-        await result.current.createPipeline.mutate({ data: { name: 'X' } as unknown as never });
+        await result.current.createPipeline.mutate({ data: createData });
       });
 
-      expect(mockInvalidate).toHaveBeenCalledWith({ queryKey: ['pipelines'] });
+      expect(mocks.service.create).toHaveBeenCalled();
+    });
+
+    it('throws when service throws', async () => {
+      mocks.service.create.mockRejectedValue(new Error('create failed'));
+      const { result } = renderHook(() => usePipelineHandler());
+
+      await expect(
+        act(async () => {
+          await result.current.createPipeline.mutate({ data: createData });
+        }),
+      ).rejects.toThrow('create failed');
     });
   });
 
   describe('updatePipeline', () => {
-    it('throws when id is missing', async () => {
+    it('delegates to pipelineService.update and invalidates caches', async () => {
+      mocks.service.update.mockResolvedValue({});
+      const onUpdateSuccess = vi.fn();
+      const { result } = renderHook(() => usePipelineHandler({ onUpdateSuccess }));
+
+      await act(async () => {
+        await result.current.updatePipeline.mutate(updateData);
+      });
+
+      expect(mocks.service.update).toHaveBeenCalledWith(updateData);
+      expect(mocks.queryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['pipelines'] });
+      expect(mocks.queryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['auth'] });
+      expect(onUpdateSuccess).toHaveBeenCalled();
+    });
+
+    it('throws when service throws', async () => {
+      mocks.service.update.mockRejectedValue(new Error('update failed'));
       const { result } = renderHook(() => usePipelineHandler());
 
       await expect(
-        result.current.updatePipeline.mutate({ name: 'X' } as unknown as never)
-      ).rejects.toThrow('Pipeline ID is required');
-    });
-
-    it('calls trpc update and invalidates both caches', async () => {
-      mockTrpcUpdate.mockResolvedValue({});
-      const { result } = renderHook(() => usePipelineHandler());
-
-      await act(async () => {
-        await result.current.updatePipeline.mutate({ id: 'p1', name: 'Updated' } as unknown as never);
-      });
-
-      expect(mockTrpcUpdate).toHaveBeenCalledWith({ id: 'p1', name: 'Updated' });
-      expect(mockInvalidate).toHaveBeenCalledWith({ queryKey: ['pipelines'] });
-      expect(mockInvalidate).toHaveBeenCalledWith({ queryKey: ['auth'] });
-    });
-
-    it('calls onUpdateSuccess after success', async () => {
-      mockTrpcUpdate.mockResolvedValue({});
-      const onSuccess = vi.fn();
-      const { result } = renderHook(() => usePipelineHandler({ onUpdateSuccess: onSuccess }));
-
-      await act(async () => {
-        await result.current.updatePipeline.mutate({ id: 'p1' } as unknown as never);
-      });
-
-      expect(onSuccess).toHaveBeenCalledTimes(1);
+        act(async () => {
+          await result.current.updatePipeline.mutate(updateData);
+        }),
+      ).rejects.toThrow('update failed');
     });
   });
 
   describe('deletePipeline', () => {
-    it('calls trpc remove', async () => {
-      mockTrpcRemove.mockResolvedValue({});
+    it('delegates to pipelineService.remove and invalidates caches', async () => {
+      mocks.service.remove.mockResolvedValue({});
       const { result } = renderHook(() => usePipelineHandler());
 
       await act(async () => {
         await result.current.deletePipeline.mutate('p1');
       });
 
-      expect(mockTrpcRemove).toHaveBeenCalledWith({ id: 'p1' });
-    });
-
-    it('invalidates both caches after success', async () => {
-      mockTrpcRemove.mockResolvedValue({});
-      const { result } = renderHook(() => usePipelineHandler());
-
-      await act(async () => {
-        await result.current.deletePipeline.mutate('p1');
-      });
-
-      expect(mockInvalidate).toHaveBeenCalledTimes(2);
+      expect(mocks.service.remove).toHaveBeenCalledWith('p1');
+      expect(mocks.queryClient.invalidateQueries).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('setCurrentPipeline', () => {
-    const pipelineBase = {
-      id: 'p1',
-      name: 'P1',
-      description: 'Desc',
-      status: 'ACTIVE',
-      lastRunAt: null,
-      screenshotUrl: null,
-    };
-
-    it('maps SUCCESS lastRunStatus', async () => {
-      mockTrpcSetCurrent.mockResolvedValue({});
+    it('maps pipeline to setCurrent payload with lastRunStatus', async () => {
+      mocks.service.setCurrent.mockResolvedValue({ id: 'u1' });
       const { result } = renderHook(() => usePipelineHandler());
 
       await act(async () => {
-        await result.current.setCurrentPipeline.mutate({
-          ...pipelineBase,
-          lastRunStatus: 'SUCCESS',
-        } as unknown as never);
+        await result.current.setCurrentPipeline.mutate(makePipeline());
       });
 
-      expect(mockTrpcSetCurrent).toHaveBeenCalledWith(
-        expect.objectContaining({ lastRunStatus: 'SUCCESS' })
+      expect(mocks.service.setCurrent).toHaveBeenCalledWith({
+        id: 'p1',
+        name: 'Pipeline',
+        description: 'desc',
+        status: 'ACTIVE',
+        lastRunAt: '2024-01-01T00:00:00Z',
+        lastRunStatus: 'SUCCESS',
+        screenshotUrl: '/uploads/a.png',
+      });
+    });
+
+    it('maps RUNNING and FAILED', async () => {
+      mocks.service.setCurrent.mockResolvedValue({});
+      const { result } = renderHook(() => usePipelineHandler());
+
+      await act(async () => {
+        await result.current.setCurrentPipeline.mutate(
+          makePipeline({ lastRunStatus: 'RUNNING' }),
+        );
+      });
+      expect(mocks.service.setCurrent).toHaveBeenLastCalledWith(
+        expect.objectContaining({ lastRunStatus: 'RUNNING' }),
+      );
+
+      await act(async () => {
+        await result.current.setCurrentPipeline.mutate(
+          makePipeline({ lastRunStatus: 'FAILED' }),
+        );
+      });
+      expect(mocks.service.setCurrent).toHaveBeenLastCalledWith(
+        expect.objectContaining({ lastRunStatus: 'FAILED' }),
       );
     });
 
-    it('maps FAILED lastRunStatus', async () => {
-      mockTrpcSetCurrent.mockResolvedValue({});
+    it('maps unknown lastRunStatus to null', async () => {
+      mocks.service.setCurrent.mockResolvedValue({});
       const { result } = renderHook(() => usePipelineHandler());
 
       await act(async () => {
-        await result.current.setCurrentPipeline.mutate({
-          ...pipelineBase,
-          lastRunStatus: 'FAILED',
-        } as unknown as never);
+        await result.current.setCurrentPipeline.mutate(
+          makePipeline({ lastRunStatus: 'UNKNOWN' }),
+        );
       });
 
-      expect(mockTrpcSetCurrent).toHaveBeenCalledWith(
-        expect.objectContaining({ lastRunStatus: 'FAILED' })
-      );
-    });
-
-    it('maps RUNNING lastRunStatus', async () => {
-      mockTrpcSetCurrent.mockResolvedValue({});
-      const { result } = renderHook(() => usePipelineHandler());
-
-      await act(async () => {
-        await result.current.setCurrentPipeline.mutate({
-          ...pipelineBase,
-          lastRunStatus: 'RUNNING',
-        } as unknown as never);
-      });
-
-      expect(mockTrpcSetCurrent).toHaveBeenCalledWith(
-        expect.objectContaining({ lastRunStatus: 'RUNNING' })
-      );
-    });
-
-    it('maps invalid lastRunStatus to null', async () => {
-      mockTrpcSetCurrent.mockResolvedValue({});
-      const { result } = renderHook(() => usePipelineHandler());
-
-      await act(async () => {
-        await result.current.setCurrentPipeline.mutate({
-          ...pipelineBase,
-          lastRunStatus: 'UNKNOWN',
-        } as unknown as never);
-      });
-
-      expect(mockTrpcSetCurrent).toHaveBeenCalledWith(
-        expect.objectContaining({ lastRunStatus: null })
+      expect(mocks.service.setCurrent).toHaveBeenCalledWith(
+        expect.objectContaining({ lastRunStatus: null }),
       );
     });
 
     it('maps null lastRunStatus to null', async () => {
-      mockTrpcSetCurrent.mockResolvedValue({});
+      mocks.service.setCurrent.mockResolvedValue({});
       const { result } = renderHook(() => usePipelineHandler());
 
       await act(async () => {
-        await result.current.setCurrentPipeline.mutate({
-          ...pipelineBase,
-          lastRunStatus: null,
-        } as unknown as never);
+        await result.current.setCurrentPipeline.mutate(makePipeline({ lastRunStatus: null }));
       });
 
-      expect(mockTrpcSetCurrent).toHaveBeenCalledWith(
-        expect.objectContaining({ lastRunStatus: null })
+      expect(mocks.service.setCurrent).toHaveBeenCalledWith(
+        expect.objectContaining({ lastRunStatus: null }),
       );
     });
 
-    it('updates auth.me cache and calls onSetCurrentSuccess', async () => {
+    it('sets auth.me cache and calls onSetCurrentSuccess', async () => {
       const updatedUser = { id: 'u1', currentPipeline: { id: 'p1' } };
-      mockTrpcSetCurrent.mockResolvedValue(updatedUser);
-      const onSuccess = vi.fn();
-      const { result } = renderHook(() => usePipelineHandler({ onSetCurrentSuccess: onSuccess }));
+      mocks.service.setCurrent.mockResolvedValue(updatedUser);
+      const onSetCurrentSuccess = vi.fn();
+      const { result } = renderHook(() =>
+        usePipelineHandler({ onSetCurrentSuccess }),
+      );
 
       await act(async () => {
-        await result.current.setCurrentPipeline.mutate(pipelineBase as unknown as never);
+        await result.current.setCurrentPipeline.mutate(makePipeline());
       });
 
-      expect(mockSetQueryData).toHaveBeenCalledWith(['auth'], updatedUser);
-      expect(onSuccess).toHaveBeenCalledTimes(1);
-    });
-  });
-});
-
-describe('usePipelineHandler — final branches', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('createPipeline with file appends file to FormData', async () => {
-    mockApiPost.mockResolvedValue({});
-    const { result } = renderHook(() => usePipelineHandler());
-    const file = new File(['x'], 'cover.png', { type: 'image/png' });
-
-    await act(async () => {
-      await result.current.createPipeline.mutate({
-        data: { name: 'P', description: 'desc' } as unknown as never,
-        file,
-      });
+      expect(mocks.queryClient.setQueryData).toHaveBeenCalledWith(['auth'], updatedUser);
+      expect(onSetCurrentSuccess).toHaveBeenCalled();
     });
 
-    const formData = mockApiPost.mock.calls[0][1] as FormData;
-    expect(formData.get('file')).toBeInstanceOf(File);
-    expect(formData.get('description')).toBe('desc');
-  });
+    it('calls onSetCurrentError on failure', async () => {
+      mocks.service.setCurrent.mockRejectedValue(new Error('network'));
+      const onSetCurrentError = vi.fn();
+      const { result } = renderHook(() =>
+        usePipelineHandler({ onSetCurrentError }),
+      );
 
-  it('createPipeline without description does not append description', async () => {
-    mockApiPost.mockResolvedValue({});
-    const { result } = renderHook(() => usePipelineHandler());
+      await expect(
+        act(async () => {
+          await result.current.setCurrentPipeline.mutate(makePipeline());
+        }),
+      ).rejects.toThrow('network');
 
-    await act(async () => {
-      await result.current.createPipeline.mutate({ data: { name: 'P' } as unknown as never });
+      expect(onSetCurrentError).toHaveBeenCalledWith(expect.any(Error));
     });
-
-    const formData = mockApiPost.mock.calls[0][1] as FormData;
-    expect(formData.get('description')).toBeNull();
-    expect(formData.get('file')).toBeNull();
-  });
-
-  it('createPipeline without onCreateSuccess does not crash', async () => {
-    mockApiPost.mockResolvedValue({});
-    const { result } = renderHook(() => usePipelineHandler());
-
-    await expect(
-      act(async () => {
-        await result.current.createPipeline.mutate({ data: { name: 'P' } as unknown as never });
-      }),
-    ).resolves.not.toThrow();
-  });
-
-  it('updatePipeline calls trpc and invalidates caches', async () => {
-    mockTrpcUpdate.mockResolvedValue({});
-    const { result } = renderHook(() => usePipelineHandler());
-
-    await act(async () => {
-      await result.current.updatePipeline.mutate({ id: 'p1', name: 'Updated' } as unknown as never);
-    });
-
-    expect(mockTrpcUpdate).toHaveBeenCalledWith({ id: 'p1', name: 'Updated' });
-    expect(mockInvalidate).toHaveBeenCalledTimes(2);
-  });
-});
-
-describe('usePipelineHandler — error branches', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('createPipeline calls onError when api.post fails', async () => {
-    mockApiPost.mockRejectedValue(new Error('create failed'));
-    const { result } = renderHook(() => usePipelineHandler());
-
-    await expect(
-      result.current.createPipeline.mutate({ data: { name: 'X' } as unknown as never }),
-    ).rejects.toThrow('create failed');
-  });
-
-  it('updatePipeline calls onError when mutate fails', async () => {
-    mockTrpcUpdate.mockRejectedValue(new Error('update failed'));
-    const { result } = renderHook(() => usePipelineHandler());
-
-    await expect(
-      result.current.updatePipeline.mutate({ id: 'p1' } as unknown as never),
-    ).rejects.toThrow('update failed');
-  });
-
-  it('deletePipeline calls onError when mutate fails', async () => {
-    mockTrpcRemove.mockRejectedValue(new Error('delete failed'));
-    const { result } = renderHook(() => usePipelineHandler());
-
-    await expect(result.current.deletePipeline.mutate('p1')).rejects.toThrow('delete failed');
-  });
-
-  it('setCurrentPipeline handles missing lastRunAt', async () => {
-    mockTrpcSetCurrent.mockResolvedValue({});
-    const { result } = renderHook(() => usePipelineHandler());
-
-    await act(async () => {
-      await result.current.setCurrentPipeline.mutate({
-        id: 'p1',
-        name: 'P1',
-        description: null,
-        status: null,
-        lastRunAt: null,
-        screenshotUrl: null,
-      } as unknown as never);
-    });
-
-    expect(mockTrpcSetCurrent).toHaveBeenCalledWith(
-      expect.objectContaining({ lastRunAt: null })
-    );
   });
 });

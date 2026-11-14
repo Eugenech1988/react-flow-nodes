@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { trpcClient } from '@/shared/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { trpcClient, useTRPC } from '@/shared/api';
 import type { TCheckoutPlanInputData, TBillingCycle } from '@pipeline/contracts';
 import type { TPlanId } from '../model';
 
@@ -24,6 +25,8 @@ const extractErrorMessage = (error: unknown): string | null => {
 };
 
 export const usePlanSelection = (isProActive: boolean) => {
+  const queryClient = useQueryClient();
+  const trpc = useTRPC();
   const [processingPlan, setProcessingPlan] = useState<TPlanId | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -55,6 +58,8 @@ export const usePlanSelection = (isProActive: boolean) => {
         const data = await trpcClient.billing.checkout.mutate(payload);
 
         if (data?.url) {
+          await queryClient.invalidateQueries({ queryKey: trpc.billing.subscription.queryKey() });
+          await queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
           window.location.href = data.url;
           return;
         }

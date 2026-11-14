@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AlertTriangle, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent } from '@pipeline/ui';
-import { DialogHeader, DialogBody, DialogFooter, FloatingInput } from '@/shared/ui';
+import { DialogHeader, DialogBody, DialogFooter, FloatingInput, LocalAlert } from '@/shared/ui';
 
 const CONFIRMATION_WORD = 'DELETE';
 
@@ -10,6 +10,7 @@ interface IDeleteAccountDialogProps {
   onClose: () => void;
   onConfirm: () => void;
   isDeletePending?: boolean;
+  errorMessage?: string | null;
 }
 
 export const DeleteAccountModal = ({
@@ -17,6 +18,7 @@ export const DeleteAccountModal = ({
   onClose,
   onConfirm,
   isDeletePending = false,
+  errorMessage = null,
 }: IDeleteAccountDialogProps) => {
   const [confirmation, setConfirmation] = useState('');
 
@@ -50,6 +52,10 @@ export const DeleteAccountModal = ({
         />
 
         <DialogBody withBorder className="space-y-4">
+          {errorMessage && (
+            <LocalAlert hasSuccess={false} hasError alertMessage={errorMessage} />
+          )}
+
           <p className="text-muted-foreground text-sm leading-relaxed">
             Are you sure you want to delete your account? This action cannot be undone and all your
             data, transactions, and pipelines will be permanently removed.

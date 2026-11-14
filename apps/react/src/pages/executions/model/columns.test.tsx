@@ -61,6 +61,17 @@ describe('executions columns', () => {
     expect(buildColumns()).toHaveLength(8);
   });
 
+  it('accessorFn works for all columns', () => {
+    const exec = makeExec();
+    const columns = buildColumns();
+    columns.forEach((col) => {
+      if ('accessorFn' in col && typeof col.accessorFn === 'function') {
+        const fn = col.accessorFn as (row: IExecutionItem) => unknown;
+        expect(fn(exec)).toBeDefined();
+      }
+    });
+  });
+
   it('id cell renders id with title', () => {
     renderAllCells(makeExec({ id: 'very-long-exec-id' }));
     expect(screen.getByTitle('very-long-exec-id')).toBeInTheDocument();

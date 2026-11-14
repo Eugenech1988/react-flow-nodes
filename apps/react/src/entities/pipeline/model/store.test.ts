@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { useStore } from './store';
+import { PERSISTED_STATE_VERSION } from './migrations';
 
 describe('pipeline store', () => {
   it('exposes graph and execution slices', () => {
@@ -31,5 +32,34 @@ describe('pipeline store', () => {
     expect(partialized).not.toHaveProperty('future');
     expect(partialized).not.toHaveProperty('saveStatus');
     expect(partialized).not.toHaveProperty('clipboard');
+  });
+
+  it('has version = PERSISTED_STATE_VERSION', () => {
+    const options = useStore.persist.getOptions();
+    expect(options.version).toBe(PERSISTED_STATE_VERSION);
+  });
+
+  it('has migrate function', () => {
+    const options = useStore.persist.getOptions();
+    expect(typeof options.migrate).toBe('function');
+  });
+
+  it('migrate returns shape with nodes and edges only', () => {
+    const options = useStore.persist.getOptions();
+    const out = options.migrate!({ nodes: [], edges: [], extra: 'junk' }, 0) as Record<
+      string,
+      unknown
+    >;
+    expect(Object.keys(out).sort()).toEqual(['edges', 'nodes']);
+  });
+
+  it('migrate normalizes malformed persisted state', () => {
+    const options = useStore.persist.getOptions();
+    const out = options.migrate!({ nodes: 'broken', edges: 'broken' }, 0) as Record<
+      string,
+      unknown
+    >;
+    expect(out.nodes).toEqual([]);
+    expect(out.edges).toEqual([]);
   });
 });

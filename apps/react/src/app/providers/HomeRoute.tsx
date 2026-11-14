@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useUser } from '@/shared/hooks';
 import { GlobalLoader } from '@/shared/ui';
+import { redirectByRole } from '@/shared/lib';
 
 export const HomeRoute = () => {
   const { isLoading, role } = useUser();
@@ -9,8 +10,9 @@ export const HomeRoute = () => {
     return <GlobalLoader />;
   }
 
-  if (role === 'CONTENT_MANAGER') {
-    return <Navigate to="/admin/jobs" replace />;
+  const target = redirectByRole(role);
+  if (target !== '/') {
+    return <Navigate to={target} replace />;
   }
 
   return <Outlet />;

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useLogout, useUser } from '@/shared/hooks';
+import { canSeeBilling, resolveAvatarUrl } from '@/shared/lib';
 import { LogOut, User, Settings, CreditCard, ChevronDown, Zap } from 'lucide-react';
 import {
   DropdownMenu,
@@ -11,14 +12,12 @@ import {
   DropdownMenuGroup,
 } from '@pipeline/ui';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
-
 export const UserDropdown = () => {
   const { user, role } = useUser();
   const { logout } = useLogout();
 
-  const isContentManager = role === 'CONTENT_MANAGER';
-  const isFreePlan = user?.subscription && user?.subscription.plan === 'FREE';
+  const showBilling = canSeeBilling(role);
+  const isFreePlan = user?.subscription?.plan === 'FREE';
 
   const firstName = user?.profile?.firstName || '';
   const lastName = user?.profile?.lastName || '';
@@ -36,12 +35,7 @@ export const UserDropdown = () => {
       ? `${firstName} ${lastName}`.trim()
       : user?.profile?.nickName || email.split('@')[0];
 
-  const avatarUrl = user?.profile?.avatarUrl;
-  const displaySrc = avatarUrl
-    ? avatarUrl.startsWith('http') || avatarUrl.startsWith('blob:')
-      ? avatarUrl
-      : `${BASE_URL}${avatarUrl}`
-    : null;
+  const displaySrc = resolveAvatarUrl(user?.profile?.avatarUrl);
 
   const itemClasses = [
     'flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg cursor-pointer transition-colors font-medium',
@@ -96,15 +90,14 @@ export const UserDropdown = () => {
             <span>Account Settings</span>
           </DropdownMenuItem>
 
-          {/* 👇 Скрываем ссылку на биллинг для контент-менеджера */}
-          {!isContentManager && (
+          {showBilling && (
             <DropdownMenuItem render={<Link to="/settings/billing" />} className={itemClasses}>
               <CreditCard className="h-4 w-4 shrink-0" />
               <span>Billing</span>
             </DropdownMenuItem>
           )}
 
-          {!isContentManager && isFreePlan && (
+          {showBilling && isFreePlan && (
             <>
               <DropdownMenuSeparator className="bg-border/60 my-1" />
 

@@ -1,11 +1,16 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { SettingsPage } from './SettingsPage';
 
+interface IUserMock {
+  isProActive: boolean;
+  role: string | null;
+}
+
 const { mockNavigate, mockUseLocation, mockUseUser } = vi.hoisted(() => ({
-  mockNavigate: vi.fn(),
-  mockUseLocation: vi.fn(),
-  mockUseUser: vi.fn(),
+  mockNavigate: vi.fn<(path: string, opts?: { replace?: boolean }) => void>(),
+  mockUseLocation: vi.fn<() => { pathname: string }>(),
+  mockUseUser: vi.fn<() => IUserMock>(),
 }));
 
 vi.mock('react-router-dom', () => ({
@@ -19,7 +24,13 @@ vi.mock('@/shared/hooks', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  Tabs: ({ currentTab, onTabChange }: unknown) => (
+  Tabs: ({
+    currentTab,
+    onTabChange,
+  }: {
+    currentTab: string;
+    onTabChange: (id: string) => void;
+  }) => (
     <button data-testid="tabs" onClick={() => onTabChange('account')}>
       {currentTab}
     </button>
@@ -33,6 +44,7 @@ vi.mock('./components', () => ({
 vi.mock('@/shared/lib', () => ({
   PAGE_VARIANTS: {},
   SETTINGS_CONTENT_VARIANTS: {},
+  canSeeBilling: (role: string | null) => role !== 'CONTENT_MANAGER',
 }));
 
 vi.mock('framer-motion', () => ({
@@ -64,11 +76,25 @@ describe('SettingsPage', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/settings/account');
   });
 
-  it('redirects CM from billing', () => {
+  it('redirects CONTENT_MANAGER from billing', () => {
     mockUseUser.mockReturnValue({ isProActive: false, role: 'CONTENT_MANAGER' });
     mockUseLocation.mockReturnValue({ pathname: '/settings/billing' });
     render(<SettingsPage />);
     expect(mockNavigate).toHaveBeenCalledWith('/settings/profile', { replace: true });
+  });
+
+  it('does NOT redirect SUPER_ADMIN from billing', () => {
+    mockUseUser.mockReturnValue({ isProActive: false, role: 'SUPER_ADMIN' });
+    mockUseLocation.mockReturnValue({ pathname: '/settings/billing' });
+    render(<SettingsPage />);
+    expect(mockNavigate).not.toHaveBeenCalledWith('/settings/profile', { replace: true });
+  });
+
+  it('does NOT redirect USER from billing', () => {
+    mockUseUser.mockReturnValue({ isProActive: false, role: 'USER' });
+    mockUseLocation.mockReturnValue({ pathname: '/settings/billing' });
+    render(<SettingsPage />);
+    expect(mockNavigate).not.toHaveBeenCalledWith('/settings/profile', { replace: true });
   });
 
   it('falls back to profile tab for empty path', () => {

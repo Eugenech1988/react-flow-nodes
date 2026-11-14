@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
 import { useStore } from '../store';
-import type { TPipelineNode, TPipelineEdge } from '../../types';
+import type { TPipelineNode, TPipelineEdge } from '../types';
 
 const makeNode = (id: string, type = 'text'): TPipelineNode =>
   ({
@@ -310,7 +310,7 @@ describe('graphSlice', () => {
     it('marks unsaved on add change', () => {
       useStore.setState({ saveStatus: 'saved', nodes: [] });
       useStore.getState().onNodesChange([
-        { id: 'new', type: 'add', item: makeNode('new') },
+        { type: 'add', item: makeNode('new') },
       ]);
       expect(useStore.getState().saveStatus).toBe('unsaved');
     });
@@ -470,5 +470,31 @@ describe('graphSlice', () => {
         expect.any(SyntaxError),
       );
     });
+  });
+});
+
+describe('graphSlice — updateNodeField snapshot control', () => {
+  beforeEach(() => {
+    useStore.setState({
+      nodes: [makeNode('a')],
+      edges: [],
+      past: [],
+      future: [],
+      saveStatus: 'saved',
+    });
+  });
+
+  it('takes snapshot by default', () => {
+    useStore.getState().updateNodeField('a', 'text', 'hello');
+    expect(useStore.getState().past).toHaveLength(1);
+    expect(useStore.getState().nodes[0].data.text).toBe('hello');
+    expect(useStore.getState().saveStatus).toBe('unsaved');
+  });
+
+  it('skips snapshot when skipSnapshot=true', () => {
+    useStore.getState().updateNodeField('a', 'nodeType', 'text', true);
+    expect(useStore.getState().past).toHaveLength(0);
+    expect(useStore.getState().nodes[0].data.nodeType).toBe('text');
+    expect(useStore.getState().saveStatus).toBe('unsaved');
   });
 });

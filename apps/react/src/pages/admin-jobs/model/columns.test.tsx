@@ -72,6 +72,17 @@ describe('admin-jobs columns', () => {
     expect(buildJobColumns(vi.fn())).toHaveLength(6);
   });
 
+  it('accessorFn works for all columns', () => {
+    const job = makeJob();
+    const columns = buildJobColumns(vi.fn());
+    columns.forEach((col) => {
+      if ('accessorFn' in col && typeof col.accessorFn === 'function') {
+        const fn = col.accessorFn as (row: IJob) => unknown;
+        expect(fn(job)).toBeDefined();
+      }
+    });
+  });
+
   it('slug cell', () => {
     renderAllCells(makeJob({ slug: 'test-slug' }));
     expect(screen.getByText('test-slug')).toBeInTheDocument();
@@ -92,7 +103,7 @@ describe('admin-jobs columns', () => {
     expect(screen.getByText('DESIGN')).toBeInTheDocument();
   });
 
-  it('locales cell', () => {
+  it('locales cell with en translation', () => {
     renderAllCells(makeJob());
     expect(screen.getByText('en')).toBeInTheDocument();
   });

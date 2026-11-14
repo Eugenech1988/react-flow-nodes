@@ -48,9 +48,10 @@ export const usePipelinesFilter = (
             valA = a.status ?? '';
             valB = b.status ?? '';
             break;
-          default:
-            valA = a.name;
-            valB = b.name;
+          default: {
+            const exhaustive = sortBy as never;
+            throw new Error(`Unhandled sortBy: ${String(exhaustive)}`);
+          }
         }
 
         if (valA === valB) return 0;

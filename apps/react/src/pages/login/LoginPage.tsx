@@ -4,11 +4,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { RegisterFormInputData, TLoginInputData } from '@pipeline/contracts';
 import { AuthModeToggle, TwoFactorForm, RecoveryForm, AuthForm } from './components';
 import { useTRPC } from '@/shared/api';
+import { redirectByRole } from '@/shared/lib';
+import type { TUserRole } from '@/shared/lib';
 import { useAuthStore } from './model/authStore';
 import type { TRequestFormData, TResetFormData } from './model';
 import Logo from '@/assets/logo.svg';
-
-type TRole = 'USER' | 'CONTENT_MANAGER' | 'SUPER_ADMIN' | string;
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -44,19 +44,15 @@ export const LoginPage: React.FC = () => {
 
   const currentApiError = apiError || twoFactorError;
 
-  const redirectByRole = (role: TRole | undefined) => {
+  const handleRedirect = (role: TUserRole | null | undefined) => {
     resetState();
-    if (role === 'CONTENT_MANAGER' || role === 'SUPER_ADMIN') {
-      navigate('/admin/jobs', { replace: true });
-    } else {
-      navigate('/', { replace: true });
-    }
+    navigate(redirectByRole(role), { replace: true });
   };
 
   const handleSuccessAuth = async () => {
     await queryClient.invalidateQueries(trpc.auth.me.queryFilter());
     const user = await queryClient.fetchQuery(trpc.auth.me.queryOptions());
-    redirectByRole((user as { role?: TRole })?.role);
+    handleRedirect((user as { role?: TUserRole })?.role);
   };
 
   const handleLogin = async (data: TLoginInputData) => {
@@ -121,9 +117,7 @@ export const LoginPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 👇 Правая панель: justify-center и overflow-y-auto */}
       <div className="flex h-screen w-full flex-col items-center justify-center overflow-y-auto px-6 py-12 sm:px-12 lg:w-[40%] xl:px-24">
-        {/* 👇 my-auto гарантирует центрирование, даже если контент длиннее экрана */}
         <div className="my-auto w-full max-w-sm">
           <div className="mb-8 flex flex-col items-center text-center">
             <img src={Logo} alt="Pipeline Studio" className="mb-4 h-10 w-auto text-teal-400" />

@@ -24,4 +24,6 @@ dist-ssr
 *.sw?
 
 .env
-.env.local
+.env.localcypress/screenshots
+cypress/videos
+cypress/downloads

@@ -15,7 +15,10 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui --api.token=''",
-    "test:cov": "vitest --coverage"
+    "test:cov": "vitest --coverage",
+    "preview:test": "vite preview --port 5174 --strictPort",
+    "test:e2e": "bun run build && start-server-and-test \"bun run preview:test\" http://localhost:5174 \"cypress run\"",
+    "test:e2e:open": "start-server-and-test \"bun run preview:test\" http://localhost:5174 \"cypress open\""
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
@@ -66,6 +69,7 @@
     "@vitest/eslint-plugin": "^1.6.23",
     "@vitest/ui": "5.1.0",
     "babel-plugin-react-compiler": "^1.0.0",
+    "cypress": "^16.3.0",
     "eslint": "^9.39.5",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -74,6 +78,7 @@
     "jsdom": "^29.1.1",
     "prettier": "^3.9.5",
     "react-compiler-runtime": "^1.0.0",
+    "start-server-and-test": "^3.0.13",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0",
     "vite": "8.3.3",

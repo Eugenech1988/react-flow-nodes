@@ -1,10 +1,29 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
+import type { ReactNode } from 'react';
 import { UserDropdown } from './UserDropdown';
 
+interface IProfileMock {
+  firstName?: string;
+  lastName?: string;
+  nickName?: string;
+  avatarUrl?: string | null;
+}
+
+interface IUserMock {
+  email: string;
+  subscription: { plan: string } | null;
+  profile: IProfileMock | null;
+}
+
+interface IUseUserReturn {
+  user: IUserMock;
+  role: string;
+}
+
 const { mockLogout, mockUseUser } = vi.hoisted(() => ({
-  mockLogout: vi.fn(),
-  mockUseUser: vi.fn(),
+  mockLogout: vi.fn<() => void>(),
+  mockUseUser: vi.fn<() => IUseUserReturn>(),
 }));
 
 vi.mock('@/shared/hooks', () => ({
@@ -12,21 +31,36 @@ vi.mock('@/shared/hooks', () => ({
   useLogout: () => ({ logout: mockLogout }),
 }));
 
+vi.mock('@/shared/lib', () => ({
+  canSeeBilling: (role: string | null | undefined) => role !== 'CONTENT_MANAGER',
+  resolveAvatarUrl: (raw: string | null | undefined) => {
+    if (!raw) return null;
+    if (raw.startsWith('http') || raw.startsWith('blob:') || raw.startsWith('data:')) return raw;
+    return `http://localhost:3000${raw}`;
+  },
+}));
+
 vi.mock('@pipeline/ui', () => ({
-  DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DropdownMenuItem: ({ children, ...props }: unknown) => <button {...props}>{children}</button>,
-  DropdownMenuLabel: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DropdownMenu: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+  DropdownMenuTrigger: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+  DropdownMenuContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+  DropdownMenuItem: ({
+    children,
+    ...props
+  }: {
+    children: ReactNode;
+    [key: string]: unknown;
+  }) => <button {...props}>{children}</button>,
+  DropdownMenuLabel: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuSeparator: () => <hr />,
-  DropdownMenuGroup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DropdownMenuGroup: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock('react-router-dom', () => ({
-  Link: ({ children, to }: unknown) => <a href={to}>{children}</a>,
+  Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
 }));
 
-const createUser =   (overrides: Record<string, unknown> = {}) => ({
+const createUser = (overrides: Partial<IUserMock> = {}): IUseUserReturn => ({
   user: {
     email: 'test@example.com',
     subscription: { plan: 'PRO' },
@@ -48,7 +82,9 @@ describe('UserDropdown', () => {
   });
 
   it('renders initials from first name only', () => {
-    mockUseUser.mockReturnValue(createUser({ profile: { firstName: 'John', lastName: '', avatarUrl: null } }));
+    mockUseUser.mockReturnValue(
+      createUser({ profile: { firstName: 'John', lastName: '', avatarUrl: null } }),
+    );
     render(<UserDropdown />);
     expect(screen.getByText('JO')).toBeInTheDocument();
   });
@@ -66,19 +102,25 @@ describe('UserDropdown', () => {
   });
 
   it('renders nickname if no first/last name', () => {
-    mockUseUser.mockReturnValue(createUser({ profile: { nickName: 'johnny', avatarUrl: null } }));
+    mockUseUser.mockReturnValue(
+      createUser({ profile: { nickName: 'johnny', avatarUrl: null } }),
+    );
     render(<UserDropdown />);
     expect(screen.getByText('johnny')).toBeInTheDocument();
   });
 
   it('renders avatar image if avatarUrl present', () => {
-    mockUseUser.mockReturnValue(createUser({ profile: { avatarUrl: 'http://img.com/a.jpg' } }));
+    mockUseUser.mockReturnValue(
+      createUser({ profile: { avatarUrl: 'http://img.com/a.jpg' } }),
+    );
     render(<UserDropdown />);
     expect(screen.getByRole('img')).toHaveAttribute('src', 'http://img.com/a.jpg');
   });
 
   it('prefixes relative avatar url with BASE_URL', () => {
-    mockUseUser.mockReturnValue(createUser({ profile: { avatarUrl: '/uploads/a.jpg' } }));
+    mockUseUser.mockReturnValue(
+      createUser({ profile: { avatarUrl: '/uploads/a.jpg' } }),
+    );
     render(<UserDropdown />);
     expect(screen.getByRole('img').getAttribute('src')).toMatch(/\/uploads\/a\.jpg$/);
   });
@@ -95,10 +137,39 @@ describe('UserDropdown', () => {
     expect(screen.getByText('Billing')).toBeInTheDocument();
   });
 
-  it('shows upgrade button for FREE plan', () => {
-    mockUseUser.mockReturnValue(createUser({ subscription: { plan: 'FREE' } }));
+  it('shows billing for SUPER_ADMIN', () => {
+    mockUseUser.mockReturnValue({ ...createUser(), role: 'SUPER_ADMIN' });
+    render(<UserDropdown />);
+    expect(screen.getByText('Billing')).toBeInTheDocument();
+  });
+
+  it('hides upgrade for SUPER_ADMIN on FREE plan (still shows billing)', () => {
+    mockUseUser.mockReturnValue({
+      user: { email: 'a@b.com', subscription: { plan: 'FREE' }, profile: null },
+      role: 'SUPER_ADMIN',
+    });
+    render(<UserDropdown />);
+    expect(screen.getByText('Billing')).toBeInTheDocument();
+    expect(screen.getByText('Activate Pro Plan')).toBeInTheDocument();
+  });
+
+  it('shows upgrade button for FREE plan on USER', () => {
+    mockUseUser.mockReturnValue({
+      user: { email: 'a@b.com', subscription: { plan: 'FREE' }, profile: null },
+      role: 'USER',
+    });
     render(<UserDropdown />);
     expect(screen.getByText('Activate Pro Plan')).toBeInTheDocument();
+  });
+
+  it('hides upgrade for CONTENT_MANAGER even on FREE plan', () => {
+    mockUseUser.mockReturnValue({
+      user: { email: 'a@b.com', subscription: { plan: 'FREE' }, profile: null },
+      role: 'CONTENT_MANAGER',
+    });
+    render(<UserDropdown />);
+    expect(screen.queryByText('Activate Pro Plan')).not.toBeInTheDocument();
+    expect(screen.queryByText('Billing')).not.toBeInTheDocument();
   });
 
   it('calls logout on Log out click', () => {

@@ -1,7 +1,26 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { LoginPage } from './LoginPage';
+
+interface IAuthStoreMock {
+  mode: 'login' | 'register';
+  is2faRequired: boolean;
+  isLoading: boolean;
+  apiError: string | null;
+  twoFactorError: string | null;
+  recoveryError: string | null;
+  isRecoverySuccess: boolean;
+  isRegistrationSuccess: boolean;
+  setRegistrationSuccess: ReturnType<typeof vi.fn>;
+  login: ReturnType<typeof vi.fn>;
+  register: ReturnType<typeof vi.fn>;
+  verifyTwoFactor: ReturnType<typeof vi.fn>;
+  requestPasswordReset: ReturnType<typeof vi.fn>;
+  resetPassword: ReturnType<typeof vi.fn>;
+  toggleMode: ReturnType<typeof vi.fn>;
+  resetState: ReturnType<typeof vi.fn>;
+}
 
 const {
   mockNavigate,
@@ -16,17 +35,17 @@ const {
   mockResetPassword,
   mockSetRecoveryError,
 } = vi.hoisted(() => ({
-  mockNavigate: vi.fn(),
-  mockSetSearchParams: vi.fn(),
-  mockUseAuthStore: vi.fn(),
-  mockFetchQuery: vi.fn(),
-  mockInvalidate: vi.fn(),
-  mockLogin: vi.fn(),
-  mockRegister: vi.fn(),
-  mockVerify: vi.fn(),
-  mockRequestReset: vi.fn(),
-  mockResetPassword: vi.fn(),
-  mockSetRecoveryError: vi.fn(),
+  mockNavigate: vi.fn<(path: string, opts: { replace: boolean }) => void>(),
+  mockSetSearchParams: vi.fn<(params: URLSearchParams, opts: { replace: boolean }) => void>(),
+  mockUseAuthStore: vi.fn<() => IAuthStoreMock>(),
+  mockFetchQuery: vi.fn<() => Promise<{ role: string }>>(),
+  mockInvalidate: vi.fn<() => void>(),
+  mockLogin: vi.fn<(email: string, password: string, onSuccess: () => Promise<void>) => void>(),
+  mockRegister: vi.fn<(email: string, password: string, onSuccess: () => void) => void>(),
+  mockVerify: vi.fn<(data: { code: string }, onSuccess: () => Promise<void>) => void>(),
+  mockRequestReset: vi.fn<(email: string) => Promise<void>>(),
+  mockResetPassword: vi.fn<(token: string, pwd: string, onSuccess: () => void) => void>(),
+  mockSetRecoveryError: vi.fn<(message: string) => void>(),
 }));
 
 const mockSearchParamsStore = { current: new URLSearchParams() };
@@ -60,17 +79,25 @@ vi.mock('./model/authStore', () => ({
 }));
 
 vi.mock('./components', () => ({
-  AuthModeToggle: ({ mode, onToggle }: unknown) => (
+  AuthModeToggle: ({ mode, onToggle }: { mode: string; onToggle: () => void }) => (
     <button onClick={onToggle} data-testid="toggle-mode">
       {mode}
     </button>
   ),
-  TwoFactorForm: ({ onVerify }: unknown) => (
+  TwoFactorForm: ({ onVerify }: { onVerify: (d: { code: string }) => void }) => (
     <button onClick={() => onVerify({ code: '123' })} data-testid="two-factor-form">
       Verify
     </button>
   ),
-  RecoveryForm: ({ onRequestSubmit, onResetSubmit, onBack }: unknown) => (
+  RecoveryForm: ({
+    onRequestSubmit,
+    onResetSubmit,
+    onBack,
+  }: {
+    onRequestSubmit: (d: { email: string }) => void;
+    onResetSubmit: (d: { password: string; confirmPassword: string }) => void;
+    onBack: () => void;
+  }) => (
     <div data-testid="recovery-form">
       <button onClick={() => onRequestSubmit({ email: 'a@b.com' })} data-testid="req-reset">
         Request
@@ -86,7 +113,17 @@ vi.mock('./components', () => ({
       </button>
     </div>
   ),
-  AuthForm: ({ onLogin, onRegister, onForgotPassword, onSocialLogin }: unknown) => (
+  AuthForm: ({
+    onLogin,
+    onRegister,
+    onForgotPassword,
+    onSocialLogin,
+  }: {
+    onLogin: (d: { email: string; password: string }) => void;
+    onRegister: (d: { email: string; password: string; confirmPassword: string }) => void;
+    onForgotPassword: () => void;
+    onSocialLogin: (p: 'google' | 'github') => (e: React.MouseEvent) => void;
+  }) => (
     <div data-testid="auth-form">
       <button onClick={() => onLogin({ email: 'a@b.com', password: 'p' })} data-testid="login">
         Login
@@ -109,7 +146,7 @@ vi.mock('./components', () => ({
 
 vi.mock('@/assets/logo.svg', () => ({ default: 'logo.svg' }));
 
-const defaultStore = {
+const createDefaultStore = (overrides: Partial<IAuthStoreMock> = {}): IAuthStoreMock => ({
   mode: 'login',
   is2faRequired: false,
   isLoading: false,
@@ -126,13 +163,14 @@ const defaultStore = {
   resetPassword: mockResetPassword,
   toggleMode: vi.fn(),
   resetState: vi.fn(),
-};
+  ...overrides,
+});
 
 describe('LoginPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSearchParamsStore.current = new URLSearchParams();
-    mockUseAuthStore.mockReturnValue(defaultStore);
+    mockUseAuthStore.mockReturnValue(createDefaultStore());
     mockFetchQuery.mockResolvedValue({ role: 'USER' });
   });
 
@@ -145,28 +183,25 @@ describe('LoginPage', () => {
   });
 
   it('renders 2FA view when required', () => {
-    mockUseAuthStore.mockReturnValue({ ...defaultStore, is2faRequired: true });
+    mockUseAuthStore.mockReturnValue(createDefaultStore({ is2faRequired: true }));
     renderPage();
     expect(screen.getByText('Two-Factor Auth')).toBeInTheDocument();
     expect(screen.getByTestId('two-factor-form')).toBeInTheDocument();
   });
 
-  it('handles login and redirects based on role', async () => {
+  it('handles login and redirects USER to /', async () => {
     renderPage();
     await act(async () => {
       fireEvent.click(screen.getByTestId('login'));
     });
-    expect(mockLogin).toHaveBeenCalledWith('a@b.com', 'p', expect.any(Function));
-
     const onSuccess = mockLogin.mock.calls[0][2];
     await act(async () => {
       await onSuccess();
     });
-
     expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
   });
 
-  it('redirects admin to /admin/jobs', async () => {
+  it('redirects CONTENT_MANAGER to /admin/jobs', async () => {
     mockFetchQuery.mockResolvedValue({ role: 'CONTENT_MANAGER' });
     renderPage();
 
@@ -181,10 +216,24 @@ describe('LoginPage', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/admin/jobs', { replace: true });
   });
 
+  it('redirects SUPER_ADMIN to / (unified with HomeRoute)', async () => {
+    mockFetchQuery.mockResolvedValue({ role: 'SUPER_ADMIN' });
+    renderPage();
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('login'));
+    });
+    const onSuccess = mockLogin.mock.calls[0][2];
+    await act(async () => {
+      await onSuccess();
+    });
+
+    expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true });
+  });
+
   it('switches to recovery mode and handles request', async () => {
     renderPage();
     fireEvent.click(screen.getByTestId('forgot'));
-
     expect(screen.getByText('Reset Password')).toBeInTheDocument();
 
     await act(async () => {
@@ -207,7 +256,6 @@ describe('LoginPage', () => {
   it('renders recovery directly when ?token= present', () => {
     mockSearchParamsStore.current = new URLSearchParams('?token=valid');
     renderPage();
-
     expect(screen.getByText('Reset Password')).toBeInTheDocument();
     expect(screen.getByTestId('recovery-form')).toBeInTheDocument();
     expect(screen.queryByTestId('auth-form')).not.toBeInTheDocument();
@@ -239,7 +287,7 @@ describe('LoginPage', () => {
   });
 
   it('handles 2FA verify success', async () => {
-    mockUseAuthStore.mockReturnValue({ ...defaultStore, is2faRequired: true });
+    mockUseAuthStore.mockReturnValue(createDefaultStore({ is2faRequired: true }));
     renderPage();
 
     await act(async () => {
@@ -253,35 +301,23 @@ describe('LoginPage', () => {
     renderPage();
     fireEvent.click(screen.getByTestId('forgot'));
     fireEvent.click(screen.getByTestId('back'));
-
     expect(screen.getByTestId('auth-form')).toBeInTheDocument();
   });
 
   it('shows registration success banner', () => {
-    mockUseAuthStore.mockReturnValue({ ...defaultStore, isRegistrationSuccess: true });
+    mockUseAuthStore.mockReturnValue(
+      createDefaultStore({ isRegistrationSuccess: true }),
+    );
     renderPage();
     expect(screen.getByText('Registered successfully! Please sign in.')).toBeInTheDocument();
   });
-});
-
-describe('LoginPage — final branches', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    mockSearchParamsStore.current = new URLSearchParams();
-    mockUseAuthStore.mockReturnValue(defaultStore);
-    mockFetchQuery.mockResolvedValue({ role: 'USER' });
-  });
-
-  const renderPage = () => render(<MemoryRouter><LoginPage /></MemoryRouter>);
 
   it('handleToggleMode resets registration success and toggles', () => {
     const setRegSuccess = vi.fn();
     const toggle = vi.fn();
-    mockUseAuthStore.mockReturnValue({
-      ...defaultStore,
-      setRegistrationSuccess: setRegSuccess,
-      toggleMode: toggle,
-    });
+    mockUseAuthStore.mockReturnValue(
+      createDefaultStore({ setRegistrationSuccess: setRegSuccess, toggleMode: toggle }),
+    );
 
     renderPage();
     fireEvent.click(screen.getByTestId('toggle-mode'));
@@ -290,8 +326,18 @@ describe('LoginPage — final branches', () => {
     expect(toggle).toHaveBeenCalled();
   });
 
-  it('redirects SUPER_ADMIN to /admin/jobs', async () => {
-    mockFetchQuery.mockResolvedValue({ role: 'SUPER_ADMIN' });
+  it('handles recovery back (with token) — clears search params', () => {
+    mockSearchParamsStore.current = new URLSearchParams('?token=valid');
+    renderPage();
+
+    fireEvent.click(screen.getByTestId('back'));
+
+    expect(mockSetSearchParams).toHaveBeenCalledWith({}, { replace: true });
+  });
+
+  it('calls resetState on successful redirect', async () => {
+    const resetState = vi.fn();
+    mockUseAuthStore.mockReturnValue(createDefaultStore({ resetState }));
     renderPage();
 
     await act(async () => {
@@ -302,23 +348,6 @@ describe('LoginPage — final branches', () => {
       await onSuccess();
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith('/admin/jobs', { replace: true });
-  });
-
-  it('handles recovery back (no token) — resets and exits recovery', () => {
-    renderPage();
-    fireEvent.click(screen.getByTestId('forgot'));
-    fireEvent.click(screen.getByTestId('back'));
-
-    expect(screen.getByTestId('auth-form')).toBeInTheDocument();
-  });
-
-  it('handles recovery back (with token) — clears search params', () => {
-    mockSearchParamsStore.current = new URLSearchParams('?token=valid');
-    renderPage();
-
-    fireEvent.click(screen.getByTestId('back'));
-
-    expect(mockSetSearchParams).toHaveBeenCalledWith({}, { replace: true });
+    expect(resetState).toHaveBeenCalled();
   });
 });

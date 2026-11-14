@@ -5,16 +5,32 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const debounce = <T extends (...args: unknown[]) => void>(fn: T, delay: number) => {
-  let timer: ReturnType<typeof setTimeout>;
+export type TDebouncedFn<T extends (...args: unknown[]) => void> = T & {
+  cancel: () => void;
+};
 
-  return (...args: Parameters<T>) => {
-    clearTimeout(timer);
+export const debounce = <T extends (...args: unknown[]) => void>(
+  fn: T,
+  delay: number,
+): TDebouncedFn<T> => {
+  let timer: ReturnType<typeof setTimeout> | null = null;
 
+  const debounced = (...args: Parameters<T>) => {
+    if (timer !== null) clearTimeout(timer);
     timer = setTimeout(() => {
+      timer = null;
       fn(...args);
     }, delay);
   };
+
+  debounced.cancel = () => {
+    if (timer !== null) {
+      clearTimeout(timer);
+      timer = null;
+    }
+  };
+
+  return debounced as TDebouncedFn<T>;
 };
 
 const VARIABLE_PATTERN = /\{\{\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\}\}/g;

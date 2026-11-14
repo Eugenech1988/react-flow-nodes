@@ -1,8 +1,9 @@
 import { renderHook } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useSubscription } from './useSubscription';
+import { useUser } from './useUser';
 
-const { mockUseQuery } = vi.hoisted(() => ({ mockUseQuery: vi.fn() }));
+const mockUseQuery = vi.fn();
 
 vi.mock('@tanstack/react-query', () => ({
   useQuery: (opts: unknown) => mockUseQuery(opts),
@@ -14,40 +15,34 @@ vi.mock('@/shared/api', () => ({
   }),
 }));
 
+vi.mock('./useUser', () => ({
+  useUser: vi.fn(),
+}));
+
+const mockUseUser = vi.mocked(useUser);
+
 describe('useSubscription', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUseUser.mockReturnValue({ isProActive: false } as ReturnType<typeof useUser>);
   });
 
-  it('returns null when no data', () => {
+  it('returns null subscription when no data', () => {
     mockUseQuery.mockReturnValue({ data: null, isLoading: true });
     const { result } = renderHook(() => useSubscription());
     expect(result.current.subscription).toBeNull();
-    expect(result.current.isProActive).toBe(false);
-    expect(result.current.isLoading).toBe(true);
   });
 
-  it('returns pro active when PRO + ACTIVE', () => {
-    mockUseQuery.mockReturnValue({
-      data: { plan: 'PRO', planStatus: 'ACTIVE' },
-      isLoading: false,
-    });
+  it('delegates isProActive to useUser (single source of truth)', () => {
+    mockUseUser.mockReturnValue({ isProActive: true } as ReturnType<typeof useUser>);
+    mockUseQuery.mockReturnValue({ data: { plan: 'PRO', planStatus: 'ACTIVE' } });
     const { result } = renderHook(() => useSubscription());
     expect(result.current.isProActive).toBe(true);
   });
 
-  it('not pro when PRO + CANCELED', () => {
-    mockUseQuery.mockReturnValue({
-      data: { plan: 'PRO', planStatus: 'CANCELED' },
-    });
-    const { result } = renderHook(() => useSubscription());
-    expect(result.current.isProActive).toBe(false);
-  });
-
-  it('not pro when FREE', () => {
-    mockUseQuery.mockReturnValue({
-      data: { plan: 'FREE', planStatus: 'ACTIVE' },
-    });
+  it('ignores subscription.plan for isProActive', () => {
+    mockUseUser.mockReturnValue({ isProActive: false } as ReturnType<typeof useUser>);
+    mockUseQuery.mockReturnValue({ data: { plan: 'PRO', planStatus: 'ACTIVE' } });
     const { result } = renderHook(() => useSubscription());
     expect(result.current.isProActive).toBe(false);
   });

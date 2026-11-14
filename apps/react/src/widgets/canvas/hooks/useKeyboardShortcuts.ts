@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { TPipelineNode, TPipelineEdge } from '@/entities';
 import { toast } from 'sonner';
 
@@ -33,7 +33,9 @@ export const isInputElement = (element: Element | null): boolean => {
     return true;
   }
   const htmlEl = element as HTMLElement;
-  const contentEditableAttr = element.getAttribute ? element.getAttribute('contenteditable') : null;
+  const contentEditableAttr = element.getAttribute
+    ? element.getAttribute('contenteditable')
+    : null;
   if (
     htmlEl.isContentEditable ||
     htmlEl.contentEditable === 'true' ||
@@ -52,6 +54,12 @@ export const useKeyboardShortcuts = ({
   undo,
   redo,
 }: UseKeyboardShortcutsParams) => {
+  const handlersRef = useRef({ copyNodes, pasteNodes, getNodes, getEdges, undo, redo });
+
+  useEffect(() => {
+    handlersRef.current = { copyNodes, pasteNodes, getNodes, getEdges, undo, redo };
+  }, [copyNodes, pasteNodes, getNodes, getEdges, undo, redo]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as Element | null;
@@ -61,41 +69,48 @@ export const useKeyboardShortcuts = ({
         return;
       }
 
+      const {
+        copyNodes: onCopy,
+        pasteNodes: onPaste,
+        getNodes: readNodes,
+        getEdges: readEdges,
+        undo: onUndo,
+        redo: onRedo,
+      } = handlersRef.current;
+
       const isMac = navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
       const modifier = isMac ? event.metaKey : event.ctrlKey;
 
       if (modifier && event.key.toLowerCase() === 'c') {
-        const selected = getNodes().filter((n) => n.selected);
+        const selected = readNodes().filter((n) => n.selected);
         if (selected.length > 0) {
           event.preventDefault();
-          copyNodes(selected, getEdges());
-          toast.success('Nodes copied', {
-            duration: 2000,
-          });
+          onCopy(selected, readEdges());
+          toast.success('Nodes copied', { duration: 2000 });
         }
       }
 
       if (modifier && event.key.toLowerCase() === 'v') {
         event.preventDefault();
-        pasteNodes();
+        onPaste();
       }
 
       if (modifier && event.key.toLowerCase() === 'z') {
         event.preventDefault();
         if (event.shiftKey) {
-          redo();
+          onRedo();
         } else {
-          undo();
+          onUndo();
         }
       }
 
       if (modifier && event.key.toLowerCase() === 'y') {
         event.preventDefault();
-        redo();
+        onRedo();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [copyNodes, pasteNodes, getNodes, getEdges, undo, redo]);
+  }, []);
 };

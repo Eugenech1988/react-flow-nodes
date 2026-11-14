@@ -251,8 +251,10 @@ export const createGraphSlice: StateCreator<TPipelineStore, [], [], TGraphState 
     }));
   },
 
-  updateNodeField: (nodeId, fieldName, fieldValue) => {
-    get().takeSnapshot();
+  updateNodeField: (nodeId, fieldName, fieldValue, skipSnapshot = false) => {
+    if (!skipSnapshot) {
+      get().takeSnapshot();
+    }
     set((state) => ({
       nodes: state.nodes.map((node) => {
         if (node.id === nodeId) {

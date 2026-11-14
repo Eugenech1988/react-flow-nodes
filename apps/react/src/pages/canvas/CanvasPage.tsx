@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { usePipelines } from '@/entities';
 import { usePipelineHandler } from '@/features/manage-pipelines';
 import { useUser } from '@/shared/hooks';
+import { GlobalLoader } from '@/shared/ui';
 import { Canvas } from '@/widgets/canvas';
 
 export const CanvasPage = () => {
@@ -19,7 +20,18 @@ export const CanvasPage = () => {
     onSetCurrentSuccess: () => {
       setSearchParams({}, { replace: true });
     },
+    onSetCurrentError: (error) => {
+      processedRef.current = null;
+      toast.error(error.message || 'Failed to load pipeline. Please try again.');
+      setSearchParams({}, { replace: true });
+    },
   });
+
+  useEffect(() => {
+    if (processedRef.current && processedRef.current !== sharedPipelineId) {
+      processedRef.current = null;
+    }
+  }, [sharedPipelineId]);
 
   useEffect(() => {
     if (!sharedPipelineId) return;
@@ -50,7 +62,9 @@ export const CanvasPage = () => {
     setSearchParams,
   ]);
 
-  if (isLoading || setCurrentPipeline.isPending) return null;
+  if (isLoading || setCurrentPipeline.isPending) {
+    return <GlobalLoader fullScreen={false} />;
+  }
 
   if (!pipelines || pipelines.length === 0) {
     return <Navigate to="/pipelines" replace />;

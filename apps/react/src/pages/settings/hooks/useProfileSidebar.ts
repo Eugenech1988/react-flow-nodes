@@ -1,6 +1,5 @@
 import { useUser } from '@/shared/hooks';
-
-const BASE_URL = import.meta.env.VITE_API_URL;
+import { resolveAvatarUrl } from '@/shared/lib';
 
 type TPlanLabel = 'Pro Plan' | 'Free Plan';
 
@@ -33,14 +32,7 @@ export const useProfileSidebar = (): IUseProfileSidebarResult => {
     initials = 'U';
   }
 
-  const rawAvatarUrl = user?.profile?.avatarUrl;
-  const avatarUrl = rawAvatarUrl
-    ? rawAvatarUrl.startsWith('http') ||
-      rawAvatarUrl.startsWith('blob:') ||
-      rawAvatarUrl.startsWith('data:')
-      ? rawAvatarUrl
-      : `${BASE_URL}${rawAvatarUrl}`
-    : null;
+  const avatarUrl = resolveAvatarUrl(user?.profile?.avatarUrl);
 
   const planLabel: TPlanLabel = isProActive ? 'Pro Plan' : 'Free Plan';
 
