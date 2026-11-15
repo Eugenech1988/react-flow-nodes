@@ -1,12 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { DialogHeader } from './DialogHeader';
+import { MockDialogHeaderProps } from '@/test-utils';
 
 vi.mock('@pipeline/ui', () => ({
-  DialogHeader: ({ children, className }: unknown) => (
+  DialogHeader: ({ children, className }: MockDialogHeaderProps) => (
     <header className={className}>{children}</header>
   ),
-  DialogTitle: ({ children, className }: unknown) => <h2 className={className}>{children}</h2>,
+  DialogTitle: ({ children, className }: MockDialogHeaderProps) => <h2 className={className}>{children}</h2>,
 }));
 
 describe('DialogHeader', () => {

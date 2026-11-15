@@ -21,6 +21,7 @@ import { ExecutionsService } from '@/executions/executions.service';
 import { JobsService } from '@/jobs/jobs.service';
 import { MailService } from '@/mail/mail.service';
 import { ApplicationsService } from '@/applications/applications.service';
+import type { NextFunction, Request, Response } from 'express';
 
 export async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
@@ -60,7 +61,7 @@ export async function bootstrap() {
   const generateCsrfToken = csrf.generateCsrfToken;
   const doubleCsrfProtection = csrf.doubleCsrfProtection;
 
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     const excludedPaths = [
       '/csrf-token',
       '/billing/webhook',

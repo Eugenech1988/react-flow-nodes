@@ -1,9 +1,11 @@
+import type { MockAppButtonProps, MockSocialLoginButtonsProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { AuthForm } from './AuthForm';
 
 vi.mock('./SocialLoginButtons', () => ({
-  SocialLoginButtons: ({ onGoogleClick, onGithubClick }: unknown) => (
+  SocialLoginButtons: ({ onGoogleClick, onGithubClick }: MockSocialLoginButtonsProps) => (
     <div>
       <button onClick={onGoogleClick}>Google</button>
       <button onClick={onGithubClick}>GitHub</button>
@@ -20,7 +22,7 @@ vi.mock('./RegisterFields', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  AppButton: ({ text, type }: unknown) => <button type={type}>{text}</button>,
+  AppButton: ({ text, type }: MockAppButtonProps) => <button type={type}>{text}</button>,
 }));
 
 describe('AuthForm', () => {

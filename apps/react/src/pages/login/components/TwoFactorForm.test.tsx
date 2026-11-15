@@ -1,3 +1,5 @@
+import type { MockAppButtonProps, MockInputProps, MockLocalAlertProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TwoFactorForm } from './TwoFactorForm';
@@ -11,16 +13,16 @@ vi.mock('../model', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  AppButton: ({ text, type, onClick }: unknown) => (
+  AppButton: ({ text, type, onClick }: MockAppButtonProps) => (
     <button type={type} onClick={onClick}>
       {text}
     </button>
   ),
-  LocalAlert: ({ alertMessage }: unknown) => <div>{alertMessage}</div>,
+  LocalAlert: ({ alertMessage }: MockLocalAlertProps) => <div>{alertMessage}</div>,
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  Input: (props: unknown) => <input {...props} />,
+  Input: (props: MockInputProps) => <input {...props} />,
 }));
 
 vi.mock('@/shared/lib', () => ({

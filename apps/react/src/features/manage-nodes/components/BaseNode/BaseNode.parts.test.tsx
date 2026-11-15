@@ -1,11 +1,17 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { NodeHandles, NodeMeta, NodeField, NodeHeader, VariableTags } from './BaseNode.parts';
+import type { ComponentProps } from 'react';
+import type {
+  MockHandleProps,
+  MockSelectItemProps,
+  MockSelectProps,
+} from '@/test-utils';
 
 vi.mock('@pipeline/ui', () => ({
-  Input: (props: unknown) => <input data-testid="input" {...props} />,
-  Textarea: (props: unknown) => <textarea data-testid="textarea" {...props} />,
-  Select: ({ value, onValueChange, children }: unknown) => (
+  Input: (props: ComponentProps<'input'>) => <input data-testid="input" {...props} />,
+  Textarea: (props: ComponentProps<'textarea'>) => <textarea data-testid="textarea" {...props} />,
+  Select: ({ value, onValueChange, children }: MockSelectProps) => (
     <select data-testid="select" value={value} onChange={(e) => onValueChange(e.target.value)}>
       {children}
     </select>
@@ -13,16 +19,16 @@ vi.mock('@pipeline/ui', () => ({
   SelectTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   SelectValue: () => <span />,
   SelectContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  SelectItem: ({ value, children }: unknown) => <option value={value}>{children}</option>,
+  SelectItem: ({ value, children }: MockSelectItemProps) => <option value={value}>{children}</option>,
 }));
 
 vi.mock('@xyflow/react', () => ({
-  Handle: ({ id, type }: unknown) => <div data-testid={`handle-${id}`} data-type={type} />,
+  Handle: ({ id, type }: MockHandleProps) => <div data-testid={`handle-${id}`} data-type={type} />,
   Position: { Left: 'left', Right: 'right', Top: 'top', Bottom: 'bottom' },
 }));
 
 vi.mock('@/shared/ui', () => ({
-  AutosizeTextarea: (props: unknown) => <textarea data-testid="autosize" {...props} />,
+  AutosizeTextarea: (props: ComponentProps<'textarea'>) => <textarea data-testid="autosize" {...props} />,
 }));
 
 describe('BaseNode.parts', () => {

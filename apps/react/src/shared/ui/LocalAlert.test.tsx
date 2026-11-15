@@ -1,15 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { LocalAlert } from './LocalAlert';
+import { MockAlertProps } from '@/test-utils';
 
 vi.mock('@pipeline/ui', () => ({
-  Alert: ({ children, variant, className }: unknown) => (
+  Alert: ({ children, variant, className }: MockAlertProps) => (
     <div data-testid="alert" data-variant={variant} className={className}>
       {children}
     </div>
   ),
-  AlertTitle: ({ children, className }: unknown) => <h3 className={className}>{children}</h3>,
-  AlertDescription: ({ children, className }: unknown) => <p className={className}>{children}</p>,
+  AlertTitle: ({ children, className }: MockAlertProps) => <h3 className={className}>{children}</h3>,
+  AlertDescription: ({ children, className }: MockAlertProps) => <p className={className}>{children}</p>,
 }));
 
 vi.mock('lucide-react', () => ({

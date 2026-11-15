@@ -1,9 +1,11 @@
+import type { MockButtonProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { AuthModeToggle } from './AuthModeToggle';
 
 vi.mock('@pipeline/ui', () => ({
-  Button: ({ children, onClick }: unknown) => <button onClick={onClick}>{children}</button>,
+  Button: ({ children, onClick }: MockButtonProps) => <button onClick={onClick}>{children}</button>,
 }));
 
 describe('AuthModeToggle', () => {

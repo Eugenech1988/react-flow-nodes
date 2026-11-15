@@ -1,3 +1,5 @@
+import type { MockAppButtonProps, MockTableCellProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { InvoiceHistory } from './InvoiceHistory';
@@ -17,7 +19,7 @@ vi.mock('../hooks', () => ({ useBilling: () => mockUseBilling() }));
 vi.mock('sonner', () => ({ toast: { error: mockToastError } }));
 
 vi.mock('@/shared/ui', () => ({
-  AppButton: ({ text, onClick }: unknown) => <button onClick={onClick}>{text}</button>,
+  AppButton: ({ text, onClick }: MockAppButtonProps) => <button onClick={onClick}>{text}</button>,
   TableSkeleton: () => <div data-testid="skeleton" />,
 }));
 
@@ -27,7 +29,7 @@ vi.mock('@pipeline/ui', () => ({
   TableBody: ({ children }: { children: React.ReactNode }) => <tbody>{children}</tbody>,
   TableHead: ({ children }: { children: React.ReactNode }) => <th>{children}</th>,
   TableRow: ({ children }: { children: React.ReactNode }) => <tr>{children}</tr>,
-  TableCell: ({ children, colSpan }: unknown) => <td colSpan={colSpan}>{children}</td>,
+  TableCell: ({ children, colSpan }: MockTableCellProps) => <td colSpan={colSpan}>{children}</td>,
 }));
 
 describe('InvoiceHistory', () => {

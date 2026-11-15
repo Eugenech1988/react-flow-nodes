@@ -103,16 +103,8 @@ export default defineConfig({
   resolve: {
     alias: {
       'react/compiler-runtime': 'react-compiler-runtime',
-      react: path.resolve(import.meta.dirname, './node_modules/react'),
-      'react-dom': path.resolve(import.meta.dirname, './node_modules/react-dom'),
-      'react/jsx-runtime': path.resolve(import.meta.dirname, './node_modules/react/jsx-runtime.js'),
-      'react/jsx-dev-runtime': path.resolve(
-        import.meta.dirname,
-        './node_modules/react/jsx-dev-runtime.js',
-      ),
-      '@xyflow/react': path.resolve(import.meta.dirname, './node_modules/@xyflow/react'),
-      recharts: path.resolve(import.meta.dirname, './node_modules/recharts'),
     },
+    dedupe: ['react', 'react-dom'],
   },
   preview: {
     port: 5173,
@@ -145,7 +137,7 @@ export default defineConfig({
       },
     },
     coverage: {
-      provider: 'istanbul', // или 'v8', если остался он
+      provider: 'istanbul',
       reporter: ['text', 'html', 'lcov'],
       exclude: [
         '**/node_modules/**',

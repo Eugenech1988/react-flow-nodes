@@ -1,3 +1,5 @@
+import type { MockAppButtonProps, MockJobDeleteModalProps, MockLocalAlertProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DangerZoneSection } from './DangerZoneSection';
@@ -8,13 +10,13 @@ vi.mock('../hooks', () => ({
 }));
 
 vi.mock('./DeleteAccountModal', () => ({
-  DeleteAccountModal: ({ isOpen, onConfirm }: unknown) =>
+  DeleteAccountModal: ({ isOpen, onConfirm }: MockJobDeleteModalProps) =>
     isOpen ? <button onClick={onConfirm}>ConfirmDelete</button> : null,
 }));
 
 vi.mock('@/shared/ui', () => ({
-  AppButton: ({ text, onClick }: unknown) => <button onClick={onClick}>{text}</button>,
-  LocalAlert: ({ alertMessage }: unknown) => <div>{alertMessage}</div>,
+  AppButton: ({ text, onClick }: MockAppButtonProps) => <button onClick={onClick}>{text}</button>,
+  LocalAlert: ({ alertMessage }: MockLocalAlertProps) => <div>{alertMessage}</div>,
 }));
 
 const mockedUseDangerZone = vi.mocked(useDangerZoneSection);

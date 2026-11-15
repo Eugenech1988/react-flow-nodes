@@ -75,10 +75,10 @@ describe('useSavePipeline', () => {
     vi.clearAllMocks();
     vi.useFakeTimers();
 
-    mockStore.nodes = [{ id: 'n1', type: 'text', position: { x: 0, y: 0 }, data: {} }];
+    (mockStore as { nodes: unknown[] }).nodes = [{ id: 'n1', type: 'text', position: { x: 0, y: 0 }, data: {} }];
     mockStore.edges = [];
-    mockStore.lastRunAt = null;
-    mockStore.lastRunStatus = null;
+    (mockStore as { lastRunAt: string | null }).lastRunAt = null;
+    (mockStore as { lastRunStatus: string | null }).lastRunStatus = null;
     mockStore.saveStatus = 'saved';
 
     mockUseUser.mockReturnValue({
@@ -151,8 +151,8 @@ describe('useSavePipeline', () => {
     });
 
     it('includes lastRunAt and lastRunStatus when present', async () => {
-      mockStore.lastRunAt = '2024-01-01T00:00:00Z';
-      mockStore.lastRunStatus = 'SUCCESS';
+      (mockStore as { lastRunAt: string | null }).lastRunAt = '2024-01-01T00:00:00Z';
+      (mockStore as { lastRunStatus: string | null }).lastRunStatus = 'SUCCESS';
 
       const { result } = renderHook(() => useSavePipeline({ wrapperRef: makeWrapperRef() }));
 

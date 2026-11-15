@@ -1,9 +1,11 @@
+import type { MockButtonProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { SocialLoginButtons } from './SocialLoginButtons';
 
 vi.mock('@pipeline/ui', () => ({
-  Button: ({ children, onClick }: unknown) => (
+  Button: ({ children, onClick }: MockButtonProps) => (
     <button onClick={onClick} data-testid="social-btn">
       {children}
     </button>

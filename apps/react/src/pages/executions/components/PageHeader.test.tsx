@@ -1,9 +1,11 @@
+import type { MockAppButtonProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { PageHeader } from './PageHeader';
 
 vi.mock('@/shared/ui', () => ({
-  AppButton: ({ text, onClick, isPending }: unknown) => (
+  AppButton: ({ text, onClick, isPending }: MockAppButtonProps) => (
     <button onClick={onClick} disabled={isPending}>
       {text}
     </button>

@@ -13,7 +13,7 @@ interface IUseMutationResult {
 }
 
 const mocks = vi.hoisted(() => ({
-  useQuery: vi.fn(() => ({ data: undefined, isLoading: false })),
+  useQuery: vi.fn(),
   useMutation: vi.fn((opts: IMutationOptions): IUseMutationResult => ({
     mutate: vi.fn(),
     opts,
@@ -42,9 +42,9 @@ vi.mock('@/shared/api', () => ({
       update: { mutationOptions: () => ({ m: 'update' }) },
       upsertTranslation: { mutationOptions: () => ({ m: 'upsert' }) },
       removeTranslation: { mutationOptions: () => ({ m: 'removeTranslation' }) },
-      publish: { mutationOptions: (opts: IMutationOptions) => ({ m: 'publish', ...opts }) },
-      archive: { mutationOptions: (opts: IMutationOptions) => ({ m: 'archive', ...opts }) },
-      remove: { mutationOptions: (opts: IMutationOptions) => ({ m: 'remove', ...opts }) },
+      publish: { mutationOptions: (opts: IMutationOptions) => ({ ...opts, m: 'publish' }) },
+      archive: { mutationOptions: (opts: IMutationOptions) => ({ ...opts, m: 'archive' }) },
+      remove: { mutationOptions: (opts: IMutationOptions) => ({ ...opts, m: 'remove' }) },
     },
   }),
 }));

@@ -1,10 +1,12 @@
+import type { MockMotionDivProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Tabs } from './Tabs';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, layoutId, transition, ...props }: unknown) => (
+    div: ({ children, layoutId, transition, ...props }: MockMotionDivProps) => (
       <div data-layout-id={layoutId} {...props}>
         {children}
       </div>

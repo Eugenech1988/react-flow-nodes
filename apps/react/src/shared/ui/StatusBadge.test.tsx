@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { StatusBadge } from './StatusBadge';
@@ -8,7 +9,7 @@ const MockIcon = ({ className }: { className?: string }) => (
 
 describe('StatusBadge', () => {
   it('renders label', () => {
-    render(<StatusBadge config={{ label: 'Active', icon: MockIcon, className: 'bg-green-500' }} />);
+    render(<StatusBadge config={{ label: 'Active', icon: MockIcon as unknown as LucideIcon, className: 'bg-green-500' }} />);
     expect(screen.getByText('Active')).toBeInTheDocument();
   });
 
@@ -17,7 +18,7 @@ describe('StatusBadge', () => {
       <StatusBadge
         config={{
           label: 'Running',
-          icon: MockIcon,
+          icon: MockIcon as unknown as LucideIcon,
           className: 'bg-blue-500',
           iconClassName: 'animate-spin',
         }}
@@ -28,13 +29,13 @@ describe('StatusBadge', () => {
 
   it('applies className', () => {
     const { container } = render(
-      <StatusBadge config={{ label: 'X', icon: MockIcon, className: 'custom-class' }} />,
+      <StatusBadge config={{ label: 'X', icon: MockIcon as unknown as LucideIcon, className: 'custom-class' }} />,
     );
     expect(container.firstChild).toHaveClass('custom-class');
   });
 
   it('handles missing iconClassName', () => {
-    render(<StatusBadge config={{ label: 'X', icon: MockIcon, className: 'c' }} />);
+    render(<StatusBadge config={{ label: 'X', icon: MockIcon as unknown as LucideIcon, className: 'c' }} />);
     expect(screen.getByTestId('badge-icon').getAttribute('data-class')).not.toContain('animate');
   });
 });

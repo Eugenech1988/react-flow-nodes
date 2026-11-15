@@ -1,3 +1,5 @@
+import type { MockAppButtonProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { JobsListPage } from './JobListPage';
@@ -16,13 +18,17 @@ vi.mock('./hooks', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  AppButton: ({ text, linkTo }: unknown) => <a href={linkTo}>{text}</a>,
+  AppButton: ({ text, linkTo }: MockAppButtonProps) => <a href={linkTo}>{text}</a>,
 }));
 
 vi.mock('./components', () => ({
-  JobTable: ({ jobs, onEdit, isLoading }: unknown) => (
+  JobTable: ({ jobs, onEdit, isLoading }: {
+    jobs: { id: string }[];
+    onEdit: (id: string) => void;
+    isLoading?: boolean;
+  }) => (
     <div data-testid="job-table" data-loading={String(isLoading)}>
-      {jobs.map((j: unknown) => (
+      {jobs.map((j) => (
         <button key={j.id} onClick={() => onEdit(j.id)}>
           Edit {j.id}
         </button>

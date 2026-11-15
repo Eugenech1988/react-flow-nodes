@@ -1,19 +1,27 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
+type FetchInit = { headers: Record<string, string>; credentials?: 'include' };
+type FetchResponse = { status: number; ok?: boolean };
+
+type MockLinkConfig = {
+  fetch: (op: string, init: FetchInit) => Promise<FetchResponse>;
+  headers: (() => Record<string, string>) | undefined;
+};
+
 const {
+  mockLinkConfig,
   mockFetch,
   mockRefreshAccessToken,
   mockNotifyAuthFailure,
   mockGetCsrfToken,
-  mockLinkConfig,
 } = vi.hoisted(() => {
-  const cfg = { current: null as unknown as never };
+  const cfg: { current: MockLinkConfig | null } = { current: null };
   return {
-    mockFetch: vi.fn(),
+    mockLinkConfig: cfg,
+    mockFetch: vi.fn<(input: string, init: FetchInit) => Promise<FetchResponse>>(),
     mockRefreshAccessToken: vi.fn(),
     mockNotifyAuthFailure: vi.fn(),
     mockGetCsrfToken: vi.fn(() => 'token-abc'),
-    mockLinkConfig: cfg,
   };
 });
 
@@ -24,11 +32,11 @@ vi.mock('./authRefresh', () => ({
 }));
 
 vi.mock('@trpc/client', () => ({
-  createTRPCClient: vi.fn((opts: unknown) => {
+  createTRPCClient: vi.fn((opts: { links: [{ config: MockLinkConfig }] }) => {
     mockLinkConfig.current = opts.links[0].config;
     return { __opts: opts };
   }),
-  httpBatchLink: vi.fn((config: unknown) => ({ config })),
+  httpBatchLink: vi.fn((config: MockLinkConfig) => ({ config })),
 }));
 
 vi.mock('@trpc/tanstack-react-query', () => ({
@@ -40,7 +48,7 @@ const originalFetch = global.fetch;
 beforeEach(() => {
   vi.clearAllMocks();
   vi.resetModules();
-  global.fetch = mockFetch;
+  global.fetch = mockFetch as unknown as typeof global.fetch;
   mockGetCsrfToken.mockReturnValue('token-abc');
 });
 
@@ -123,7 +131,10 @@ describe('extractTrpcProcedurePaths', () => {
 });
 
 describe('custom fetch handler', () => {
-  const getHandler = () => mockLinkConfig.current.fetch;
+  const getHandler = (): MockLinkConfig['fetch'] => {
+    if (!mockLinkConfig.current) throw new Error('mock link not initialized');
+    return mockLinkConfig.current.fetch;
+  };
 
   it('passes through on non-401', async () => {
     await import('./trpc');
@@ -187,16 +198,16 @@ describe('custom fetch handler', () => {
 
     await handler('http://x/trpc/health', { headers: {} });
 
-    const init = mockFetch.mock.calls[0][1];
+    const init = mockFetch.mock.calls[0]![1];
     expect(init.headers['x-csrf-token']).toBe('csrf-value');
     expect(init.credentials).toBe('include');
   });
 
   it('headers() callback returns csrf token', async () => {
     await import('./trpc');
-    const headersFn = mockLinkConfig.current.headers;
+    const headersFn = mockLinkConfig.current!.headers;
     mockGetCsrfToken.mockReturnValue('csrf-from-callback');
 
-    expect(headersFn()).toEqual({ 'x-csrf-token': 'csrf-from-callback' });
+    expect(headersFn!()).toEqual({ 'x-csrf-token': 'csrf-from-callback' });
   });
 });

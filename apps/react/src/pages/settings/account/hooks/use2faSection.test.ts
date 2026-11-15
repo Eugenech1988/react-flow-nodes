@@ -11,11 +11,15 @@ const { mockGenerate, mockTurnOn, mockTurnOff, mockInvalidate, mockUseUser } = v
 }));
 
 vi.mock('@tanstack/react-query', () => ({
-  useMutation: (opts: unknown) => {
-    let mockFn: ReturnType<typeof vi.fn> = vi.fn();
-    if (opts?.mutationKey === 'generate') mockFn = mockGenerate;
-    if (opts?.mutationKey === 'turnOn') mockFn = mockTurnOn;
-    if (opts?.mutationKey === 'turnOff') mockFn = mockTurnOff;
+  useMutation: (opts: {
+    mutationKey?: string;
+    onSuccess?: (res: unknown) => void;
+    onError?: (err: unknown) => void;
+  }) => {
+    let mockFn: (vars?: unknown) => Promise<unknown> = async () => undefined;
+    if (opts?.mutationKey === 'generate') mockFn = mockGenerate as typeof mockFn;
+    if (opts?.mutationKey === 'turnOn') mockFn = mockTurnOn as typeof mockFn;
+    if (opts?.mutationKey === 'turnOff') mockFn = mockTurnOff as typeof mockFn;
 
     return {
       mutateAsync: async (vars?: unknown) => {
@@ -38,13 +42,13 @@ vi.mock('@/shared/api', () => ({
   useTRPC: () => ({
     auth: {
       generate2fa: {
-        mutationOptions: (o: unknown) => ({ ...o, mutationKey: 'generate' }),
+        mutationOptions: (o: object) => ({ ...o, mutationKey: 'generate' as const }),
       },
       turnOn2fa: {
-        mutationOptions: (o: unknown) => ({ ...o, mutationKey: 'turnOn' }),
+        mutationOptions: (o: object) => ({ ...o, mutationKey: 'turnOn' as const }),
       },
       turnOff2fa: {
-        mutationOptions: (o: unknown) => ({ ...o, mutationKey: 'turnOff' }),
+        mutationOptions: (o: object) => ({ ...o, mutationKey: 'turnOff' as const }),
       },
       me: { queryFilter: () => ({}) },
     },

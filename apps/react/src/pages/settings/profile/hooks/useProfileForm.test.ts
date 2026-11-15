@@ -1,6 +1,16 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useProfileForm } from './useProfileForm';
+import type { SubmitHandler } from 'react-hook-form';
+
+type ProfileValues = {
+  firstName?: string;
+  lastName?: string | null;
+  company?: string | null;
+  location?: string | null;
+  jobTitle?: string | null;
+  avatarUrl?: string | null;
+};
 
 const { mockMutateAsync, mockInvalidate, mockUseUser } = vi.hoisted(() => ({
   mockMutateAsync: vi.fn(),
@@ -9,7 +19,10 @@ const { mockMutateAsync, mockInvalidate, mockUseUser } = vi.hoisted(() => ({
 }));
 
 vi.mock('@tanstack/react-query', () => ({
-  useMutation: (opts: unknown) => ({
+  useMutation: (opts: {
+    onSuccess?: (data: { success: boolean }) => void;
+    onError?: (e: unknown) => void;
+  }) =>  ({
     mutateAsync: async (vars: unknown) => {
       try {
         const res = await mockMutateAsync(vars);
@@ -76,7 +89,9 @@ describe('useProfileForm', () => {
     const { result } = renderHook(() => useProfileForm());
 
     await act(async () => {
-      await result.current.form.handleSubmit(result.current.onSubmit)();
+      await result.current.form.handleSubmit(
+        result.current.onSubmit as SubmitHandler<ProfileValues>,
+      )();
     });
 
     expect(mockMutateAsync).toHaveBeenCalledWith({
@@ -98,8 +113,9 @@ describe('useProfileForm', () => {
     const { result } = renderHook(() => useProfileForm());
 
     await act(async () => {
-      await result.current.form.handleSubmit(result.current.onSubmit)();
-    });
+      await result.current.form.handleSubmit(
+        result.current.onSubmit as SubmitHandler<ProfileValues>,
+      )();    });
 
     expect(result.current.alert).toEqual({
       type: 'error',

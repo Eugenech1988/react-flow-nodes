@@ -27,7 +27,7 @@ export const contentManagerProcedure = protectedProcedure.use(({ ctx, next }) =>
       message: 'Only content managers can access this resource',
     });
   }
-  return next({ ctx });
+  return next();
 });
 
 export const superAdminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -37,5 +37,5 @@ export const superAdminProcedure = protectedProcedure.use(({ ctx, next }) => {
       message: 'Super admin access required',
     });
   }
-  return next({ ctx });
+  return next();
 });

@@ -1,3 +1,5 @@
+import type { MockAppButtonProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { NotFoundPage } from './NotFoundPage';
@@ -9,7 +11,7 @@ vi.mock('react-router-dom', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  AppButton: ({ text, onClick }: unknown) => <button onClick={onClick}>{text}</button>,
+  AppButton: ({ text, onClick }: MockAppButtonProps) => <button onClick={onClick}>{text}</button>,
 }));
 
 vi.mock('@/assets/logo.svg', () => ({ default: 'logo.svg' }));

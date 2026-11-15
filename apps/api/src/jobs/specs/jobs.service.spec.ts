@@ -25,7 +25,7 @@ const mockPrismaService = {
     delete: jest.fn(),
     deleteMany: jest.fn(),
   },
-  $transaction: jest.fn((cb) => cb(mockPrismaService)),
+  $transaction: jest.fn((cb: (tx: unknown) => unknown): unknown => cb(mockPrismaService)),
 };
 
 const mockPortalRevalidateService = {

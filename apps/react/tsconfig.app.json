@@ -9,11 +9,9 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
-    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
+    "types": ["vite/client"],
     "paths": {
-      "@/*": ["src/*", "../api/src/*", "../../packages/ui/src/*"]
+      "@/*": ["./src/*", "../api/src/*", "../../packages/ui/src/*"]
     }
   },
   "include": ["src"],

@@ -1,3 +1,10 @@
+import type {
+  MockDialogHeaderProps,
+  MockFloatingInputProps,
+  MockTabsProps,
+  MockUniversalTableProps
+} from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ExecutionsPage } from './ExecutionsPage';
@@ -25,12 +32,12 @@ vi.mock('./hooks', () => ({
 }));
 
 vi.mock('./components', () => ({
-  PageHeader: ({ handleRefresh }: unknown) => (
+  PageHeader: ({ handleRefresh }: MockDialogHeaderProps) => (
     <button data-testid="page-header-refresh" onClick={handleRefresh}>
       Refresh
     </button>
   ),
-  ExecutionDetailsDialog: ({ onClose }: unknown) => (
+  ExecutionDetailsDialog: ({ onClose }: MockDialogHeaderProps) => (
     <button data-testid="dialog-close" onClick={onClose}>
       Close
     </button>
@@ -38,14 +45,14 @@ vi.mock('./components', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: ({ onChange }: unknown) => <input data-testid="search" onChange={onChange} />,
-  Tabs: ({ onTabChange }: unknown) => (
+  FloatingInput: ({ onChange }: MockFloatingInputProps) => <input data-testid="search" onChange={onChange} />,
+  Tabs: ({ onTabChange }: MockTabsProps) => (
     <button data-testid="tab" onClick={() => onTabChange('failed')}>
       Tab
     </button>
   ),
   TableSkeleton: () => <div data-testid="skeleton" />,
-  UniversalTable: ({ onSort, onSelect, onPageChange, onLimitChange }: unknown) => (
+  UniversalTable: ({ onSort, onSelect, onPageChange, onLimitChange }: MockUniversalTableProps) => (
     <div data-testid="table">
       <button data-testid="sort" onClick={() => onSort('slug')}>
         Sort

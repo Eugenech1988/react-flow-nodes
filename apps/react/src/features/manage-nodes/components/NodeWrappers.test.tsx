@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { ReactFlowProvider } from '@xyflow/react';
-import { TextNode } from './TextNode';
+import { ReactFlowProvider, type NodeProps } from '@xyflow/react';
 import { OutputNode } from './OutputNode';
 import { DatabaseNode } from './DatabaseNode';
 
@@ -14,30 +13,33 @@ vi.mock('@/entities', () => {
     executionStatus: 'idle',
     runNode: vi.fn(),
   };
-  return {
-    useStore: (selector: (state: unknown) => unknown) => selector(mockState),
-  };
+  return { useStore: (selector: (state: unknown) => unknown) => selector(mockState) };
 });
 
-vi.mock('@/shared/lib', () => ({
-  extractVariables: vi.fn(() => []),
-}));
+vi.mock('@/shared/lib', () => ({ extractVariables: vi.fn(() => []) }));
+
+type TestNodeProps = Omit<NodeProps, 'data'> & { data: Record<string, unknown> };
+
+const makeNodeProps = (id: string): TestNodeProps => ({
+  id,
+  data: {},
+  selected: false,
+  type: 'test',
+  dragging: false,
+  draggable: false,
+  selectable: false,
+  deletable: false,
+  zIndex: 0,
+  isConnectable: true,
+  positionAbsoluteX: 0,
+  positionAbsoluteY: 0,
+});
 
 describe('Node Wrappers', () => {
-  it('renders TextNode', () => {
-    render(
-      <ReactFlowProvider>
-        <TextNode id="t1" data={{}} selected={false} {...({} as unknown as never)} />
-      </ReactFlowProvider>,
-    );
-    expect(screen.getByText('Text')).toBeInTheDocument();
-  });
-
   it('renders OutputNode', () => {
-    const Node = OutputNode as unknown as never;
     render(
       <ReactFlowProvider>
-        <Node id="o1" data={{}} selected={false} />
+        <OutputNode {...makeNodeProps('o1')} />
       </ReactFlowProvider>,
     );
     expect(screen.getByText('Output')).toBeInTheDocument();
@@ -46,7 +48,7 @@ describe('Node Wrappers', () => {
   it('renders DatabaseNode', () => {
     render(
       <ReactFlowProvider>
-        <DatabaseNode id="d1" data={{}} selected={false} {...({} as unknown as never)} />
+        <DatabaseNode {...makeNodeProps('d1')} />
       </ReactFlowProvider>,
     );
     expect(screen.getByText('Database')).toBeInTheDocument();

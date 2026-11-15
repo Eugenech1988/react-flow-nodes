@@ -2,6 +2,12 @@ import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { usePasswordSection } from './usePasswordSection';
 
+type PasswordValues = {
+  currentPassword?: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+
 const { mockMutate, mockInvalidate, mockUseUser, mockFormReset } = vi.hoisted(() => ({
   mockMutate: vi.fn(),
   mockInvalidate: vi.fn(),
@@ -9,21 +15,34 @@ const { mockMutate, mockInvalidate, mockUseUser, mockFormReset } = vi.hoisted(()
   mockFormReset: vi.fn(),
 }));
 
-vi.mock('react-hook-form', () => ({
-  useForm: () => ({
-    register: vi.fn(),
-    handleSubmit: (fn: (data: unknown) => unknown) => fn,
-    reset: mockFormReset,
-    formState: { isDirty: true, errors: {} },
-  }),
-}));
+vi.mock('react-hook-form', () => {
+  let currentValues: Record<string, unknown> = {};
+  return {
+    useForm: () => ({
+      register: vi.fn(),
+      handleSubmit: (fn: (data: Record<string, unknown>) => unknown) => (data: Record<string, unknown>) => {
+        currentValues = data;
+        return fn(data);
+      },
+      reset: mockFormReset,
+      formState: { isDirty: true, errors: {} },
+      watch: (key?: string) =>
+        key === undefined ? currentValues : currentValues[key],
+      getValues: (key?: string) =>
+        key === undefined ? currentValues : currentValues[key],
+    }),
+  };
+});
 
 vi.mock('@hookform/resolvers/zod', () => ({
   zodResolver: () => vi.fn(),
 }));
 
 vi.mock('@tanstack/react-query', () => ({
-  useMutation: (opts: unknown) => ({
+  useMutation: (opts: {
+    onSuccess?: (data: { success: boolean }) => void;
+    onError?: (e: unknown) => void;
+  }) => ({
     mutate: (vars: unknown) => {
       mockMutate(vars);
       opts.onSuccess?.({ success: true });
@@ -62,10 +81,14 @@ describe('usePasswordSection', () => {
   });
 
   it('submits password change and sets success alert', async () => {
-    const { result } = renderHook(() => usePasswordSection());
+    const {result} = renderHook(() => usePasswordSection());
 
     await act(async () => {
-      await result.current.onSubmit({
+      const submit = result.current.onSubmit as unknown as (
+        data: PasswordValues,
+      ) => Promise<void>;
+
+      await submit({
         currentPassword: 'old',
         newPassword: 'new123',
         confirmPassword: 'new123',

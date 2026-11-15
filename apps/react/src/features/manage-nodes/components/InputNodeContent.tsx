@@ -6,7 +6,7 @@ import { inputFieldClassName } from './BaseNode/BaseNode.utils';
 
 export interface IInputNodeContentProps {
   values: Record<string, unknown>;
-  handleFieldChange: (field: string, value: unknown) => void;
+  handleFieldChange: (field: string, value: string) => void;
 }
 
 export const InputNodeContent = ({ values, handleFieldChange }: IInputNodeContentProps) => {

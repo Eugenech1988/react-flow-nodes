@@ -1,23 +1,25 @@
+import type { MockDialogFooterProps, MockDialogHeaderProps, MockDialogProps } from '@/test-utils/mock-props';
+
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ExecutionDetailsDialog } from './ExecutionDetailsDialog';
 import type { IExecutionItem } from '../model';
-import type { TExecutionLog } from '@/entities';
+import { TExecutionLog } from '@/entities';
 
 vi.mock('@pipeline/ui', () => ({
-  Dialog: ({ children, open }: unknown) => (open ? <div>{children}</div> : null),
+  Dialog: ({ children, open }: MockDialogProps) => (open ? <div>{children}</div> : null),
   DialogContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
 vi.mock('@/shared/ui', () => ({
-  DialogHeader: ({ title, onClose }: unknown) => (
+  DialogHeader: ({ title, onClose }: MockDialogHeaderProps) => (
     <div>
       <h2>{title}</h2>
       <button onClick={onClose}>Close</button>
     </div>
   ),
   DialogBody: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DialogFooter: ({ onCancel }: unknown) => <button onClick={onCancel}>Footer Close</button>,
+  DialogFooter: ({ onCancel }: MockDialogFooterProps) => <button onClick={onCancel}>Footer Close</button>,
 }));
 
 vi.mock('@/shared/lib', () => ({
@@ -34,7 +36,7 @@ const makeExecution = (logs?: unknown): IExecutionItem => ({
   nodesExecuted: 3,
   startedAt: '2024-01-01',
   finishedAt: '2024-01-01',
-  logs: logs ?? [],
+  logs: (logs as TExecutionLog[] | undefined) ?? [],
 });
 
 describe('ExecutionDetailsDialog', () => {

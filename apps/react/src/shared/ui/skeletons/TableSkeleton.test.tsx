@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { TableSkeleton } from './TableSkeleton';
 
 vi.mock('@pipeline/ui', () => ({
-  Skeleton: ({ className, style }: unknown) => (
+  Skeleton: ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
     <div data-testid="skeleton" className={className} style={style} />
   ),
   Table: ({ children }: { children: React.ReactNode }) => <table>{children}</table>,

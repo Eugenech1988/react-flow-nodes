@@ -9,10 +9,16 @@ export interface ITrpcServices {
   authService: AuthService;
 }
 
+export type TrpcContext = {
+  req: Request;
+  res: Response;
+  user: UserWithRelations | null;
+};
+
 export const createContext = async (
   { req, res }: { req: Request; res: Response },
   services: ITrpcServices,
-) => {
+): Promise<TrpcContext> => {
   const accessToken = req.cookies?.accessToken as string | undefined;
 
   let user: UserWithRelations | null = null;
@@ -31,5 +37,3 @@ export const createContext = async (
 
   return { req, res, user };
 };
-
-export type TrpcContext = Awaited<ReturnType<typeof createContext>>;

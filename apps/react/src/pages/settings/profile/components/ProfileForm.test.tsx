@@ -2,6 +2,26 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ProfileForm } from './ProfileForm';
 import { useProfileForm } from '../hooks';
+import { MockAppButtonProps, MockFloatingInputProps, MockLocalAlertProps } from '@/test-utils';
+import { UseFormReturn } from 'react-hook-form';
+
+type ProfileValues = {
+  firstName?: string;
+  lastName?: string | null;
+  company?: string | null;
+  location?: string | null;
+  jobTitle?: string | null;
+  avatarUrl?: string | null;
+};
+
+type ProfileHook = ReturnType<typeof useProfileForm>;
+
+type FormFieldOverrides = {
+  register?: ProfileHook['form']['register'];
+  handleSubmit?: ProfileHook['form']['handleSubmit'];
+  formState?: Partial<ProfileHook['form']['formState']>;
+};
+
 
 vi.mock('../hooks', () => ({
   useProfileForm: vi.fn(),
@@ -12,15 +32,15 @@ vi.mock('@/shared/hooks', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: ({ label, error, errorMessage, disabled, value, ...props }: unknown) => (
+  FloatingInput: ({ label, error, errorMessage, disabled, value, ...props }: MockFloatingInputProps) => (
     <div>
       <label>{label}</label>
       {error && <span data-testid={`error-${label}`}>{errorMessage}</span>}
       <input data-testid={`input-${label}`} disabled={disabled} value={value} {...props} />
     </div>
   ),
-  LocalAlert: ({ alertMessage }: unknown) => <div data-testid="alert">{alertMessage}</div>,
-  AppButton: ({ text, type, onClick, isDisabled, isPending }: unknown) => (
+  LocalAlert: ({ alertMessage }: MockLocalAlertProps) => <div data-testid="alert">{alertMessage}</div>,
+  AppButton: ({ text, type, onClick, isDisabled, isPending }: MockAppButtonProps) => (
     <button
       type={type}
       onClick={onClick}
@@ -34,17 +54,22 @@ vi.mock('@/shared/ui', () => ({
 
 const mockedUseProfileForm = vi.mocked(useProfileForm);
 
-const createHookMock = (overrides: Record<string, unknown> = {}) => ({
-  form: {
-    register: vi.fn(),
-    formState: { errors: {} },
-  },
-  onSubmit: vi.fn((e) => e.preventDefault()),
-  isPristine: false,
-  isPending: false,
-  alert: null,
-  ...overrides,
-});
+const createHookMock = (
+  overrides: Partial<Omit<ProfileHook, 'form'>> & { form?: FormFieldOverrides } = {},
+): ProfileHook =>
+  ({
+    form: {
+      register: vi.fn(),
+      handleSubmit: vi.fn(),
+      formState: { errors: {} },
+      ...(overrides.form ?? {}),
+    } as unknown as UseFormReturn<ProfileValues>,
+    onSubmit: vi.fn(),
+    isPristine: true,
+    isPending: false,
+    alert: null,
+    ...overrides,
+  }) as ProfileHook;
 
 describe('ProfileForm', () => {
   beforeEach(() => {
@@ -77,7 +102,7 @@ describe('ProfileForm', () => {
         form: {
           register: vi.fn(),
           formState: {
-            errors: { firstName: { message: 'Too short' } },
+            errors: { firstName: { message: 'Too short', type: 'manual' } },
           },
         },
       }),

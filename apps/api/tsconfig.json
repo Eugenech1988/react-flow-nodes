@@ -1,17 +1,14 @@
 {
   "extends": "@pipeline/typescript-config/nest",
   "compilerOptions": {
-    "rootDir": ".",
     "outDir": "./dist",
+    "declaration": false,
     "exactOptionalPropertyTypes": false,
     "noUncheckedIndexedAccess": false,
     "strictPropertyInitialization": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "declaration": false,
+    "types": ["node", "jest"],
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  }
+    "paths": { "@/*": ["src/*"] }
+  },
+  "include": ["src", "test", "prisma", "prisma.config.ts"]
 }

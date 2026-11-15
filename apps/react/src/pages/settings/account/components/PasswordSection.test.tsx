@@ -1,16 +1,26 @@
+import type { MockAppButtonProps, MockFloatingInputProps, MockLocalAlertProps } from '@/test-utils/mock-props';
+import type { UseFormReturn } from 'react-hook-form';
+import { usePasswordSection } from '../hooks/usePasswordSection';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PasswordSection } from './PasswordSection';
-import { usePasswordSection } from '../hooks';
 
-vi.mock('../hooks', () => ({
-  usePasswordSection: vi.fn(),
-}));
+type PasswordValues = { currentPassword?: string; newPassword: string; confirmPassword: string };
+type PasswordHook = ReturnType<typeof usePasswordSection>;
+
+type PasswordFormOverrides = {
+  register?: PasswordHook['form']['register'];
+  handleSubmit?: PasswordHook['form']['handleSubmit'];
+  formState?: Partial<PasswordHook['form']['formState']>;
+};
+
+vi.mock('../hooks/usePasswordSection', () => ({ usePasswordSection: vi.fn() }));
+
 
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: (props: unknown) => <input data-testid={`input-${props.label}`} {...props} />,
-  LocalAlert: ({ alertMessage }: unknown) => <div>{alertMessage}</div>,
-  AppButton: ({ text, onClick, type, isDisabled }: unknown) => (
+  FloatingInput: (props: MockFloatingInputProps) => <input data-testid={`input-${props.label}`} {...props} />,
+  LocalAlert: ({ alertMessage }: MockLocalAlertProps) => <div>{alertMessage}</div>,
+  AppButton: ({ text, onClick, type, isDisabled }: MockAppButtonProps) => (
     <button onClick={onClick} type={type} disabled={isDisabled}>
       {text}
     </button>
@@ -19,19 +29,23 @@ vi.mock('@/shared/ui', () => ({
 
 const mockedUsePasswordSection = vi.mocked(usePasswordSection);
 
-const createHookMock = (overrides: Record<string, unknown> = {}) => ({
-  form: {
-    register: vi.fn(),
-    handleSubmit: vi.fn((fn) => fn),
-    formState: { errors: {} },
-  },
-  onSubmit: vi.fn(),
-  hasPassword: true,
-  isPending: false,
-  isPristine: false,
-  alert: null,
-  ...overrides,
-});
+const createHookMock = (
+  overrides: Partial<Omit<PasswordHook, 'form'>> & { form?: PasswordFormOverrides } = {},
+): PasswordHook =>
+  ({
+    form: {
+      register: vi.fn(),
+      handleSubmit: vi.fn(),
+      formState: { errors: {} },
+      ...(overrides.form ?? {}),
+    } as unknown as UseFormReturn<PasswordValues>,
+    onSubmit: vi.fn(),
+    hasPassword: true,
+    isPending: false,
+    isPristine: true,
+    alert: null,
+    ...overrides,
+  }) as PasswordHook;
 
 describe('PasswordSection', () => {
   beforeEach(() => {

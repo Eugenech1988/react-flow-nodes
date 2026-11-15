@@ -1,10 +1,12 @@
+import type { MockFloatingInputProps } from '@/test-utils/mock-props';
+
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { LoginFields } from './LoginFields';
 import { RegisterFields } from './RegisterFields';
 
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: ({ label, error, errorMessage, ...props }: unknown) => (
+  FloatingInput: ({ label, error, errorMessage, ...props }: MockFloatingInputProps) => (
     <div>
       <label>{label}</label>
       {error && <span data-testid={`error-${label}`}>{errorMessage}</span>}

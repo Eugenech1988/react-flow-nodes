@@ -1,3 +1,5 @@
+import type { MockAppButtonProps } from '@/test-utils/mock-props';
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { BillingTab } from './BillingTab';
@@ -6,7 +8,7 @@ const { mockUseBilling } = vi.hoisted(() => ({ mockUseBilling: vi.fn() }));
 
 vi.mock('./hooks/useBilling', () => ({ useBilling: () => mockUseBilling() }));
 vi.mock('@/shared/ui', () => ({
-  AppButton: ({ text, onClick, isLink, linkTo }: unknown) =>
+  AppButton: ({ text, onClick, isLink, linkTo }: MockAppButtonProps) =>
     isLink ? <a href={linkTo}>{text}</a> : <button onClick={onClick}>{text}</button>,
 }));
 vi.mock('./components', () => ({

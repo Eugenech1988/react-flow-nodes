@@ -2,12 +2,28 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { JobTableRowActions } from './JobTableRowActions';
 import type { IJob } from '../model/types';
+import { MockDropdownItemProps, MockJobDeleteModalProps } from '@/test-utils';
 
-const { mockPublish, mockArchive, mockRemove } = vi.hoisted(() => ({
-  mockPublish: { mutate: vi.fn(), isPending: false, variables: null as unknown as never },
-  mockArchive: { mutate: vi.fn(), isPending: false, variables: null as unknown as never },
-  mockRemove: { mutate: vi.fn(), isPending: false, variables: null as unknown as never },
-}));
+type TMutationMock = {
+  variables: { id: string } | null;
+  isPending: boolean;
+  mutate: ReturnType<typeof vi.fn>;
+  mutateAsync: ReturnType<typeof vi.fn>;
+  reset: ReturnType<typeof vi.fn>;
+}
+
+const makeMutationMock = (): ReturnType<typeof vi.fn> & TMutationMock =>
+  Object.assign(vi.fn(), {
+    variables: null,
+    isPending: false,
+    mutate: vi.fn<(vars: { id: string }, opts?: { onSuccess?: () => void }) => void>(),
+    mutateAsync: vi.fn<(vars: { id: string }) => Promise<void>>(),
+    reset: vi.fn(),
+  });
+
+const mockPublish = makeMutationMock();
+const mockArchive = makeMutationMock();
+const mockRemove = makeMutationMock();
 
 vi.mock('../hooks/', () => ({
   useJobMutations: () => ({
@@ -19,13 +35,13 @@ vi.mock('../hooks/', () => ({
 
 vi.mock('@pipeline/ui', () => ({
   DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DropdownMenuTrigger: ({ children, onClick, disabled }: unknown) => (
+  DropdownMenuTrigger: ({ children, onClick, disabled }: MockDropdownItemProps) => (
     <button onClick={onClick} disabled={disabled}>
       {children}
     </button>
   ),
   DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DropdownMenuItem: ({ children, onClick, disabled }: unknown) => (
+  DropdownMenuItem: ({ children, onClick, disabled }: MockDropdownItemProps) => (
     <button onClick={onClick} disabled={disabled}>
       {children}
     </button>
@@ -34,7 +50,7 @@ vi.mock('@pipeline/ui', () => ({
 }));
 
 vi.mock('./JobDeleteModal', () => ({
-  JobDeleteModal: ({ isOpen, onConfirm }: unknown) =>
+  JobDeleteModal: ({ isOpen, onConfirm }: MockJobDeleteModalProps) =>
     isOpen ? <button onClick={onConfirm}>ConfirmDelete</button> : null,
 }));
 
@@ -101,8 +117,9 @@ describe('JobTableRowActions', () => {
   });
 
   it('confirms delete via modal', () => {
-    mockRemove.mutate.mockImplementation((_, opts) => opts?.onSuccess?.());
-    render(<JobTableRowActions job={makeJob()} onEdit={vi.fn()} />);
+    mockRemove.mutate.mockImplementation((_: { id: string }, opts?: { onSuccess?: () => void }) =>
+      opts?.onSuccess?.(),
+    );    render(<JobTableRowActions job={makeJob()} onEdit={vi.fn()} />);
     fireEvent.click(screen.getByText('Delete'));
     fireEvent.click(screen.getByText('ConfirmDelete'));
     expect(mockRemove.mutate).toHaveBeenCalledWith(

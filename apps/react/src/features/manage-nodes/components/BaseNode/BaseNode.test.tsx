@@ -1,7 +1,9 @@
+import type { MockInputProps, MockSelectItemProps, MockSelectProps, MockTextareaProps } from '@/test-utils/mock-props';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BaseNode, createNode } from './BaseNode';
 import type { TFieldConfig } from '@/entities';
+
 
 const { updateNodeField, deleteElements, extractVariables, mockRunNode, mockExecutionStatus } =
   vi.hoisted(() => ({
@@ -34,13 +36,13 @@ vi.mock('@xyflow/react', () => ({
 }));
 
 vi.mock('@pipeline/ui', () => ({
-  Input: ({ value, onChange }: unknown) => (
+  Input: ({ value, onChange }: MockInputProps) => (
     <input data-testid="input" value={value} onChange={onChange} />
   ),
-  Textarea: ({ value, onChange }: unknown) => (
+  Textarea: ({ value, onChange }: MockTextareaProps) => (
     <textarea data-testid="textarea" value={value} onChange={onChange} />
   ),
-  Select: ({ value, onValueChange, children }: unknown) => (
+  Select: ({ value, onValueChange, children }: MockSelectProps) => (
     <select data-testid="select" value={value} onChange={(e) => onValueChange(e.target.value)}>
       {children}
     </select>
@@ -48,8 +50,8 @@ vi.mock('@pipeline/ui', () => ({
   SelectTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   SelectValue: () => <span />,
   SelectContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  SelectItem: ({ value, children }: unknown) => <option value={value}>{children}</option>,
-  AutosizeTextarea: ({ value, onChange }: unknown) => (
+  SelectItem: ({ value, children }: MockSelectItemProps) => <option value={value}>{children}</option>,
+  AutosizeTextarea: ({ value, onChange }: MockTextareaProps) => (
     <textarea data-testid="textarea" value={value} onChange={onChange} />
   ),
 }));
