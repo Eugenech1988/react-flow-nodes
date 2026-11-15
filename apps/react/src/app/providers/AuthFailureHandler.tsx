@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTRPC, onAuthFailure } from '@/shared/api';
+import { useStore } from '@/entities';
 
 export const AuthFailureHandler = () => {
   const queryClient = useQueryClient();
@@ -9,7 +10,8 @@ export const AuthFailureHandler = () => {
   useEffect(() => {
     return onAuthFailure(() => {
       queryClient.setQueryData(trpc.auth.me.queryKey(), null);
-      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
+      useStore.persist.clearStorage();
+      useStore.getState().resetGraph();
     });
   }, [queryClient, trpc]);
 

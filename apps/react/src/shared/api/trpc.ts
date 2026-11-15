@@ -11,6 +11,7 @@ const SKIP_REFRESH_PROCEDURES = new Set<string>([
   'auth.loginWith2fa',
   'auth.logout',
   'auth.refresh',
+  'auth.me',
   'auth.requestPasswordReset',
   'auth.resetPassword',
 ]);

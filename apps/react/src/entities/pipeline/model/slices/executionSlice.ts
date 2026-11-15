@@ -304,6 +304,31 @@ export const createExecutionSlice: StateCreator<
           continue;
         }
 
+        const propagateSkips = (): void => {
+          let changed = true;
+          while (changed) {
+            changed = false;
+            for (const node of nodes) {
+              if (executedNodeIds.has(node.id) || conditionSkippedNodeIds.has(node.id)) {
+                continue;
+              }
+              const incoming = edges.filter((edge) => edge.target === node.id);
+              if (incoming.length === 0) {
+                continue;
+              }
+              const allIncomingSkipped = incoming.every((edge) =>
+                conditionSkippedNodeIds.has(edge.source),
+              );
+              if (allIncomingSkipped) {
+                conditionSkippedNodeIds.add(node.id);
+                changed = true;
+              }
+            }
+          }
+        };
+
+        propagateSkips();
+
         const endTime = Date.now();
         const durationMs = endTime - startTime;
         const finishedAt = new Date().toISOString();
