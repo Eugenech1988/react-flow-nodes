@@ -4,10 +4,16 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import '@pipeline/ui/globals.css';
 import './style.css';
 import { QueryProvider, AppRoutes, ThemeProvider } from '@/app/providers';
+import { FatalErrorState } from '@/shared/ui';
 
 const CSRF_ERROR_TITLE = 'Unable to connect to the server';
 const CSRF_ERROR_FALLBACK =
-  'Failed to initialize secure session. Check your connection and try again.';
+  'Failed to initialize a secure session. Check your connection and try again.';
+
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error && error.message) return error.message;
+  return CSRF_ERROR_FALLBACK;
+};
 
 const renderFatalError = (message: string): void => {
   const rootElement = document.getElementById('root');
@@ -15,17 +21,7 @@ const renderFatalError = (message: string): void => {
 
   createRoot(rootElement).render(
     <StrictMode>
-      <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-8 text-center">
-        <h1 className="text-xl font-semibold">{CSRF_ERROR_TITLE}</h1>
-        <p className="text-muted-foreground max-w-md text-sm">{message}</p>
-        <button
-          type="button"
-          className="bg-primary text-primary-foreground mt-2 cursor-pointer rounded-xl px-4 py-2 text-sm font-medium"
-          onClick={() => window.location.reload()}
-        >
-          Retry
-        </button>
-      </div>
+      <FatalErrorState title={CSRF_ERROR_TITLE} message={message} />
     </StrictMode>,
   );
 };
@@ -58,8 +54,7 @@ const bootstrap = async (): Promise<void> => {
     }
   } catch (error) {
     console.error('Failed to initialize CSRF token:', error);
-    const message = error instanceof Error && error.message ? error.message : CSRF_ERROR_FALLBACK;
-    renderFatalError(message);
+    renderFatalError(getErrorMessage(error));
     return;
   }
 
