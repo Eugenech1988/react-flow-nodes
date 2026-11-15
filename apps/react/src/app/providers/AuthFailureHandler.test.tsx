@@ -2,14 +2,21 @@ import { render } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AuthFailureHandler } from './AuthFailureHandler';
 
-const { mockSetQueryData, mockInvalidateQueries, mockOnAuthFailure, mockUnsubscribe, mockUseTRPC } =
-  vi.hoisted(() => ({
-    mockSetQueryData: vi.fn(),
-    mockInvalidateQueries: vi.fn(),
-    mockOnAuthFailure: vi.fn(),
-    mockUnsubscribe: vi.fn(),
-    mockUseTRPC: vi.fn(),
-  }));
+const {
+  mockSetQueryData,
+  mockOnAuthFailure,
+  mockUnsubscribe,
+  mockUseTRPC,
+  mockClearStorage,
+  mockResetGraph,
+} = vi.hoisted(() => ({
+  mockSetQueryData: vi.fn(),
+  mockOnAuthFailure: vi.fn(),
+  mockUnsubscribe: vi.fn(),
+  mockUseTRPC: vi.fn(),
+  mockClearStorage: vi.fn(),
+  mockResetGraph: vi.fn(),
+}));
 
 vi.mock('@tanstack/react-query', async () => {
   const actual =
@@ -18,7 +25,6 @@ vi.mock('@tanstack/react-query', async () => {
     ...actual,
     useQueryClient: () => ({
       setQueryData: mockSetQueryData,
-      invalidateQueries: mockInvalidateQueries,
     }),
   };
 });
@@ -31,6 +37,13 @@ vi.mock('@/shared/api', async () => {
     useTRPC: () => mockUseTRPC(),
   };
 });
+
+vi.mock('@/entities', () => ({
+  useStore: {
+    persist: { clearStorage: mockClearStorage },
+    getState: () => ({ resetGraph: mockResetGraph }),
+  },
+}));
 
 const createTrpcMock = (tag: string) => ({
   auth: {
@@ -62,7 +75,7 @@ describe('AuthFailureHandler', () => {
     expect(mockUseTRPC).toHaveBeenCalled();
   });
 
-  it('clears user cache when auth failure fires', () => {
+  it('clears user cache, persist storage and resets graph on auth failure', () => {
     let callback: () => void = () => {};
     mockOnAuthFailure.mockImplementation((cb: () => void) => {
       callback = cb;
@@ -73,9 +86,8 @@ describe('AuthFailureHandler', () => {
     callback();
 
     expect(mockSetQueryData).toHaveBeenCalledWith(['auth', 'me', 'v1'], null);
-    expect(mockInvalidateQueries).toHaveBeenCalledWith({
-      queryKey: ['auth', 'me', 'v1'],
-    });
+    expect(mockClearStorage).toHaveBeenCalledTimes(1);
+    expect(mockResetGraph).toHaveBeenCalledTimes(1);
   });
 
   it('unsubscribes from auth failure on unmount', () => {

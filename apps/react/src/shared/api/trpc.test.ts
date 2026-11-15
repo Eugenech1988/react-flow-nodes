@@ -1,10 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-type FetchInit = { headers: Record<string, string>; credentials?: 'include' };
-type FetchResponse = { status: number; ok?: boolean };
-
-type MockLinkConfig = {
-  fetch: (op: string, init: FetchInit) => Promise<FetchResponse>;
+type TFetchInit = { headers: Record<string, string>; credentials?: 'include' };
+type TFetchResponse = { status: number; ok?: boolean };
+type TMockLinkConfig = {
+  fetch: (op: string, init: TFetchInit) => Promise<TFetchResponse>;
   headers: (() => Record<string, string>) | undefined;
 };
 
@@ -15,10 +14,10 @@ const {
   mockNotifyAuthFailure,
   mockGetCsrfToken,
 } = vi.hoisted(() => {
-  const cfg: { current: MockLinkConfig | null } = { current: null };
+  const cfg: { current: TMockLinkConfig | null } = { current: null };
   return {
     mockLinkConfig: cfg,
-    mockFetch: vi.fn<(input: string, init: FetchInit) => Promise<FetchResponse>>(),
+    mockFetch: vi.fn<(input: string, init: TFetchInit) => Promise<TFetchResponse>>(),
     mockRefreshAccessToken: vi.fn(),
     mockNotifyAuthFailure: vi.fn(),
     mockGetCsrfToken: vi.fn(() => 'token-abc'),
@@ -32,11 +31,11 @@ vi.mock('./authRefresh', () => ({
 }));
 
 vi.mock('@trpc/client', () => ({
-  createTRPCClient: vi.fn((opts: { links: [{ config: MockLinkConfig }] }) => {
+  createTRPCClient: vi.fn((opts: { links: [{ config: TMockLinkConfig }] }) => {
     mockLinkConfig.current = opts.links[0].config;
     return { __opts: opts };
   }),
-  httpBatchLink: vi.fn((config: MockLinkConfig) => ({ config })),
+  httpBatchLink: vi.fn((config: TMockLinkConfig) => ({ config })),
 }));
 
 vi.mock('@trpc/tanstack-react-query', () => ({
@@ -63,7 +62,7 @@ describe('shouldSkipRefresh', () => {
     expect(shouldSkipRefresh('http://x/auth/refresh')).toBe(true);
   });
 
-  it('skips all auth tRPC procedures', async () => {
+  it('skips all auth tRPC procedures including auth.me', async () => {
     const { shouldSkipRefresh } = await import('./trpc');
     const procs = [
       'auth.login',
@@ -71,6 +70,7 @@ describe('shouldSkipRefresh', () => {
       'auth.loginWith2fa',
       'auth.logout',
       'auth.refresh',
+      'auth.me',
       'auth.requestPasswordReset',
       'auth.resetPassword',
     ];
@@ -83,6 +83,7 @@ describe('shouldSkipRefresh', () => {
     const { shouldSkipRefresh } = await import('./trpc');
     expect(shouldSkipRefresh('http://x/trpc/users.update,auth.logout')).toBe(true);
     expect(shouldSkipRefresh('http://x/trpc/billing.checkout,auth.login')).toBe(true);
+    expect(shouldSkipRefresh('http://x/trpc/pipelines.list,auth.me')).toBe(true);
   });
 
   it('does not skip non-auth procedures', async () => {
@@ -131,7 +132,7 @@ describe('extractTrpcProcedurePaths', () => {
 });
 
 describe('custom fetch handler', () => {
-  const getHandler = (): MockLinkConfig['fetch'] => {
+  const getHandler = (): TMockLinkConfig['fetch'] => {
     if (!mockLinkConfig.current) throw new Error('mock link not initialized');
     return mockLinkConfig.current.fetch;
   };
@@ -158,6 +159,19 @@ describe('custom fetch handler', () => {
 
     expect(res).toBe(mock401);
     expect(mockRefreshAccessToken).not.toHaveBeenCalled();
+  });
+
+  it('does not trigger refresh on auth.me 401 (prevents invalidation loop)', async () => {
+    await import('./trpc');
+    const handler = getHandler();
+    const mock401 = { status: 401 };
+    mockFetch.mockResolvedValue(mock401);
+
+    const res = await handler('http://x/trpc/auth.me', { headers: {} });
+
+    expect(res).toBe(mock401);
+    expect(mockRefreshAccessToken).not.toHaveBeenCalled();
+    expect(mockNotifyAuthFailure).not.toHaveBeenCalled();
   });
 
   it('refreshes and retries on 401 for non-auth procedure', async () => {

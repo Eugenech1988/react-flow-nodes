@@ -1,111 +1,143 @@
-import { act, renderHook } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useLogout } from './useLogout';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
 
-interface IMutationCallbacks {
-  onSuccess?: () => void;
-  onError?: (error: Error) => void;
-}
-
-interface IMutationResult {
-  mutate: () => void;
-  isPending: boolean;
-}
-
-const { mockMutate, mockClear, mockNavigate, mockToastError, mockUseMutation } = vi.hoisted(() => ({
-  mockMutate: vi.fn<() => void>(),
-  mockClear: vi.fn<() => void>(),
-  mockNavigate: vi.fn<(path: string, opts: { replace: boolean }) => void>(),
-  mockToastError: vi.fn<(message: string) => void>(),
-  mockUseMutation: vi.fn<(opts: IMutationCallbacks) => IMutationResult>(),
-}));
-
-vi.mock('@tanstack/react-query', () => ({
-  useMutation: (opts: IMutationCallbacks) => mockUseMutation(opts),
-  useQueryClient: () => ({ clear: mockClear }),
-}));
+const { mockNavigate, mockClearStorage, mockResetGraph, mockLogoutMutation, mockToastError } =
+  vi.hoisted(() => ({
+    mockNavigate: vi.fn(),
+    mockClearStorage: vi.fn(),
+    mockResetGraph: vi.fn(),
+    mockLogoutMutation: vi.fn<() => Promise<void>>(),
+    mockToastError: vi.fn(),
+  }));
 
 vi.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
+}));
+
+vi.mock('@/shared/api', async () => {
+  const actual = await vi.importActual<typeof import('@/shared/api')>('@/shared/api');
+  return {
+    ...actual,
+    useTRPC: () => ({
+      auth: {
+        logout: {
+          mutationOptions: () => ({ mutationFn: mockLogoutMutation }),
+        },
+      },
+    }),
+  };
+});
+
+vi.mock('@/entities', () => ({
+  useStore: {
+    persist: { clearStorage: mockClearStorage },
+    getState: () => ({ resetGraph: mockResetGraph }),
+  },
 }));
 
 vi.mock('sonner', () => ({
   toast: { error: mockToastError },
 }));
 
-vi.mock('@/shared/api', () => ({
-  useTRPC: () => ({
-    auth: {
-      logout: { mutationOptions: () => ({}) },
-    },
-  }),
-}));
+import { useLogout } from './useLogout';
+
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { mutations: { retry: false } },
+  });
+
+  return ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+};
 
 describe('useLogout', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUseMutation.mockImplementation((opts: IMutationCallbacks) => ({
-      mutate: () => {
-        mockMutate();
-        opts.onSuccess?.();
-      },
-      isPending: false,
-    }));
   });
 
-  it('returns mutate and pending flag', () => {
-    const { result } = renderHook(() => useLogout());
+  it('returns logout and isLoggingOut', () => {
+    const { result } = renderHook(() => useLogout(), { wrapper: createWrapper() });
+
     expect(typeof result.current.logout).toBe('function');
-    expect(result.current.isLoggingOut).toBe(false);
+    expect(typeof result.current.isLoggingOut).toBe('boolean');
   });
 
-  it('on success clears cache and navigates to /login', () => {
-    const { result } = renderHook(() => useLogout());
+  it('clears cache, persist storage, resets graph and navigates on success', async () => {
+    mockLogoutMutation.mockResolvedValueOnce(undefined);
+    const { result } = renderHook(() => useLogout(), { wrapper: createWrapper() });
 
     act(() => {
       result.current.logout();
     });
 
-    expect(mockMutate).toHaveBeenCalled();
-    expect(mockClear).toHaveBeenCalledTimes(1);
-    expect(mockNavigate).toHaveBeenCalledWith('/login', { replace: true });
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/login', { replace: true });
+    });
+
+    expect(mockLogoutMutation).toHaveBeenCalledTimes(1);
+    expect(mockClearStorage).toHaveBeenCalledTimes(1);
+    expect(mockResetGraph).toHaveBeenCalledTimes(1);
   });
 
-  it('on error shows toast', () => {
-    mockUseMutation.mockImplementationOnce((opts: IMutationCallbacks) => ({
-      mutate: () => {
-        opts.onError?.(new Error('Logout failed'));
-      },
-      isPending: false,
-    }));
-
-    const { result } = renderHook(() => useLogout());
+  it('does not clear storage or navigate on error', async () => {
+    mockLogoutMutation.mockRejectedValueOnce(new Error('boom'));
+    const { result } = renderHook(() => useLogout(), { wrapper: createWrapper() });
 
     act(() => {
       result.current.logout();
     });
 
-    expect(mockToastError).toHaveBeenCalledWith('Logout failed');
-    expect(mockClear).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockToastError).toHaveBeenCalledWith('boom');
+    });
+
     expect(mockNavigate).not.toHaveBeenCalled();
+    expect(mockClearStorage).not.toHaveBeenCalled();
+    expect(mockResetGraph).not.toHaveBeenCalled();
   });
 
-  it('shows fallback message when error message is empty', () => {
-    mockUseMutation.mockImplementationOnce((opts: IMutationCallbacks) => ({
-      mutate: () => {
-        opts.onError?.(new Error(''));
-      },
-      isPending: false,
-    }));
-
-    const { result } = renderHook(() => useLogout());
+  it('shows default error message when error has no message', async () => {
+    mockLogoutMutation.mockRejectedValueOnce(new Error(''));
+    const { result } = renderHook(() => useLogout(), { wrapper: createWrapper() });
 
     act(() => {
       result.current.logout();
     });
 
-    expect(mockToastError).toHaveBeenCalledWith(
-      'Logout failed. Please try again or close the browser.',
+    await waitFor(() => {
+      expect(mockToastError).toHaveBeenCalledWith(
+        'Logout failed. Please try again or close the browser.',
+      );
+    });
+  });
+
+  it('exposes isLoggingOut=true while pending', async () => {
+    let resolveLogout: () => void = () => {};
+    mockLogoutMutation.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        resolveLogout = resolve;
+      }),
     );
+
+    const { result } = renderHook(() => useLogout(), { wrapper: createWrapper() });
+
+    act(() => {
+      result.current.logout();
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLoggingOut).toBe(true);
+    });
+
+    act(() => {
+      resolveLogout();
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLoggingOut).toBe(false);
+    });
   });
 });
