@@ -20,16 +20,15 @@ vi.mock('react-hook-form', () => {
   return {
     useForm: () => ({
       register: vi.fn(),
-      handleSubmit: (fn: (data: Record<string, unknown>) => unknown) => (data: Record<string, unknown>) => {
-        currentValues = data;
-        return fn(data);
-      },
+      handleSubmit:
+        (fn: (data: Record<string, unknown>) => unknown) => (data: Record<string, unknown>) => {
+          currentValues = data;
+          return fn(data);
+        },
       reset: mockFormReset,
       formState: { isDirty: true, errors: {} },
-      watch: (key?: string) =>
-        key === undefined ? currentValues : currentValues[key],
-      getValues: (key?: string) =>
-        key === undefined ? currentValues : currentValues[key],
+      watch: (key?: string) => (key === undefined ? currentValues : currentValues[key]),
+      getValues: (key?: string) => (key === undefined ? currentValues : currentValues[key]),
     }),
   };
 });
@@ -81,12 +80,10 @@ describe('usePasswordSection', () => {
   });
 
   it('submits password change and sets success alert', async () => {
-    const {result} = renderHook(() => usePasswordSection());
+    const { result } = renderHook(() => usePasswordSection());
 
     await act(async () => {
-      const submit = result.current.onSubmit as unknown as (
-        data: PasswordValues,
-      ) => Promise<void>;
+      const submit = result.current.onSubmit as unknown as (data: PasswordValues) => Promise<void>;
 
       await submit({
         currentPassword: 'old',

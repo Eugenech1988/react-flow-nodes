@@ -2,11 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { NodeHandles, NodeMeta, NodeField, NodeHeader, VariableTags } from './BaseNode.parts';
 import type { ComponentProps } from 'react';
-import type {
-  MockHandleProps,
-  MockSelectItemProps,
-  MockSelectProps,
-} from '@/test-utils';
+import type { MockHandleProps, MockSelectItemProps, MockSelectProps } from '@/test-utils';
 
 vi.mock('@pipeline/ui', () => ({
   Input: (props: ComponentProps<'input'>) => <input data-testid="input" {...props} />,
@@ -19,7 +15,9 @@ vi.mock('@pipeline/ui', () => ({
   SelectTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   SelectValue: () => <span />,
   SelectContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  SelectItem: ({ value, children }: MockSelectItemProps) => <option value={value}>{children}</option>,
+  SelectItem: ({ value, children }: MockSelectItemProps) => (
+    <option value={value}>{children}</option>
+  ),
 }));
 
 vi.mock('@xyflow/react', () => ({
@@ -28,7 +26,9 @@ vi.mock('@xyflow/react', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  AutosizeTextarea: (props: ComponentProps<'textarea'>) => <textarea data-testid="autosize" {...props} />,
+  AutosizeTextarea: (props: ComponentProps<'textarea'>) => (
+    <textarea data-testid="autosize" {...props} />
+  ),
 }));
 
 describe('BaseNode.parts', () => {

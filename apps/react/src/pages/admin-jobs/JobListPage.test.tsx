@@ -22,7 +22,11 @@ vi.mock('@/shared/ui', () => ({
 }));
 
 vi.mock('./components', () => ({
-  JobTable: ({ jobs, onEdit, isLoading }: {
+  JobTable: ({
+    jobs,
+    onEdit,
+    isLoading,
+  }: {
     jobs: { id: string }[];
     onEdit: (id: string) => void;
     isLoading?: boolean;

@@ -1,21 +1,61 @@
 import type { ChangeEventHandler, ComponentProps, ReactNode } from 'react';
 
-export type MockAppButtonProps = { text?: ReactNode; onClick?: () => void; type?: 'button' | 'submit' | 'reset'; isPending?: boolean; isDisabled?: boolean; isLink?: boolean; linkTo?: string; };
-export type MockFloatingInputProps = { label?: string; error?: boolean; errorMessage?: string; disabled?: boolean; value?: string; onChange?: ChangeEventHandler<HTMLInputElement>; };
-export type MockSelectProps = { value?: string; onValueChange: (v: string) => void; children?: ReactNode; };
-export type MockSelectItemProps = { value?: string; children?: ReactNode; };
-export type MockHandleProps = { id?: string; type?: string; };
-export type MockAlertProps = { children?: ReactNode; variant?: string; className?: string; };
-export type MockLocalAlertProps = { alertMessage?: string; };
-export type MockDialogProps = { children?: ReactNode; open?: boolean; };
-export type MockDialogHeaderProps = { title?: string; handleRefresh: () => void; onClose?: () => void; children?: ReactNode; className?: string; };
-export type MockDialogFooterProps = { onCancel?: () => void; };
-export type MockDropdownItemProps = { children?: ReactNode; onClick?: () => void; disabled?: boolean; };
-export type MockJobDeleteModalProps = { isOpen?: boolean; onConfirm?: () => void; };
-export type MockSocialLoginButtonsProps = { onGoogleClick?: () => void; onGithubClick?: () => void; };
-export type MockTabsProps = { onTabChange: (v: string) => void; };
-export type MockUniversalTableProps = { onSort: (slug: string) => void; onSelect: ({id}: {id: string}) => void; onPageChange: (page: number) => void; onLimitChange: (limit: number) => void; };
-export type MockMotionDivProps = ComponentProps<'div'> & { layoutId?: string; transition?: unknown; };
+export type MockAppButtonProps = {
+  text?: ReactNode;
+  onClick?: () => void;
+  type?: 'button' | 'submit' | 'reset';
+  isPending?: boolean;
+  isDisabled?: boolean;
+  isLink?: boolean;
+  linkTo?: string;
+};
+export type MockFloatingInputProps = {
+  label?: string;
+  error?: boolean;
+  errorMessage?: string;
+  disabled?: boolean;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+};
+export type MockSelectProps = {
+  value?: string;
+  onValueChange: (v: string) => void;
+  children?: ReactNode;
+};
+export type MockSelectItemProps = { value?: string; children?: ReactNode };
+export type MockHandleProps = { id?: string; type?: string };
+export type MockAlertProps = { children?: ReactNode; variant?: string; className?: string };
+export type MockLocalAlertProps = { alertMessage?: string };
+export type MockDialogProps = { children?: ReactNode; open?: boolean };
+export type MockDialogHeaderProps = {
+  title?: string;
+  handleRefresh: () => void;
+  onClose?: () => void;
+  children?: ReactNode;
+  className?: string;
+};
+export type MockDialogFooterProps = { onCancel?: () => void };
+export type MockDropdownItemProps = {
+  children?: ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+};
+export type MockJobDeleteModalProps = { isOpen?: boolean; onConfirm?: () => void };
+export type MockSocialLoginButtonsProps = {
+  onGoogleClick?: () => void;
+  onGithubClick?: () => void;
+};
+export type MockTabsProps = { onTabChange: (v: string) => void };
+export type MockUniversalTableProps = {
+  onSort: (slug: string) => void;
+  onSelect: ({ id }: { id: string }) => void;
+  onPageChange: (page: number) => void;
+  onLimitChange: (limit: number) => void;
+};
+export type MockMotionDivProps = ComponentProps<'div'> & {
+  layoutId?: string;
+  transition?: unknown;
+};
 export type MockInputProps = ComponentProps<'input'>;
 export type MockTextareaProps = ComponentProps<'textarea'>;
 export type MockButtonProps = ComponentProps<'button'>;

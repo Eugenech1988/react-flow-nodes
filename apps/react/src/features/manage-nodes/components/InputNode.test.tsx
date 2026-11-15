@@ -29,10 +29,10 @@ vi.mock('@xyflow/react', () => ({
 vi.mock('@pipeline/ui', () => ({
   Input: (props: ComponentProps<'input'>) => <input data-testid="text-input" {...props} />,
   Select: ({
-             value,
-             onValueChange,
-             children,
-           }: {
+    value,
+    onValueChange,
+    children,
+  }: {
     value?: string;
     onValueChange?: (v: string) => void;
     children?: ReactNode;

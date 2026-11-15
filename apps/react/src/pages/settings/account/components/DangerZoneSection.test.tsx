@@ -1,4 +1,8 @@
-import type { MockAppButtonProps, MockJobDeleteModalProps, MockLocalAlertProps } from '@/test-utils/mock-props';
+import type {
+  MockAppButtonProps,
+  MockJobDeleteModalProps,
+  MockLocalAlertProps,
+} from '@/test-utils/mock-props';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';

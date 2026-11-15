@@ -22,7 +22,6 @@ type FormFieldOverrides = {
   formState?: Partial<ProfileHook['form']['formState']>;
 };
 
-
 vi.mock('../hooks', () => ({
   useProfileForm: vi.fn(),
 }));
@@ -32,14 +31,23 @@ vi.mock('@/shared/hooks', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: ({ label, error, errorMessage, disabled, value, ...props }: MockFloatingInputProps) => (
+  FloatingInput: ({
+    label,
+    error,
+    errorMessage,
+    disabled,
+    value,
+    ...props
+  }: MockFloatingInputProps) => (
     <div>
       <label>{label}</label>
       {error && <span data-testid={`error-${label}`}>{errorMessage}</span>}
       <input data-testid={`input-${label}`} disabled={disabled} value={value} {...props} />
     </div>
   ),
-  LocalAlert: ({ alertMessage }: MockLocalAlertProps) => <div data-testid="alert">{alertMessage}</div>,
+  LocalAlert: ({ alertMessage }: MockLocalAlertProps) => (
+    <div data-testid="alert">{alertMessage}</div>
+  ),
   AppButton: ({ text, type, onClick, isDisabled, isPending }: MockAppButtonProps) => (
     <button
       type={type}

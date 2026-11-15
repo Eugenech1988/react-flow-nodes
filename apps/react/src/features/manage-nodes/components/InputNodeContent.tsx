@@ -120,4 +120,3 @@ export const InputNodeContent = ({ values, handleFieldChange }: IInputNodeConten
     </div>
   );
 };
-

@@ -7,7 +7,9 @@ vi.mock('@pipeline/ui', () => ({
   DialogHeader: ({ children, className }: MockDialogHeaderProps) => (
     <header className={className}>{children}</header>
   ),
-  DialogTitle: ({ children, className }: MockDialogHeaderProps) => <h2 className={className}>{children}</h2>,
+  DialogTitle: ({ children, className }: MockDialogHeaderProps) => (
+    <h2 className={className}>{children}</h2>
+  ),
 }));
 
 describe('DialogHeader', () => {

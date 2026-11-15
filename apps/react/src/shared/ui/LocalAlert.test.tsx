@@ -9,8 +9,12 @@ vi.mock('@pipeline/ui', () => ({
       {children}
     </div>
   ),
-  AlertTitle: ({ children, className }: MockAlertProps) => <h3 className={className}>{children}</h3>,
-  AlertDescription: ({ children, className }: MockAlertProps) => <p className={className}>{children}</p>,
+  AlertTitle: ({ children, className }: MockAlertProps) => (
+    <h3 className={className}>{children}</h3>
+  ),
+  AlertDescription: ({ children, className }: MockAlertProps) => (
+    <p className={className}>{children}</p>
+  ),
 }));
 
 vi.mock('lucide-react', () => ({

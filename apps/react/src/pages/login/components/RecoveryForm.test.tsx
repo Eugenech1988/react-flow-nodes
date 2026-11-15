@@ -1,11 +1,17 @@
-import type { MockAppButtonProps, MockFloatingInputProps, MockLocalAlertProps } from '@/test-utils/mock-props';
+import type {
+  MockAppButtonProps,
+  MockFloatingInputProps,
+  MockLocalAlertProps,
+} from '@/test-utils/mock-props';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { RecoveryForm } from './RecoveryForm';
 
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: (props: MockFloatingInputProps) => <input data-testid={`input-${props.label}`} {...props} />,
+  FloatingInput: (props: MockFloatingInputProps) => (
+    <input data-testid={`input-${props.label}`} {...props} />
+  ),
   LocalAlert: ({ alertMessage }: MockLocalAlertProps) => <div>{alertMessage}</div>,
   AppButton: ({ text, type, onClick }: MockAppButtonProps) => (
     <button type={type} onClick={onClick}>

@@ -10,7 +10,7 @@ type TMutationMock = {
   mutate: ReturnType<typeof vi.fn>;
   mutateAsync: ReturnType<typeof vi.fn>;
   reset: ReturnType<typeof vi.fn>;
-}
+};
 
 const makeMutationMock = (): ReturnType<typeof vi.fn> & TMutationMock =>
   Object.assign(vi.fn(), {
@@ -119,7 +119,8 @@ describe('JobTableRowActions', () => {
   it('confirms delete via modal', () => {
     mockRemove.mutate.mockImplementation((_: { id: string }, opts?: { onSuccess?: () => void }) =>
       opts?.onSuccess?.(),
-    );    render(<JobTableRowActions job={makeJob()} onEdit={vi.fn()} />);
+    );
+    render(<JobTableRowActions job={makeJob()} onEdit={vi.fn()} />);
     fireEvent.click(screen.getByText('Delete'));
     fireEvent.click(screen.getByText('ConfirmDelete'));
     expect(mockRemove.mutate).toHaveBeenCalledWith(

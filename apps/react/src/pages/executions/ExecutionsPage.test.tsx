@@ -2,7 +2,7 @@ import type {
   MockDialogHeaderProps,
   MockFloatingInputProps,
   MockTabsProps,
-  MockUniversalTableProps
+  MockUniversalTableProps,
 } from '@/test-utils/mock-props';
 
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -45,7 +45,9 @@ vi.mock('./components', () => ({
 }));
 
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: ({ onChange }: MockFloatingInputProps) => <input data-testid="search" onChange={onChange} />,
+  FloatingInput: ({ onChange }: MockFloatingInputProps) => (
+    <input data-testid="search" onChange={onChange} />
+  ),
   Tabs: ({ onTabChange }: MockTabsProps) => (
     <button data-testid="tab" onClick={() => onTabChange('failed')}>
       Tab

@@ -14,4 +14,3 @@ export interface ThemeProviderProps {
   defaultTheme?: Theme;
   storageKey?: string;
 }
-

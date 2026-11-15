@@ -1,9 +1,13 @@
-import type { MockInputProps, MockSelectItemProps, MockSelectProps, MockTextareaProps } from '@/test-utils/mock-props';
+import type {
+  MockInputProps,
+  MockSelectItemProps,
+  MockSelectProps,
+  MockTextareaProps,
+} from '@/test-utils/mock-props';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BaseNode, createNode } from './BaseNode';
 import type { TFieldConfig } from '@/entities';
-
 
 const { updateNodeField, deleteElements, extractVariables, mockRunNode, mockExecutionStatus } =
   vi.hoisted(() => ({
@@ -50,7 +54,9 @@ vi.mock('@pipeline/ui', () => ({
   SelectTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   SelectValue: () => <span />,
   SelectContent: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  SelectItem: ({ value, children }: MockSelectItemProps) => <option value={value}>{children}</option>,
+  SelectItem: ({ value, children }: MockSelectItemProps) => (
+    <option value={value}>{children}</option>
+  ),
   AutosizeTextarea: ({ value, onChange }: MockTextareaProps) => (
     <textarea data-testid="textarea" value={value} onChange={onChange} />
   ),

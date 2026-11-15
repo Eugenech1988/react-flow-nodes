@@ -22,7 +22,7 @@ vi.mock('@tanstack/react-query', () => ({
   useMutation: (opts: {
     onSuccess?: (data: { success: boolean }) => void;
     onError?: (e: unknown) => void;
-  }) =>  ({
+  }) => ({
     mutateAsync: async (vars: unknown) => {
       try {
         const res = await mockMutateAsync(vars);
@@ -115,7 +115,8 @@ describe('useProfileForm', () => {
     await act(async () => {
       await result.current.form.handleSubmit(
         result.current.onSubmit as SubmitHandler<ProfileValues>,
-      )();    });
+      )();
+    });
 
     expect(result.current.alert).toEqual({
       type: 'error',

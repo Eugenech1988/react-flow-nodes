@@ -75,7 +75,9 @@ describe('useSavePipeline', () => {
     vi.clearAllMocks();
     vi.useFakeTimers();
 
-    (mockStore as { nodes: unknown[] }).nodes = [{ id: 'n1', type: 'text', position: { x: 0, y: 0 }, data: {} }];
+    (mockStore as { nodes: unknown[] }).nodes = [
+      { id: 'n1', type: 'text', position: { x: 0, y: 0 }, data: {} },
+    ];
     mockStore.edges = [];
     (mockStore as { lastRunAt: string | null }).lastRunAt = null;
     (mockStore as { lastRunStatus: string | null }).lastRunStatus = null;

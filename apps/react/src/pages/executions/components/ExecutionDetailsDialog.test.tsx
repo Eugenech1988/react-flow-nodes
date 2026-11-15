@@ -1,4 +1,8 @@
-import type { MockDialogFooterProps, MockDialogHeaderProps, MockDialogProps } from '@/test-utils/mock-props';
+import type {
+  MockDialogFooterProps,
+  MockDialogHeaderProps,
+  MockDialogProps,
+} from '@/test-utils/mock-props';
 
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
@@ -19,7 +23,9 @@ vi.mock('@/shared/ui', () => ({
     </div>
   ),
   DialogBody: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DialogFooter: ({ onCancel }: MockDialogFooterProps) => <button onClick={onCancel}>Footer Close</button>,
+  DialogFooter: ({ onCancel }: MockDialogFooterProps) => (
+    <button onClick={onCancel}>Footer Close</button>
+  ),
 }));
 
 vi.mock('@/shared/lib', () => ({

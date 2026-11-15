@@ -1,4 +1,8 @@
-import type { MockAppButtonProps, MockFloatingInputProps, MockLocalAlertProps } from '@/test-utils/mock-props';
+import type {
+  MockAppButtonProps,
+  MockFloatingInputProps,
+  MockLocalAlertProps,
+} from '@/test-utils/mock-props';
 import type { UseFormReturn } from 'react-hook-form';
 import { usePasswordSection } from '../hooks/usePasswordSection';
 import { render, screen } from '@testing-library/react';
@@ -16,9 +20,10 @@ type PasswordFormOverrides = {
 
 vi.mock('../hooks/usePasswordSection', () => ({ usePasswordSection: vi.fn() }));
 
-
 vi.mock('@/shared/ui', () => ({
-  FloatingInput: (props: MockFloatingInputProps) => <input data-testid={`input-${props.label}`} {...props} />,
+  FloatingInput: (props: MockFloatingInputProps) => (
+    <input data-testid={`input-${props.label}`} {...props} />
+  ),
   LocalAlert: ({ alertMessage }: MockLocalAlertProps) => <div>{alertMessage}</div>,
   AppButton: ({ text, onClick, type, isDisabled }: MockAppButtonProps) => (
     <button onClick={onClick} type={type} disabled={isDisabled}>
