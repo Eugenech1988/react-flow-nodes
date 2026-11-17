@@ -12,4 +12,5 @@ export * from './UniversalTable';
 export * from './SortIndicator';
 export * from './StatusBadge';
 export * from './ConfirmDeleteModal';
+export * from './ConfirmDialog';
 export * from './FatalErrorState';

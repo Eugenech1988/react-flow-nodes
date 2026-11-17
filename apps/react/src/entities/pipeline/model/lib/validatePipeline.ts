@@ -153,32 +153,52 @@ export const validatePipeline = (
   }
 
   let inputConnected = true;
+
   if (inputNodes.length === 0) {
     inputConnected = false;
     errors.push(
       'Workflow requirements failed: At least one Input node must be placed on the canvas.',
     );
   } else {
-    const allInputsHaveOutgoing = inputNodes.every((node) => outgoing.get(node.id)!.length > 0);
-
-    if (!allInputsHaveOutgoing) {
-      inputConnected = false;
-      errors.push('Disconnected variables: Active inputs must map to their target steps.');
-    } else {
-      for (const variable of variables) {
-        const input = inputNodes.find((node) => getFieldName(node, 'input') === variable);
-        const hasTextTarget = input
-          ? outgoing.get(input.id)!.some((edge) => kinds.get(edge.target)?.has('text'))
-          : false;
-        if (!hasTextTarget) {
-          inputConnected = false;
-          break;
+    const usageTextNodeIdsByName = new Map<string, Set<string>>();
+    for (const textNode of textNodes) {
+      const text = String(textNode.data?.text ?? textNode.data?.content ?? '');
+      for (const match of text.matchAll(/\{\{\s*([^}]+?)\s*}}/g)) {
+        const name = normalize(match[1]);
+        const existing = usageTextNodeIdsByName.get(name);
+        if (existing) {
+          existing.add(textNode.id);
+        } else {
+          usageTextNodeIdsByName.set(name, new Set([textNode.id]));
         }
       }
+    }
 
-      if (!inputConnected) {
-        errors.push('Disconnected variables: Active inputs must map to their target steps.');
+    for (const input of inputNodes) {
+      const inputOutgoing = outgoing.get(input.id)!;
+
+      if (inputOutgoing.length === 0) {
+        inputConnected = false;
+        continue;
       }
+
+      const name = getFieldName(input, 'input');
+      if (!name) continue;
+
+      const usageTextIds = usageTextNodeIdsByName.get(name);
+      if (!usageTextIds || usageTextIds.size === 0) {
+        continue;
+      }
+
+      const connectedTargetIds = new Set(inputOutgoing.map((edge) => edge.target));
+      const allUsageConnected = [...usageTextIds].every((id) => connectedTargetIds.has(id));
+      if (!allUsageConnected) {
+        inputConnected = false;
+      }
+    }
+
+    if (!inputConnected) {
+      errors.push('Disconnected variables: Active inputs must map to their target steps.');
     }
   }
 

@@ -1,12 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { usePipelines } from '@/entities';
+import type { TPipeline } from '@/entities';
 import { usePipelineHandler } from '@/features/manage-pipelines';
 import { useUser } from '@/shared/hooks';
-import { GlobalLoader } from '@/shared/ui';
+import { GlobalLoader, ConfirmDialog } from '@/shared/ui';
 import { Canvas } from '@/widgets/canvas';
 
 export const CanvasPage = () => {
@@ -15,12 +16,15 @@ export const CanvasPage = () => {
   const { pipelines, isLoading } = usePipelines();
   const { user } = useUser();
   const processedRef = useRef<string | null>(null);
+  const [pendingPipeline, setPendingPipeline] = useState<TPipeline | null>(null);
 
   const { setCurrentPipeline } = usePipelineHandler({
     onSetCurrentSuccess: () => {
+      setPendingPipeline(null);
       setSearchParams({}, { replace: true });
     },
     onSetCurrentError: (error) => {
+      setPendingPipeline(null);
       processedRef.current = null;
       toast.error(error.message || 'Failed to load pipeline. Please try again.');
       setSearchParams({}, { replace: true });
@@ -45,22 +49,24 @@ export const CanvasPage = () => {
       return;
     }
 
-    const pipeline = pipelines.find((p) => p.id === sharedPipelineId);
+    const pipeline = pipelines.find((item) => item.id === sharedPipelineId);
     if (!pipeline) {
       toast.error('Pipeline not found or you do not have access to it.');
       setSearchParams({}, { replace: true });
       return;
     }
 
-    setCurrentPipeline.mutate(pipeline);
-  }, [
-    sharedPipelineId,
-    isLoading,
-    pipelines,
-    user?.currentPipelineId,
-    setCurrentPipeline,
-    setSearchParams,
-  ]);
+    setPendingPipeline(pipeline);
+  }, [sharedPipelineId, isLoading, pipelines, user?.currentPipelineId, setSearchParams]);
+
+  const handleConfirmSwitch = (): void => {
+    if (pendingPipeline) setCurrentPipeline.mutate(pendingPipeline);
+  };
+
+  const handleCancelSwitch = (): void => {
+    setPendingPipeline(null);
+    setSearchParams({}, { replace: true });
+  };
 
   if (isLoading || setCurrentPipeline.isPending) {
     return <GlobalLoader fullScreen={false} />;
@@ -78,6 +84,24 @@ export const CanvasPage = () => {
       className="relative h-full w-full flex-1 overflow-hidden"
     >
       <Canvas />
+
+      <ConfirmDialog
+        isOpen={Boolean(pendingPipeline)}
+        onClose={handleCancelSwitch}
+        onConfirm={handleConfirmSwitch}
+        isPending={setCurrentPipeline.isPending}
+        title="Open shared pipeline?"
+        message={
+          <>
+            This will set <strong>&quot;{pendingPipeline?.name}&quot;</strong> as your active
+            pipeline. Unsaved changes on your current canvas will be discarded.
+          </>
+        }
+        submitText="Open"
+        pendingText="Opening..."
+        cancelText="Cancel"
+        variant="primary"
+      />
     </motion.div>
   );
 };
