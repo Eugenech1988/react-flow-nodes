@@ -24,14 +24,16 @@ export const buildInitialValues = (
   data: TNodeData,
   id: string,
 ): TNodeFieldValues => {
-  const initialValues: TNodeFieldValues = {};
-  fields.forEach((field) => {
+  const dataRecord: Record<string, unknown> = data;
+
+  return fields.reduce<TNodeFieldValues>((acc, field) => {
     const fallbackValue =
       typeof field.defaultValue === 'function' ? field.defaultValue(id) : field.defaultValue;
-    // @ts-ignore
-    initialValues[field.key] = data[field.key] ?? fallbackValue ?? '';
-  });
-  return initialValues;
+    const rawValue = dataRecord[field.key];
+
+    acc[field.key] = (rawValue ?? fallbackValue ?? '') as TNodeFieldValues[string];
+    return acc;
+  }, {});
 };
 
 export const toVariableHandle = (variable: string): THandleConfig => ({
